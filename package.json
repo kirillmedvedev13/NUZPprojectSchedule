@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/kirillmedvedev13/NUZPprojectSchedule/issues"
   },
-  "homepage": "https://github.com/kirillmedvedev13/NUZPprojectSchedule#readme"
+  "homepage": "https://github.com/kirillmedvedev13/NUZPprojectSchedule#readme",
+  "dependencies": {
+    "config": "^3.3.6"
+  }
 }
