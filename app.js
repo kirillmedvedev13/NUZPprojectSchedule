@@ -4,11 +4,12 @@ const config = require("config")
 const mysql = require("mysql")
 
 const PORT = config.get('port') || 5000
+const HOST= config.get('DB_URL');
 
 const app = express()
 
 const connection = mysql.createConnection({
-    host     : 'nuzp-shedule.mysql.database.azure.com',
+    host     : HOST,
     user     : 'nuzp_admin',
     password : 'Morality351973',
     database : 'shedule',
