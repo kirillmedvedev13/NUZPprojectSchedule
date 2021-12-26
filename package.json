@@ -18,6 +18,12 @@
   },
   "homepage": "https://github.com/kirillmedvedev13/NUZPprojectSchedule#readme",
   "dependencies": {
-    "config": "^3.3.6"
+    "config": "^3.3.6",
+    "express": "^4.17.2",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.5.1",
+    "nodemon": "^2.0.15"
   }
 }
