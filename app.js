@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
     host     : HOST,
     user     : 'nuzp_admin',
     password : 'Morality351973',
-    database : 'shedule',
+    database : 'schedule',
     port: 3306,
     ssl: {ca:fs.readFileSync("config/DigiCertGlobalRootCA.crt.pem")}
   })
