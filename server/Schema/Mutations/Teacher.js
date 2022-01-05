@@ -1,10 +1,9 @@
-import { TeacherType } from "../TypeDefs/Teacher.js";
 import { GraphQLID, GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
 export const CREATE_TEACHER = {
-  type: TeacherType,
+  type: MessageType,
   args: {
     name: { type: GraphQLString },
     surname: { type: GraphQLString },
@@ -15,8 +14,11 @@ export const CREATE_TEACHER = {
       name,
       surname,
       patronymic,
+    })
+    .catch((err) => {
+      return { successful: false, message: "Teacher wasn`t deleted!\n" + err }
     });
-    return { name, surname, patronymic };
+    return {successful: true, message: "Teacher was created" };
   },
 };
 
@@ -33,27 +35,35 @@ export const DELETE_TEACHER = {
         },
       })
       .catch((err) => {
-        return { successful: false, message: "Teacher was not deleted!" };
+        return { successful: false, message: "Teacher wasn`t deleted!\n" + err }
       });
-    return { successful: true, message: "Teacher was deleted!" };
-  },
-};
+      return {successful: true, message: "Teacher was deleted" };
+    },
+  };
 
 export const UPDATE_TEACHER = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
+    name: { type: GraphQLString },
     surname: { type: GraphQLString },
+    patronymic: { type: GraphQLString },
   },
-  async resolve(parent, { id, surname }) {
+  async resolve(parent, { id, name, surname, patronymic }) {
     await db.teachers.update(
-      { surname },
+      { name, surname, patronymic },
       {
         where: {
-          id,
+          id
         },
       }
-    );
-    return { successful: true, message: "Teacher was updated!" };
+    ).then((res) => {
+      console.log(res);
+      return {successful: true, message: "Teacher was updated" + res };
+    })
+    .catch((err) => {
+      console.log(err);
+      return { successful: false, message: "Teacher wasn`t updated!\n" + err }
+    });
   },
 };

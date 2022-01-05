@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLString, GraphQLObjectType } from "graphql";
 
-export const TeacherType = new GraphQLObjectType({
+const TeacherType = new GraphQLObjectType({
   name: "Teacher",
   fields: () => ({
     id: { type: GraphQLID },
@@ -9,3 +9,5 @@ export const TeacherType = new GraphQLObjectType({
     patronymic: { type: GraphQLString },
   }),
 });
+
+export default TeacherType;
