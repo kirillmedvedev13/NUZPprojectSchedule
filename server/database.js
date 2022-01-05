@@ -1,6 +1,6 @@
 import Sequelize from "sequelize";
 import config from "./config/config.js";
-import Teacher from "./Models/Teacher.js";
+import { Teacher } from "./Models/Teacher.js";
 import fs from "fs";
 
 const db = {};

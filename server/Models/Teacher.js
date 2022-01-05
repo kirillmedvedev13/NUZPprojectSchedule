@@ -1,4 +1,4 @@
-const Teacher = (Sequelize, DataTypes) => {
+export const Teacher = (Sequelize, DataTypes) => {
   return Sequelize.define("teachers", {
     id: {
       type: DataTypes.INTEGER,
@@ -20,5 +20,3 @@ const Teacher = (Sequelize, DataTypes) => {
     },
   });
 };
-
-export default Teacher;

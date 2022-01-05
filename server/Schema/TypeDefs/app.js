@@ -1,5 +1,10 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
-import GET_ALL_TEACHERS from "../Queries/Teacher.js";
+import { GET_ALL_TEACHERS } from "../Queries/Teacher.js";
+import {
+  CREATE_TEACHER,
+  DELETE_TEACHER,
+  UPDATE_TEACHER,
+} from "../Mutations/Teacher.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -10,7 +15,11 @@ const RootQuery = new GraphQLObjectType({
 
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
-  fields: {},
+  fields: {
+    CreateTeacher: CREATE_TEACHER,
+    DeleteTeacher: DELETE_TEACHER,
+    UpdateTeacher: UPDATE_TEACHER,
+  },
 });
 
 const Schema = new GraphQLSchema({
