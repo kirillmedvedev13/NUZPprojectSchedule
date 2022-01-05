@@ -1,2 +1,9 @@
-export const PORT = "5000";
-export const DB_URL = "nuzp-shedule.mysql.database.azure.com";
+const config = { 
+    PORT: "3000",
+    HOST: "nuzp-shedule.mysql.database.azure.com",
+    DB_NAME: "schedule",
+    DB_USER: "nuzp_admin",
+    DB_PASS: "Morality351973"
+}
+
+export default config

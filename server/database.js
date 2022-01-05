@@ -1,11 +1,24 @@
 import Sequelize from "sequelize";
-import { DB_URL as HOST } from "./config/config.js";
+import config from "./config/config.js";
+import fs from "fs";
 
 const db = {};
 
-const Connection = new Sequelize("nuzp_admin", "nuzp_admin", "Morality351973", {
+
+const Connection = new Sequelize(
+  config.DB_NAME, 
+  config.DB_USER,
+  config.DB_PASS,
+ {
   dialect: "mysql",
-  host: HOST,
+  dialectOptions: {
+    ssl: {
+      key: fs.readFile("./config/DigiCertGlobalRootCA.crt.pem", 'utf8', function(err, contents) {
+        console.log("Sertificate connected");
+      })
+    }
+  },
+  host: config.HOST,
   define: { timestamps: false },
 });
 

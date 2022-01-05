@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import db from "./database.js";
 import { graphqlHTTP } from "express-graphql";
-import { PORT } from "./config/config.js";
+import config from "./config/config.js";
 
 const main = async () => {
   const app = express();
@@ -18,7 +18,7 @@ const main = async () => {
       graphiql: true,
     })
   );
-  app.listen(PORT, () => {
+  app.listen(config.PORT, () => {
     console.log("Server is running");
   });
 };
