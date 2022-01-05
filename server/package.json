@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/kirillmedvedev13/NUZPprojectSchedule#readme",
   "dependencies": {
+    "body-parser": "^1.19.1",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "express": "^4.17.2",
@@ -29,12 +30,8 @@
     "sequelize": "^6.12.5"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.7",
     "@babel/core": "^7.16.7",
-    "@babel/node": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
     "concurrently": "^6.5.1",
     "nodemon": "^2.0.15"
   }

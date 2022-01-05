@@ -4,22 +4,28 @@ import db from "./database.js";
 import Schema from "./Schema/TypeDefs/app.js";
 import { graphqlHTTP } from "express-graphql";
 import config from "./config/config.js";
-
+import bodyParser from "body-parser";
+ 
 const main = async () => {
   const app = express();
 
   await db.Connection.sync()
-    .then((result) => console.log("Good"))
+    .then((result) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
+  
+   
+  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(bodyParser.json())
   app.use(cors());
-  app.use(express.json());
+
   app.use(
     "/graphql",
     graphqlHTTP({
-      Schema,
+      schema: Schema,
       graphiql: true,
     })
   );
+
   app.listen(config.PORT, () => {
     console.log("Server is running");
   });
