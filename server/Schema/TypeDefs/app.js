@@ -5,11 +5,18 @@ import {
   DELETE_TEACHER,
   UPDATE_TEACHER,
 } from "../Mutations/Teacher.js";
+import { GET_ALL_CATHEDRAS } from "../Queries/Cathedra.js";
+import {
+  CREATE_CATHEDRA,
+  DELETE_CATHEDRA,
+  UPDATE_CATHEDRA,
+} from "../Mutations/Cathedra.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
     GetAllTeachers: GET_ALL_TEACHERS,
+    GetAllCathedras: GET_ALL_CATHEDRAS,
   },
 });
 
@@ -19,6 +26,9 @@ const Mutation = new GraphQLObjectType({
     CreateTeacher: CREATE_TEACHER,
     DeleteTeacher: DELETE_TEACHER,
     UpdateTeacher: UPDATE_TEACHER,
+    CreateCathedra: CREATE_CATHEDRA,
+    DeleteCathedra: DELETE_CATHEDRA,
+    UpdateCathedra: UPDATE_CATHEDRA,
   },
 });
 

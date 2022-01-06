@@ -1,6 +1,7 @@
 import Sequelize from "sequelize";
 import config from "./config/config.js";
 import Teacher from "./Models/Teacher.js";
+import Cathedra from "./Models/Cathedra.js";
 import fs from "fs";
 
 const db = {};
@@ -27,7 +28,7 @@ const Connection = new Sequelize(
   }
 );
 
-const models = [Teacher];
+const models = [Teacher, Cathedra];
 
 models.forEach((model) => {
   const seqModel = model(Connection, Sequelize);
