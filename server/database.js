@@ -4,6 +4,7 @@ import fs from "fs";
 import Teacher from "./Models/Teacher.js";
 import Cathedra from "./Models/Cathedra.js";
 import Audience from "./Models/Audience.js";
+import Assigned_audience from "./Models/Assigned_audience.js";
 
 
 const db = {};
@@ -11,7 +12,8 @@ const db = {};
 const models = [
   Teacher,
   Cathedra,
-  Audience
+  Audience,
+  Assigned_audience
 ];
 
 const Connection = new Sequelize(
@@ -38,14 +40,18 @@ const Connection = new Sequelize(
 
 models.forEach((model) => {
   const seqModel = model(Connection, Sequelize);
+  console.log(seqModel.name);
   db[seqModel.name] = seqModel;
 });
+
 Object.keys(db).forEach((key) => {
   if ("associate" in db[key]) {
     db[key].associate(db);
   }
 });
+
 db.Connection = Connection;
 db.Sequelize = Sequelize;
+
 
 export default db;

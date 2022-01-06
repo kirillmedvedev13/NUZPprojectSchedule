@@ -1,5 +1,5 @@
 export default (Sequelize, DataTypes) => {
-    return Sequelize.define("audiences", {
+    let Audience = Sequelize.define("audience", {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -19,5 +19,15 @@ export default (Sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-  };;
-  
+
+    Audience.associate = models => {
+      Audience.belongsToMany(models.cathedra, 
+        {
+           through: models.assigned_audience,
+           foreignKey: 'id_audience'
+      });
+    }
+
+    return Audience;
+  };
+
