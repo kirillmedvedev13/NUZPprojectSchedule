@@ -10,15 +10,12 @@ export const CREATE_TEACHER = {
     patronymic: { type: GraphQLString },
   },
   async resolve(parent, { name, surname, patronymic }) {
-    await db.teachers.create({
+    let res = await db.teachers.create({
       name,
       surname,
       patronymic,
-    })
-    .catch((err) => {
-      return { successful: false, message: "Teacher wasn`t deleted!\n" + err }
     });
-    return {successful: true, message: "Teacher was created" };
+    return res ? {successful: true, message: "Teacher was created"} : {successful: false, message: "Teacher wasn`t created"};
   },
 };
 
@@ -28,16 +25,13 @@ export const DELETE_TEACHER = {
     id: { type: GraphQLID },
   },
   async resolve(parent, { id }) {
-    await db.teachers
+    let res = await db.teachers
       .destroy({
         where: {
           id,
         },
-      })
-      .catch((err) => {
-        return { successful: false, message: "Teacher wasn`t deleted!\n" + err }
       });
-      return {successful: true, message: "Teacher was deleted" };
+      return res ? {successful: true, message: "Teacher was deleted"} : {successful: false, message: "Teacher wasn`t deleted"};
     },
   };
 
@@ -49,21 +43,18 @@ export const UPDATE_TEACHER = {
     surname: { type: GraphQLString },
     patronymic: { type: GraphQLString },
   },
-  async resolve(parent, { id, name, surname, patronymic }) {
-    await db.teachers.update(
+  resolve(parent, { id, name, surname, patronymic }) {
+    let res = db.teachers.update(
       { name, surname, patronymic },
       {
         where: {
           id
         },
       }
-    ).then((res) => {
-      console.log(res);
-      return {successful: true, message: "Teacher was updated" + res };
-    })
-    .catch((err) => {
-      console.log(err);
-      return { successful: false, message: "Teacher wasn`t updated!\n" + err }
-    });
+    );
+    console.log("`````````````````")
+    console.log(res);
+    console.log("`````````````````")
+    return res ? {successful: true, message: "Teacher was updated"} : {successful: false, message: "Teacher wasn`t updated"};
   },
 };
