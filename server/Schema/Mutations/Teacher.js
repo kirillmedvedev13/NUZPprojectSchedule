@@ -43,8 +43,8 @@ export const UPDATE_TEACHER = {
     surname: { type: GraphQLString },
     patronymic: { type: GraphQLString },
   },
-  resolve(parent, { id, name, surname, patronymic }) {
-    let res = db.teachers.update(
+  async resolve(parent, { id, name, surname, patronymic }) {
+    let res = await db.teachers.update(
       { name, surname, patronymic },
       {
         where: {
@@ -52,9 +52,6 @@ export const UPDATE_TEACHER = {
         },
       }
     );
-    console.log("`````````````````")
-    console.log(res);
-    console.log("`````````````````")
-    return res ? {successful: true, message: "Teacher was updated"} : {successful: false, message: "Teacher wasn`t updated"};
+    return res[0] ? {successful: true, message: "Teacher was updated"} : {successful: false, message: "Teacher wasn`t updated"};
   },
 };
