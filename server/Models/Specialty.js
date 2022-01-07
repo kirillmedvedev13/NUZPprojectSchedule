@@ -11,5 +11,10 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+  Specialty.associate = (models) => {
+    Specialty.belongsTo(models.cathedra, {
+      foreignKey: "id_cathedra",
+    });
+  };
   return Specialty;
 };

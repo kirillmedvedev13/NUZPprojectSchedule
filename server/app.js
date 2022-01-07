@@ -9,7 +9,7 @@ import bodyParser from "body-parser";
 const main = async () => {
   const app = express();
 
-  await db.Connection.sync()
+  await db.Connection.sync({ force: true })
     .then((result) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
 
