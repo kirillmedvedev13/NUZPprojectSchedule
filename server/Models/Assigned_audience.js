@@ -15,5 +15,6 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+ 
   return Assigned_audience;
 };

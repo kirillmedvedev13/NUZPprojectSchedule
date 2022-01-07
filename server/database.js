@@ -21,6 +21,7 @@ const models = [
   Pair_type,
 ];
 
+
 const Connection = new Sequelize(
   config.DB_NAME,
   config.DB_USER,
