@@ -18,7 +18,7 @@ import {
   UPDATE_CATHEDRA,
 } from "../Mutations/Cathedra.js";
 import { GET_ALL_SPECIALTY } from "../Queries/Specialty.js";
-
+import { CREATE_SPECIALTY } from "../Mutations/Specialty.js";
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
@@ -41,6 +41,7 @@ const Mutation = new GraphQLObjectType({
     CreateCathedra: CREATE_CATHEDRA,
     DeleteCathedra: DELETE_CATHEDRA,
     UpdateCathedra: UPDATE_CATHEDRA,
+    CreateSpecialty: CREATE_SPECIALTY,
   },
 });
 
