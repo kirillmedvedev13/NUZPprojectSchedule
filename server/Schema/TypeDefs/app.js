@@ -19,6 +19,8 @@ import {
 } from "../Mutations/Cathedra.js";
 import { GET_ALL_SPECIALTY } from "../Queries/Specialty.js";
 import { CREATE_SPECIALTY } from "../Mutations/Specialty.js";
+import {GET_ALL_ASSIGNED_AUDIENCES} from "../Queries/Assigned_audience.js"
+import {CREATE_ASSIGNED_AUDIENCE, DELETE_ASSIGNED_AUDIENCE} from "../Mutations/Assigned_audience.js"
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
@@ -26,6 +28,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllAudiences: GET_ALL_AUDIENCES,
     GetAllCathedras: GET_ALL_CATHEDRAS,
     GetAllSpecialties: GET_ALL_SPECIALTY,
+    GetAllAssignedAudiences: GET_ALL_ASSIGNED_AUDIENCES
   },
 });
 
@@ -42,6 +45,8 @@ const Mutation = new GraphQLObjectType({
     DeleteCathedra: DELETE_CATHEDRA,
     UpdateCathedra: UPDATE_CATHEDRA,
     CreateSpecialty: CREATE_SPECIALTY,
+    CreateAssignedAudience: CREATE_ASSIGNED_AUDIENCE,
+    DeleteAssignedAudience: DELETE_ASSIGNED_AUDIENCE
   },
 });
 

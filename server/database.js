@@ -9,7 +9,7 @@ import Specialty from "./Models/Specialty.js";
 
 const db = {};
 
-const models = [Teacher, Cathedra, Audience, Assigned_audience, Specialty];
+const models = [Teacher, Cathedra, Audience, Assigned_audience, Specialty, Assigned_audience];
 
 const Connection = new Sequelize(
   config.DB_NAME,
