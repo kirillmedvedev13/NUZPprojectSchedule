@@ -25,6 +25,9 @@ export default (Sequelize, DataTypes) => {
       through: models.assigned_audience,
       foreignKey: "id_audience",
     });
+    Audience.hasMany(models.assigned_audience, {
+      foreignKey: "id_audience",
+    });
   };
 
   return Audience;

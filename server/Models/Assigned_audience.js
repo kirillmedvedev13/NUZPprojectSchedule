@@ -15,6 +15,14 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
- 
+  Assigned_audience.associate = (models) => {
+    Assigned_audience.belongsTo(models.cathedra, {
+      foreignKey: "id_cathedra",
+    });
+    Assigned_audience.belongsTo(models.audience, {
+      foreignKey: "id_audience",
+    });
+  };
+
   return Assigned_audience;
 };
