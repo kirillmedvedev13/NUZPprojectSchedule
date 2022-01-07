@@ -19,6 +19,7 @@ import {
 } from "../Mutations/Cathedra.js";
 import { GET_ALL_SPECIALTY } from "../Queries/Specialty.js";
 import { CREATE_SPECIALTY } from "../Mutations/Specialty.js";
+import { GET_WEEKS_DAY } from "../Queries/Day_week.js";
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
@@ -26,6 +27,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllAudiences: GET_ALL_AUDIENCES,
     GetAllCathedras: GET_ALL_CATHEDRAS,
     GetAllSpecialties: GET_ALL_SPECIALTY,
+    GetWeeksDay: GET_WEEKS_DAY,
   },
 });
 

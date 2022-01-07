@@ -6,10 +6,20 @@ import Cathedra from "./Models/Cathedra.js";
 import Audience from "./Models/Audience.js";
 import Assigned_audience from "./Models/Assigned_audience.js";
 import Specialty from "./Models/Specialty.js";
+import Day_week from "./Models/Day_week.js";
+import Pair_type from "./Models/Pair_type.js";
 
 const db = {};
 
-const models = [Teacher, Cathedra, Audience, Assigned_audience, Specialty];
+const models = [
+  Teacher,
+  Cathedra,
+  Audience,
+  Assigned_audience,
+  Specialty,
+  Day_week,
+  Pair_type,
+];
 
 const Connection = new Sequelize(
   config.DB_NAME,
