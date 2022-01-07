@@ -1,5 +1,5 @@
 export default (Sequelize, DataTypes) => {
-  return Sequelize.define("teacher", {
+  const Teacher = Sequelize.define("teacher", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -19,4 +19,5 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-};;
+  return Teacher;
+};

@@ -5,6 +5,6 @@ import TeacherType from "../TypeDefs/TeacherType.js";
 export const GET_ALL_TEACHERS = {
   type: new GraphQLList(TeacherType),
   async resolve() {
-    return await db.teachers.findAll();
+    return await db.teacher.findAll();
   },
 };

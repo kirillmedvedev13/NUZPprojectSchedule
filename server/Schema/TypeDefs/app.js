@@ -1,10 +1,23 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { GET_ALL_TEACHERS } from "../Queries/Teacher.js";
-import { CREATE_TEACHER, DELETE_TEACHER, UPDATE_TEACHER}  from "../Mutations/Teacher.js";
+import {
+  CREATE_TEACHER,
+  DELETE_TEACHER,
+  UPDATE_TEACHER,
+} from "../Mutations/Teacher.js";
 import { GET_ALL_AUDIENCES } from "../Queries/Audience.js";
-import { CREATE_AUDIENCE, DELETE_AUDIENCE, UPDATE_AUDIENCE } from "../Mutations/Audience.js";
+import {
+  CREATE_AUDIENCE,
+  DELETE_AUDIENCE,
+  UPDATE_AUDIENCE,
+} from "../Mutations/Audience.js";
 import { GET_ALL_CATHEDRAS } from "../Queries/Cathedra.js";
-import {CREATE_CATHEDRA,DELETE_CATHEDRA,UPDATE_CATHEDRA} from "../Mutations/Cathedra.js";
+import {
+  CREATE_CATHEDRA,
+  DELETE_CATHEDRA,
+  UPDATE_CATHEDRA,
+} from "../Mutations/Cathedra.js";
+import { GET_ALL_SPECIALTY } from "../Queries/Specialty.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -12,6 +25,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllTeachers: GET_ALL_TEACHERS,
     GetAllAudiences: GET_ALL_AUDIENCES,
     GetAllCathedras: GET_ALL_CATHEDRAS,
+    GetAllSpecialties: GET_ALL_SPECIALTY,
   },
 });
 

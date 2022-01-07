@@ -5,16 +5,11 @@ import Teacher from "./Models/Teacher.js";
 import Cathedra from "./Models/Cathedra.js";
 import Audience from "./Models/Audience.js";
 import Assigned_audience from "./Models/Assigned_audience.js";
-
+import Specialty from "./Models/Specialty.js";
 
 const db = {};
 
-const models = [
-  Teacher,
-  Cathedra,
-  Audience,
-  Assigned_audience
-];
+const models = [Teacher, Cathedra, Audience, Assigned_audience, Specialty];
 
 const Connection = new Sequelize(
   config.DB_NAME,
@@ -52,6 +47,4 @@ Object.keys(db).forEach((key) => {
 
 db.Connection = Connection;
 db.Sequelize = Sequelize;
-
-
 export default db;

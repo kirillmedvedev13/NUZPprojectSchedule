@@ -10,12 +10,14 @@ export const CREATE_AUDIENCE = {
     capacity: { type: GraphQLInt },
   },
   async resolve(parent, { audience_number, type, capacity }) {
-    let res = await db.audiences.create({
+    let res = await db.audience.create({
       audience_number,
       type,
       capacity,
     });
-    return res ? {successful: true, message: "Audience was created"} : {successful: false, message: "Audience wasn`t created"};
+    return res
+      ? { successful: true, message: "Audience was created" }
+      : { successful: false, message: "Audience wasn`t created" };
   },
 };
 
@@ -25,14 +27,16 @@ export const DELETE_AUDIENCE = {
     id: { type: GraphQLID },
   },
   async resolve(parent, { id }) {
-    let res = await db.audiences.destroy({
-        where: {
-          id,
-        },
-      });
-      return res ? {successful: true, message: "Audience was deleted"} : {successful: false, message: "Audience wasn`t deleted"};
-    },
-  };
+    let res = await db.audience.destroy({
+      where: {
+        id,
+      },
+    });
+    return res
+      ? { successful: true, message: "Audience was deleted" }
+      : { successful: false, message: "Audience wasn`t deleted" };
+  },
+};
 
 export const UPDATE_AUDIENCE = {
   type: MessageType,
@@ -43,14 +47,16 @@ export const UPDATE_AUDIENCE = {
     capacity: { type: GraphQLInt },
   },
   async resolve(parent, { id, audience_number, type, capacity }) {
-    let res = await db.audiences.update(
+    let res = await db.audience.update(
       { audience_number, type, capacity },
       {
         where: {
-          id
+          id,
         },
       }
     );
-    return res[0] ? {successful: true, message: "Audience was updated"} : {successful: false, message: "Audience wasn`t updated"};
+    return res[0]
+      ? { successful: true, message: "Audience was updated" }
+      : { successful: false, message: "Audience wasn`t updated" };
   },
 };

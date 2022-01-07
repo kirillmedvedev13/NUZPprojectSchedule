@@ -1,5 +1,5 @@
 export default (Sequelize, DataTypes) => {
-  let Cathedra =  Sequelize.define("cathedra", {
+  const Cathedra = Sequelize.define("cathedra", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -12,12 +12,14 @@ export default (Sequelize, DataTypes) => {
     },
   });
 
-  Cathedra.associate = models => {
-    Cathedra.belongsToMany(models.audience, 
-      {
-         through: models.assigned_audience,
-         foreignKey: 'id_cathedra'
+  Cathedra.associate = (models) => {
+    Cathedra.belongsToMany(models.audience, {
+      through: models.assigned_audience,
+      foreignKey: "id_cathedra",
     });
-  }
+    Cathedra.hasMany(models.specialty, {
+      foreignKey: "id_cathedra",
+    });
+  };
   return Cathedra;
 };

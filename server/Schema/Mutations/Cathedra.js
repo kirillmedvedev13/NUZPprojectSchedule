@@ -7,8 +7,8 @@ export const CREATE_CATHEDRA = {
   args: {
     name: { type: GraphQLString },
   },
-  async resolve(parent, { name, surname, patronymic }) {
-    let res = await db.cathedras.create({
+  async resolve(parent, { name }) {
+    let res = await db.cathedra.create({
       name,
     });
     return res
@@ -23,7 +23,7 @@ export const DELETE_CATHEDRA = {
     id: { type: GraphQLID },
   },
   async resolve(parent, { id }) {
-    let res = await db.cathedras.destroy({
+    let res = await db.cathedra.destroy({
       where: {
         id,
       },
@@ -41,7 +41,7 @@ export const UPDATE_CATHEDRA = {
     name: { type: GraphQLString },
   },
   async resolve(parent, { id, name }) {
-    let res = await db.cathedras.update(
+    let res = await db.cathedra.update(
       { name },
       {
         where: {
