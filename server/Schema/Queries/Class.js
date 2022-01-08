@@ -12,13 +12,16 @@ export const GET_ALL_CLASSES = {
         },
         {
           model: db.assigned_discipline,
-          inlcude: {
+          include: [{
             model: db.discipline,
           },
+          {
+            model: db.specialty,
+          }
+        ]
         },
       ],
     });
-    console.log(res);
     return res;
   },
 };
