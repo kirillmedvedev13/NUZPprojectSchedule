@@ -11,5 +11,8 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+  Pair_type.associate = (models) => {
+    Pair_type.hasMany(models.schedule, {foreignKey: "id_pair_type",});
+  };
   return Pair_type;
 };

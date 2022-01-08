@@ -43,6 +43,7 @@ import {
 } from "../Mutations/Discipline.js";
 import { CREATE_CLASS } from "../Mutations/Class.js";
 import { GET_ALL_CLASSES } from "../Queries/Class.js";
+import { GET_ALL_SCHEDULES } from "../Queries/Schedule.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -56,6 +57,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllGroups: GET_ALL_GROUPS,
     GetAllDisciplines: GET_ALL_DISCIPLINES,
     GetAllClasses: GET_ALL_CLASSES,
+    GetAllSchedules: GET_ALL_SCHEDULES,
   },
 });
 

@@ -15,6 +15,7 @@ import Assigned_discipline from "./Models/Assigned_discipline.js";
 import Class from "./Models/Class.js";
 import Recommended_audience from "./Models/Recommended_audience.js";
 import Assigned_teacher from "./Models/Assigned_teacher.js";
+import Schedule from "./Models/Schedule.js";
 
 const db = {};
 
@@ -33,6 +34,7 @@ const models = [
   Class,
   Recommended_audience,
   Assigned_teacher,
+  Schedule,
 ];
 
 const Connection = new Sequelize(

@@ -20,9 +20,8 @@ export default (Sequelize, DataTypes) => {
       }
     });
     Group.associate = (models) => {
-        Group.belongsTo(models.specialty, {
-        foreignKey: "id_specialty",
-      });
+        Group.belongsTo(models.specialty, {foreignKey: "id_specialty",});
+        Group.hasMany(models.schedule, {foreignKey: "id_group",});
     };
     return Group;
   };

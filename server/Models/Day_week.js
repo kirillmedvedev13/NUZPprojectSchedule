@@ -11,5 +11,8 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+  Day_week.associate = (models) => {
+    Day_week.hasMany(models.schedule, {foreignKey: "id_day_week",});
+  };
   return Day_week;
 };
