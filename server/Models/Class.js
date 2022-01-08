@@ -26,7 +26,6 @@ export default (Sequelize, DataTypes) => {
     Class.belongsTo(models.type_class, {
       foreignKey: "id_type_class",
     });
-<<<<<<< HEAD
     Class.hasMany(models.recommended_audience, {
       foreignKey: "id_class",
     });
@@ -41,9 +40,7 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_class",
       through: models.assigned_teacher,
     });
-=======
     Class.hasMany(models.schedule, {foreignKey: "id_class",});
->>>>>>> temp
   };
   return Class;
 };
