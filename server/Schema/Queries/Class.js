@@ -12,13 +12,17 @@ export const GET_ALL_CLASSES = {
         },
         {
           model: db.assigned_discipline,
-          include: [{
-            model: db.discipline,
-          },
-          {
-            model: db.specialty,
-          }
-        ]
+          include: [
+            {
+              model: db.discipline,
+            },
+            {
+              model: db.specialty,
+              include: {
+                model: db.cathedra,
+              },
+            },
+          ],
         },
       ],
     });

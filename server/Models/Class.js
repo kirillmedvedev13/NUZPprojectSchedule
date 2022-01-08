@@ -26,6 +26,20 @@ export default (Sequelize, DataTypes) => {
     Class.belongsTo(models.type_class, {
       foreignKey: "id_type_class",
     });
+    Class.hasMany(models.recommended_audience, {
+      foreignKey: "id_class",
+    });
+    Class.hasMany(models.assigned_teacher, {
+      foreignKey: "id_teacher",
+    });
+    Class.belongsToMany(models.audience, {
+      foreignKey: "id_class",
+      through: models.recommended_audience,
+    });
+    Class.belongsToMany(models.teacher, {
+      foreignKey: "id_class",
+      through: models.assigned_teacher,
+    });
   };
   return Class;
 };

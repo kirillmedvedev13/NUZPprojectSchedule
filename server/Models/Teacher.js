@@ -6,7 +6,7 @@ export default (Sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    name: {           
+    name: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
@@ -19,5 +19,13 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+  Teacher.associate = (models) => {
+    Teacher.hasMany(models.assigned_teacher, { foreignKey: "id_teacher" });
+    Teacher.belongsToMany(models.class, {
+      foreignKey: "id_teacher",
+      through: models.assigned_teacher,
+    });
+  };
+
   return Teacher;
 };
