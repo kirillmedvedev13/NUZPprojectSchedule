@@ -11,6 +11,7 @@ import Pair_type from "./Models/Pair_type.js";
 import Type_class from "./Models/Type_class.js";
 import Group from "./Models/Group.js";
 import Discipline from "./Models/Discipline.js";
+import Assigned_discipline from "./Models/Assigned_discipline.js";
 
 const db = {};
 
@@ -24,7 +25,8 @@ const models = [
   Pair_type,
   Type_class,
   Group,
-  Discipline
+  Discipline,
+  Assigned_discipline
 ];
 
 

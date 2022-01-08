@@ -14,7 +14,7 @@ import { GET_ALL_TYPE_CLASSES } from "../Queries/Type_class.js";
 import { GET_ALL_GROUPS } from "../Queries/Group.js";
 import { CREATE_GROUP, UPDATE_GROUP, DELETE_GROUP } from "../Mutations/Group.js";
 import { GET_ALL_DISCIPLINES } from "../Queries/Discipline.js";
-import { CREATE_DISCIPLINE, UPDATE_DISCIPLINE, DELETE_DISCIPLINE } from "../Mutations/Discipline.js";
+import { CREATE_DISCIPLINE, UPDATE_DISCIPLINE, DELETE_DISCIPLINE, ADD_DISCIPLINE_TO_SPECIALTY } from "../Mutations/Discipline.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -54,6 +54,7 @@ const Mutation = new GraphQLObjectType({
     CreateDiscipline: CREATE_DISCIPLINE, 
     UpdateDiscipline: UPDATE_DISCIPLINE, 
     DeleteDiscipline: DELETE_DISCIPLINE,
+    AddDisciplineToSpecialty: ADD_DISCIPLINE_TO_SPECIALTY,
   },
 });
 

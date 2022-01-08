@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 import { SpecialtyType } from "./SpecialtyType.js";
 
 export const DisciplineType = new GraphQLObjectType({
@@ -6,6 +6,6 @@ export const DisciplineType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
-    specialty: { type: SpecialtyType },
+    specialties: { type: new GraphQLList(SpecialtyType) },
   }),
 });

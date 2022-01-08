@@ -5,15 +5,11 @@ import { DisciplineType } from "../TypeDefs/DisciplineType.js";
 export const GET_ALL_DISCIPLINES = {
   type: new GraphQLList(DisciplineType),
   async resolve() {
-    return await db.discipline.findAll({
-      include: {
-        model: db.specialty,
-        required: true,
-        include: {
-          model: db.cathedra,
-          required: true,
-        }
-      },
-    });
+    let disciplines =  await db.discipline.findAll();
+    for(let disc of disciplines){
+      disc.specialties = await disc.getSpecialties();
+      console.log(disc.specialties);
+    }
+      return disciplines;
   },
 };

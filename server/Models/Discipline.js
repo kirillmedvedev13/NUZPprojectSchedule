@@ -10,15 +10,12 @@ export default (Sequelize, DataTypes) => {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      id_specialty:{
-        type: DataTypes.INTEGER,
-        allowNull: false,        
-      }
     });
     
     Discipline.associate = (models) => {
-        Discipline.belongsTo(models.specialty, {
-        foreignKey: "id_specialty",
+        Discipline.belongsToMany(models.specialty, {
+        foreignKey: "id_discipline",
+        through: models.assigned_discipline
       });
     };
     return Discipline;

@@ -14,6 +14,10 @@ export const GET_ALL_ASSIGNED_AUDIENCES = {
         {
           model: db.audience,
           required: true,
+          include: {
+            model: db.type_class,
+            required: true,
+          }
         },
       ],
     });
