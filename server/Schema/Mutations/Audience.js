@@ -48,25 +48,21 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
   type: MessageType,
   args: {
     id_audience: { type: GraphQLID },
-    id_cathedra: {type : GraphQLID}
+    id_cathedra: { type: GraphQLID },
   },
-  async resolve(parent, { id_audience,id_cathedra }) {
-    let aud = await db.audience.findOne(
-      {
-        where: {
-          id: id_audience
-        },
-      }
-    );
-    if(!aud) return { successful: false, message: "Cannot find audience" };
-    let cath = await db.cathedra.findOne(
-      {
-        where: {
-          id: id_cathedra
-        },
-      }
-    );
-    if(!cath) return { successful: false, message: "Cannot find cathedra" };
+  async resolve(parent, { id_audience, id_cathedra }) {
+    let aud = await db.audience.findOne({
+      where: {
+        id: id_audience,
+      },
+    });
+    if (!aud) return { successful: false, message: "Cannot find audience" };
+    let cath = await db.cathedra.findOne({
+      where: {
+        id: id_cathedra,
+      },
+    });
+    if (!cath) return { successful: false, message: "Cannot find cathedra" };
     console.log(aud);
     let res = await aud.addCathedra(cath);
     return res
@@ -78,17 +74,33 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
 export const DELETE_AUDIENCE_FROM_CATHEDRA = {
   type: MessageType,
   args: {
-    id: { type: GraphQLID},
+    id: { type: GraphQLID },
   },
-  async resolve(parent, {id}){
+  async resolve(parent, { id }) {
     let res = await db.assigned_audience.destroy({
       where: {
-        id
-      }
+        id,
+      },
     });
     return res
-    ? { successful: true, message: "Audience was deleted from Cathedra" }
-    : { successful: false, message: "Audience wasn`t deleted from Cathedra" };
-  }
+      ? { successful: true, message: "Audience was deleted from Cathedra" }
+      : { successful: false, message: "Audience wasn`t deleted from Cathedra" };
+  },
 };
-git
+
+export const DELETE_AUDIENCE = {
+  type: MessageType,
+  args: {
+    id: { type: GraphQLID },
+  },
+  async resolve(parent, { id }) {
+    let res = await db.audience.destroy({
+      where: {
+        id,
+      },
+    });
+    return res
+      ? { successful: true, message: "Audience was deleted " }
+      : { successful: false, message: "Audience wasn`t deleted " };
+  },
+};

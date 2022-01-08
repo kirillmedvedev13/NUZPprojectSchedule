@@ -10,7 +10,7 @@ export const GET_ALL_DISCIPLINES = {
         model: db.assigned_discipline,
         include: {
           model: db.specialty,
-        }
+        },
       },
     });
     return res;
