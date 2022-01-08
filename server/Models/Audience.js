@@ -21,16 +21,9 @@ export default (Sequelize, DataTypes) => {
   });
 
   Audience.associate = (models) => {
-    Audience.belongsToMany(models.cathedra, {
-      through: models.assigned_audience,
-      foreignKey: "id_audience",
-    });
-    Audience.hasMany(models.assigned_audience, {
-      foreignKey: "id_audience",
-    });
-    Audience.belongsTo(models.type_class, {
-      foreignKey: "id_type_class",
-    });
+    Audience.hasMany(models.assigned_audience, {foreignKey: "id_audience",});
+    Audience.belongsTo(models.type_class, {foreignKey: "id_type_class",});
+    Audience.belongsToMany(models.cathedra, {foreignKey: "id_audience", through: models.assigned_audience});
   };
 
   return Audience;

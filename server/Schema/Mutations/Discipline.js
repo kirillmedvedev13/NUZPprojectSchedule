@@ -80,7 +80,6 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
     );
     if(!disc) return { successful: false, message: "Cannot find discipline" };
     let res = await disc.addSpecialty(spec);
-    console.log(res);
     return res
       ? { successful: true, message: "Discipline was added to Specialty" }
       : { successful: false, message: "Discipline wasn`t added to Specialty" };
