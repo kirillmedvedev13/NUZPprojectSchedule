@@ -13,10 +13,7 @@ export default (Sequelize, DataTypes) => {
     });
     
     Discipline.associate = (models) => {
-        Discipline.belongsToMany(models.specialty, {
-        foreignKey: "id_discipline",
-        through: models.assigned_discipline
-      });
+      Discipline.hasMany(models.assigned_discipline, {foreignKey: "id_discipline"});
     };
     return Discipline;
   };

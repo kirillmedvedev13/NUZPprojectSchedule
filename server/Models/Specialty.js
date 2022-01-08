@@ -15,10 +15,7 @@ export default (Sequelize, DataTypes) => {
     Specialty.belongsTo(models.cathedra, {
       foreignKey: "id_cathedra",
     });
-    Specialty.belongsToMany(models.discipline, {
-      foreignKey: "id_specialty",
-      through: models.assigned_discipline
-    });
+    Specialty.hasMany(models.assigned_discipline, { foreignKey: "id_specialty"});
   };
   return Specialty;
 };
