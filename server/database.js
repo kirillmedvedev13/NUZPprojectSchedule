@@ -13,7 +13,7 @@ import Group from "./Models/Group.js";
 import Discipline from "./Models/Discipline.js";
 import Assigned_discipline from "./Models/Assigned_discipline.js";
 import Class from "./Models/Class.js";
-
+import Schedule from "./Models/Schedule.js";
 const db = {};
 
 const models = [
@@ -29,6 +29,7 @@ const models = [
   Discipline,
   Assigned_discipline,
   Class,
+  Schedule,
 ];
 
 const Connection = new Sequelize(
