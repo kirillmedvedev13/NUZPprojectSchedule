@@ -5,15 +5,15 @@ import MessageType from "../TypeDefs/MessageType.js";
 export const CREATE_AUDIENCE = {
   type: MessageType,
   args: {
-    name: { type: GraphQLString },
+    audience_number: { type: GraphQLString },
+    type: { type: GraphQLString },
     capacity: { type: GraphQLInt },
-    id_type_class: {type : GraphQLInt}
   },
-  async resolve(parent, { name, capacity, id_type_class}) {
+  async resolve(parent, { audience_number, type, capacity }) {
     let res = await db.audience.create({
-      name,
+      audience_number,
+      type,
       capacity,
-      id_type_class,
     });
     return res
       ? { successful: true, message: "Audience was created" }
@@ -21,33 +21,17 @@ export const CREATE_AUDIENCE = {
   },
 };
 
-export const DELETE_AUDIENCE = {
-  type: MessageType,
-  args: {
-    id: { type: GraphQLID },
-  },
-  async resolve(parent, { id }) {
-    let res = await db.audience.destroy({
-      where: {
-        id,
-      },
-    });
-    return res
-      ? { successful: true, message: "Audience was deleted" }
-      : { successful: false, message: "Audience wasn`t deleted" };
-  },
-};
-
 export const UPDATE_AUDIENCE = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
-    name: { type: GraphQLString },
+    audience_number: { type: GraphQLString },
+    type: { type: GraphQLString },
     capacity: { type: GraphQLInt },
   },
-  async resolve(parent, { id,name,capacity }) {
+  async resolve(parent, { id, audience_number, type, capacity }) {
     let res = await db.audience.update(
-      { name, capacity },
+      { audience_number, type, capacity },
       {
         where: {
           id,
@@ -57,36 +41,5 @@ export const UPDATE_AUDIENCE = {
     return res[0]
       ? { successful: true, message: "Audience was updated" }
       : { successful: false, message: "Audience wasn`t updated" };
-  },
-};
-
-export const ADD_AUDIENCE_TO_CATHEDRA = {
-  type: MessageType,
-  args: {
-    id_audience: { type: GraphQLID },
-    id_cathedra: {type : GraphQLID}
-  },
-  async resolve(parent, { id_audience,id_cathedra }) {
-    let aud = await db.audience.findOne(
-      {
-        where: {
-          id: id_audience
-        },
-      }
-    );
-    if(!aud) return { successful: false, message: "Cannot find audience" };
-    let cath = await db.cathedra.findOne(
-      {
-        where: {
-          id: id_cathedra
-        },
-      }
-    );
-    if(!cath) return { successful: false, message: "Cannot find cathedra" };
-    console.log(aud);
-    let res = await aud.addCathedra(cath);
-    return res
-      ? { successful: true, message: "Audience was added to Cathedra" }
-      : { successful: false, message: "Audience wasn`t added to Cathedra" };
   },
 };
