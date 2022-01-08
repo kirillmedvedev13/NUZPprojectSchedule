@@ -16,12 +16,12 @@ export default (Sequelize, DataTypes) => {
       },
     });
     Assigned_discipline.associate = (models) => {
-    //   Assigned_audience.belongsTo(models.cathedra, {
-    //     foreignKey: "id_cathedra",
-    //   });
-    //   Assigned_audience.belongsTo(models.audience, {
-    //     foreignKey: "id_audience",
-    //   });
+      Assigned_discipline.belongsTo(models.specialty, {
+        foreignKey: "id_specialty",
+      });
+      Assigned_discipline.belongsTo(models.discipline, {
+        foreignKey: "id_discipline",
+      });
     };
   
     return Assigned_discipline;
