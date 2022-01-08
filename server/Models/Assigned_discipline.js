@@ -14,6 +14,10 @@ export default (Sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      semester: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      }
     });
     Assigned_discipline.associate = (models) => {
       Assigned_discipline.belongsTo(models.specialty, {
