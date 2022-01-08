@@ -12,6 +12,7 @@ import Type_class from "./Models/Type_class.js";
 import Group from "./Models/Group.js";
 import Discipline from "./Models/Discipline.js";
 import Assigned_discipline from "./Models/Assigned_discipline.js";
+import Classes from "./Models/Classes.js";
 
 const db = {};
 
@@ -26,9 +27,9 @@ const models = [
   Type_class,
   Group,
   Discipline,
-  Assigned_discipline
+  Assigned_discipline,
+  Classes,
 ];
-
 
 const Connection = new Sequelize(
   config.DB_NAME,
