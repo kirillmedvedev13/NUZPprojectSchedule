@@ -6,12 +6,12 @@ export default (Sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    audience_number: {
-      type: DataTypes.STRING(255),
+    name: {
+      type: DataTypes.STRING(10),
       allowNull: false,
     },
-    type: {
-      type: DataTypes.STRING(11),
+    id_type_class: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     capacity: {
@@ -27,6 +27,9 @@ export default (Sequelize, DataTypes) => {
     });
     Audience.hasMany(models.assigned_audience, {
       foreignKey: "id_audience",
+    });
+    Audience.belongsTo(models.type_class, {
+      foreignKey: "id_type_class",
     });
   };
 

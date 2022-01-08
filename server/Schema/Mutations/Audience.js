@@ -5,15 +5,15 @@ import MessageType from "../TypeDefs/MessageType.js";
 export const CREATE_AUDIENCE = {
   type: MessageType,
   args: {
-    audience_number: { type: GraphQLString },
-    type: { type: GraphQLString },
+    name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
+    id_type_class: {type : GraphQLInt}
   },
-  async resolve(parent, { audience_number, type, capacity }) {
+  async resolve(parent, { name, capacity, id_type_class}) {
     let res = await db.audience.create({
-      audience_number,
-      type,
+      name,
       capacity,
+      id_type_class,
     });
     return res
       ? { successful: true, message: "Audience was created" }
@@ -42,13 +42,13 @@ export const UPDATE_AUDIENCE = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
-    audience_number: { type: GraphQLString },
-    type: { type: GraphQLString },
+    name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
+    id_type_class: {type : GraphQLInt}
   },
-  async resolve(parent, { id, audience_number, type, capacity }) {
+  async resolve(parent, { id,name,capacity, id_type_class, }) {
     let res = await db.audience.update(
-      { audience_number, type, capacity },
+      { name, id_type_class, id_type_class },
       {
         where: {
           id,

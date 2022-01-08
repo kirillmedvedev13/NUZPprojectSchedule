@@ -1,14 +1,13 @@
 import { GraphQLID, GraphQLString, GraphQLObjectType, GraphQLInt, GraphQLList } from "graphql";
-import CathedraType from "./CathedraType.js";
+import Type_classType from "./Type_classType.js";
 
 const AudienceType = new GraphQLObjectType({
   name: "Audience",
   fields: () => ({
     id: { type: GraphQLID },
-    audience_number: { type: GraphQLString },
-    type: { type: GraphQLString },
+    type_class: { type: Type_classType },
+    name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
-    cathedra: {type: CathedraType}
   }),
 });
 
