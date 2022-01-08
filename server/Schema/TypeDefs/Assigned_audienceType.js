@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLObjectType } from "graphql";
+import { GraphQLID, GraphQLInt, GraphQLObjectType } from "graphql";
 import AudienceType from "./AudienceType.js";
 import CathedraType from "./CathedraType.js";
 

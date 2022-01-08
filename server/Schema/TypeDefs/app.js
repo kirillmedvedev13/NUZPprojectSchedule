@@ -2,7 +2,7 @@ import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { GET_ALL_TEACHERS } from "../Queries/Teacher.js";
 import { CREATE_TEACHER,DELETE_TEACHER,UPDATE_TEACHER,} from "../Mutations/Teacher.js";
 import { GET_ALL_AUDIENCES } from "../Queries/Audience.js";
-import {CREATE_AUDIENCE,DELETE_AUDIENCE,UPDATE_AUDIENCE, ADD_AUDIENCE_TO_CATHEDRA} from "../Mutations/Audience.js";
+import {CREATE_AUDIENCE,DELETE_AUDIENCE,UPDATE_AUDIENCE, ADD_AUDIENCE_TO_CATHEDRA, DELETE_AUDIENCE_FROM_CATHEDRA} from "../Mutations/Audience.js";
 import { GET_ALL_CATHEDRAS } from "../Queries/Cathedra.js";
 import {CREATE_CATHEDRA,DELETE_CATHEDRA,UPDATE_CATHEDRA,} from "../Mutations/Cathedra.js";
 import { GET_ALL_SPECIALTY } from "../Queries/Specialty.js";
@@ -12,7 +12,7 @@ import { GET_ALL_TYPE_CLASSES } from "../Queries/Type_class.js";
 import { GET_ALL_GROUPS } from "../Queries/Group.js";
 import { CREATE_GROUP, UPDATE_GROUP, DELETE_GROUP } from "../Mutations/Group.js";
 import { GET_ALL_DISCIPLINES } from "../Queries/Discipline.js";
-import { CREATE_DISCIPLINE, UPDATE_DISCIPLINE, DELETE_DISCIPLINE, ADD_DISCIPLINE_TO_SPECIALTY } from "../Mutations/Discipline.js";
+import { CREATE_DISCIPLINE, UPDATE_DISCIPLINE, DELETE_DISCIPLINE, ADD_DISCIPLINE_TO_SPECIALTY, DELETE_DISCIPLINE_FROM_SPECIALTY } from "../Mutations/Discipline.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -51,6 +51,8 @@ const Mutation = new GraphQLObjectType({
     DeleteDiscipline: DELETE_DISCIPLINE,
     AddDisciplineToSpecialty: ADD_DISCIPLINE_TO_SPECIALTY,
     AddAudienceToCathedra: ADD_AUDIENCE_TO_CATHEDRA,
+    DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
+    DeleteAudienceFromCathedra: DELETE_AUDIENCE_FROM_CATHEDRA,
   },
 });
 

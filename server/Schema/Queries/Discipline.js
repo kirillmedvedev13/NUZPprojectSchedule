@@ -13,7 +13,6 @@ export const GET_ALL_DISCIPLINES = {
         }
       },
     });
-    console.log(res);
     return res;
   },
 };

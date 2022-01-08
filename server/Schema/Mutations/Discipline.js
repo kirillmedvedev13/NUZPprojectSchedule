@@ -28,7 +28,6 @@ export const DELETE_DISCIPLINE = {
         id,
       },
     });
-    console.log(res);
     return res
       ? { successful: true, message: "Discipline was deleted" }
       : { successful: false, message: "Discipline wasn`t deleted" };
@@ -60,9 +59,10 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
   type: MessageType,
   args: {
     id_discipline: { type: GraphQLID },
-    id_specialty: {type : GraphQLID}
+    id_specialty: {type : GraphQLID},
+    semester: {type: GraphQLInt}
   },
-  async resolve(parent, { id_discipline,id_specialty }) {
+  async resolve(parent, { id_discipline,id_specialty, semester }) {
     let spec = await db.specialty.findOne(
       {
         where: {
@@ -79,9 +79,26 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
       }
     );
     if(!disc) return { successful: false, message: "Cannot find discipline" };
-    let res = await disc.addSpecialty(spec);
+    let res = await disc.addSpecialty(spec, {through: {semester}});
     return res
       ? { successful: true, message: "Discipline was added to Specialty" }
       : { successful: false, message: "Discipline wasn`t added to Specialty" };
   },
+};
+
+export const DELETE_DISCIPLINE_FROM_SPECIALTY = {
+  type: MessageType,
+  args: {
+    id: { type: GraphQLID},
+  },
+  async resolve(parent, {id}){
+    let res = await db.assigned_discipline.destroy({
+      where: {
+        id
+      }
+    });
+    return res
+    ? { successful: true, message: "Discipline was deleted from Specialty" }
+    : { successful: false, message: "Discipline wasn`t deleted from Specialty" };
+  }
 };

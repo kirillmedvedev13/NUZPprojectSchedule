@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLObjectType } from "graphql";
+import { GraphQLID, GraphQLObjectType, GraphQLInt } from "graphql";
 import { DisciplineType } from "./DisciplineType.js";
 import { SpecialtyType } from "./SpecialtyType.js";
 
@@ -8,6 +8,7 @@ const Assigned_disciplineType = new GraphQLObjectType({
     id: { type: GraphQLID },
     discipline: { type: DisciplineType },
     specialty: { type: SpecialtyType },
+    semester: { type: GraphQLInt }
   }),
 });
 

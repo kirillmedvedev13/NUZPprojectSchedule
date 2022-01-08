@@ -90,3 +90,20 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
       : { successful: false, message: "Audience wasn`t added to Cathedra" };
   },
 };
+
+export const DELETE_AUDIENCE_FROM_CATHEDRA = {
+  type: MessageType,
+  args: {
+    id: { type: GraphQLID},
+  },
+  async resolve(parent, {id}){
+    let res = await db.assigned_audience.destroy({
+      where: {
+        id
+      }
+    });
+    return res
+    ? { successful: true, message: "Audience was deleted from Cathedra" }
+    : { successful: false, message: "Audience wasn`t deleted from Cathedra" };
+  }
+};
