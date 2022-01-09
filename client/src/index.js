@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ApolloClient,InMemoryCache,ApolloProvider,} from "@apollo/client";
 import Schedule from "./Components/Schedule/Schedule";
 import Error from "./Components/Error/Error";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const client = new ApolloClient({
   uri: 'https://localhost:3002/graphql',

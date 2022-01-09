@@ -1,10 +1,10 @@
-import { Component, Fragment } from "react";
-import NavBar from "./Components/Navbar/Navbar";
+import { Fragment } from "react";
+import NaviBar from "./Components/Navbar/Navibar";
 
-const App = ({children}) =>  (
+const App = ({element}) =>  (
   <Fragment>
-    <NavBar />
-    {children}
+    <NaviBar />
+    {element}
   </Fragment>
 )
 
