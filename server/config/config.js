@@ -1,5 +1,5 @@
 const config = {
-  PORT: "3000",
+  PORT: "3002",
   HOST: "nuzp-shedule.mysql.database.azure.com",
   DB_NAME: "ScheduleDB",
   DB_USER: "nuzp_admin",
