@@ -1,11 +1,11 @@
 import React from "react"
 
-class Schedule extends React.Component(){
+class Schedule extends React.Component{
     render(){
         return(
-            <>
+            <div>
                 Scedule
-            </>
+            </div>
         )
     }
 }

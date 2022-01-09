@@ -1,12 +1,11 @@
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import NavBar from "./Components/Navbar/Navbar";
 
-class App extends Component {
-  render() {
-    return (
-        <NavBar></NavBar>
-    );
-  }
-}
+const App = ({children}) =>  (
+  <Fragment>
+    <NavBar />
+    {children}
+  </Fragment>
+)
 
 export default App;

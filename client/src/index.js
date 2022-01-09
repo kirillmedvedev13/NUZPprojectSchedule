@@ -18,11 +18,11 @@ ReactDOM.render(
           <BrowserRouter>
           <App>
             <Routes>
-              <Route exact path='/' component={Schedule} />
-              <Route path='/schedule' component={Schedule} />
-              <Route path='*' component={Error} />
+              <Route exact path='/' element={<Schedule></Schedule>} />
+              <Route path='/schedule' element={<Schedule></Schedule>} />
+              <Route path='*' element={<Error></Error>} />
             </Routes>
-            </App>
+          </App>
         </BrowserRouter>
       </ApolloProvider>
   </React.StrictMode>,
