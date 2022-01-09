@@ -8,8 +8,4 @@ export default styled.div`
             color: white;
         }
     }
-    button{
-        float: right;
-        margin: 5px;
-    }
 `

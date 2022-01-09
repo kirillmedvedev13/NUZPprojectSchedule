@@ -11,8 +11,8 @@ class NaviBar extends React.Component{
                     <Container fluid>
                         <Navbar.Brand>NUZP-Розклад</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse className="justify-content-between">
-                        <Nav className="mr-auto ">
+                        <Navbar.Collapse className="justify-content-between ">
+                        <Nav className="m-0 align-items-center">
                             <Nav.Link><Link to="/schedules">Розклад</Link></Nav.Link>
                             <Nav.Link><Link to="/cathedras">Кафедри</Link></Nav.Link>
                             <Nav.Link><Link to="/audiences">Аудиторії</Link></Nav.Link>
@@ -22,9 +22,9 @@ class NaviBar extends React.Component{
                             <Nav.Link><Link to="/groups">Групи</Link></Nav.Link>
                             <Nav.Link><Link to="/teachers">Вчителі</Link></Nav.Link>
                         </Nav> 
-                        <Nav className="my-2">
-                            <Button variant="success">Увійти</Button>
-                            <Button variant="secondary">Зареєструватися</Button>
+                        <Nav className="mx-2 ">
+                            <Button className="mx-1  my-1 align-self-center" variant="success">Увійти</Button>
+                            <Button className="mx-1  my-1 align-self-center" variant="secondary">Зареєструватися</Button>
                         </Nav> 
                         </Navbar.Collapse>
                     </Container>
