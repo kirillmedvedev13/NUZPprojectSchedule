@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ApolloClient,InMemoryCache,ApolloProvider,} from "@apollo/client";
+import { ApolloClient,InMemoryCache,ApolloProvider} from "@apollo/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Schedule from "./Components/Schedule/Schedule";
 import Error from "./Components/Error/Error";
@@ -15,9 +15,8 @@ import Class from "./Components/Class/Class";
 import Group from "./Components/Group/Group";
 import Teacher from "./Components/Teacher/Teacher";
 
-
 const client = new ApolloClient({
-  uri: 'https://localhost:3002/graphql',
+  uri: 'http://localhost:3002/graphql',
   cache: new InMemoryCache()
 });
 

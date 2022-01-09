@@ -9,13 +9,19 @@ import bodyParser from "body-parser";
 const main = async () => {
   const app = express();
 
+  let corsOptions = {
+    origin: "*",
+    credentials: true ,
+  };
+  app.use(cors(corsOptions));
+
   await db.Connection.sync({})
     .then((result) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use(cors());
+
 
   app.use(
     "/graphql",

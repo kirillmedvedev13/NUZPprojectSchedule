@@ -1,10 +1,10 @@
 import React from "react"
-
+import CathedrasTable from "./CathedrasTable"
 class Cathedra extends React.Component{
     render(){
         return(
             <div>
-                Cathedra
+                <CathedrasTable />
             </div>
         )
     }
