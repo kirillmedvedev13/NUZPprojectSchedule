@@ -41,9 +41,14 @@ import {
   ADD_DISCIPLINE_TO_SPECIALTY,
   DELETE_DISCIPLINE_FROM_SPECIALTY,
 } from "../Mutations/Discipline.js";
-import { CREATE_CLASS } from "../Mutations/Class.js";
+import { ADD_TEACHER_TO_CLASS, CREATE_CLASS } from "../Mutations/Class.js";
 import { GET_ALL_CLASSES } from "../Queries/Class.js";
 import { GET_ALL_SCHEDULES } from "../Queries/Schedule.js";
+import {
+  ADD_REC_AUD_TO_CLASS,
+  DELETE_CLASS_FROM_TEACHER,
+  DELETE_CLASS_FROM_AUDIENCE,
+} from "../Mutations/Class.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -87,6 +92,10 @@ const Mutation = new GraphQLObjectType({
     DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
     DeleteAudienceFromCathedra: DELETE_AUDIENCE_FROM_CATHEDRA,
     CreateClass: CREATE_CLASS,
+    AddTeacherToClass: ADD_TEACHER_TO_CLASS,
+    AddRecAudToClass: ADD_REC_AUD_TO_CLASS,
+    DeleteClassFromTeacher: DELETE_CLASS_FROM_TEACHER,
+    DeleteClassFromAudience: DELETE_CLASS_FROM_AUDIENCE,
   },
 });
 

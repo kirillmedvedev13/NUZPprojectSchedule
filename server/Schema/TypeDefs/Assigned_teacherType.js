@@ -1,9 +1,9 @@
 import { GraphQLID, GraphQLObjectType, GraphQLInt } from "graphql";
-import { ClassType } from "./ClassType.js";
-import { TeacherType } from "./TeacherType.js";
+import ClassType from "./ClassType.js";
+import TeacherType from "./TeacherType.js";
 
-const Assigned_disciplineType = new GraphQLObjectType({
-  name: "Assigned_discipline",
+const Assigned_teacherType = new GraphQLObjectType({
+  name: "Assigned_teacher",
   fields: () => ({
     id: { type: GraphQLID },
     class: { type: ClassType },
@@ -11,4 +11,4 @@ const Assigned_disciplineType = new GraphQLObjectType({
   }),
 });
 
-export default Assigned_disciplineType;
+export default Assigned_teacherType;
