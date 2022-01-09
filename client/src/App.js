@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import NaviBar from "./Components/Navbar/Navibar";
 
-const App = ({element}) =>  (
+const App = ({children}) =>  (
   <Fragment>
     <NaviBar />
-    {element}
+    {children}
   </Fragment>
 )
 
