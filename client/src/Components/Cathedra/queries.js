@@ -1,6 +1,6 @@
 import {gql} from "@apollo/client"
 
-export const cathedrasQuery = gql`
+export const GetAllCathedras = gql`
     query cathedrasQuery{ 
       GetAllCathedras{
               id
