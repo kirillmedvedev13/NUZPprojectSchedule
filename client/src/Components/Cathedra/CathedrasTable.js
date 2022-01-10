@@ -1,27 +1,52 @@
 import React from "react"
 import {Table} from "react-bootstrap";
-import ExchangeCathedras from "./ExchangeCathedras.js";
 import ModalCathedra from "./ModalCathedra.js";
+import {XCircle, PencilSquare} from "react-bootstrap-icons";
+import withHocs from "./CathedrasTableHoc.js"
+import CathedrasSearch from "./CathedrasSearch.js"
 
 class CathedrasTable extends React.Component{
     
     state = {
-        showModal: false,
+        openModal: false,
         name: "",
-        id: 0,
     }
 
-    handleOpenModal = (id,name) =>{
-        this.setState({showModal: true, id, name})
+    handleSearchCathedra = (event) =>{
+        this.setState({name: event.target.value},() => {
+            const {data} = this.props;
+            const {name} = this.state;
+            data.fetchMore({
+                variables: {name},
+                updateQuery: (previousResult, {fetchMoreResult}) => {
+                    return {
+                        GetAllCathedras: [...fetchMoreResult.GetAllCathedras]
+                    }
+                }
+            }
+            )
+        }
+        );
     }
 
-    handleSaveModal = (new_name) =>{
-        this.setState({showModal: false, id: 0, name: ""})
+    handleOpenModal = () => {this.setState({openModal: true})};
+    handleCloseModal = () => {this.setState({openModal: false})};
+
+    handleClick = ({currentTarget}, data) => {
+        this.setState({
+            data,
+        })
     }
+
 
     render(){
+        const {name} = this.state;
+        const {data = {}} = this.props;
+        const {GetAllCathedras = []} = data;
+        
         return(
             <div className="container-fluid w-100">
+                <CathedrasSearch handleSearch={this.handleSearchCathedra} name={name}></CathedrasSearch>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -29,13 +54,24 @@ class CathedrasTable extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        <ExchangeCathedras handleOpenModal={this.handleOpenModal}/>
+                    {
+                        GetAllCathedras.map(cathedra => {
+                        return(
+                            <tr key={cathedra.id} >
+                                <td> {cathedra.name} </td>
+                                <td className="col-2">
+                                    <PencilSquare className="mx-1" type="button"  />
+                                    <XCircle className="mx-1" type="button"  />
+                                </td>
+                            </tr>
+                        )
+                        })
+                    }
                     </tbody>
                 </Table>
-                <ModalCathedra showModal={this.state.showModal} handleSave={this.handleSaveModal} id={this.state.id} name={this.state.name}/>
             </div>
         );
     }
 }
 
-export default CathedrasTable;
+export default withHocs(CathedrasTable);
