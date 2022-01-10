@@ -1,6 +1,5 @@
 import React from "react"
 import {Table} from "react-bootstrap";
-import ModalCathedra from "./ModalCathedra.js";
 import {XCircle, PencilSquare} from "react-bootstrap-icons";
 import withHocs from "./CathedrasTableHoc.js"
 import CathedrasSearch from "./CathedrasSearch.js"
@@ -8,7 +7,7 @@ import CathedrasSearch from "./CathedrasSearch.js"
 class CathedrasTable extends React.Component{
     
     state = {
-        openModal: false,
+        openDialog: false,
         name: "",
     }
 
@@ -29,15 +28,17 @@ class CathedrasTable extends React.Component{
         );
     }
 
-    handleOpenModal = () => {this.setState({openModal: true})};
-    handleCloseModal = () => {this.setState({openModal: false})};
+    handleDialogOpen = () => { this.setState({ openDialog: true }); };
+    handleDialogClose = () => { this.setState({ openDialog: false }); };
 
-    handleClick = ({currentTarget}, data) => {
-        this.setState({
-            data,
-        })
-    }
 
+    handleEdit = (data) => (event) => {
+        this.props.handleOpenModal(data);
+    };
+    
+    handleDelete = () => {
+        this.handleDialogOpen();
+    };
 
     render(){
         const {name} = this.state;
@@ -60,7 +61,7 @@ class CathedrasTable extends React.Component{
                             <tr key={cathedra.id} >
                                 <td> {cathedra.name} </td>
                                 <td className="col-2">
-                                    <PencilSquare className="mx-1" type="button"  />
+                                    <PencilSquare className="mx-1" type="button" onClick={this.handleEdit(cathedra)} />
                                     <XCircle className="mx-1" type="button"  />
                                 </td>
                             </tr>

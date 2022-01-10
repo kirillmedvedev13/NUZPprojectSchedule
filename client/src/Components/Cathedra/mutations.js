@@ -1,7 +1,7 @@
 import {gql} from "@apollo/client"
 
 export const DELETE_CATHEDRA = gql`
-mutation ($id: ID!){
+mutation DeleteCathedra($id: ID!){
   DeleteCathedra(id: $id){
 	  message
     successful
@@ -9,10 +9,18 @@ mutation ($id: ID!){
 }
 `
 export const UPDATE_CATHEDRA = gql`
-  mutation ($id: ID!, $name: String!){
+  mutation UpdateCathedra($id: ID!, $name: String!){
   UpdateCathedra(id: $id, name: $name){
     message
     successful
   }
 }
 `
+export const CREATE_CATHEDRA = gql`
+    mutation CreateCathedra($name: String){ 
+      CreateCathedra(name: $name){
+              message
+              successful
+            }
+    }
+    `
