@@ -8,3 +8,11 @@ mutation ($id: ID!){
   }
 }
 `
+export const UPDATE_CATHEDRA = gql`
+  mutation ($id: ID!, $name: String!){
+  UpdateCathedra(id: $id, name: $name){
+    message
+    successful
+  }
+}
+`
