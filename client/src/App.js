@@ -30,7 +30,7 @@ class App extends React.Component {
           open={this.state.openLogin}
           handleCloseModal={this.handleCloseModalLogin}
         />
-        <NaviBar />
+        <NaviBar open={this.handleOpenModalLogin} />
         {this.props.children}
       </Fragment>
     );

@@ -12,6 +12,7 @@ class ModalAuthorization extends React.Component {
     handleCloseModal();
   };
   render() {
+    const { open } = this.props;
     return (
       <>
         <Modal size="lg" show={open} onHide={this.handleClose}>

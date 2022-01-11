@@ -1,4 +1,4 @@
-import gql from "@appollo/client";
+import { gql } from "@apollo/client";
 export const GetUser = gql`
 query GetUser($email:String,$password:String){
     GetUser(email:$email,password:$password){
