@@ -1,24 +1,32 @@
 import React from "react";
 import { Button, Modal, Form, Row } from "react-bootstrap";
-import withHocs from "./ModalCathedraHoc.js"
-import withHocsCathedras from "./CathedrasTableHoc"
+import withHocs from "./ModalCathedraHoc.js";
+import withHocsCathedras from "./CathedrasTableHoc";
 
 class ModalCathedra extends React.Component {
-
-  handleClose = () => { this.props.handleCloseModal(); };
+  handleClose = () => {
+    this.props.handleCloseModal();
+  };
 
   handleSave = () => {
-    const { filters, selectedValue, handleCloseModal, CreateCathedra, UpdateCathedra, data ,fetchCathedras} = this.props;
+    const {
+      filters,
+      selectedValue,
+      handleCloseModal,
+      CreateCathedra,
+      UpdateCathedra,
+      data,
+      fetchCathedras,
+    } = this.props;
     const { id, name } = selectedValue;
-    if(id) {
+    if (id) {
       UpdateCathedra({ id, name }).then(() => {
-        fetchCathedras(data,filters);
-      })
-    }
-    else{ 
-      CreateCathedra({name }).then(() => {
-        fetchCathedras(data,filters);
-      })
+        fetchCathedras(data, filters);
+      });
+    } else {
+      CreateCathedra({ name }).then(() => {
+        fetchCathedras(data, filters);
+      });
     }
     handleCloseModal();
   };
@@ -35,9 +43,14 @@ class ModalCathedra extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Group as={Row} className="my-2 mx-2" >
+              <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-auto">Назва кафедри</Form.Label>
-                <Form.Control className="col" type="text" value={name} onChange={handleChange('name')} />
+                <Form.Control
+                  className="col"
+                  type="text"
+                  value={name}
+                  onChange={handleChange("name")}
+                />
               </Form.Group>
             </Form>
           </Modal.Body>
@@ -54,6 +67,5 @@ class ModalCathedra extends React.Component {
     );
   }
 }
-
 
 export default withHocsCathedras(withHocs(ModalCathedra));
