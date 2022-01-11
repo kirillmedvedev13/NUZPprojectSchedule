@@ -1,18 +1,36 @@
 import React from "react"
 import CathedrasTable from "./CathedrasTable"
 import ModalCathedra from "./ModalCathedra";
+import CathedraDialog from "./CathedraDialog";
 
 class Cathedra extends React.Component{
     state = {
         openModal: false,
+        openDialog: false,
         name: '',
     }
 
-    handleOpenModal = (data) => {
-        console.log(data);
+    handleOpenDialog = (data, filters) => { 
+        this.setState({ 
+            openDialog: true ,
+            ...data,
+            filters
+        }); 
+    };
+
+    handleCloseDialog = () => { 
+        this.setState({ 
+            openDialog: false ,
+            name: '', 
+            id: null, 
+        }); 
+    };
+
+    handleOpenModal = (data, filters) => {
         this.setState({
           openModal: true,
           ...data,
+          filters
         });
     };
 
@@ -30,14 +48,24 @@ class Cathedra extends React.Component{
         }); 
     };
 
+    fetchCathedras = (data, variables) => {
+        data.fetchMore({
+            variables,
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                return {
+                    GetAllCathedras: [...fetchMoreResult.GetAllCathedras]
+                }
+            }
+        })
+    }
 
     render(){
-        const { name, id, openModal } = this.state;
-
+        const { name, id, openModal, filters, openDialog} = this.state;
         return(
             <div>
-                <ModalCathedra handleChange={this.handleChange} selectedValue={{ name, id }} open={openModal} handleCloseModal={this.handleCloseModal}/>
-                <CathedrasTable handleOpenModal={this.handleOpenModal} onClose={this.handleCloseModal}/>
+                <CathedraDialog fetchCathedras={this.fetchCathedras} filters={filters} selectedValue={{id, name}} open={openDialog} handleCloseDialog={this.handleCloseDialog}></CathedraDialog>
+                <ModalCathedra fetchCathedras={this.fetchCathedras} handleChange={this.handleChange} filters={filters} selectedValue={{ name, id }} open={openModal} handleCloseModal={this.handleCloseModal}/>
+                <CathedrasTable handleOpenDialog={this.handleOpenDialog} handleOpenModal={this.handleOpenModal} fetchCathedras={this.fetchCathedras}/>
             </div>
         )
     }
