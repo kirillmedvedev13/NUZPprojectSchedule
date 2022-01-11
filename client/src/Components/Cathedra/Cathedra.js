@@ -8,11 +8,11 @@ class Cathedra extends React.Component{
         name: '',
     }
 
-    handleOpenModal = (data) => {
-        console.log(data);
+    handleOpenModal = (data, filters) => {
         this.setState({
           openModal: true,
           ...data,
+          filters
         });
     };
 
@@ -32,12 +32,11 @@ class Cathedra extends React.Component{
 
 
     render(){
-        const { name, id, openModal } = this.state;
-
+        const { name, id, openModal, filters} = this.state;
         return(
             <div>
-                <ModalCathedra handleChange={this.handleChange} selectedValue={{ name, id }} open={openModal} handleCloseModal={this.handleCloseModal}/>
-                <CathedrasTable handleOpenModal={this.handleOpenModal} onClose={this.handleCloseModal}/>
+                <ModalCathedra handleChange={this.handleChange} filters={filters} selectedValue={{ name, id }} open={openModal} handleCloseModal={this.handleCloseModal}/>
+                <CathedrasTable handleOpenModal={this.handleOpenModal} />
             </div>
         )
     }
