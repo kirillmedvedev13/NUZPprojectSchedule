@@ -7,28 +7,31 @@ class App extends React.Component {
   state = {
     openLogin: false,
     userID: null,
-    jwtToken: null,
   };
-  handleOpenModalLogin = (data) => {
+
+  loginSuccess = (data) => {
     this.setState({
-      openLogin: true,
       ...data,
     });
   };
-  handleCloseModalLogin = (data) => {
+  handleOpenModalLogin = () => {
+    this.setState({
+      openLogin: true,
+    });
+  };
+  handleCloseModalLogin = () => {
     this.setState({
       openLogin: false,
       userID: null,
-      jwtToken: null,
     });
   };
   render() {
-    console.log(this);
     return (
       <Fragment>
         <ModalAuthorization
           open={this.state.openLogin}
           handleCloseModal={this.handleCloseModalLogin}
+          login={this.loginSuccess}
         />
         <NaviBar open={this.handleOpenModalLogin} />
         {this.props.children}

@@ -3,13 +3,39 @@ import { Button, Modal, Form, Row } from "react-bootstrap";
 import withHocs from "./ModalAuthorizationHoc.js";
 
 class ModalAuthorization extends React.Component {
-  handleClose = () => {
-    this.props.handleCloseModalLogin();
+  state = {
+    email: null,
+    password: null,
   };
-  handleLogin = () => {
-    const { handleCloseModal, data } = this.props;
+  handleChange = (event) => {
+    this.setState({
+      [event.target.type]: event.target.value,
+    });
+  };
+  handleClose = () => {
+    this.props.handleCloseModal();
+  };
 
-    handleCloseModal();
+  handleLogin = () => {
+    const { email, password } = this.state;
+    const { handleCloseModal, data, login } = this.props;
+    data
+      .fetchMore({
+        variables: { email, password },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          return {
+            GetUser: fetchMoreResult.GetUser,
+          };
+        },
+      })
+      .then((res) => {
+        if (!res.data.GetUser.isAuth.successfull) {
+          alert(res.data.GetUser.isAuth.message);
+        } else {
+          login({ userID: res.GetUser.id });
+          this.handleClose();
+        }
+      });
   };
   render() {
     const { open } = this.props;
@@ -23,7 +49,11 @@ class ModalAuthorization extends React.Component {
             <Form>
               <Form.Group as={Row} className="my-2 mx-2" controlId="formEmail">
                 <Form.Label className="col-auto">Email address: </Form.Label>
-                <Form.Control className="col" type="email" />
+                <Form.Control
+                  className="col"
+                  type="email"
+                  onChange={this.handleChange}
+                />
               </Form.Group>
               <Form.Group
                 as={Row}
@@ -31,7 +61,11 @@ class ModalAuthorization extends React.Component {
                 controlId="formPassword"
               >
                 <Form.Label className="col-auto">Password: </Form.Label>
-                <Form.Control className="col" type="password" />
+                <Form.Control
+                  className="col"
+                  type="password"
+                  onChange={this.handleChange}
+                />
               </Form.Group>
             </Form>
           </Modal.Body>
