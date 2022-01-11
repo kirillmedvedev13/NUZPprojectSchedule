@@ -1,42 +1,40 @@
 import React from "react";
-import { Button, Modal, Form, Row } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import withHocs from "./CathedraDialogHoc"
+import withHocsCathedras from "./CathedrasTableHoc"
 
  class CathedraDialog extends React.Component{
 
-  handleClose = () => { this.props.handleCloseModal(); };
+  handleClose = () => { 
+    this.props.handleCloseDialog(); 
+  };
 
-  handleSave = () => {
-    const { selectedValue,handleCloseModal, CreateCathedra, UpdateCathedra } = this.props;
-    const { id, name } = selectedValue;
-    id ? UpdateCathedra({ id, name }) : CreateCathedra({ name });
-    handleCloseModal();
+  handleConfirm = () => {
+    const { selectedValue,handleCloseDialog, DeleteCathedra, filters, fetchCathedras, data} = this.props;
+    const { id } = selectedValue;
+    if(id)
+      DeleteCathedra({ id }).then(() => {
+        fetchCathedras(data,filters);
+      })
+    handleCloseDialog();
   };
 
     render(){
-      const { open, handleChange, selectedValue = {} } = this.props;
-      const { id, name } = selectedValue;
-
+    const { open, selectedValue = {}} = this.props;
+    const {name} = selectedValue;
+    
     return (
         <>
           <Modal size="lg" show={open} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Редагування кафедри</Modal.Title>
+              <Modal.Title>Видалити кафедру {name}?</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group as={Row} className="my-2 mx-2" >
-                  <Form.Label className="col-auto">Назва кафедри</Form.Label>
-                  <Form.Control className="col" type="text" value={name} onChange={handleChange('name')}/>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.handleClose}>
-                Закрити
+                Відмінити
               </Button>
-              <Button variant="primary" onClick={this.handleSave}>
-                {id ? "Оновити кафедру" : "Додати кафедру"}
+              <Button variant="primary" onClick={this.handleConfirm}>
+                Видалити
               </Button>
             </Modal.Footer>
           </Modal>
@@ -45,5 +43,4 @@ import withHocs from "./CathedraDialogHoc"
     }
 }
 
-
-export default withHocs(CathedraDialog);
+export default withHocsCathedras(withHocs(CathedraDialog));

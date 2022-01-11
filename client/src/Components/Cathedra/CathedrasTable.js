@@ -15,21 +15,12 @@ class CathedrasTable extends React.Component {
 
     handleSearchCathedra = (event) => {
         this.setState({ filters : {name: event.target.value} });
-        const { data } = this.props;
+        const { data, fetchCathedras} = this.props;
         if (event.target.value.length > 2 || event.target.value.length === 0) {
-            data.fetchMore({
-                variables: { name: event.target.value },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    return {
-                        GetAllCathedras: [...fetchMoreResult.GetAllCathedras]
-                    }
-                }
-            })
+            fetchCathedras(data,{name: event.target.value});
         }
     }
 
-    handleDialogOpen = () => { this.setState({ openDialog: true }); };
-    handleDialogClose = () => { this.setState({ openDialog: false }); };
 
     handleCreate = () => {
         this.props.handleOpenModal(null, this.state.filters);
@@ -39,15 +30,14 @@ class CathedrasTable extends React.Component {
         this.props.handleOpenModal(data, this.state.filters);
     };
 
-    handleDelete = () => {
-        this.handleDialogOpen();
+    handleDelete = (data) => (event) => {
+        this.props.handleOpenDialog(data, this.state.filters);
     };
 
     render() {
         const { name } = this.state;
         const { data = {} } = this.props;
         const { GetAllCathedras = [] } = data;
-
 
         return (
             <div className="container-fluid w-100">
@@ -67,7 +57,7 @@ class CathedrasTable extends React.Component {
                                         <td> {cathedra.name} </td>
                                         <td className="col-2">
                                             <PencilSquare className="mx-1" type="button" onClick={this.handleEdit(cathedra)} />
-                                            <XCircle className="mx-1" type="button" onClick={this.handleDelete} />
+                                            <XCircle className="mx-1" type="button" onClick={this.handleDelete(cathedra)} />
                                         </td>
                                     </tr>
                                 )

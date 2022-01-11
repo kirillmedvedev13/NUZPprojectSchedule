@@ -8,18 +8,18 @@ class ModalCathedra extends React.Component {
   handleClose = () => { this.props.handleCloseModal(); };
 
   handleSave = () => {
-    const { filters, selectedValue, handleCloseModal, CreateCathedra, UpdateCathedra, data } = this.props;
+    const { filters, selectedValue, handleCloseModal, CreateCathedra, UpdateCathedra, data ,fetchCathedras} = this.props;
     const { id, name } = selectedValue;
-    const query = id ? UpdateCathedra : CreateCathedra;
-    query({ id, name }, filters).then(() => data.fetchMore({
-      variables: filters,
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        return {
-          GetAllCathedras: [...fetchMoreResult.GetAllCathedras]
-        }
-      }
-    })
-    );
+    if(id) {
+      UpdateCathedra({ id, name }).then(() => {
+        fetchCathedras(data,filters);
+      })
+    }
+    else{ 
+      CreateCathedra({name }).then(() => {
+        fetchCathedras(data,filters);
+      })
+    }
     handleCloseModal();
   };
 
