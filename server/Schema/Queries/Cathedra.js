@@ -9,12 +9,17 @@ export const GET_ALL_CATHEDRAS = {
     name: { type: GraphQLString },
   },
   async resolve(parent, {name}) {
-    return await db.cathedra.findAll({
+    const arr = name.split(" ");
+    arr.map((word, index) => {
+      arr[index] = `%${word}%`
+    }); 
+    const res =  await db.cathedra.findAll({
       where: {
         name: {
-          [Op.like]: `%${name}%`
+          [Op.like]: [arr]
         }
       }
     });
+    return res;
   },
 };

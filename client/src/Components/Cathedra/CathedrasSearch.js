@@ -8,12 +8,12 @@ class CathedrasSearch extends React.Component {
       const { handleSearch, name} = this.props;
   
       return (
-        <Form className="my-2 mx-2">
+        <Form className="my-2 mx-2" onSubmit={(e) => e.preventDefault()}>
             <Form.Group as={Row} >
                 <Form.Label column className="col-auto justify-content-center"><Search className="align-self-center"></Search></Form.Label>
                 <Col className="px-0"><Form.Control onChange={handleSearch} value={name}  placeholder="Назва кафедри" /></Col>
             </Form.Group>
-        </Form>
+        </Form >
       );
     }
   };
