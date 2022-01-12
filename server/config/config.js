@@ -4,7 +4,8 @@ const config = {
   DB_NAME: "ScheduleDB",
   DB_USER: "nuzp_admin",
   DB_PASS: "Morality351973",
-  jwtSecret: "bnV6cCBzY2hlZHVsZSBwcm9qZWN0IGkgbG92ZSB0cw==",
+  jwtAccessSecret: "bnV6cCBzY2hlZHVsZSBwcm9qZWN0IGkgbG92ZSB0cw==",
+  jwtRefreshSecret: "bnV6cCBzY2hlZyfky547uth;r0IGkgbG92ZSB0cw+++",
 };
 
 export default config;
