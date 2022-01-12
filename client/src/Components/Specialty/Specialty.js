@@ -3,6 +3,7 @@ import TemplateSearch from "../Template/TemplateSearch"
 import TemplateTable from "../Template/TemplateTable";
 import { GetAllSpecialties } from "./queries";
 import { GetAllCathedras } from "../Cathedra/queries"
+import update from 'react-addons-update'
 
 class Specialty extends React.Component {
     state = {
@@ -13,9 +14,10 @@ class Specialty extends React.Component {
     }
 
     handleChangeFilters = (name, value) => {
-        const newfilters = this.state.filters;
-        newfilters[name] = value;
-        this.setState({filters: newfilters});
+        this.setState(PrevState => ({
+            filters: update(PrevState.filters, { $merge: { [name]: value } })
+        })
+        )
     }
 
     render() {
