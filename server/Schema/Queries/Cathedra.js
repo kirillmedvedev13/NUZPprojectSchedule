@@ -9,16 +9,25 @@ export const GET_ALL_CATHEDRAS = {
     name: { type: GraphQLString },
   },
   async resolve(parent, {name}) {
-    const arr = name.split(" ");
-    arr.map((word, index) => {
-      arr[index] = `%${word}%`
-    }); 
-    const res =  await db.cathedra.findAll({
-      where: {
-        name: {
-          [Op.like]: [arr]
+    let isFilters = {}
+    if(name){
+      const arr = name.split(" ");
+      arr.map((word, index) => {
+        if (index != arr.length - 1) {
+          str += `${word}|`
         }
-      }
+        else {
+          str += word
+        }
+        isFilters = {
+            name: {
+              [Op.regexp]: str
+            }
+          }
+      });
+  }
+    const res =  await db.cathedra.findAll({
+      where: isFilters
     });
     return res;
   },

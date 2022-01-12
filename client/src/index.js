@@ -17,19 +17,7 @@ import Teacher from "./Components/Teacher/Teacher";
 
 const client = new ApolloClient({
   uri: 'http://localhost:3002/graphql',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          GetAllCathedras: {
-            merge(existing=[],incoming){
-              return [...incoming];
-            }
-          }
-        }
-        },
-    },
-  })
+  cache: new InMemoryCache()
 });
 
 ReactDOM.render(
