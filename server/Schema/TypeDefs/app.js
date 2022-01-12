@@ -49,7 +49,7 @@ import {
   DELETE_CLASS_FROM_TEACHER,
   DELETE_CLASS_FROM_AUDIENCE,
 } from "../Mutations/Class.js";
-import { GET_USER } from "../Queries/User.js";
+import { LOGIN_USER, LOGOUT_USER, RELOGIN_USER } from "../Mutations/User.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -64,7 +64,6 @@ const RootQuery = new GraphQLObjectType({
     GetAllDisciplines: GET_ALL_DISCIPLINES,
     GetAllClasses: GET_ALL_CLASSES,
     GetAllSchedules: GET_ALL_SCHEDULES,
-    GetUser: GET_USER,
   },
 });
 
@@ -98,6 +97,9 @@ const Mutation = new GraphQLObjectType({
     AddRecAudToClass: ADD_REC_AUD_TO_CLASS,
     DeleteClassFromTeacher: DELETE_CLASS_FROM_TEACHER,
     DeleteClassFromAudience: DELETE_CLASS_FROM_AUDIENCE,
+    LoginUser: LOGIN_USER,
+    LogoutUser: LOGOUT_USER,
+    ReloginUser: RELOGIN_USER,
   },
 });
 

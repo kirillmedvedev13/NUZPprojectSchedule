@@ -15,7 +15,7 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    jwtToken: {
+    refreshToken: {
       type: DataTypes.STRING,
     },
   });
