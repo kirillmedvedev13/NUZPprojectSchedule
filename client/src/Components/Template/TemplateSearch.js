@@ -2,7 +2,7 @@ import { Form, Row, InputGroup,FormControl  } from "react-bootstrap"
 import { Search } from "react-bootstrap-icons"
 import React from "react";
 import { useQuery } from "@apollo/client"
-import Select from "react-select"
+import Select from "react-select/async"
 
 function TemplateSelect({ searchinfo, handleChangeFilters }) {
     const { error, loading, data } = useQuery(searchinfo.query.gql);
@@ -10,11 +10,11 @@ function TemplateSelect({ searchinfo, handleChangeFilters }) {
     if (error) return `Error! ${error}`;
     let options = []
     data[searchinfo.query.name].forEach(item => {
-        const key = Number(item.id)
-        options.push({ label: item.name, value: key})
+        options.push({ label: item[searchinfo.query.nameatr], value: Number(item.id)})
     });
-    return (<Select options={options} placeholder={searchinfo.placeholder} onChange={(e) => {
-        handleChangeFilters(searchinfo.namefilter, searchinfo.typeValue(e.value))
+    console.log(options)
+    return (<Select isClearable options={options} placeholder={searchinfo.placeholder} onChange={(e) => {
+        handleChangeFilters(searchinfo.namefilter, e ? searchinfo.typeValue(e.value) : null)
     }
     }/>)
 }

@@ -15,6 +15,7 @@ import Class from "./Components/Class/Class";
 import Group from "./Components/Group/Group";
 import Teacher from "./Components/Teacher/Teacher";
 
+
 const client = new ApolloClient({
   uri: 'http://localhost:3002/graphql',
   cache: new InMemoryCache()

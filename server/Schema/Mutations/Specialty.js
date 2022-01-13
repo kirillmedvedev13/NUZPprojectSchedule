@@ -27,7 +27,6 @@ export const DELETE_SPECIALTY = {
         id,
       },
     });
-    console.log(res);
     return res
       ? { successful: true, message: "Specialty was deleted" }
       : { successful: false, message: "Specialty wasn`t deleted" };
