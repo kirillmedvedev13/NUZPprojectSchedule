@@ -13,7 +13,6 @@ function TemplateSelect({ searchinfo, handleChangeFilters }) {
         const key = Number(item.id)
         options.push({ label: item.name, value: key})
     });
-    console.log(options);
     return (<Select options={options} placeholder={searchinfo.placeholder} onChange={(e) => {
         handleChangeFilters(searchinfo.namefilter, searchinfo.typeValue(e.value))
     }

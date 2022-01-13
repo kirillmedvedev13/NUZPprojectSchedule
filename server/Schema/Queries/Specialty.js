@@ -53,7 +53,6 @@ export const GET_ALL_SPECIALTY = {
         :
         {}
     }
-    console.log(isFilters)
     const res = await db.specialty.findAll({
       include: {
         model: db.cathedra,

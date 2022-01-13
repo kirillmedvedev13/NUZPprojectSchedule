@@ -8,8 +8,6 @@ function DataTable({ filters, tableinfo }) {
     const { loading, error, data } = useQuery(tableinfo.query.gql, {
         variables: filters,
     });
-    console.log(filters)
-    console.log(data)
     if (loading) return null;
     if (error) return `Error! ${error}`;
     return (
