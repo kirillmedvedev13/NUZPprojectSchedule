@@ -1,11 +1,13 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from '@apollo/client';
+import {GET_ALL_SPECIALTIES} from "./queries"
+import {DELETE_SPECIALTY} from "./mutations"
 
-function Confirm({ item, mutation, handleClose, refetch }) {
-    const [mutateFunction, {loading, error }] = useMutation(mutation, {
+function Confirm({ item, handleClose}) {
+    const [DeleteSpecialty, {loading, error }] = useMutation(DELETE_SPECIALTY, {
         refetchQueries: [
-            refetch
+            GET_ALL_SPECIALTIES
         ]
     });
     if (loading) return 'Submitting...';
@@ -13,17 +15,17 @@ function Confirm({ item, mutation, handleClose, refetch }) {
 
     return (
         <Button variant="primary" onClick={(e) => {
-            mutateFunction({ variables: { id: Number(item.id) } }).then((res) => {
+            DeleteSpecialty({ variables: { id: Number(item.id) } }).then((res) => {
                 handleClose();
             })
         }
         }>
-            Видалити
+            Видалити запис
         </Button>
     )
 };
 
-class TemplateDialog extends React.Component {
+class SpecialtyDialog extends React.Component {
 
     handleClose = () => {
         this.props.handleCloseDialog();
@@ -31,19 +33,19 @@ class TemplateDialog extends React.Component {
 
 
     render() {
-        const { isopen, item, mutation, refetch } = this.props;
+        const { isopen, item,  } = this.props;
 
         return (
             <>
                 <Modal centered size="lg" show={isopen} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Підтвердіть видалення запису</Modal.Title>
+                        <Modal.Title>Підтвердіть видалення запису {item.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
                             Відмінити
                         </Button>
-                        <Confirm refetch={refetch} item={item} mutation={mutation} handleClose={this.handleClose}></Confirm>
+                        <Confirm item={item} handleClose={this.handleClose}></Confirm>
                     </Modal.Footer>
                 </Modal>
             </>
@@ -51,4 +53,4 @@ class TemplateDialog extends React.Component {
     }
 }
 
-export default TemplateDialog;
+export default SpecialtyDialog;
