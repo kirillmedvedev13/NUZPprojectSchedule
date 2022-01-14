@@ -18,7 +18,6 @@ export const LOGIN_USER = {
     const incorrect = {
       id: null,
       email: email,
-      refreshToken: "",
       accessToken: "",
       isAuth: {
         successful: false,
@@ -36,7 +35,6 @@ export const LOGIN_USER = {
       return {
         id: null,
         email: email,
-        refreshToken: "",
         accessToken: "",
         isAuth: {
           successful: false,
@@ -51,23 +49,15 @@ export const LOGIN_USER = {
       { id: user.id, email: user.email },
       config.jwtAccessSecret,
       {
-        expiresIn: "1h",
+        expiresIn: "2h",
       }
     );
-    const refreshToken = jwt.sign(
-      { id: user.id, email: user.email },
-      config.jwtRefreshSecret,
-      {
-        expiresIn: "30d",
-      }
-    );
-    db.user.update({ refreshToken }, { where: { id: user.id } });
+    db.user.update({ accessToken }, { where: { id: user.id } });
 
     return {
       id: user.id,
       email: user.email,
       accessToken,
-      refreshToken,
       isAuth: {
         successful: true,
         message: "You're logged in",
@@ -81,10 +71,7 @@ export const LOGOUT_USER = {
     email: { type: GraphQLString },
   },
   async resolve(parent, { email }) {
-    let res = await db.user.update(
-      { refreshToken: null },
-      { where: { email } }
-    );
+    let res = await db.user.update({ accessToken: null }, { where: { email } });
     return res
       ? { successful: true, message: "Log out" }
       : { successful: true, message: "Some error" };
@@ -94,14 +81,12 @@ export const LOGOUT_USER = {
 export const RELOGIN_USER = {
   type: UserType,
   args: {
-    email: { type: GraphQLString },
-    refreshToken: { type: GraphQLString },
+    accessToken: { type: GraphQLString },
   },
-  async resolve(parent, { email, refreshToken }) {
+  async resolve(parent, { accessToken }) {
     const incorrect = {
       id: null,
-      email: email,
-      refreshToken: "",
+      email: null,
       accessToken: "",
       isAuth: {
         successful: false,
@@ -109,37 +94,25 @@ export const RELOGIN_USER = {
       },
     };
 
-    if (!refreshToken) return incorrect;
+    if (!accessToken) return incorrect;
+    try {
+      const isValid = jwt.verify(accessToken, config.jwtAccessSecret);
 
-    const isValid = jwt.verify(refreshToken, config.jwtRefreshSecret);
-    const isExist = await db.user.findOne({ where: { refreshToken } });
-    if (!isExist || !isValid) return incorrect;
-    const accessToken = jwt.sign(
-      { id: isValid.id, email: isValid.email },
-      config.jwtAccessSecret,
-      {
-        expiresIn: "1h",
-      }
-    );
-    refreshToken = jwt.sign(
-      { id: isValid.id, email: isValid.email },
-      config.jwtRefreshSecret,
-      {
-        expiresIn: "30d",
-      }
-    );
-    db.user.update({ refreshToken }, { where: { id: isValid.id } });
+      const isExist = await db.user.findOne({ where: { accessToken } });
+      if (!isExist || !isValid) return incorrect;
 
-    let user = isExist.dataValues;
-    return {
-      id: user.id,
-      email: user.email,
-      accessToken,
-      refreshToken,
-      isAuth: {
-        successful: true,
-        message: "You're logged in",
-      },
-    };
+      let user = isExist.dataValues;
+      return {
+        id: user.id,
+        email: user.email,
+        accessToken,
+        isAuth: {
+          successful: true,
+          message: "You're logged in",
+        },
+      };
+    } catch (error) {
+      return incorrect;
+    }
   },
 };

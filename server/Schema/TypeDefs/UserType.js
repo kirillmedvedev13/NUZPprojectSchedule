@@ -7,7 +7,6 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLID },
     email: { type: GraphQLString },
     accessToken: { type: GraphQLString },
-    refreshToken: { type: GraphQLString },
     isAuth: { type: MessageType },
   }),
 });

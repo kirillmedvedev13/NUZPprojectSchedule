@@ -1,85 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, Form, Row } from "react-bootstrap";
-import withHocs from "./ModalAuthorizationHoc.js";
+import { LoginUser } from "./mutations";
+import { useMutation } from "@apollo/client";
 
-class ModalAuthorization extends React.Component {
-  state = {
-    email: null,
-    password: null,
+function ModalAuthorization(props) {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [loginUser, { data, error }] = useMutation(LoginUser);
+  const { open } = props;
+
+  const handleChange = (event) => {
+    if (event.target.type === "email") {
+      setEmail(event.target.value);
+    } else setPassword(event.target.value);
   };
-  handleChange = (event) => {
-    this.setState({
-      [event.target.type]: event.target.value,
+  const handleClose = () => {
+    props.handleCloseModal();
+  };
+
+  const handleLogin = () => {
+    const { login } = props;
+    loginUser({ variables: { email, password } }).then((data) => {
+      const user = data.data.LoginUser;
+      if (!user.isAuth.successful) {
+        alert(user.isAuth.message);
+        return;
+      } else {
+        alert(user.isAuth.message);
+        login(
+          { openLogin: false, userID: user.id, isLoggin: true },
+          user.accessToken
+        );
+        handleClose();
+      }
     });
   };
-  handleClose = () => {
-    this.props.handleCloseModal();
-  };
 
-  handleLogin = () => {
-    const { email, password } = this.state;
-    const { handleCloseModal, data, login } = this.props;
-    data
-      .fetchMore({
-        variables: { email, password },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          return {
-            GetUser: fetchMoreResult.GetUser,
-          };
-        },
-      })
-      .then((res) => {
-        if (!res.data.GetUser.isAuth.successfull) {
-          alert(res.data.GetUser.isAuth.message);
-        } else {
-          login({ userID: res.GetUser.id });
-          this.handleClose();
-        }
-      });
-  };
-  render() {
-    const { open } = this.props;
-    return (
-      <>
-        <Modal size="lg" show={open} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Авторизація</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group as={Row} className="my-2 mx-2" controlId="formEmail">
-                <Form.Label className="col-auto">Email address: </Form.Label>
-                <Form.Control
-                  className="col"
-                  type="email"
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
-              <Form.Group
-                as={Row}
-                className="my-2 mx-2"
-                controlId="formPassword"
-              >
-                <Form.Label className="col-auto">Password: </Form.Label>
-                <Form.Control
-                  className="col"
-                  type="password"
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Закрити
-            </Button>
-            <Button variant="primary" onClick={this.handleLogin}>
-              Авторизоватися
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    );
-  }
+  return (
+    <>
+      <Modal size="lg" show={open} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Авторизація</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group as={Row} className="my-2 mx-2" controlId="formEmail">
+              <Form.Label className="col-auto">Email address: </Form.Label>
+              <Form.Control
+                className="col"
+                type="email"
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group as={Row} className="my-2 mx-2" controlId="formPassword">
+              <Form.Label className="col-auto">Password: </Form.Label>
+              <Form.Control
+                className="col"
+                type="password"
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Закрити
+          </Button>
+          <Button variant="primary" onClick={handleLogin}>
+            Авторизоватися
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
 }
-export default withHocs(ModalAuthorization);
+export default ModalAuthorization;

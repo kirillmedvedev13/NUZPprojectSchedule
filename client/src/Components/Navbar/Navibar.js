@@ -5,7 +5,7 @@ import Style from "./Style";
 
 class NaviBar extends React.Component {
   render() {
-    const { open } = this.props;
+    const { open, isLoggin } = this.props;
     return (
       <Style>
         <Navbar variant="dark" bg="dark" expand="lg">
@@ -45,7 +45,7 @@ class NaviBar extends React.Component {
                   variant="success"
                   onClick={open}
                 >
-                  Увійти
+                  {isLoggin ? "Вийти" : "Увійти"}
                 </Button>
                 <Button
                   className="mx-1  my-1 align-self-center"
