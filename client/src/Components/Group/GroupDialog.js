@@ -1,14 +1,14 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from '@apollo/client';
-import {GET_ALL_TEACHERS} from "./queries"
-import {DELETE_TEACHER} from "./mutations"
+import {GET_ALL_GROUPS} from "./queries"
+import {DELETE_GROUP} from "./mutations"
 import {CreateNotification} from "../Alert"
 
 function Confirm({ item, handleClose}) {
-    const [DeleteTeacher, {loading, error }] = useMutation(DELETE_TEACHER, {
+    const [DeleteGroup, {loading, error }] = useMutation(DELETE_GROUP, {
         refetchQueries: [
-            GET_ALL_TEACHERS
+            GET_ALL_GROUPS
         ]
     });
     if (loading) return 'Submitting...';
@@ -16,8 +16,8 @@ function Confirm({ item, handleClose}) {
 
     return (
         <Button variant="primary" onClick={(e) => {
-            DeleteTeacher({ variables: { id: Number(item.id) } }).then((res) => {
-                CreateNotification(res.data.DeleteTeacher)
+            DeleteGroup({ variables: { id: Number(item.id) } }).then((res) => {
+                CreateNotification(res.data.DeleteGroup)
                 handleClose();
             })
         }
@@ -27,7 +27,7 @@ function Confirm({ item, handleClose}) {
     )
 };
 
-class TeacherDialog extends React.Component {
+class GroupDialog extends React.Component {
 
     handleClose = () => {
         this.props.handleCloseDialog();
@@ -41,7 +41,7 @@ class TeacherDialog extends React.Component {
             <>
                 <Modal centered size="lg" show={isopen} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Підтвердіть видалення запису {item.name} {item.surname} {item.patronymic}</Modal.Title>
+                        <Modal.Title>Підтвердіть видалення запису {item.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
@@ -55,4 +55,4 @@ class TeacherDialog extends React.Component {
     }
 }
 
-export default TeacherDialog;
+export default GroupDialog;

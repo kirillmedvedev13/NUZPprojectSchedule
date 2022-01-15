@@ -67,7 +67,7 @@ class Specialty extends React.Component {
 
     handleSetItem = (item) => {
         this.setState(PrevState => ({
-            item: update(PrevState.item, { $merge: item })
+            item: update(PrevState.item, { $merge: {...item, id_cathedra: Number(item.cathedra.id)}}),
         }))
     }
 

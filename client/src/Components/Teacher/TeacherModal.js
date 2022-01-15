@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { useMutation } from "@apollo/client"
-import { UPDATE_TEACHER, CREATE_TEACHER} from "./mutations";
+import { UPDATE_TEACHER, CREATE_TEACHER } from "./mutations";
 import { GET_ALL_TEACHERS } from "./queries";
+import { CreateNotification } from "../Alert";
 
-function Save({ item, handleCloseModal, handleValidation, handleValidationCathedra }) {
+function Save({ item, handleCloseModal, handleValidation }) {
     const mutation = item.id ? UPDATE_TEACHER : CREATE_TEACHER
     const [mutateFunction, { loading, error }] = useMutation(mutation, {
         refetchQueries: [
@@ -14,23 +15,29 @@ function Save({ item, handleCloseModal, handleValidation, handleValidationCathed
     if (loading) return 'Submitting...';
     if (error) return `Submission error! ${error.message}`;
     const variables = item.id ?
-        { variables: { id: Number(item.id), name: item.name,  surname: item.surname, patronymic: item.patronymic} }
+        { variables: { id: Number(item.id), name: item.name, surname: item.surname, patronymic: item.patronymic } }
         :
-        { variables: { name: item.name,  surname: item.surname, patronymic: item.patronymic} }
+        { variables: { name: item.name, surname: item.surname, patronymic: item.patronymic } }
     return (
         <Button variant="primary" onClick={(e) => {
-            if (item.name && item.surname && item.patronymic){
+            if (item.name && item.surname && item.patronymic) {
                 mutateFunction(variables).then((res) => {
+                    if (item.id) {
+                        CreateNotification(res.data.UpdateTeacher)
+                    }
+                    else {
+                        CreateNotification(res.data.CreateTeacher)
+                    }
                     handleCloseModal();
                 })
             }
-            else{
+            else {
                 handleValidation(true);
             }
         }
         }>
             {item.id ? "Оновити" : "Додати"}
-        </Button>
+        </Button >
     )
 }
 

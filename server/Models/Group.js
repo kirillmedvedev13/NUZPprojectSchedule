@@ -14,6 +14,10 @@ export default (Sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNullL: false,
       },
+      semester: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       id_specialty:{
         type: DataTypes.INTEGER,
         allowNull: false,        

@@ -5,6 +5,7 @@ import { GetAllCathedras } from "../Cathedra/queries";
 import { UPDATE_SPECIALTY, CREATE_SPECIALTY } from "./mutations";
 import { GET_ALL_SPECIALTIES } from "./queries";
 import Select from "react-select"
+import {CreateNotification} from "../Alert"
 
 function Save({ item, handleCloseModal, handleValidation, handleValidationCathedra }) {
     const mutation = item.id ? UPDATE_SPECIALTY : CREATE_SPECIALTY
@@ -29,6 +30,7 @@ function Save({ item, handleCloseModal, handleValidation, handleValidationCathed
             if (item.name && item.id_cathedra) {
                 handleValidation(true, false);
                 mutateFunction(variables).then((res) => {
+                    CreateNotification(item.id ? res.data.UpdateSpecialty : res.data.CreateSpecialty)
                     handleCloseModal();
                 })
             }
@@ -39,7 +41,7 @@ function Save({ item, handleCloseModal, handleValidation, handleValidationCathed
     )
 }
 
-function SelectCathedras({ item, handleChangeItem, handleValidationCathedra}) {
+function SelectCathedras({ item, handleChangeItem, handleValidationCathedra }) {
     const { error, loading, data } = useQuery(GetAllCathedras);
     if (loading) return 'Loading...';
     if (error) return `Error! ${error}`;
@@ -63,7 +65,6 @@ class SpecialtyModal extends React.Component {
         validated: false,
         isValidCathedra: true,
     }
-
     handleClose = () => {
         this.props.handleCloseModal();
     };

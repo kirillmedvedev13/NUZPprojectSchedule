@@ -9,6 +9,7 @@ const GroupType = new GraphQLObjectType({
     name: { type: GraphQLString },
     number_students: { type: GraphQLInt },
     specialty: {type: SpecialtyType},
+    semester: {type: GraphQLInt},
   }),
 });
 

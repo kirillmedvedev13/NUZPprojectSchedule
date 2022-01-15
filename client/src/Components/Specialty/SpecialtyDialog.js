@@ -3,6 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { useMutation } from '@apollo/client';
 import {GET_ALL_SPECIALTIES} from "./queries"
 import {DELETE_SPECIALTY} from "./mutations"
+import {CreateNotification} from "../Alert"
 
 function Confirm({ item, handleClose}) {
     const [DeleteSpecialty, {loading, error }] = useMutation(DELETE_SPECIALTY, {
@@ -16,6 +17,7 @@ function Confirm({ item, handleClose}) {
     return (
         <Button variant="primary" onClick={(e) => {
             DeleteSpecialty({ variables: { id: Number(item.id) } }).then((res) => {
+                CreateNotification(res.data.DeleteSpecialty)
                 handleClose();
             })
         }
