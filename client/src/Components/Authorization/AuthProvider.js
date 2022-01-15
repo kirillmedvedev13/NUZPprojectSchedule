@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AuthContext } from "./AuthContext";
-import { rewriteURIForGET, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { ReloginUser } from "./mutations";
 
 function AuthProvider(props) {
-  const [user, setUser] = useState("");
+  const [userId, setUserId] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [token, setAccessToken] = useState("");
   const [reLogin, { data, error }] = useMutation(ReloginUser);
   const [cookies, setCookie, removeCookie] = useCookies(["token", ""]);
 
+  const setUser = (id, email) => {
+    setUserId(id);
+    setUserEmail(email);
+  };
   const setToken = useCallback((accessToken) => {
     setAccessToken(accessToken);
     if (accessToken) {
@@ -20,7 +25,7 @@ function AuthProvider(props) {
   }, []);
 
   const logOut = useCallback(() => {
-    setUser("");
+    setUser("", "");
     setToken("");
   }, [setToken]);
 
@@ -41,14 +46,15 @@ function AuthProvider(props) {
 
   const contextValue = useMemo(
     () => ({
-      user,
+      userId,
+      userEmail,
       token,
       loadData,
       setUser,
       setToken,
       logOut,
     }),
-    [user, token, loadData, setUser, setToken, logOut]
+    [userId, userEmail, token, loadData, setUser, setToken, logOut]
   );
   return (
     <AuthContext.Provider value={contextValue}>

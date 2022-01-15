@@ -5,7 +5,7 @@ import Style from "./Style";
 
 class NaviBar extends React.Component {
   render() {
-    const { open, isLoggin } = this.props;
+    const { open, isLoggin, email } = this.props;
     return (
       <Style>
         <Navbar variant="dark" bg="dark" expand="lg">
@@ -40,6 +40,7 @@ class NaviBar extends React.Component {
                 </Link>
               </Nav>
               <Nav className="mx-2 ">
+                <Navbar.Brand>{isLoggin ? email : ""}</Navbar.Brand>
                 <Button
                   className="mx-1  my-1 align-self-center"
                   variant="success"
