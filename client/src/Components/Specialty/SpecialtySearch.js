@@ -3,11 +3,11 @@ import { Search } from "react-bootstrap-icons"
 import React from "react";
 import { useQuery } from "@apollo/client"
 import Select from "react-select"
-import { GetAllCathedras } from "../Cathedra/queries";
+import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 
 
 function SelectCathedra({ handleChangeFilters }) {
-    const { error, loading, data } = useQuery(GetAllCathedras);
+    const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
     if (loading) return 'Loading...';
     if (error) return `Error! ${error}`;
     let options = []

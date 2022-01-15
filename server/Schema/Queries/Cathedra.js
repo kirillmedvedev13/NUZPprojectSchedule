@@ -12,6 +12,7 @@ export const GET_ALL_CATHEDRAS = {
     let isFilters = {}
     if(name){
       const arr = name.split(" ");
+      let str = ""
       arr.map((word, index) => {
         if (index != arr.length - 1) {
           str += `${word}|`

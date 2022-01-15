@@ -41,7 +41,7 @@ function Save({ item, handleCloseModal, handleValidation }) {
     )
 }
 
-class SpecialtyModal extends React.Component {
+class TeacherModal extends React.Component {
 
     state = {
         validated: false,
@@ -124,4 +124,4 @@ class SpecialtyModal extends React.Component {
     }
 }
 
-export default SpecialtyModal;
+export default TeacherModal;

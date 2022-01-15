@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client"
-import { GetAllCathedras } from "../Cathedra/queries";
+import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import { UPDATE_SPECIALTY, CREATE_SPECIALTY } from "./mutations";
 import { GET_ALL_SPECIALTIES } from "./queries";
 import Select from "react-select"
@@ -42,7 +42,7 @@ function Save({ item, handleCloseModal, handleValidation, handleValidationCathed
 }
 
 function SelectCathedras({ item, handleChangeItem, handleValidationCathedra }) {
-    const { error, loading, data } = useQuery(GetAllCathedras);
+    const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
     if (loading) return 'Loading...';
     if (error) return `Error! ${error}`;
     let options = [];
