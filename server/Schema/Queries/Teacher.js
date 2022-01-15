@@ -1,30 +1,39 @@
-import { GraphQLList } from "graphql";
+import { GraphQLList, GraphQLString } from "graphql";
 import db from "../../database.js";
 import TeacherType from "../TypeDefs/TeacherType.js";
+import { Op } from "sequelize";
 
 export const GET_ALL_TEACHERS = {
   type: new GraphQLList(TeacherType),
-  async resolve() {
+  args: {
+    surname: { type: GraphQLString },
+  },
+  async resolve(parent, { surname }) {
+    let FilterSurname = {}
+    let str = "";
+    if (surname) {
+      const arr = surname.split(" ");
+      arr.map((word, index) => {
+        if (index != arr.length - 1) {
+          str += `${word}|`
+        }
+        else {
+          str += word
+        }
+      });
+      FilterSurname = {
+        surname: {
+          [Op.regexp]: str
+        },
+      }
+    }
+
     let res = await db.teacher.findAll({
       include: {
         model: db.assigned_teacher,
-        include: {
-          model: db.class,
-          include: [
-            {
-              model: db.type_class,
-            },
-            {
-              model: db.assigned_discipline,
-              include: {
-                model: db.discipline,
-              },
-            },
-          ],
-        },
       },
+      where: FilterSurname,
     });
-    console.log(res);
     return res;
   },
 };
