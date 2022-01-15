@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, Form, Row } from "react-bootstrap";
 import { LoginUser } from "./mutations";
 import { useMutation } from "@apollo/client";
+import { CreateNotification } from "../Alert";
 
 function ModalAuthorization(props) {
   const [email, setEmail] = useState(null);
@@ -23,12 +24,18 @@ function ModalAuthorization(props) {
     loginUser({ variables: { email, password } }).then((data) => {
       const user = data.data.LoginUser;
       if (!user.isAuth.successful) {
-        alert(user.isAuth.message);
+        CreateNotification(user.isAuth);
+
         return;
       } else {
-        alert(user.isAuth.message);
+        CreateNotification(user.isAuth);
         login(
-          { openLogin: false, userID: user.id, isLoggin: true },
+          {
+            openLogin: false,
+            userId: user.id,
+            userEmail: user.email,
+            isLoggin: true,
+          },
           user.accessToken
         );
         handleClose();
