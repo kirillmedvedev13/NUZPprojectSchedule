@@ -22,10 +22,6 @@ export const GET_ALL_SPECIALTY = {
           str += word
         }
       });
-      console.log("name")
-      console.log(name)
-      console.log("id_cathedra")
-      console.log(id_cathedra)
       isFilters = id_cathedra ?
         {
           [Op.and]: {
@@ -53,7 +49,6 @@ export const GET_ALL_SPECIALTY = {
         :
         {}
     }
-    console.log(isFilters)
     const res = await db.specialty.findAll({
       include: {
         model: db.cathedra,

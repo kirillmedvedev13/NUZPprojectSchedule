@@ -1,63 +1,88 @@
 import React from "react"
-import TemplateSearch from "../Template/TemplateSearch"
-import TemplateTable from "../Template/TemplateTable";
-import { GetAllSpecialties } from "./queries";
-import { GetAllCathedras } from "../Cathedra/queries"
+import update from 'react-addons-update'
+import { Button } from "react-bootstrap"
+import SpecialtyDialog from "./SpecialtyDialog"
+import SpecialtyModal from "./SpecialtyModal"
+import SpecialtyTable from "./SpecialtyTable"
+import SpecialtySearch from "./SpecialtySearch"
 
 class Specialty extends React.Component {
     state = {
         filters: {
             name: "",
             id_cathedra: null
-        }
+        },
+        item: {
+            id: null,
+            name: "",
+            id_cathedra: null,
+        },
+        openModal: false,
+        openDialog: false,
+    }
+
+    handleOpenDialog = () => {
+        this.setState({
+            openDialog: true,
+        })
+    }
+
+    handleCloseDialog = () => {
+        this.setState({
+            openDialog: false,
+        })
+    }
+
+    handleOpenModal = () => {
+        this.setState({
+            openModal: true,
+        })
+    }
+
+    handleCloseModal = () => {
+        this.setState({
+            openModal: false,
+            item: {
+                id: null,
+                name: "",
+                id_cathedra: null,
+            },
+        })
+    }
+
+    handleChangeItem = (name, value) => {
+        this.setState(PrevState => (
+            {
+                item: update(PrevState.item, { $merge: { [name]: value } })
+            }
+        ))
     }
 
     handleChangeFilters = (name, value) => {
-        const newfilters = this.state.filters;
-        newfilters[name] = value;
-        this.setState({filters: newfilters});
+        this.setState(PrevState => ({
+            filters: update(PrevState.filters, { $merge: { [name]: value } })
+        })
+        )
+    }
+
+    handleSetItem = (item) => {
+        this.setState(PrevState => ({
+            item: update(PrevState.item, { $merge: item })
+        }))
     }
 
     render() {
-        const { filters } = this.state;
-        const tableinfo = {
-            rows: [
-                {
-                    headname: "Назва спеціалізації",
-                    namecol: "name",
-                },
-                {
-                    headname: "Назва кафедри",
-                    namecol: "cathedra.name",
-                }
-            ],
-            query: {
-                name: "GetAllSpecialties",
-                gql: GetAllSpecialties,
-            }
-        }
-        const searchinfo = [
-            {
-                type: "input",
-                namefilter: "name",
-                typeValue: String,
-                placeholder: "Спеціальність",
-            },
-            {
-                type: "select",
-                namefilter: "id_cathedra",
-                typeValue: Number,
-                placeholder: "Кафедра",
-                query: {
-                    name: "GetAllCathedras",
-                    gql: GetAllCathedras,
-                }
-            }
-        ]
+        const { filters, item, openModal, openDialog } = this.state;
         return (
             <>
-                <TemplateSearch searchinfo={searchinfo} handleChangeFilters={this.handleChangeFilters}></TemplateSearch>
-                <TemplateTable filters={filters} tableinfo={tableinfo}></TemplateTable>
+                <SpecialtyModal isopen={openModal} item={item} handleChangeItem={this.handleChangeItem} handleCloseModal={this.handleCloseModal}></SpecialtyModal>
+                <SpecialtyDialog isopen={openDialog} item={item} handleCloseDialog={this.handleCloseDialog}></SpecialtyDialog>
+                <SpecialtySearch handleChangeFilters={this.handleChangeFilters}></SpecialtySearch>
+                <div className="d-flex justify-content-end mx-2 my-2">
+                    <Button variant="primary" className="col-auto" onClick={this.handleOpenModal}>Додати Спеціальність</Button>
+                </div>
+                <SpecialtyTable handleOpenModal={this.handleOpenModal} handleOpenDialog={this.handleOpenDialog} handleSetItem={this.handleSetItem} filters={filters}></SpecialtyTable>
+
             </>
         )
     }
