@@ -1,92 +1,110 @@
-import React from "react"
-import update from 'react-addons-update'
-import { Button } from "react-bootstrap"
-import TeacherDialog from "./TeacherDialog"
-import TeacherModal from "./TeacherModal"
-import TeacherTable from "./TeacherTable"
-import TeacherSearch from "./TeacherSearch"
+import React from "react";
+import update from "react-addons-update";
+import { Button } from "react-bootstrap";
+import TeacherDialog from "./TeacherDialog";
+import TeacherModal from "./TeacherModal";
+import TeacherTable from "./TeacherTable";
+import TeacherSearch from "./TeacherSearch";
 
 class Teacher extends React.Component {
-    state = {
-        filters: {
-            surname: "",
-        },
-        item: {
-            id: null,
-            name: "",
-            surname: "",
-            patronymic: "",
-        },
-        openModal: false,
-        openDialog: false,
-    }
+  state = {
+    filters: {
+      surname: "",
+    },
+    item: {
+      id: null,
+      name: "",
+      surname: "",
+      patronymic: "",
+    },
+    openModal: false,
+    openDialog: false,
+  };
 
-    handleOpenDialog = () => {
-        this.setState({
-            openDialog: true,
-        })
-    }
+  handleOpenDialog = () => {
+    this.setState({
+      openDialog: true,
+    });
+  };
 
-    handleCloseDialog = () => {
-        this.setState({
-            openDialog: false,
-        })
-    }
+  handleCloseDialog = () => {
+    this.setState({
+      openDialog: false,
+    });
+  };
 
-    handleOpenModal = () => {
-        this.setState({
-            openModal: true,
-        })
-    }
+  handleOpenModal = () => {
+    this.setState({
+      openModal: true,
+    });
+  };
 
-    handleCloseModal = () => {
-        this.setState({
-            openModal: false,
-            item: {
-                id: null,
-                name: "",
-                surname: "",
-                patronymic: "",
-            },
-        })
-    }
+  handleCloseModal = () => {
+    this.setState({
+      openModal: false,
+      item: {
+        id: null,
+        name: "",
+        surname: "",
+        patronymic: "",
+      },
+    });
+  };
 
-    handleChangeItem = (name, value) => {
-        this.setState(PrevState => (
-            {
-                item: update(PrevState.item, { $merge: { [name]: value } })
-            }
-        ))
-    }
+  handleChangeItem = (name, value) => {
+    this.setState((PrevState) => ({
+      item: update(PrevState.item, { $merge: { [name]: value } }),
+    }));
+  };
 
-    handleChangeFilters = (name, value) => {
-        this.setState(PrevState => ({
-            filters: update(PrevState.filters, { $merge: { [name]: value } })
-        })
-        )
-    }
+  handleChangeFilters = (name, value) => {
+    this.setState((PrevState) => ({
+      filters: update(PrevState.filters, { $merge: { [name]: value } }),
+    }));
+  };
 
-    handleSetItem = (item) => {
-        this.setState(PrevState => ({
-            item: update(PrevState.item, { $merge: item })
-        }))
-    }
+  handleSetItem = (item) => {
+    this.setState((PrevState) => ({
+      item: update(PrevState.item, { $merge: item }),
+    }));
+  };
 
-    render() {
-        const { filters, item, openModal, openDialog } = this.state;
-        return (
-            <>
-                <TeacherModal isopen={openModal} item={item} handleChangeItem={this.handleChangeItem} handleCloseModal={this.handleCloseModal}></TeacherModal>
-                <TeacherDialog isopen={openDialog} item={item} handleCloseDialog={this.handleCloseDialog}></TeacherDialog>
-                <TeacherSearch handleChangeFilters={this.handleChangeFilters}></TeacherSearch>
-                <div className="d-flex justify-content-end mx-2 my-2">
-                    <Button variant="primary" className="col-auto" onClick={this.handleOpenModal}>Додати Вчителя</Button>
-                </div>
-                <TeacherTable handleOpenModal={this.handleOpenModal} handleOpenDialog={this.handleOpenDialog} handleSetItem={this.handleSetItem} filters={filters}></TeacherTable>
-
-            </>
-        )
-    }
+  render() {
+    const { filters, item, openModal, openDialog } = this.state;
+    return (
+      <>
+        <TeacherModal
+          isopen={openModal}
+          item={item}
+          handleChangeItem={this.handleChangeItem}
+          handleCloseModal={this.handleCloseModal}
+        ></TeacherModal>
+        <TeacherDialog
+          isopen={openDialog}
+          item={item}
+          handleCloseDialog={this.handleCloseDialog}
+        ></TeacherDialog>
+        <TeacherSearch
+          handleChangeFilters={this.handleChangeFilters}
+        ></TeacherSearch>
+        <div className="d-flex justify-content-end mx-2 my-2">
+          <Button
+            variant="primary"
+            className="col-auto"
+            onClick={this.handleOpenModal}
+          >
+            Додати Вчителя
+          </Button>
+        </div>
+        <TeacherTable
+          handleOpenModal={this.handleOpenModal}
+          handleOpenDialog={this.handleOpenDialog}
+          handleSetItem={this.handleSetItem}
+          filters={filters}
+        ></TeacherTable>
+      </>
+    );
+  }
 }
 
 export default Teacher;

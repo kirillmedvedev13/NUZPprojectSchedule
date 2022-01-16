@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
-export const GET_ALL_SPECIALTIES = gql`
+export const GET_ALL_DISCIPLINES = gql`
   query ($name: String, $id_cathedra: Int) {
-    GetAllSpecialties(name: $name, id_cathedra: $id_cathedra) {
+    GetAllDicsiplines(name: $name, id_cathedra: $id_cathedra) {
       name
       id
       cathedra {

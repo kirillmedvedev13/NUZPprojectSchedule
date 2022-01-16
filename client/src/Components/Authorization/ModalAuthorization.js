@@ -3,6 +3,7 @@ import { Button, Modal, Form, Row } from "react-bootstrap";
 import { LoginUser } from "./mutations";
 import { useMutation } from "@apollo/client";
 import { CreateNotification } from "../Alert";
+import { Table } from "react-bootstrap";
 
 function ModalAuthorization(props) {
   const [email, setEmail] = useState(null);
@@ -51,22 +52,34 @@ function ModalAuthorization(props) {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group as={Row} className="my-2 mx-2" controlId="formEmail">
-              <Form.Label className="col-auto">Email address: </Form.Label>
-              <Form.Control
-                className="col"
-                type="email"
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group as={Row} className="my-2 mx-2" controlId="formPassword">
-              <Form.Label className="col-auto">Password: </Form.Label>
-              <Form.Control
-                className="col"
-                type="password"
-                onChange={handleChange}
-              />
-            </Form.Group>
+            <Table borderless>
+              <tbody>
+                <tr>
+                  <td>
+                    <Form.Label className="col-auto">Почта: </Form.Label>
+                  </td>
+                  <td>
+                    <Form.Control
+                      className="col"
+                      type="email"
+                      onChange={handleChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Form.Label className="col-auto">Пароль: </Form.Label>{" "}
+                  </td>
+                  <td>
+                    <Form.Control
+                      className="col"
+                      type="password"
+                      onChange={handleChange}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
           </Form>
         </Modal.Body>
         <Modal.Footer>
