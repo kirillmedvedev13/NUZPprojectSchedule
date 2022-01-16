@@ -30,7 +30,7 @@ export const GET_ALL_DISCIPLINES = {
     }
     if (id_specialty) {
       isFilters1 = {
-        id: {
+        id_specialty: {
           [Op.eq]: id_specialty,
         },
       };
@@ -39,9 +39,9 @@ export const GET_ALL_DISCIPLINES = {
       where: isFilters,
       include: {
         model: db.assigned_discipline,
+        where: isFilters1,
         include: {
           model: db.specialty,
-          where: isFilters1,
         },
       },
     });
