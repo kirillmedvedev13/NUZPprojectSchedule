@@ -2,7 +2,7 @@ import React from "react";
 import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_GROUPS } from "./queries";
+import { GET_ALL_AUDIENCES } from "./queries";
 
 function DataTable({
   filters,
@@ -10,19 +10,27 @@ function DataTable({
   handleOpenDialog,
   handleOpenModal,
 }) {
-  const { loading, error, data } = useQuery(GET_ALL_GROUPS, {
+  const { loading, error, data } = useQuery(GET_ALL_AUDIENCES, {
     variables: filters,
   });
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
     <tbody>
-      {data.GetAllGroups.map((item) => (
+      {data.GetAllAudiences.map((item) => (
         <tr key={item.id}>
           <td>{item.name}</td>
-          <td>{item.number_students}</td>
-          <td>{item.semester}</td>
-          <td>{item.specialty.name}</td>
+          <td>{item.type_class.name}</td>
+          <td>{item.capacity}</td>
+          <td>
+            <ul className="mx-0 px-0">
+              {
+                item.assigned_audiences.map((item) => {
+                  return (<li key={item.cathedra.id}>{item.cathedra.name}</li>)
+                })
+              }
+            </ul>
+          </td>
           <td className="col-2" onClick={(e) => handleSetItem(item)}>
             <PencilSquare
               className="mx-1"
@@ -41,7 +49,7 @@ function DataTable({
   );
 }
 
-class GroupTable extends React.Component {
+class AudienceTable extends React.Component {
   render() {
     const { filters, handleOpenModal, handleOpenDialog, handleSetItem } =
       this.props;
@@ -50,10 +58,10 @@ class GroupTable extends React.Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Назва групи</th>
-              <th>Кількість студентів</th>
-              <th>Семестр</th>
-              <th>Спеціальність</th>
+              <th>Назва аудиторії</th>
+              <th>Тип</th>
+              <th>Вмісткість</th>
+              <th>Закріплені кафедри</th>
             </tr>
           </thead>
           <DataTable
@@ -68,4 +76,4 @@ class GroupTable extends React.Component {
   }
 }
 
-export default GroupTable;
+export default AudienceTable;

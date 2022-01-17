@@ -10,8 +10,10 @@ export const GET_ALL_AUDIENCES = {
     id_cathedra: { type: GraphQLInt },
   },
   async resolve(parent, { name, id_cathedra }) {
-    let FilterName = ""
-    let FilterCathedra = ""
+    let FilterName = {}
+    let FilterCathedra = {}
+    let FilterIDsAudiences = {}
+    let arrIDsAudiences = []
     if (name) {
       const arr = name.split(" ");
       let str = ""
@@ -23,29 +25,51 @@ export const GET_ALL_AUDIENCES = {
           str += word
         }
       });
-      FilterName = `Where audiences.name REGEXP '${str}'`
+      FilterName = {
+        name: {
+          [Op.regexp]: str
+        }
+      }
     }
     if (id_cathedra) {
-      FilterCathedra = `    
-      join assigned_audiences au2 on au2.id_audience = audiences.id
-      join cathedras c2 on au2.id_cathedra = c2.id and c2.id = ${id_cathedra} 
-      `
+      FilterCathedra = {
+        id_cathedra: {
+          [Op.eq]: id_cathedra
+        }
+
+      }
+      const res = await db.audience.findAll({
+        include: {
+            model: db.assigned_audience,
+            where: FilterCathedra
+          },
+      });
+      res.map((aud) => {
+        arrIDsAudiences.push(aud.dataValues.id)
+      })
     }
-    
-    db.Connection.query(`
-    select audiences.id, audiences.name, audiences.capacity, audiences.id_type_class, type_classes.name as name_type_class, 
-    group_concat(c1.name separator '||') as "listCathedras", 
-    group_concat(au1.id separator '||') as "listIdsAU" 
-    from audiences
-    join assigned_audiences au1 on au1.id_audience = audiences.id
-    join cathedras c1 on au1.id_cathedra = c1.id
-    join type_classes on audiences.id_type_class = type_classes.id
-    ${FilterCathedra}
-    ${FilterName}
-    group by audiences.id
-    `).then(([res, meta]) => {
-      console.log(res)
-      return res;
-    })
+    if(arrIDsAudiences.length){
+      FilterIDsAudiences = {
+        id: arrIDsAudiences
+      }
+    }
+    console.log(arrIDsAudiences)
+    const res = await db.audience.findAll({
+      where: {
+        [Op.and]: [FilterName, FilterIDsAudiences]
+      },
+      include: [
+        {
+          model: db.type_class
+        },
+        {
+          model: db.assigned_audience,
+          include: {
+            model: db.cathedra
+          }
+        }
+    ]
+    });
+    return res;
   },
 };

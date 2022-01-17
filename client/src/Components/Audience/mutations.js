@@ -1,46 +1,62 @@
 import { gql } from "@apollo/client";
 
-export const DELETE_GROUP = gql`
+export const DELETE_AUDIENCE = gql`
   mutation ($id: ID!) {
-    DeleteGroup(id: $id) {
+    DeleteAudience(id: $id) {
       message
       successful
     }
   }
 `;
-export const UPDATE_GROUP = gql`
+export const UPDATE_AUDIENCE = gql`
   mutation (
     $id: ID!
     $name: String!
-    $id_specialty: Int!
-    $semester: Int!
-    $number_students: Int!
+    $capacity: Int!
+    $id_type_class: Int!
   ) {
-    UpdateGroup(
+    UpdateAudience(
       id: $id
       name: $name
-      id_specialty: $id_specialty
-      semester: $semester
-      number_students: $number_students
+      capacity: $capacity
+      id_type_class: $id_type_class
     ) {
       message
       successful
     }
   }
 `;
-export const CREATE_GROUP = gql`
-  mutation (
+export const CREATE_AUDIENCE = gql`
+    mutation (
     $name: String!
-    $id_specialty: Int!
-    $semester: Int!
-    $number_students: Int!
+    $capacity: Int!
+    $id_type_class: Int!
   ) {
-    CreateGroup(
+    CreateAudience(
       name: $name
-      id_specialty: $id_specialty
-      semester: $semester
-      number_students: $number_students
+      capacity: $capacity
+      id_type_class: $id_type_class
     ) {
+      message
+      successful
+    }
+  }
+`;
+
+export const ADD_AUDIENCE_TO_CATHEDRA = gql`
+mutation($id_audience: ID!, $id_cathedra: ID!)
+  {
+    AddAudienceToCathedra(id_audience: $id_audience, id_cathedra: $id_cathedra){
+      message
+      successful
+    }
+  }
+`;
+
+export const DELETE_AUDIENCE_FROM_CATHEDRA = gql`
+mutation($id: ID!)
+  {
+    DeleteAudienceFromCathedra(id: $id){
       message
       successful
     }

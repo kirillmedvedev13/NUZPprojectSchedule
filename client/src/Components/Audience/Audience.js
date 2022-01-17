@@ -1,23 +1,25 @@
 import React from "react";
 import update from "react-addons-update";
 import { Button } from "react-bootstrap";
-import GroupDialog from "./GroupDialog";
-import GroupModal from "./GroupModal";
-import GroupTable from "./GroupTable";
-import GroupSearch from "./GroupSearch";
+import AudienceDialog from "./AudienceDialog";
+import AudienceModal from "./AudienceModal";
+import AudienceTable from "./AudienceTable";
+import AudienceSearch from "./AudienceSearch";
 
-class Group extends React.Component {
+class Audience extends React.Component {
   state = {
     filters: {
       name: "",
-      id_specialty: null,
+      id_cathedra: null,
     },
     item: {
       id: null,
       name: "",
-      id_specialty: null,
-      number_students: "",
-      semester: "",
+      capacity: "",
+      id_type_class: null,
+      type_class: {
+        name: ""
+      },
     },
     openModal: false,
     openDialog: false,
@@ -47,9 +49,11 @@ class Group extends React.Component {
       item: {
         id: null,
         name: "",
-        id_specialty: null,
-        number_students: "",
-        semester: "",
+        capacity: "",
+        id_type_class: null,
+        type_class: {
+          name: ""
+        },
       },
     });
   };
@@ -69,7 +73,7 @@ class Group extends React.Component {
   handleSetItem = (item) => {
     this.setState((PrevState) => ({
       item: update(PrevState.item, {
-        $merge: { ...item, id_specialty: Number(item.specialty.id) },
+        $merge: { ...item, id_type_class: Number(item.type_class.id) },
       }),
     }));
   };
@@ -78,38 +82,38 @@ class Group extends React.Component {
     const { filters, item, openModal, openDialog } = this.state;
     return (
       <>
-        <GroupModal
+        <AudienceModal
           isopen={openModal}
           item={item}
           handleChangeItem={this.handleChangeItem}
           handleCloseModal={this.handleCloseModal}
-        ></GroupModal>
-        <GroupDialog
+        ></AudienceModal>
+        <AudienceDialog
           isopen={openDialog}
           item={item}
           handleCloseDialog={this.handleCloseDialog}
-        ></GroupDialog>
-        <GroupSearch
+        ></AudienceDialog>
+        <AudienceSearch
           handleChangeFilters={this.handleChangeFilters}
-        ></GroupSearch>
+        ></AudienceSearch>
         <div className="d-flex justify-content-end mx-2 my-2">
           <Button
             variant="primary"
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати групу
+            Додати аудиторiю
           </Button>
         </div>
-        <GroupTable
+        <AudienceTable
           handleOpenModal={this.handleOpenModal}
           handleOpenDialog={this.handleOpenDialog}
           handleSetItem={this.handleSetItem}
           filters={filters}
-        ></GroupTable>
+        ></AudienceTable>
       </>
     );
   }
 }
 
-export default Group;
+export default Audience;

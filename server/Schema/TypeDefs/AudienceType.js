@@ -9,7 +9,7 @@ const AudienceType = new GraphQLObjectType({
     type_class: { type: Type_classType },
     name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
-    listCathedras: {type: GraphQLString},
+    assigned_audiences: { type: new GraphQLList(Assigned_audienceType) },
   }),
 });
 

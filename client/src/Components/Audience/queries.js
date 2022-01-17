@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-export const GET_ALL_GROUPS = gql`
+export const GET_ALL_AUDIENCES = gql`
     query ($name: String, $id_cathedra: Int) {
     GetAllAudiences(name: $name, id_cathedra: $id_cathedra) {
       id
@@ -19,3 +19,11 @@ export const GET_ALL_GROUPS = gql`
     }
   }
 `;
+export const GET_ALL_TYPE_CLASSES = gql`
+  query{
+    GetAllTypeClasses{
+    id
+    name
+    }
+  }
+`

@@ -3,14 +3,14 @@ import { Search } from "react-bootstrap-icons";
 import React from "react";
 import { useQuery } from "@apollo/client";
 import Select from "react-select";
-import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
+import { GET_ALL_CATHEDRAS } from "../Cathedra/queries"
 
-function SelectSpecialty({ handleChangeFilters }) {
-  const { error, loading, data } = useQuery(GET_ALL_SPECIALTIES);
+function SelectCathedra({ handleChangeFilters }) {
+  const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
   let options = [];
-  data.GetAllSpecialties.forEach((item) => {
+  data.GetAllCathedras.forEach((item) => {
     options.push({ label: item.name, value: Number(item.id) });
   });
   return (
@@ -18,15 +18,15 @@ function SelectSpecialty({ handleChangeFilters }) {
       className="col-12"
       isClearable
       options={options}
-      placeholder="Спеціальність"
+      placeholder="Кафедра"
       onChange={(e) => {
-        handleChangeFilters("id_specialty", e ? Number(e.value) : null);
+        handleChangeFilters("id_cathedra", e ? Number(e.value) : null);
       }}
     />
   );
 }
 
-class GroupSearch extends React.Component {
+class AudienceSearch extends React.Component {
   render() {
     const { handleChangeFilters } = this.props;
 
@@ -39,14 +39,14 @@ class GroupSearch extends React.Component {
                 <Search></Search>
               </InputGroup.Text>
               <FormControl
-                placeholder="Назва групи"
+                placeholder="Назва аудиторії"
                 onChange={(e) => handleChangeFilters("name", e.target.value)}
               />
             </InputGroup>
             <InputGroup className="my-1">
-              <SelectSpecialty
+              <SelectCathedra
                 handleChangeFilters={handleChangeFilters}
-              ></SelectSpecialty>
+              ></SelectCathedra>
             </InputGroup>
           </Form.Group>
         </Form>
@@ -55,4 +55,4 @@ class GroupSearch extends React.Component {
   }
 }
 
-export default GroupSearch;
+export default AudienceSearch;

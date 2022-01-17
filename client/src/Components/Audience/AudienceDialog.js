@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
-import { GET_ALL_GROUPS } from "./queries";
-import { DELETE_GROUP } from "./mutations";
+import { GET_ALL_AUDIENCES } from "./queries";
+import { DELETE_AUDIENCE } from "./mutations";
 import { CreateNotification } from "../Alert";
 
 function Confirm({ item, handleClose }) {
-  const [DeleteGroup, { loading, error }] = useMutation(DELETE_GROUP, {
-    refetchQueries: [GET_ALL_GROUPS],
+  const [DeleteAudience, { loading, error }] = useMutation(DELETE_AUDIENCE, {
+    refetchQueries: [GET_ALL_AUDIENCES],
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
@@ -16,8 +16,8 @@ function Confirm({ item, handleClose }) {
     <Button
       variant="primary"
       onClick={(e) => {
-        DeleteGroup({ variables: { id: Number(item.id) } }).then((res) => {
-          CreateNotification(res.data.DeleteGroup);
+        DeleteAudience({ variables: { id: Number(item.id) } }).then((res) => {
+          CreateNotification(res.data.DeleteAudience);
           handleClose();
         });
       }}
@@ -27,7 +27,7 @@ function Confirm({ item, handleClose }) {
   );
 }
 
-class GroupDialog extends React.Component {
+class AudienceDialog extends React.Component {
   handleClose = () => {
     this.props.handleCloseDialog();
   };
@@ -53,4 +53,4 @@ class GroupDialog extends React.Component {
   }
 }
 
-export default GroupDialog;
+export default AudienceDialog;

@@ -1,9 +1,8 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
-import { UPDATE_GROUP, CREATE_GROUP } from "./mutations";
-import { GET_ALL_GROUPS } from "./queries";
+import { UPDATE_AUDIENCE, CREATE_AUDIENCE } from "./mutations";
+import { GET_ALL_AUDIENCES, GET_ALL_TYPE_CLASSES } from "./queries";
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
 
@@ -11,11 +10,11 @@ function Save({
   item,
   handleCloseModal,
   handleValidation,
-  handleValidationSpecialty,
+  handleValidationTypeClass
 }) {
-  const mutation = item.id ? UPDATE_GROUP : CREATE_GROUP;
+  const mutation = item.id ? UPDATE_AUDIENCE : CREATE_AUDIENCE;
   const [mutateFunction, { loading, error }] = useMutation(mutation, {
-    refetchQueries: [GET_ALL_GROUPS],
+    refetchQueries: [GET_ALL_AUDIENCES],
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
@@ -24,17 +23,15 @@ function Save({
         variables: {
           id: Number(item.id),
           name: item.name,
-          number_students: Number(item.number_students),
-          semester: Number(item.semester),
-          id_specialty: Number(item.id_specialty),
+          capacity: Number(item.capacity),
+          id_type_class: Number(item.id_type_class)
         },
       }
     : {
         variables: {
           name: item.name,
-          number_students: Number(item.number_students),
-          semester: Number(item.semester),
-          id_specialty: Number(item.id_specialty),
+          capacity: Number(item.capacity),
+          id_type_class: Number(item.id_type_class)
         },
       };
   return (
@@ -43,22 +40,20 @@ function Save({
       onClick={(e) => {
         if (
           item.name &&
-          item.number_students &&
-          item.semester &&
-          item.id_specialty
+          item.capacity
         ) {
           mutateFunction(variables).then((res) => {
             CreateNotification(
-              item.id ? res.data.UpdateGroup : res.data.CreateGroup
+              item.id ? res.data.UpdateAudience : res.data.CreateAudience
             );
             handleCloseModal();
           });
         } else {
           handleValidation(true);
-          if (item.id_specialty) {
-            handleValidationSpecialty(true);
+          if (item.id_type_class) {
+            handleValidationTypeClass(true);
           } else {
-            handleValidationSpecialty(false);
+            handleValidationTypeClass(false);
           }
         }
       }}
@@ -68,41 +63,41 @@ function Save({
   );
 }
 
-function SelectSpecialties({
+function SelectTypeClass({
   item,
   handleChangeItem,
-  handleValidationSpecialty,
+  handleValidationTypeClass,
 }) {
-  const { error, loading, data } = useQuery(GET_ALL_SPECIALTIES);
+  const { error, loading, data } = useQuery(GET_ALL_TYPE_CLASSES);
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
   let options = [];
-  data.GetAllSpecialties.forEach((selectitem) => {
+  data.GetAllTypeClasses.forEach((selectitem) => {
     options.push({ label: selectitem.name, value: Number(selectitem.id) });
   });
   return (
     <Select
       required
       options={options}
-      placeholder="Спеціальність"
+      placeholder="Тип аудиторії"
       defaultValue={
         item.id
-          ? { label: item.specialty.name, value: Number(item.specialty.id) }
+          ? { label: item.type_class.name, value: Number(item.type_class.id) }
           : null
       }
       onChange={(e) => {
-        handleValidationSpecialty(true);
-        handleChangeItem("id_specialty", Number(e.value));
-        e.value = item.id_specialty;
+        handleValidationTypeClass(true);
+        handleChangeItem("id_type_class", Number(e.value));
+        e.value = item.id_type_class;
       }}
     />
   );
 }
 
-class GroupModal extends React.Component {
+class AudienceModal extends React.Component {
   state = {
     validated: false,
-    isValidSpecialty: true,
+    validatedTypeClass: true,
   };
 
   handleClose = () => {
@@ -113,30 +108,31 @@ class GroupModal extends React.Component {
     this.setState({ validated: status });
   };
 
-  handleValidationSpecialty = (status) => {
-    this.setState({ isValidSpecialty: status });
+  handleValidationTypeClass = (status) => {
+    this.setState({ validatedTypeClass: status });
   };
 
   render() {
     const { isopen, handleChangeItem, item } = this.props;
+    console.log(item)
     return (
       <>
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
               {item.id
-                ? `Редагувати запис групи ${item.name}`
-                : "Створити запис групи"}
+                ? `Редагувати запис аудиторії ${item.name}`
+                : "Створити запис аудиторії"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form noValidate validated={this.state.validated}>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва групи</Form.Label>
+                <Form.Label className="col-2">Назва аудиторії</Form.Label>
                 <Col>
                   <Form.Control
                     required
-                    placeholder="Група"
+                    placeholder="Аудиторія"
                     value={item.name}
                     onChange={(e) => {
                       handleChangeItem("name", e.target.value);
@@ -148,14 +144,14 @@ class GroupModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Кількість студентів</Form.Label>
+                <Form.Label className="col-2">Вмісткість</Form.Label>
                 <Col>
                   <Form.Control
                     required
-                    placeholder="Кількість студентів"
-                    value={item.number_students}
+                    placeholder="Вмісткість"
+                    value={item.capacity}
                     onChange={(e) => {
-                      handleChangeItem("number_students", e.target.value);
+                      handleChangeItem("capacity", e.target.value);
                     }}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
@@ -164,32 +160,18 @@ class GroupModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Семестр</Form.Label>
+                <Form.Label className="col-2">Тип аудиторії</Form.Label>
                 <Col>
-                  <Form.Control
-                    required
-                    placeholder="Семестр"
-                    value={item.semester}
-                    onChange={(e) => {
-                      handleChangeItem("semester", e.target.value);
-                    }}
-                  ></Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    Семестр не повинен бути пустим
-                  </Form.Control.Feedback>
+                  <SelectTypeClass item={item} handleValidationTypeClass={this.handleValidationTypeClass} handleChangeItem={handleChangeItem}></SelectTypeClass>
+                  {!this.state.validatedTypeClass && (
+                    <div className="text-danger">Тип не вибран</div>
+                  )}
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва спеціальності</Form.Label>
+                <Form.Label className="col-2">Закріплені кафедри</Form.Label>
                 <Col>
-                  <SelectSpecialties
-                    handleValidationSpecialty={this.handleValidationSpecialty}
-                    handleChangeItem={handleChangeItem}
-                    item={item}
-                  ></SelectSpecialties>
-                  {!this.state.isValidSpecialty && (
-                    <div className="text-danger">Спеціальність не вибрана</div>
-                  )}
+                        
                 </Col>
               </Form.Group>
             </Form>
@@ -201,8 +183,8 @@ class GroupModal extends React.Component {
             <Save
               item={item}
               handleCloseModal={this.handleClose}
-              handleValidationSpecialty={this.handleValidationSpecialty}
               handleValidation={this.handleValidation}
+              handleValidationTypeClass={this.handleValidationTypeClass}
             ></Save>
           </Modal.Footer>
         </Modal>
@@ -211,4 +193,4 @@ class GroupModal extends React.Component {
   }
 }
 
-export default GroupModal;
+export default AudienceModal;
