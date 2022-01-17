@@ -52,7 +52,10 @@ class Discipline extends React.Component {
   handleSetItem = (item) => {
     this.setState((PrevState) => ({
       item: update(PrevState.item, {
-        $merge: { ...item, id_specialty: Number(item.specialty.id) },
+        $merge: {
+          ...item,
+          id_specialty: Number(item.assigned_disciplines.specialty.id),
+        },
       }),
     }));
   };
