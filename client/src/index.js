@@ -16,7 +16,7 @@ import Group from "./Components/Group/Group";
 import Teacher from "./Components/Teacher/Teacher";
 import AuthProvider from "./Components/Authorization/AuthProvider";
 import "react-notifications/lib/notifications.css";
-
+import "./App.css";
 const client = new ApolloClient({
   uri: "http://localhost:3002/graphql",
   cache: new InMemoryCache(),

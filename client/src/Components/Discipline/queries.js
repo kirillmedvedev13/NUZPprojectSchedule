@@ -6,6 +6,7 @@ export const GET_ALL_DISCIPLINES = gql`
       id
       name
       assigned_disciplines {
+        id
         semester
         specialty {
           id

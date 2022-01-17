@@ -10,6 +10,7 @@ export const GET_ALL_DISCIPLINES = {
     id_specialty: { type: GraphQLInt },
   },
   async resolve(parent, { name, id_specialty }) {
+    let array = [];
     let isFilters = {};
     let isFilters1 = {};
     let str = "";
@@ -34,17 +35,38 @@ export const GET_ALL_DISCIPLINES = {
           [Op.eq]: id_specialty,
         },
       };
+      const res1 = await db.discipline.findAll({
+        include: {
+          model: db.assigned_discipline,
+          where: isFilters1,
+          include: {
+            model: db.specialty,
+          },
+        },
+      });
+      res1.map((disc) => {
+        array.push(disc.dataValues.id);
+      });
     }
-    const res = await db.discipline.findAll({
-      where: isFilters,
+    console.log(isFilters);
+    let isFilterID = {};
+    if (array.length) {
+      isFilterID = {
+        id: array,
+      };
+    }
+    let res = await db.discipline.findAll({
+      where: {
+        [Op.and]: [isFilters, isFilterID],
+      },
       include: {
         model: db.assigned_discipline,
-        where: isFilters1,
         include: {
           model: db.specialty,
         },
       },
     });
+
     return res;
   },
 };

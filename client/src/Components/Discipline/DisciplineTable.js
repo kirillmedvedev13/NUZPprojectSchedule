@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
-import { Table } from "react-bootstrap";
+import { ListGroup, Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { GET_ALL_DISCIPLINES } from "./queries";
 function DataTable({
@@ -17,27 +17,35 @@ function DataTable({
 
   return (
     <tbody>
-      {data.GetAllDisciplines.map((item) =>
-        item.assigned_disciplines.map((item1) => (
-          <tr key={item1.id}>
-            <td>{item.name}</td>
-            <td>{item1.specialty.name}</td>
-            <td>{item1.semester}</td>
-            <td className="col-2" onClick={(e) => handleSetItem(item)}>
-              <PencilSquare
-                className="mx-1"
-                type="button"
-                onClick={(e) => handleOpenModal()}
-              />
-              <XCircle
-                className="mx-1"
-                type="button"
-                onClick={(e) => handleOpenDialog()}
-              />
-            </td>
-          </tr>
-        ))
-      )}
+      {data.GetAllDisciplines.map((item) => (
+        <tr key={item.id}>
+          <td>{item.name}</td>
+          <td>
+            <ul>
+              {item.assigned_disciplines.map((item1) => {
+                return (
+                  <li key={item1.id}>
+                    {item1.specialty.name} - {item1.semester}
+                  </li>
+                );
+              })}
+            </ul>
+          </td>
+          <td className="col-2" onClick={(e) => handleSetItem(item)}>
+            {console.log(item)}
+            <PencilSquare
+              className="mx-1"
+              type="button"
+              onClick={(e) => handleOpenModal()}
+            />
+            <XCircle
+              className="mx-1"
+              type="button"
+              onClick={(e) => handleOpenDialog()}
+            />
+          </td>
+        </tr>
+      ))}
     </tbody>
   );
 }
@@ -50,10 +58,10 @@ class DisciplineTable extends React.Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Назва дісципліни</th>
-              <th>Назва спеціальності</th>
+              <th>Дісципліна</th>
+              <th>Спеціальність - Семестер</th>
 
-              <th>Семестер</th>
+              <th></th>
             </tr>
           </thead>
           <DataTable
