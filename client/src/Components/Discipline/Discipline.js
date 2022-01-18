@@ -10,7 +10,7 @@ class Discipline extends React.Component {
   state = {
     filters: {
       name: "",
-      id_specialty: null,
+      id_discipline: null,
     },
     item: {
       id: null,
@@ -25,6 +25,16 @@ class Discipline extends React.Component {
   handleOpenDialog = () => {
     this.setState({
       openDialog: true,
+    });
+  };
+  handleCloseDialog = () => {
+    this.setState({
+      openDialog: false,
+    });
+  };
+  handleOpenModal = () => {
+    this.setState({
+      openModal: true,
     });
   };
   handleCloseModal = () => {
@@ -54,7 +64,7 @@ class Discipline extends React.Component {
       item: update(PrevState.item, {
         $merge: {
           ...item,
-          id_specialty: Number(item.assigned_disciplines.specialty.id),
+          id_specialty: Number(item.id),
         },
       }),
     }));
