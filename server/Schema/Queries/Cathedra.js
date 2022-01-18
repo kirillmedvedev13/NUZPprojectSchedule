@@ -1,16 +1,16 @@
 import { GraphQLList, GraphQLString } from "graphql";
 import db from "../../database.js";
 import CathedraType from "../TypeDefs/CathedraType.js";
-import {Op} from "sequelize"
+import { Op } from "sequelize"
 
 export const GET_ALL_CATHEDRAS = {
   type: new GraphQLList(CathedraType),
   args: {
     name: { type: GraphQLString },
   },
-  async resolve(parent, {name}) {
+  async resolve(parent, { name }) {
     let isFilters = {}
-    if(name){
+    if (name) {
       const arr = name.split(" ");
       let str = ""
       arr.map((word, index) => {
@@ -20,14 +20,14 @@ export const GET_ALL_CATHEDRAS = {
         else {
           str += word
         }
-        isFilters = {
-            name: {
-              [Op.regexp]: str
-            }
-          }
       });
-  }
-    const res =  await db.cathedra.findAll({
+      isFilters = {
+        name: {
+          [Op.regexp]: str
+        }
+      }
+    }
+    const res = await db.cathedra.findAll({
       where: isFilters
     });
     return res;
