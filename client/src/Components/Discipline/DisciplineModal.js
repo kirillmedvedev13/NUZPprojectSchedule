@@ -29,6 +29,15 @@ function Save({
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
   console.log(item);
+  item.assigned_disciplines.map((object) => {
+    if (object.semester === 0) {
+      CreateNotification({
+        successful: false,
+        message: "Введіть правильний номер семестру",
+      });
+      return;
+    }
+  });
   let str = JSON.stringify(item.assigned_disciplines);
   const variables = item.id
     ? {
