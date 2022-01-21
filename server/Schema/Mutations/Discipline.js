@@ -1,18 +1,35 @@
-import { GraphQLID, GraphQLInt, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList } from "graphql";
 import db from "../../database.js";
+import Assigned_disciplineInput from "../TypeDefs/Assigned_disciplineType.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
 export const CREATE_DISCIPLINE = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
+    input: { type: GraphQLString },
   },
-  async resolve(parent, { name}) {
-    let res = await db.discipline.create({
+  async resolve(parent, { name, input }) {
+    const res1 = await db.discipline.create({
       name,
     });
-    return res
-      ? { successful: true, message: "Discipline was created" }
+    const disc = await db.discipline.findOne({ where: { name } });
+    let arraySpec = JSON.parse(input);
+    const discID = disc.dataValues.id;
+    let assigned_discipline = arraySpec.map((object) => {
+      return {
+        id_discipline: discID,
+        id_specialty: object.specialty.id,
+        semester: object.semester,
+      };
+    });
+    const res2 = await db.assigned_discipline.bulkCreate(assigned_discipline);
+    return res2
+      ? {
+          successful: true,
+          message:
+            "Discipline was created and all specialties was added to discipline",
+        }
       : { successful: false, message: "Discipline wasn`t created" };
   },
 };
@@ -38,18 +55,29 @@ export const UPDATE_DISCIPLINE = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
-    id_specialty: {type : GraphQLInt}
+    name: { type: GraphQLString },
+    input: { type: GraphQLString },
   },
-  async resolve(parent, { id,name }) {
+  async resolve(parent, { id, name, input }) {
     let res = await db.discipline.update(
-      { name, },
+      { name },
       {
         where: {
           id,
         },
       }
     );
-    return res[0]
+    await db.assigned_discipline.destroy({ where: { id_discipline: id } });
+    let arraySpec = JSON.parse(input);
+    let assigned_discipline = arraySpec.map((object) => {
+      return {
+        id_discipline: id,
+        id_specialty: object.specialty.id,
+        semester: object.semester,
+      };
+    });
+    const res2 = await db.assigned_discipline.bulkCreate(assigned_discipline);
+    return res2
       ? { successful: true, message: "Discipline was updated" }
       : { successful: false, message: "Discipline wasn`t updated" };
   },
@@ -59,27 +87,23 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
   type: MessageType,
   args: {
     id_discipline: { type: GraphQLID },
-    id_specialty: {type : GraphQLID},
-    semester: {type: GraphQLInt}
+    id_specialty: { type: GraphQLID },
+    semester: { type: GraphQLInt },
   },
-  async resolve(parent, { id_discipline,id_specialty, semester }) {
-    let spec = await db.specialty.findOne(
-      {
-        where: {
-          id: id_specialty
-        },
-      }
-    );
-    if(!spec) return { successful: false, message: "Cannot find specialty" };
-    let disc = await db.discipline.findOne(
-      {
-        where: {
-          id: id_discipline
-        },
-      }
-    );
-    if(!disc) return { successful: false, message: "Cannot find discipline" };
-    let res = await disc.addSpecialty(spec, {through: {semester}});
+  async resolve(parent, { id_discipline, id_specialty, semester }) {
+    let spec = await db.specialty.findOne({
+      where: {
+        id: id_specialty,
+      },
+    });
+    if (!spec) return { successful: false, message: "Cannot find specialty" };
+    let disc = await db.discipline.findOne({
+      where: {
+        id: id_discipline,
+      },
+    });
+    if (!disc) return { successful: false, message: "Cannot find discipline" };
+    let res = await disc.addSpecialty(spec, { through: { semester } });
     return res
       ? { successful: true, message: "Discipline was added to Specialty" }
       : { successful: false, message: "Discipline wasn`t added to Specialty" };
@@ -89,16 +113,19 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
 export const DELETE_DISCIPLINE_FROM_SPECIALTY = {
   type: MessageType,
   args: {
-    id: { type: GraphQLID},
+    id: { type: GraphQLID },
   },
-  async resolve(parent, {id}){
+  async resolve(parent, { id }) {
     let res = await db.assigned_discipline.destroy({
       where: {
-        id
-      }
+        id,
+      },
     });
     return res
-    ? { successful: true, message: "Discipline was deleted from Specialty" }
-    : { successful: false, message: "Discipline wasn`t deleted from Specialty" };
-  }
+      ? { successful: true, message: "Discipline was deleted from Specialty" }
+      : {
+          successful: false,
+          message: "Discipline wasn`t deleted from Specialty",
+        };
+  },
 };

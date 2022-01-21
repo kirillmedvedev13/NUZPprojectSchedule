@@ -15,8 +15,7 @@ class Discipline extends React.Component {
     item: {
       id: null,
       name: "",
-      id_specialty: null,
-      semester: null,
+      assigned_disciplines: [],
     },
     openModal: false,
     openDialog: false,
@@ -43,8 +42,7 @@ class Discipline extends React.Component {
       item: {
         id: null,
         name: "",
-        id_specialty: null,
-        semester: null,
+        assigned_disciplines: [],
       },
     });
   };
@@ -55,6 +53,7 @@ class Discipline extends React.Component {
   };
 
   handleChangeFilters = (name, value) => {
+    console.log("filters");
     this.setState((PrevState) => ({
       filters: update(PrevState.filters, { $merge: { [name]: value } }),
     }));
@@ -64,7 +63,6 @@ class Discipline extends React.Component {
       item: update(PrevState.item, {
         $merge: {
           ...item,
-          id_specialty: Number(item.id),
         },
       }),
     }));

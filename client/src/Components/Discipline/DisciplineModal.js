@@ -1,11 +1,20 @@
 import React from "react";
-import { Button, Modal, Form, Row, Col, ListGroup } from "react-bootstrap";
+import {
+  Button,
+  Modal,
+  Form,
+  Row,
+  Col,
+  ListGroup,
+  InputGroup,
+} from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
-import { UPDATE_SPECIALTY, CREATE_SPECIALTY } from "./mutations";
+import { CREATE_DISCIPLINE, UPDATE_DISCIPLINE } from "./mutations";
 import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
+import { XCircle } from "react-bootstrap-icons";
+import { GET_ALL_DISCIPLINES } from "./queries";
 
 function Save({
   item,
@@ -13,16 +22,45 @@ function Save({
   handleValidation,
   handleValidationSpecialty,
 }) {
+  const mutation = item.id ? UPDATE_DISCIPLINE : CREATE_DISCIPLINE;
+  const [mutateFunction, { loading, error }] = useMutation(mutation, {
+    refetchQueries: [GET_ALL_DISCIPLINES],
+  });
+  if (loading) return "Submitting...";
+  if (error) return `Submission error! ${error.message}`;
+  console.log(item);
+  let str = JSON.stringify(item.assigned_disciplines);
+  const variables = item.id
+    ? {
+        variables: {
+          id: Number(item.id),
+          name: item.name,
+          input: str,
+        },
+      }
+    : {
+        variables: {
+          name: item.name,
+          input: str,
+        },
+      };
+
   return (
     <Button
       variant="primary"
       onClick={(e) => {
         if (!item.name) handleValidation(true);
-        if (!item.id_cathedra) {
+        if (!item.assigned_disciplines.length) {
           handleValidationSpecialty(false);
         }
-        if (item.name && item.id_cathedra) {
+        if (item.name && item.assigned_disciplines.length) {
           handleValidation(true, false);
+          mutateFunction(variables).then((res) => {
+            CreateNotification(
+              item.id ? res.data.UpdateDiscipline : res.data.CreateDiscipline
+            );
+          });
+          handleCloseModal();
         }
       }}
     >
@@ -30,6 +68,24 @@ function Save({
     </Button>
   );
 }
+const findInArraySpec = (array, id) => {
+  let spec = {};
+  array.map((object) => {
+    if (Number(object.id) === Number(id)) {
+      spec = object;
+    }
+  });
+  return spec;
+};
+const findInArraySpeciaty = (array, id) => {
+  let check = false;
+  array.map((object) => {
+    if (Number(object.specialty.id) === Number(id)) {
+      check = true;
+    }
+  });
+  return check;
+};
 
 function SelectSpecialties({
   item,
@@ -42,23 +98,24 @@ function SelectSpecialties({
   if (error) return `Error! ${error}`;
   let options = [];
   data.GetAllSpecialties.forEach((selectitem) => {
-    options.push({ label: selectitem.name, value: Number(selectitem.id) });
+    if (!findInArraySpeciaty(selectedSpec, selectitem.id))
+      options.push({ label: selectitem.name, value: Number(selectitem.id) });
   });
   return (
     <Select
       required
       options={options}
       placeholder="Спеціальність"
-      defaultValue={
-        item.id
-          ? { label: item.specialty.name, value: Number(item.specialty.id) }
-          : null
-      }
+      defaultValue={""}
       onChange={(e) => {
         handleValidationSpecialty(true);
-        handleChangeItem("id_specialty", Number(e.value));
-        console.log(item);
-        selectedSpec.push({ id: item.id_specialty, name: e });
+        let spec = findInArraySpec(data.GetAllSpecialties, e.value);
+        handleChangeItem("assigned_disciplines", selectedSpec);
+
+        selectedSpec.push({
+          specialty: { id: spec.id, name: spec.name },
+          semester: 0,
+        });
       }}
     />
   );
@@ -68,8 +125,15 @@ class DisciplineModal extends React.Component {
     validated: false,
     isValidSpecialty: true,
     selectedSpec: [],
+    update: false,
   };
   handleClose = () => {
+    this.setState({
+      validated: false,
+      isValidSpecialty: true,
+      selectedSpec: [],
+      update: false,
+    });
     this.props.handleCloseModal();
   };
 
@@ -80,9 +144,50 @@ class DisciplineModal extends React.Component {
   handleValidationSpecialty = (status) => {
     this.setState({ isValidSpecialty: status });
   };
+  deleteSelectedSpec = (object, selectedSpec) => {
+    let arr = selectedSpec;
+    arr.splice(arr.indexOf(object), 1);
+    console.log(arr);
+    this.setState({
+      update: true,
+      selectedSpec: arr,
+    });
+    this.props.handleChangeItem("assigned_disciplines", arr);
+  };
+  setSelectedSpec = (item) => {
+    if (
+      item.assigned_disciplines.length &&
+      this.state.selectedSpec.length === 0 &&
+      !this.state.update
+    ) {
+      let arr = [];
+      item.assigned_disciplines.map((object) => {
+        arr.push({ specialty: object.specialty, semester: object.semester });
+      });
+      this.state.selectedSpec = arr;
+    }
+  };
+  setSemester = (id, semester) => {
+    if (semester < 1 || semester > 13) {
+      CreateNotification({
+        successful: false,
+        message: "Введіть правильний номер семестру",
+      });
+      return;
+    }
+    let arr = this.state.selectedSpec;
+    arr.map((object) => {
+      if (object.specialty.id === id) object.semester = semester;
+    });
+    this.setState({
+      selectedSpec: arr,
+    });
+    this.props.handleChangeItem("assigned_disciplines", arr);
+  };
 
   render() {
     const { isopen, handleChangeItem, item } = this.props;
+    this.setSelectedSpec(item);
     return (
       <>
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
@@ -127,11 +232,42 @@ class DisciplineModal extends React.Component {
                     </div>
                   )}
                 </Col>
-                <ListGroup>
-                  {this.state.selectedSpec
+                <ListGroup variant="flush">
+                  {this.state.selectedSpec[0]
                     ? this.state.selectedSpec.map((object) => {
-                        console.log(object);
-                        return <ListGroup.Item>{object.name}</ListGroup.Item>;
+                        return (
+                          <ListGroup.Item key={object.specialty.id}>
+                            <label className="col-8">
+                              {object.specialty.name}
+                            </label>
+                            <input
+                              placeholder="Семестр"
+                              value={object.semester}
+                              className="col-3"
+                              id={object.specialty.id}
+                              type="number"
+                              min="0"
+                              max="13"
+                              required
+                              onChange={(e) => {
+                                this.setSemester(
+                                  object.specialty.id,
+                                  e.target.value
+                                );
+                              }}
+                            ></input>
+                            <XCircle
+                              className="mx-1"
+                              type="button"
+                              onClick={(e) => {
+                                this.deleteSelectedSpec(
+                                  object,
+                                  this.state.selectedSpec
+                                );
+                              }}
+                            />
+                          </ListGroup.Item>
+                        );
                       })
                     : ""}
                 </ListGroup>
@@ -145,7 +281,7 @@ class DisciplineModal extends React.Component {
             <Save
               item={item}
               handleCloseModal={this.handleClose}
-              handleValidationCathedra={this.handleValidationSpecialty}
+              handleValidationSpecialty={this.handleValidationSpecialty}
               handleValidation={this.handleValidation}
             ></Save>
           </Modal.Footer>

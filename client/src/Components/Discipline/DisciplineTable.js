@@ -32,7 +32,6 @@ function DataTable({
             </ul>
           </td>
           <td className="col-2" onClick={(e) => handleSetItem(item)}>
-            {console.log(item)}
             <PencilSquare
               className="mx-1"
               type="button"

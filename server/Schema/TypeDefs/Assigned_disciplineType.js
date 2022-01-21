@@ -8,7 +8,14 @@ const Assigned_disciplineType = new GraphQLObjectType({
     id: { type: GraphQLID },
     discipline: { type: DisciplineType },
     specialty: { type: SpecialtyType },
-    semester: { type: GraphQLInt }
+    semester: { type: GraphQLInt },
+  }),
+});
+export const Assigned_disciplineInput = new GraphQLObjectType({
+  name: "Assigned_discipline",
+  fields: () => ({
+    specialty: { type: SpecialtyType },
+    semester: { type: GraphQLInt },
   }),
 });
 
