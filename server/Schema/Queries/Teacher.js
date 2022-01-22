@@ -9,29 +9,25 @@ export const GET_ALL_TEACHERS = {
     surname: { type: GraphQLString },
   },
   async resolve(parent, { surname }) {
-    let FilterSurname = {}
+    let FilterSurname = {};
     let str = "";
     if (surname) {
       const arr = surname.split(" ");
       arr.map((word, index) => {
         if (index != arr.length - 1) {
-          str += `${word}|`
-        }
-        else {
-          str += word
+          str += `${word}|`;
+        } else {
+          str += word;
         }
       });
       FilterSurname = {
         surname: {
-          [Op.regexp]: str
+          [Op.regexp]: str,
         },
-      }
+      };
     }
 
     let res = await db.teacher.findAll({
-      include: {
-        model: db.assigned_teacher,
-      },
       where: FilterSurname,
     });
     return res;

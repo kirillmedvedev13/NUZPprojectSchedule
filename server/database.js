@@ -17,6 +17,7 @@ import Recommended_audience from "./Models/Recommended_audience.js";
 import Assigned_teacher from "./Models/Assigned_teacher.js";
 import Schedule from "./Models/Schedule.js";
 import User from "./Models/User.js";
+import Assigned_group from "./Models/Assigned_group.js";
 
 const db = {};
 
@@ -36,6 +37,7 @@ const models = [
   Recommended_audience,
   Assigned_teacher,
   Schedule,
+  Assigned_group,
   User,
 ];
 

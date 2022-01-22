@@ -30,7 +30,10 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_class",
     });
     Class.hasMany(models.assigned_teacher, {
-      foreignKey: "id_teacher",
+      foreignKey: "id_class",
+    });
+    Class.hasMany(models.assigned_group, {
+      foreignKey: "id_class",
     });
     Class.belongsToMany(models.audience, {
       foreignKey: "id_class",
@@ -40,7 +43,10 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_class",
       through: models.assigned_teacher,
     });
-    Class.hasMany(models.schedule, {foreignKey: "id_class",});
+    Class.belongsToMany(models.group, {
+      foreignKey: "id_class",
+      through: models.assigned_teacher,
+    });
   };
   return Class;
 };

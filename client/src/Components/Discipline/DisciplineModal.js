@@ -28,16 +28,7 @@ function Save({
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
-  console.log(item);
-  item.assigned_disciplines.map((object) => {
-    if (object.semester === 0) {
-      CreateNotification({
-        successful: false,
-        message: "Введіть правильний номер семестру",
-      });
-      return;
-    }
-  });
+
   let str = JSON.stringify(item.assigned_disciplines);
   const variables = item.id
     ? {
@@ -86,7 +77,7 @@ const findInArraySpec = (array, id) => {
   });
   return spec;
 };
-const findInArraySpeciaty = (array, id) => {
+const findInArraySpecialty = (array, id) => {
   let check = false;
   array.map((object) => {
     if (Number(object.specialty.id) === Number(id)) {
@@ -107,7 +98,7 @@ function SelectSpecialties({
   if (error) return `Error! ${error}`;
   let options = [];
   data.GetAllSpecialties.forEach((selectitem) => {
-    if (!findInArraySpeciaty(selectedSpec, selectitem.id))
+    if (!findInArraySpecialty(selectedSpec, selectitem.id))
       options.push({ label: selectitem.name, value: Number(selectitem.id) });
   });
   return (
@@ -123,7 +114,7 @@ function SelectSpecialties({
 
         selectedSpec.push({
           specialty: { id: spec.id, name: spec.name },
-          semester: 0,
+          semester: 1,
         });
       }}
     />
@@ -241,47 +232,46 @@ class DisciplineModal extends React.Component {
                     </div>
                   )}
                 </Col>
-                <ListGroup variant="flush">
-                  {this.state.selectedSpec[0]
-                    ? this.state.selectedSpec.map((object) => {
-                        return (
-                          <ListGroup.Item key={object.specialty.id}>
-                            <label className="col-8">
-                              {object.specialty.name}
-                            </label>
-                            <input
-                              placeholder="Семестр"
-                              value={object.semester}
-                              className="col-3"
-                              id={object.specialty.id}
-                              type="number"
-                              min="0"
-                              max="13"
-                              required
-                              onChange={(e) => {
-                                this.setSemester(
-                                  object.specialty.id,
-                                  e.target.value
-                                );
-                              }}
-                            ></input>
-                            <XCircle
-                              className="mx-1"
-                              type="button"
-                              onClick={(e) => {
-                                this.deleteSelectedSpec(
-                                  object,
-                                  this.state.selectedSpec
-                                );
-                              }}
-                            />
-                          </ListGroup.Item>
-                        );
-                      })
-                    : ""}
-                </ListGroup>
               </Form.Group>
             </Form>
+            <ListGroup variant="flush">
+              <ListGroup.Item>Обрані спеціальності: </ListGroup.Item>
+              {this.state.selectedSpec[0]
+                ? this.state.selectedSpec.map((object) => {
+                    return (
+                      <ListGroup.Item key={object.specialty.id}>
+                        <label className="col-9">{object.specialty.name}</label>
+                        <input
+                          placeholder="Семестр"
+                          value={object.semester}
+                          className="col-2"
+                          id={object.specialty.id}
+                          type="number"
+                          min="1"
+                          max="13"
+                          required
+                          onChange={(e) => {
+                            this.setSemester(
+                              object.specialty.id,
+                              e.target.value
+                            );
+                          }}
+                        ></input>
+                        <XCircle
+                          className="mx-1"
+                          type="button"
+                          onClick={(e) => {
+                            this.deleteSelectedSpec(
+                              object,
+                              this.state.selectedSpec
+                            );
+                          }}
+                        />
+                      </ListGroup.Item>
+                    );
+                  })
+                : ""}
+            </ListGroup>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
