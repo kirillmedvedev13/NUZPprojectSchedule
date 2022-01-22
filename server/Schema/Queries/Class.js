@@ -18,14 +18,55 @@ export const GET_ALL_CLASSES = {
             },
             {
               model: db.specialty,
-              include: {
-                model: db.cathedra,
-              },
             },
           ],
         },
+        {
+          model: db.assigned_teacher,
+          include: {
+            model: db.teacher,
+            include: {
+              model: db.cathedra,
+            },
+          },
+        },
+        {
+          model: db.assigned_group,
+          include: {
+            model: db.group,
+          },
+        },
       ],
     });
+    console.log(res);
     return res;
   },
 };
+/*query{
+  GetAllClasses {
+    assigned_discipline {
+      discipline {
+        name
+      }
+    }
+    type_class {
+      name
+    }
+    times_per_week
+    assigned_groups {
+      group {
+        name
+      }
+  }
+    assigned_teachers {
+      teacher {
+        patronymic
+        name
+        cathedra {
+          name
+        }
+      }
+    }
+  }
+}
+ */

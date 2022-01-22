@@ -5,6 +5,7 @@ import {
   GraphQLList,
 } from "graphql";
 import Assigned_teacherType from "./Assigned_teacherType.js";
+import CathedraType from "./CathedraType.js";
 
 const TeacherType = new GraphQLObjectType({
   name: "Teacher",
@@ -14,6 +15,7 @@ const TeacherType = new GraphQLObjectType({
     surname: { type: GraphQLString },
     patronymic: { type: GraphQLString },
     assigned_teachers: { type: new GraphQLList(Assigned_teacherType) },
+    cathedra: { type: CathedraType },
   }),
 });
 
