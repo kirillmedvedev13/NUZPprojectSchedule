@@ -3,13 +3,16 @@ import update from "react-addons-update";
 import { Button } from "react-bootstrap";
 import ClassDialog from "./ClassDialog";
 import ClassModal from "./ClassModal";
+import ClassTable from "./ClassTable";
 import ClassSearch from "./ClassSearch";
 
 class Class extends React.Component {
   state = {
     filters: {
       name: "",
-      id_class: null,
+      id_discipline: null,
+      id_teacher: null,
+      id_group: null,
     },
     item: {
       id: null,
@@ -102,6 +105,12 @@ class Class extends React.Component {
             Додати Занняття
           </Button>
         </div>
+        <ClassTable
+          handleOpenModal={this.handleOpenModal}
+          handleOpenDialog={this.handleOpenDialog}
+          handleSetItem={this.handleSetItem}
+          filters={filters}
+        ></ClassTable>
       </>
     );
   }
