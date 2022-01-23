@@ -1,10 +1,12 @@
 import React from "react";
-import { Button, Modal, Form, Row, Col } from "react-bootstrap";
+import { Button, Modal, Form, Row, Col, Table } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import { UPDATE_AUDIENCE, CREATE_AUDIENCE } from "./mutations";
+import { UPDATE_AUDIENCE, CREATE_AUDIENCE, DELETE_AUDIENCE_FROM_CATHEDRA, ADD_AUDIENCE_TO_CATHEDRA } from "./mutations";
 import { GET_ALL_AUDIENCES, GET_ALL_TYPE_CLASSES } from "./queries";
+import { GET_ALL_CATHEDRAS } from "../Cathedra/queries"
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
+import { XCircle } from "react-bootstrap-icons"
 
 function Save({
   item,
@@ -20,20 +22,21 @@ function Save({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: Number(item.id),
-          name: item.name,
-          capacity: Number(item.capacity),
-          id_type_class: Number(item.id_type_class)
-        },
-      }
+      variables: {
+        id: Number(item.id),
+        name: item.name,
+        capacity: Number(item.capacity),
+        id_type_class: Number(item.type_class.id)
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          capacity: Number(item.capacity),
-          id_type_class: Number(item.id_type_class)
-        },
-      };
+      variables: {
+        name: item.name,
+        capacity: Number(item.capacity),
+        id_type_class: Number(item.type_class.id),
+        assigned_cathedras: JSON.stringify(item.assigned_audiences),
+      },
+    };
   return (
     <Button
       variant="primary"
@@ -50,7 +53,7 @@ function Save({
           });
         } else {
           handleValidation(true);
-          if (item.id_type_class) {
+          if (item.type_class.id) {
             handleValidationTypeClass(true);
           } else {
             handleValidationTypeClass(false);
@@ -87,18 +90,171 @@ function SelectTypeClass({
       }
       onChange={(e) => {
         handleValidationTypeClass(true);
-        handleChangeItem("id_type_class", Number(e.value));
-        e.value = item.id_type_class;
+        handleChangeItem("type_class", { id: Number(e.value) });
+        e.value = item.type_class.id;
       }}
     />
   );
+}
+
+function SelectsCathedras({ item, handleUpdateItem, handleChangeItem }) {
+  const [DelAudFromCathedra, { loading, error }] = useMutation(DELETE_AUDIENCE_FROM_CATHEDRA, {
+    refetchQueries: [GET_ALL_AUDIENCES],
+  });
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error}`;
+
+  return (
+    <Table striped bordered hover className="my-2">
+      <thead>
+        <tr>
+          <th>Назва кафедри</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          item.assigned_audiences.map((itemAU) => (
+            <tr key={Number(itemAU.id)}>
+              <td>{itemAU.cathedra.name}</td>
+              <td className="p-0">
+                <XCircle
+                  className="m-1"
+                  type="button"
+                  onClick={(e) => {
+                    if (item.id) { // При редактировании
+                      DelAudFromCathedra({ variables: { id: Number(itemAU.id) } }).then((res) => {
+                        handleUpdateItem(item);
+                        CreateNotification(res.data.DeleteAudienceFromCathedra)
+                      })
+                    }
+                    else { // При добавлении
+                      let arrAU = item.assigned_audiences.filter(au => Number(au.id) !== Number(itemAU.id))
+                      handleChangeItem("assigned_audiences", arrAU)
+                    }
+                  }
+                  }>
+                </XCircle >
+              </td>
+            </tr>
+          )
+          )
+        }
+      </tbody>
+    </Table>
+  )
+}
+
+function AddAudienceToCathedra({
+  item,
+  handleUpdateItem,
+  handleAddAudToCath,
+  statusAddAudeinceToCathedra,
+  handleChangeSelectedCathedraToAdd,
+  selectedCathedraToAdd,
+  handleValidationSelectedCathedraToAdd,
+  validatedSelectedCathedraToAdd,
+  handleChangeItem,
+  handleIncCounterCathedras,
+  counterCathedras,
+}) {
+  const query = useQuery(GET_ALL_CATHEDRAS);
+  const [AddAudToCathedra, { loading, error }] = useMutation(ADD_AUDIENCE_TO_CATHEDRA, {
+    refetchQueries: [GET_ALL_AUDIENCES],
+  });
+  if (query.loading) return "Loading...";
+  if (query.error) return `Error! ${error}`;
+  let options = [];
+  query.data.GetAllCathedras.forEach(element => {
+    options.push({ label: element.name, value: Number(element.id) })
+  })
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error}`;
+
+  if (statusAddAudeinceToCathedra) {
+    return (
+      <Form.Group as={Row} className="my-2 mx-2 px-0">
+        <Form.Label className="col-auto px-1">Виберiть кафедру</Form.Label>
+        <Col className="px-1">
+          <Select options={options} placeholder="Кафедра" onChange={(e) => {
+            handleChangeSelectedCathedraToAdd({ id: e.value, name: e.label })
+            handleValidationSelectedCathedraToAdd({ status: true });
+          }}></Select>
+          {!validatedSelectedCathedraToAdd.status && (
+            <div className="text-danger">{validatedSelectedCathedraToAdd.message}</div>
+          )}
+        </Col>
+        <Col className="col-auto px-1">
+          <Button onClick={(e) => {
+            if (selectedCathedraToAdd) {
+              const checkSelectedCathedras = item.assigned_audiences.filter(au => Number(au.cathedra.id) === Number(selectedCathedraToAdd.id))
+              if (!checkSelectedCathedras.length) { // Проверка не добавлена ли эта кафедра уже в массив
+                if (item.id) { // Если редактирование элемента
+                  AddAudToCathedra({ variables: { id_cathedra: Number(selectedCathedraToAdd.id), id_audience: Number(item.id) } }).then((res) => {
+                    handleUpdateItem(item);
+                    CreateNotification(res.data.AddAudienceToCathedra);
+                    handleAddAudToCath(false);
+                    handleChangeSelectedCathedraToAdd(null);
+                  }
+                  )
+                }
+                else { // Создание элемента
+                  let arrAU = item.assigned_audiences;
+                  arrAU.push({ id: counterCathedras, cathedra: { id: selectedCathedraToAdd.id, name: selectedCathedraToAdd.name } })
+                  handleChangeItem("assigned_audiences", arrAU);
+                  handleIncCounterCathedras();
+                  handleAddAudToCath(false);
+                  handleChangeSelectedCathedraToAdd(null);
+                }
+              }
+              else {
+                handleValidationSelectedCathedraToAdd({ status: false, message: "Кафедра вже додана" });
+              }
+            }
+            else {
+              handleValidationSelectedCathedraToAdd({ status: false, message: "Кафедра не вибрана!" });
+            }
+          }}>Зберегти</Button>
+        </Col>
+      </Form.Group>
+    )
+  }
+  else {
+    return <Button onClick={(e) => handleAddAudToCath(true)}>Додати кафедру</Button>
+  }
+
 }
 
 class AudienceModal extends React.Component {
   state = {
     validated: false,
     validatedTypeClass: true,
+    statusAddAudeinceToCathedra: false, // Если тру то форма с добавлением кафедры
+    selectedCathedraToAdd: null, // выбранная кафедра для добавление к аудитории 
+    validatedSelectedCathedraToAdd: { status: true },  // Проверка выбранной кафдеры
+    counterCathedras: 0, // счётчик для ключей в массиве закрепленных кафедр
   };
+
+  //При выборке кафедры в селекте
+  handleChangeSelectedCathedraToAdd = (cathedra) => {
+    this.setState({ selectedCathedraToAdd: cathedra });
+  }
+
+  //Изменение отображение : формы или кнопки
+  handleAddAudToCath = (status) => {
+    this.setState({ statusAddAudeinceToCathedra: status });
+  }
+
+  //Проверка на выбранную кафедру
+  handleValidationSelectedCathedraToAdd = (valid) => {
+    this.setState({ validatedSelectedCathedraToAdd: valid });
+  }
+
+  //Увелечиние счётчика кафедр
+  handleIncCounterCathedras = () => {
+    this.setState(prevState => ({ counterCathedras: prevState.counterCathedras + 1 }));
+  }
 
   handleClose = () => {
     this.props.handleCloseModal();
@@ -113,8 +269,7 @@ class AudienceModal extends React.Component {
   };
 
   render() {
-    const { isopen, handleChangeItem, item } = this.props;
-    console.log(item)
+    const { isopen, handleChangeItem, item, handleUpdateItem } = this.props;
     return (
       <>
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
@@ -171,7 +326,26 @@ class AudienceModal extends React.Component {
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Закріплені кафедри</Form.Label>
                 <Col>
-                        
+                  <AddAudienceToCathedra
+                    item={item}
+                    handleUpdateItem={handleUpdateItem}
+                    statusAddAudeinceToCathedra={this.state.statusAddAudeinceToCathedra}
+                    handleAddAudToCath={this.handleAddAudToCath}
+                    handleChangeSelectedCathedraToAdd={this.handleChangeSelectedCathedraToAdd}
+                    validatedSelectedCathedraToAdd={this.state.validatedSelectedCathedraToAdd}
+                    handleValidationSelectedCathedraToAdd={this.handleValidationSelectedCathedraToAdd}
+                    selectedCathedraToAdd={this.state.selectedCathedraToAdd}
+                    handleChangeItem={handleChangeItem}
+                    handleIncCounterCathedras={this.handleIncCounterCathedras}
+                    counterCathedras={this.state.counterCathedras}
+                  >
+                  </AddAudienceToCathedra>
+                  <SelectsCathedras
+                    item={item}
+                    handleUpdateItem={handleUpdateItem}
+                    handleChangeItem={handleChangeItem}
+                  >
+                  </SelectsCathedras>
                 </Col>
               </Form.Group>
             </Form>

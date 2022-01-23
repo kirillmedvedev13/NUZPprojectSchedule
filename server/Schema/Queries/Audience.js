@@ -53,7 +53,6 @@ export const GET_ALL_AUDIENCES = {
         id: arrIDsAudiences
       }
     }
-    console.log(arrIDsAudiences)
     const res = await db.audience.findAll({
       where: {
         [Op.and]: [FilterName, FilterIDsAudiences]

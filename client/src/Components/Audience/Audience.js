@@ -16,14 +16,23 @@ class Audience extends React.Component {
       id: null,
       name: "",
       capacity: "",
-      id_type_class: null,
       type_class: {
-        name: ""
+        id: null,
+        name: "",
       },
+      assigned_audiences: []
     },
+    updateItem:  null,
     openModal: false,
     openDialog: false,
   };
+
+  //обновляет выбранный объект в модальном окне
+  handleUpdateItem = (item) => {
+    this.setState({
+      updateItem: item,
+    })
+  }
 
   handleOpenDialog = () => {
     this.setState({
@@ -50,10 +59,11 @@ class Audience extends React.Component {
         id: null,
         name: "",
         capacity: "",
-        id_type_class: null,
         type_class: {
-          name: ""
+          id: null,
+          name: "",
         },
+        assigned_audiences: []
       },
     });
   };
@@ -71,15 +81,13 @@ class Audience extends React.Component {
   };
 
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, {
-        $merge: { ...item, id_type_class: Number(item.type_class.id) },
-      }),
-    }));
+    this.setState({
+      item
+    });
   };
 
   render() {
-    const { filters, item, openModal, openDialog } = this.state;
+    const { filters, item, openModal, openDialog, updateItem } = this.state;
     return (
       <>
         <AudienceModal
@@ -87,6 +95,7 @@ class Audience extends React.Component {
           item={item}
           handleChangeItem={this.handleChangeItem}
           handleCloseModal={this.handleCloseModal}
+          handleUpdateItem={this.handleUpdateItem}
         ></AudienceModal>
         <AudienceDialog
           isopen={openDialog}
@@ -110,6 +119,9 @@ class Audience extends React.Component {
           handleOpenDialog={this.handleOpenDialog}
           handleSetItem={this.handleSetItem}
           filters={filters}
+          item={item}
+          handleUpdateItem={this.handleUpdateItem}
+          updateItem={updateItem}
         ></AudienceTable>
       </>
     );

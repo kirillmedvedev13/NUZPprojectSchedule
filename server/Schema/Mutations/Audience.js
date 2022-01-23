@@ -7,14 +7,25 @@ export const CREATE_AUDIENCE = {
   args: {
     name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
-    id_type_class: { type: GraphQLInt }
+    id_type_class: { type: GraphQLInt },
+    assigned_cathedras: { type: GraphQLString },
   },
-  async resolve(parent, { name, capacity, id_type_class }) {
+  async resolve(parent, { name, capacity, id_type_class, assigned_cathedras }) {
     let res = await db.audience.create({
       name,
       capacity,
       id_type_class
     });
+    if (res && assigned_cathedras) {
+      assigned_cathedras = JSON.parse(assigned_cathedras);
+      let arrAssigned_cathedras = assigned_cathedras.map((object) => {
+        return {
+          id_audience: res.dataValues.id,
+          id_cathedra: object.cathedra.id,
+        };
+      });
+      await db.assigned_audience.bulkCreate(arrAssigned_cathedras)
+    }
     return res
       ? { successful: true, message: "Audience was created" }
       : { successful: false, message: "Audience wasn`t created" };
@@ -27,11 +38,11 @@ export const UPDATE_AUDIENCE = {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
-    id_type_class: {type: GraphQLInt}
+    id_type_class: { type: GraphQLInt }
   },
   async resolve(parent, { id, name, capacity, id_type_class }) {
     let res = await db.audience.update(
-      { name, capacity, id_type_class},
+      { name, capacity, id_type_class },
       {
         where: {
           id,
@@ -80,7 +91,6 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
       },
     });
     if (!cath) return { successful: false, message: "Cannot find cathedra" };
-    console.log(aud);
     let res = await aud.addCathedra(cath);
     return res
       ? { successful: true, message: "Audience was added to Cathedra" }

@@ -31,11 +31,13 @@ export const CREATE_AUDIENCE = gql`
     $name: String!
     $capacity: Int!
     $id_type_class: Int!
+    $assigned_cathedras: String
   ) {
     CreateAudience(
       name: $name
       capacity: $capacity
       id_type_class: $id_type_class
+      assigned_cathedras: $assigned_cathedras
     ) {
       message
       successful
