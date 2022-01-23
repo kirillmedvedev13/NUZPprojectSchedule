@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
-import { ListGroup, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { GET_ALL_DISCIPLINES } from "./queries";
 function DataTable({

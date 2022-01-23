@@ -11,4 +11,4 @@ const Assigned_groupType = new GraphQLObjectType({
   }),
 });
 
-export default Assigned_GroupType;
+export default Assigned_groupType;

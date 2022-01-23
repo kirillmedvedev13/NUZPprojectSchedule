@@ -18,6 +18,10 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    id_cathedra: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
   Teacher.associate = (models) => {
     Teacher.hasMany(models.assigned_teacher, { foreignKey: "id_teacher" });
@@ -25,6 +29,7 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_teacher",
       through: models.assigned_teacher,
     });
+    Teacher.belongsTo(models.cathedra, { foreignKey: "id_cathedra" });
   };
 
   return Teacher;

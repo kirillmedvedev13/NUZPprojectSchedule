@@ -20,6 +20,9 @@ export default (Sequelize, DataTypes) => {
     Cathedra.hasMany(models.specialty, {
       foreignKey: "id_cathedra",
     });
+    Cathedra.hasMany(models.teacher, {
+      foreignKey: "id_cathedra",
+    });
     Cathedra.hasMany(models.assigned_audience, {
       foreignKey: "id_cathedra",
     });

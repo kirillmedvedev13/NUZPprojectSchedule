@@ -45,7 +45,7 @@ export default (Sequelize, DataTypes) => {
     });
     Class.belongsToMany(models.group, {
       foreignKey: "id_class",
-      through: models.assigned_teacher,
+      through: models.assigned_group,
     });
   };
   return Class;
