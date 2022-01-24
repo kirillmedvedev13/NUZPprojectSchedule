@@ -27,7 +27,7 @@ class Audience extends React.Component {
     openDialog: false,
   };
 
-  //обновляет выбранный объект в модальном окне
+  //обновляет переданный объект в модальном окне
   handleUpdateItem = (item) => {
     this.setState({
       updateItem: item,
@@ -119,7 +119,6 @@ class Audience extends React.Component {
           handleOpenDialog={this.handleOpenDialog}
           handleSetItem={this.handleSetItem}
           filters={filters}
-          item={item}
           handleUpdateItem={this.handleUpdateItem}
           updateItem={updateItem}
         ></AudienceTable>

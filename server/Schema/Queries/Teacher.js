@@ -29,6 +29,9 @@ export const GET_ALL_TEACHERS = {
 
     let res = await db.teacher.findAll({
       where: FilterSurname,
+      include: {
+        model: db.cathedra,
+      }
     });
     return res;
   },

@@ -6,6 +6,10 @@ export const GET_ALL_TEACHERS = gql`
       name
       surname
       patronymic
+      cathedra{
+        id
+        name
+      }
     }
   }
 `;

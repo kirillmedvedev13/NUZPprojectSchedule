@@ -9,24 +9,60 @@ export const GET_ALL_CLASSES = {
     id_group: { type: GraphQLInt },
     id_discipline: { type: GraphQLInt },
     id_teacher: { type: GraphQLInt },
+    id_specialty: { type: GraphQLInt },
+    semester: { type: GraphQLInt },
   },
-  async resolve(parent, { id_group, id_discipline, id_teacher }) {
-    console.log({ id_group, id_discipline, id_teacher });
-    const isFilterGroup = id_group ? { id_group: { [Op.eq]: id_group } } : {};
-    const isFilterDisc = id_group
+  async resolve(parent, { id_group, id_discipline, id_teacher, id_specialty, semester }) {
+    const FilterGroup = id_group
+      ? { id_group: { [Op.eq]: id_group } }
+      : {};
+    const FilterDisc = id_discipline
       ? { id_discipline: { [Op.eq]: id_discipline } }
       : {};
-    const isFilterTeach = id_group
+    const FilterTeach = id_teacher
       ? { id_teacher: { [Op.eq]: id_teacher } }
       : {};
-    let res = await db.class.findAll({
+    const FilterSpec = id_specialty
+      ? { id_specialty: { [Op.eq]: id_specialty } }
+      : {};
+    const FilterSemester = semester
+      ? { semester: { [Op.eq]: semester } }
+      : {};
+    let arrIDsFilteredClasses = [];
+    let FilterIDsClasses = {};
+    if (semester || id_specialty || id_discipline || id_group || id_teacher) {
+      const filterClasses = await db.class.findAll({
+        include: [
+          {
+            model: db.assigned_discipline,
+            where: {
+              [Op.and]: [FilterDisc, FilterSpec, FilterSemester,],
+            },
+          },
+          {
+            model: db.assigned_teacher,
+            where: FilterTeach,
+          },
+          {
+            model: db.assigned_group,
+            where: FilterGroup,
+          },
+        ],
+      });
+      filterClasses.forEach(element => {
+        arrIDsFilteredClasses.push(element.dataValues.id)
+      });
+      FilterIDsClasses = { id: arrIDsFilteredClasses }
+    }
+
+    const res = await db.class.findAll({
+      where: FilterIDsClasses,
       include: [
         {
           model: db.type_class,
         },
         {
           model: db.assigned_discipline,
-          where: isFilterDisc,
           include: [
             {
               model: db.discipline,
@@ -38,7 +74,6 @@ export const GET_ALL_CLASSES = {
         },
         {
           model: db.assigned_teacher,
-          where: isFilterTeach,
           include: {
             model: db.teacher,
             include: {
@@ -48,7 +83,6 @@ export const GET_ALL_CLASSES = {
         },
         {
           model: db.assigned_group,
-          where: isFilterGroup,
           include: {
             model: db.group,
           },
@@ -64,41 +98,3 @@ export const GET_ALL_CLASSES = {
     return res;
   },
 };
-/*query{
-  GetAllClasses {
-    assigned_discipline {
-      discipline {
-        name
-        
-      }
-      specialty{
-          name
-        }
-    }
-    type_class {
-      name
-    }
-    times_per_week
-    assigned_groups {
-      group {
-        name
-      }
-  }
-    assigned_teachers {
-      teacher {
-        patronymic
-        name
-        cathedra {
-          name
-        }
-      }
-    }
-    recommended_audiences{
-      audience{
-        name
-      }
-    }
-  }
-}
-
- */

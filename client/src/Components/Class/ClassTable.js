@@ -8,6 +8,8 @@ function DataTable({
   handleSetItem,
   handleOpenDialog,
   handleOpenModal,
+  handleUpdateItem,
+  updateItem
 }) {
   const { loading, error, data } = useQuery(GET_ALL_CLASSES, {
     variables: filters,
@@ -17,74 +19,84 @@ function DataTable({
 
   return (
     <tbody>
-      {data.GetAllClasses.map((item) => (
-        <tr key={item.id}>
-          <td>
-            {item.assigned_discipline.discipline.name} (
-            {item.assigned_discipline.specialty.name})
-          </td>
-          <td>{item.type_class.name}</td>
-          <td>{item.times_per_week}</td>
-          <td>
-            <Table>
-              <tbody>
-                {item.assigned_teachers.map((obj) => {
-                  return (
-                    <tr key={obj.teacher.id}>
-                      <td>{obj.teacher.surname + " " + obj.teacher.name}</td>
-                      <td>{obj.teacher.cathedra.name}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </td>
-          <td>
-            <Table>
-              <tbody>
-                {item.assigned_groups.map((obj) => {
-                  return (
-                    <tr key={obj.group.id}>
-                      <td>{obj.group.name}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </td>
-          <td>
-            <Table>
-              <tbody>
-                {item.recommended_audiences.map((obj) => {
-                  return (
-                    <tr key={obj.audience.id}>
-                      <td>{obj.audience.name}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </td>
-          <td className="col-2" onClick={(e) => handleSetItem(item)}>
-            <PencilSquare
-              className="mx-1"
-              type="button"
-              onClick={(e) => handleOpenModal()}
-            />
-            <XCircle
-              className="mx-1"
-              type="button"
-              onClick={(e) => handleOpenDialog()}
-            />
-          </td>
-        </tr>
-      ))}
+      {data.GetAllClasses.map((item) => {
+        if (updateItem) {
+          if (Number(updateItem.id) === Number(item.id)) {
+            if (JSON.stringify(item) !== JSON.stringify(updateItem)) {
+              handleSetItem(item);
+              handleUpdateItem(null);
+            }
+          }
+        }
+        return (
+          <tr key={item.id}>
+            <td>{item.assigned_discipline.discipline.name}</td>
+            <td>{item.assigned_discipline.specialty.name}</td>
+            <td>{item.assigned_discipline.semester}</td>
+            <td>{item.type_class.name}</td>
+            <td>{item.times_per_week}</td>
+            <td>
+              <Table>
+                <tbody>
+                  {item.assigned_teachers.map((obj) => {
+                    return (
+                      <tr key={obj.teacher.id}>
+                        <td>{obj.teacher.surname + " " + obj.teacher.name}</td>
+                        <td>{obj.teacher.cathedra.name}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </td>
+            <td>
+              <Table>
+                <tbody>
+                  {item.assigned_groups.map((obj) => {
+                    return (
+                      <tr key={obj.group.id}>
+                        <td>{obj.group.name}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </td>
+            <td>
+              <Table>
+                <tbody>
+                  {item.recommended_audiences.map((obj) => {
+                    return (
+                      <tr key={obj.audience.id}>
+                        <td>{obj.audience.name}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </td>
+            <td className="col-2" onClick={(e) => handleSetItem(item)}>
+              <PencilSquare
+                className="mx-1"
+                type="button"
+                onClick={(e) => handleOpenModal()}
+              />
+              <XCircle
+                className="mx-1"
+                type="button"
+                onClick={(e) => handleOpenDialog()}
+              />
+            </td>
+          </tr>
+        )
+      })
+      }
     </tbody>
   );
 }
 class DisciplineTable extends React.Component {
   render() {
-    const { filters, handleOpenModal, handleOpenDialog, handleSetItem } =
+    const { filters, handleOpenModal, handleOpenDialog, handleSetItem, updateItem, handleUpdateItem } =
       this.props;
     return (
       <div className="container-fluid w-100">
@@ -92,8 +104,10 @@ class DisciplineTable extends React.Component {
           <thead>
             <tr>
               <th>Дисципліна</th>
+              <th>Спеціальність</th>
+              <th>Семестр</th>
               <th>Тип заняття</th>
-              <th>Кількість на тиждень</th>
+              <th>Кількість занять на тиждень</th>
               <th>Викладачі</th>
               <th>Групи</th>
               <th>Рекомендовані аудиторії</th>
@@ -105,6 +119,8 @@ class DisciplineTable extends React.Component {
             handleSetItem={handleSetItem}
             handleOpenDialog={handleOpenDialog}
             handleOpenModal={handleOpenModal}
+            handleUpdateItem={handleUpdateItem}
+            updateItem={updateItem}
           ></DataTable>
         </Table>
       </div>

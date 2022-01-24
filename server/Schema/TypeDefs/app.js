@@ -41,13 +41,18 @@ import {
   ADD_DISCIPLINE_TO_SPECIALTY,
   DELETE_DISCIPLINE_FROM_SPECIALTY,
 } from "../Mutations/Discipline.js";
-import { ADD_TEACHER_TO_CLASS, CREATE_CLASS } from "../Mutations/Class.js";
 import { GET_ALL_CLASSES } from "../Queries/Class.js";
 import { GET_ALL_SCHEDULES } from "../Queries/Schedule.js";
 import {
-  ADD_REC_AUD_TO_CLASS,
-  DELETE_CLASS_FROM_TEACHER,
-  DELETE_CLASS_FROM_AUDIENCE,
+  CREATE_CLASS,
+  UPDATE_CLASS,
+  DELETE_CLASS,
+  ADD_GROUP_TO_CLASS,
+  DELETE_GROUP_FROM_CLASS,
+  ADD_RECOMMENDED_AUDIENCE_TO_CLASS,
+  DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS,
+  ADD_TEACHER_TO_CLASS,
+  DELETE_TEACHER_FROM_CLASS,
 } from "../Mutations/Class.js";
 import { LOGIN_USER, LOGOUT_USER, RELOGIN_USER } from "../Mutations/User.js";
 
@@ -93,10 +98,14 @@ const Mutation = new GraphQLObjectType({
     DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
     DeleteAudienceFromCathedra: DELETE_AUDIENCE_FROM_CATHEDRA,
     CreateClass: CREATE_CLASS,
+    UpdateClass: UPDATE_CLASS,
+    DeleteClass: DELETE_CLASS,
     AddTeacherToClass: ADD_TEACHER_TO_CLASS,
-    AddRecAudToClass: ADD_REC_AUD_TO_CLASS,
-    DeleteClassFromTeacher: DELETE_CLASS_FROM_TEACHER,
-    DeleteClassFromAudience: DELETE_CLASS_FROM_AUDIENCE,
+    AddRecAudienceToClass: ADD_RECOMMENDED_AUDIENCE_TO_CLASS,
+    AddGroupToClass: ADD_GROUP_TO_CLASS,
+    DeleteTeacherFromClass: DELETE_TEACHER_FROM_CLASS,
+    DeleteRecAudienceFromClass: DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS,
+    DeleteGroupFromClass: DELETE_GROUP_FROM_CLASS,
     LoginUser: LOGIN_USER,
     LogoutUser: LOGOUT_USER,
     ReloginUser: RELOGIN_USER,

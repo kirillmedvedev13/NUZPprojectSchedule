@@ -9,22 +9,36 @@ import ClassSearch from "./ClassSearch";
 class Class extends React.Component {
   state = {
     filters: {
-      name: "",
       id_discipline: null,
       id_teacher: null,
       id_group: null,
+      id_specialty: null,
+      semester: null,
     },
     item: {
       id: null,
-      type_class: null,
-      number_per_week: null,
-      assigned_discipline: [],
+      times_per_week: "",
+      type_class: {
+        id: null,
+      },
+      assigned_discipline: {
+        id: null,
+      },
       assigned_groups: [],
       assigned_teachers: [],
+      recommended_audiences: [],
     },
+    updateItem: null,
     openModal: false,
     openDialog: false,
   };
+
+  //обновляет переданный объект в модальном окне
+  handleUpdateItem = (item) => {
+    this.setState({
+      updateItem: item,
+    })
+  }
 
   handleOpenDialog = () => {
     this.setState({
@@ -49,11 +63,16 @@ class Class extends React.Component {
       openModal: false,
       item: {
         id: null,
-        type_class: null,
-        number_per_week: null,
-        assigned_discipline: [],
+        times_per_week: "",
+        type_class: {
+          id: null,
+        },
+        assigned_discipline: {
+          id: null,
+        },
         assigned_groups: [],
         assigned_teachers: [],
+        recommended_audiences: [],
       },
     });
   };
@@ -71,15 +90,13 @@ class Class extends React.Component {
   };
 
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, {
-        $merge: { ...item },
-      }),
-    }));
+    this.setState({
+      item
+    });
   };
 
   render() {
-    const { filters, item, openModal, openDialog } = this.state;
+    const { filters, item, openModal, openDialog, updateItem } = this.state;
     return (
       <>
         <ClassModal
@@ -87,6 +104,7 @@ class Class extends React.Component {
           item={item}
           handleChangeItem={this.handleChangeItem}
           handleCloseModal={this.handleCloseModal}
+          handleUpdateItem={this.handleUpdateItem}
         ></ClassModal>
         <ClassDialog
           isopen={openDialog}
@@ -110,6 +128,8 @@ class Class extends React.Component {
           handleOpenDialog={this.handleOpenDialog}
           handleSetItem={this.handleSetItem}
           filters={filters}
+          handleUpdateItem={this.handleUpdateItem}
+          updateItem={updateItem}
         ></ClassTable>
       </>
     );

@@ -1,44 +1,54 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_CLASSES = gql`
-  query ($id_discipline: Int, $id_group: Int, $id_teacher: Int) {
+  query ($id_discipline: Int, $id_group: Int, $id_teacher: Int, $id_specialty: Int, $semester: Int) {
     GetAllClasses(
       id_discipline: $id_discipline
       id_group: $id_group
       id_teacher: $id_teacher
+      id_specialty: $id_specialty
+      semester: $semester
     ) {
       id
-      assigned_discipline {
-        discipline {
+      times_per_week
+      assigned_discipline{
+        id
+        semester
+        discipline{
+          id
           name
         }
-        specialty {
+        specialty{
+          id
           name
         }
       }
-      type_class {
+      type_class{
+        id
         name
       }
-      times_per_week
-      assigned_groups {
-        group {
+      assigned_groups{
+        id
+        group{
           id
           name
         }
       }
-      assigned_teachers {
-        teacher {
+      assigned_teachers{
+        id
+        teacher{
           id
-          patronymic
-          surname
           name
-          cathedra {
+          surname
+          patronymic
+          cathedra{
             name
           }
         }
       }
-      recommended_audiences {
-        audience {
+      recommended_audiences{
+        id
+        audience{
           id
           name
         }
@@ -46,3 +56,11 @@ export const GET_ALL_CLASSES = gql`
     }
   }
 `;
+export const GET_ALL_TYPE_CLASSES = gql`
+  query{
+    GetAllTypeClasses{
+    id
+    name
+    }
+  }
+`
