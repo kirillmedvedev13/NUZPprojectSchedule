@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLString } from "graphql";
+import { GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
@@ -8,12 +8,14 @@ export const CREATE_TEACHER = {
     name: { type: GraphQLString },
     surname: { type: GraphQLString },
     patronymic: { type: GraphQLString },
+    id_cathedra: { type: GraphQLInt },
   },
-  async resolve(parent, { name, surname, patronymic }) {
+  async resolve(parent, { name, surname, patronymic, id_cathedra }) {
     let res = await db.teacher.create({
       name,
       surname,
       patronymic,
+      id_cathedra,
     });
     return res
       ? { successful: true, message: "Teacher was created" }
@@ -24,7 +26,7 @@ export const CREATE_TEACHER = {
 export const DELETE_TEACHER = {
   type: MessageType,
   args: {
-    id: { type: GraphQLID },
+    id: { type: GraphQLInt },
   },
   async resolve(parent, { id }) {
     let res = await db.teacher.destroy({
@@ -41,14 +43,15 @@ export const DELETE_TEACHER = {
 export const UPDATE_TEACHER = {
   type: MessageType,
   args: {
-    id: { type: GraphQLID },
+    id: { type: GraphQLInt },
     name: { type: GraphQLString },
     surname: { type: GraphQLString },
     patronymic: { type: GraphQLString },
+    id_cathedra: { type: GraphQLInt },
   },
-  async resolve(parent, { id, name, surname, patronymic }) {
+  async resolve(parent, { id, name, surname, patronymic, id_cathedra }) {
     let res = await db.teacher.update(
-      { name, surname, patronymic },
+      { name, surname, patronymic, id_cathedra },
       {
         where: {
           id,

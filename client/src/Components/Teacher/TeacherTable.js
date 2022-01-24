@@ -19,9 +19,10 @@ function DataTable({
     <tbody>
       {data.GetAllTeachers.map((item) => (
         <tr key={item.id}>
-          <td>{item.name}</td>
           <td>{item.surname}</td>
+          <td>{item.name}</td>
           <td>{item.patronymic}</td>
+          <td>{item.cathedra.name}</td>
           <td className="col-2" onClick={(e) => handleSetItem(item)}>
             <PencilSquare
               className="mx-1"
@@ -49,9 +50,12 @@ class TeacherTable extends React.Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Ім'я</th>
               <th>Прізвище</th>
+              <th>Ім'я</th>
+
               <th>По-батькові</th>
+              <th>Кафедра</th>
+              <th></th>
             </tr>
           </thead>
           <DataTable

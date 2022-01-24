@@ -1,17 +1,25 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_TEACHER, CREATE_TEACHER } from "./mutations";
+import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import { GET_ALL_TEACHERS } from "./queries";
 import { CreateNotification } from "../Alert";
+import Select from "react-select";
 
-function Save({ item, handleCloseModal, handleValidation }) {
+function Save({
+  item,
+  handleCloseModal,
+  handleValidation,
+  handleValidationCathedra,
+}) {
   const mutation = item.id ? UPDATE_TEACHER : CREATE_TEACHER;
   const [mutateFunction, { loading, error }] = useMutation(mutation, {
     refetchQueries: [GET_ALL_TEACHERS],
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
+  console.log(item.id_cathedra);
   const variables = item.id
     ? {
         variables: {
@@ -19,6 +27,7 @@ function Save({ item, handleCloseModal, handleValidation }) {
           name: item.name,
           surname: item.surname,
           patronymic: item.patronymic,
+          id_cathedra: Number(item.id_cathedra),
         },
       }
     : {
@@ -26,14 +35,19 @@ function Save({ item, handleCloseModal, handleValidation }) {
           name: item.name,
           surname: item.surname,
           patronymic: item.patronymic,
+          id_cathedra: Number(item.id_cathedra),
         },
       };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
+        if (!item.id_cathedra) {
+          handleValidationCathedra(false);
+        }
         if (item.name && item.surname && item.patronymic) {
           mutateFunction(variables).then((res) => {
+            console.log(res);
             if (item.id) {
               CreateNotification(res.data.UpdateTeacher);
             } else {
@@ -50,10 +64,37 @@ function Save({ item, handleCloseModal, handleValidation }) {
     </Button>
   );
 }
+function SelectCathedras({ item, handleChangeItem, handleValidationCathedra }) {
+  const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error}`;
+  let options = [];
+  data.GetAllCathedras.forEach((selectitem) => {
+    options.push({ label: selectitem.name, value: Number(selectitem.id) });
+  });
+  return (
+    <Select
+      required
+      options={options}
+      placeholder="Кафедра"
+      defaultValue={
+        item.id
+          ? { label: item.cathedra.name, value: Number(item.cathedra.id) }
+          : null
+      }
+      onChange={(e) => {
+        handleValidationCathedra(true);
+        handleChangeItem("id_cathedra", Number(e.value));
+        e.value = item.id_cathedra;
+      }}
+    />
+  );
+}
 
 class TeacherModal extends React.Component {
   state = {
     validated: false,
+    isValidCathedra: true,
   };
 
   handleClose = () => {
@@ -62,6 +103,9 @@ class TeacherModal extends React.Component {
 
   handleValidation = (status) => {
     this.setState({ validated: status });
+  };
+  handleValidationCathedra = (status) => {
+    this.setState({ isValidCathedra: status });
   };
 
   render() {
@@ -122,6 +166,19 @@ class TeacherModal extends React.Component {
                   <Form.Control.Feedback type="invalid">
                     По-батькові не повинно бути пустим
                   </Form.Control.Feedback>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <Form.Label className="col-2">Назва кафедри</Form.Label>
+                <Col>
+                  <SelectCathedras
+                    handleValidationCathedra={this.handleValidationCathedra}
+                    handleChangeItem={handleChangeItem}
+                    item={item}
+                  ></SelectCathedras>
+                  {!this.state.isValidCathedra && (
+                    <div className="text-danger">Кафедра не вибрана</div>
+                  )}
                 </Col>
               </Form.Group>
             </Form>

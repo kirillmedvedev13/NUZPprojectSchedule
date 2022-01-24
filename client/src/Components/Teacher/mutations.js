@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const DELETE_TEACHER = gql`
-  mutation ($id: ID!) {
+  mutation ($id: Int!) {
     DeleteTeacher(id: $id) {
       message
       successful
@@ -9,12 +9,19 @@ export const DELETE_TEACHER = gql`
   }
 `;
 export const UPDATE_TEACHER = gql`
-  mutation ($id: ID!, $name: String, $surname: String, $patronymic: String) {
+  mutation (
+    $id: Int!
+    $name: String
+    $surname: String
+    $patronymic: String
+    $id_cathedra: Int
+  ) {
     UpdateTeacher(
       id: $id
       name: $name
       surname: $surname
       patronymic: $patronymic
+      id_cathedra: $id_cathedra
     ) {
       message
       successful
@@ -22,8 +29,18 @@ export const UPDATE_TEACHER = gql`
   }
 `;
 export const CREATE_TEACHER = gql`
-  mutation ($name: String, $surname: String, $patronymic: String) {
-    CreateTeacher(name: $name, surname: $surname, patronymic: $patronymic) {
+  mutation (
+    $name: String
+    $surname: String
+    $patronymic: String
+    $id_cathedra: Int
+  ) {
+    CreateTeacher(
+      name: $name
+      surname: $surname
+      patronymic: $patronymic
+      id_cathedra: $id_cathedra
+    ) {
       message
       successful
     }

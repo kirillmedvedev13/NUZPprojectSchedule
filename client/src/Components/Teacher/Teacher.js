@@ -10,12 +10,15 @@ class Teacher extends React.Component {
   state = {
     filters: {
       surname: "",
+      id_cathedra: null,
     },
     item: {
       id: null,
       name: "",
       surname: "",
       patronymic: "",
+      id_cathedra: null,
+      cathedra: {},
     },
     openModal: false,
     openDialog: false,
@@ -47,6 +50,8 @@ class Teacher extends React.Component {
         name: "",
         surname: "",
         patronymic: "",
+        id_cathedra: null,
+        cathedra: {},
       },
     });
   };
