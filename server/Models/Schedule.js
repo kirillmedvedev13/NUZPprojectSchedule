@@ -33,6 +33,7 @@ export default (Sequelize, DataTypes) => {
     Schedule.belongsTo(models.audience, { foreignKey: "id_audience" });
     Schedule.belongsTo(models.assigned_group, {
       foreignKey: "id_assigned_group",
+      onDelete: "cascade",
     });
   };
   return Schedule;
