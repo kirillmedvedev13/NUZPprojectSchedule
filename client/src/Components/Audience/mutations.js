@@ -9,12 +9,7 @@ export const DELETE_AUDIENCE = gql`
   }
 `;
 export const UPDATE_AUDIENCE = gql`
-  mutation (
-    $id: ID!
-    $name: String!
-    $capacity: Int!
-    $id_type_class: Int!
-  ) {
+  mutation ($id: ID!, $name: String!, $capacity: Int!, $id_type_class: Int!) {
     UpdateAudience(
       id: $id
       name: $name
@@ -27,7 +22,7 @@ export const UPDATE_AUDIENCE = gql`
   }
 `;
 export const CREATE_AUDIENCE = gql`
-    mutation (
+  mutation (
     $name: String!
     $capacity: Int!
     $id_type_class: Int!
@@ -46,9 +41,11 @@ export const CREATE_AUDIENCE = gql`
 `;
 
 export const ADD_AUDIENCE_TO_CATHEDRA = gql`
-mutation($id_audience: ID!, $id_cathedra: ID!)
-  {
-    AddAudienceToCathedra(id_audience: $id_audience, id_cathedra: $id_cathedra){
+  mutation ($id_audience: ID!, $id_cathedra: ID!) {
+    AddAudienceToCathedra(
+      id_audience: $id_audience
+      id_cathedra: $id_cathedra
+    ) {
       message
       successful
     }
@@ -56,9 +53,8 @@ mutation($id_audience: ID!, $id_cathedra: ID!)
 `;
 
 export const DELETE_AUDIENCE_FROM_CATHEDRA = gql`
-mutation($id: ID!)
-  {
-    DeleteAudienceFromCathedra(id: $id){
+  mutation ($id: ID!) {
+    DeleteAudienceFromCathedra(id: $id) {
       message
       successful
     }
