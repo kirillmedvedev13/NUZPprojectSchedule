@@ -1,6 +1,5 @@
 import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList } from "graphql";
 import db from "../../database.js";
-import Assigned_disciplineInput from "../TypeDefs/Assigned_disciplineType.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
 export const CREATE_DISCIPLINE = {
@@ -86,8 +85,8 @@ export const UPDATE_DISCIPLINE = {
 export const ADD_DISCIPLINE_TO_SPECIALTY = {
   type: MessageType,
   args: {
-    id_discipline: { type: GraphQLID },
-    id_specialty: { type: GraphQLID },
+    id_discipline: { type: GraphQLInt },
+    id_specialty: { type: GraphQLInt },
     semester: { type: GraphQLInt },
   },
   async resolve(parent, { id_discipline, id_specialty, semester }) {
@@ -103,7 +102,12 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
       },
     });
     if (!disc) return { successful: false, message: "Cannot find discipline" };
-    let res = await disc.addSpecialty(spec, { through: { semester } });
+    let res = await db.assigned_discipline.create({
+      id_discipline,
+      id_specialty,
+      semester,
+    });
+    console.log(res);
     return res
       ? { successful: true, message: "Discipline was added to Specialty" }
       : { successful: false, message: "Discipline wasn`t added to Specialty" };

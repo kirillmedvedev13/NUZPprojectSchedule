@@ -1,5 +1,24 @@
 import { gql } from "@apollo/client";
-
+export const ADD_DISCIPLINE_TO_SPECIALTY = gql`
+  mutation ($id_discipline: Int!, $semester: Int, $id_specialty: Int) {
+    AddDisciplineToSpecialty(
+      id_discipline: $id_discipline
+      semester: $semester
+      id_specialty: $id_specialty
+    ) {
+      message
+      successful
+    }
+  }
+`;
+export const DELETE_DISCIPLINE_FROM_SPECIALTY = gql`
+  mutation ($id: ID!) {
+    DeleteAudience(id: $id) {
+      message
+      successful
+    }
+  }
+`;
 export const DELETE_DISCIPLINE = gql`
   mutation ($id: ID!) {
     DeleteDiscipline(id: $id) {

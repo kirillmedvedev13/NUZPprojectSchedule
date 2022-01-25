@@ -1,26 +1,23 @@
 import React from "react";
-import {
-  Button,
-  Modal,
-  Form,
-  Row,
-  Col,
-  ListGroup,
-  InputGroup,
-} from "react-bootstrap";
+import { Button, Modal, Form, Row, Col, Table } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_DISCIPLINE, UPDATE_DISCIPLINE } from "./mutations";
+import {
+  UPDATE_DISCIPLINE,
+  CREATE_DISCIPLINE,
+  DELETE_DISCIPLINE_FROM_SPECIALTY,
+} from "./mutations";
+import { ADD_DISCIPLINE_TO_SPECIALTY } from "./mutations";
+import { GET_ALL_DISCIPLINES } from "./queries";
 import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
 import { XCircle } from "react-bootstrap-icons";
-import { GET_ALL_DISCIPLINES } from "./queries";
 
 function Save({
   item,
   handleCloseModal,
   handleValidation,
-  handleValidationSpecialty,
+  handleValidationTypeClass,
 }) {
   const mutation = item.id ? UPDATE_DISCIPLINE : CREATE_DISCIPLINE;
   const [mutateFunction, { loading, error }] = useMutation(mutation, {
@@ -28,39 +25,32 @@ function Save({
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
-
-  let str = JSON.stringify(item.assigned_disciplines);
   const variables = item.id
     ? {
         variables: {
           id: Number(item.id),
           name: item.name,
-          input: str,
         },
       }
     : {
         variables: {
           name: item.name,
-          input: str,
+          assigned_disciplines: JSON.stringify(item.assigned_disciplines),
         },
       };
-
   return (
     <Button
       variant="primary"
       onClick={(e) => {
-        if (!item.name) handleValidation(true);
-        if (!item.assigned_disciplines.length) {
-          handleValidationSpecialty(false);
-        }
-        if (item.name && item.assigned_disciplines.length) {
-          handleValidation(true, false);
+        if (item.name) {
           mutateFunction(variables).then((res) => {
             CreateNotification(
               item.id ? res.data.UpdateDiscipline : res.data.CreateDiscipline
             );
+            handleCloseModal();
           });
-          handleCloseModal();
+        } else {
+          handleValidation(true);
         }
       }}
     >
@@ -68,72 +58,261 @@ function Save({
     </Button>
   );
 }
-const findInArraySpec = (array, id) => {
-  let spec = {};
-  array.map((object) => {
-    if (Number(object.id) === Number(id)) {
-      spec = object;
-    }
-  });
-  return spec;
-};
-const findInArraySpecialty = (array, id) => {
-  let check = false;
-  array.map((object) => {
-    if (Number(object.specialty.id) === Number(id)) {
-      check = true;
-    }
-  });
-  return check;
-};
 
-function SelectSpecialties({
-  item,
-  handleChangeItem,
-  handleValidationSpecialty,
-  selectedSpec,
-}) {
-  const { error, loading, data } = useQuery(GET_ALL_SPECIALTIES);
+function SelectsSpecialties({ item, handleUpdateItem, handleChangeItem }) {
+  const [DelDiscFromSpecialty, { loading, error }] = useMutation(
+    DELETE_DISCIPLINE_FROM_SPECIALTY,
+    {
+      refetchQueries: [GET_ALL_DISCIPLINES],
+    }
+  );
+
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
-  let options = [];
-  data.GetAllSpecialties.forEach((selectitem) => {
-    if (!findInArraySpecialty(selectedSpec, selectitem.id))
-      options.push({ label: selectitem.name, value: Number(selectitem.id) });
-  });
-  return (
-    <Select
-      required
-      options={options}
-      placeholder="Спеціальність"
-      defaultValue={""}
-      onChange={(e) => {
-        handleValidationSpecialty(true);
-        let spec = findInArraySpec(data.GetAllSpecialties, e.value);
-        handleChangeItem("assigned_disciplines", selectedSpec);
 
-        selectedSpec.push({
-          specialty: { id: spec.id, name: spec.name },
-          semester: 1,
-        });
-      }}
-    />
+  return (
+    <Table striped bordered hover className="my-2">
+      <thead>
+        <tr>
+          <th>Назва спеціальності</th>
+          <th>Семестр</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {item.assigned_disciplines.map((itemDisc) => (
+          <tr key={Number(itemDisc.id)}>
+            <td>{itemDisc.specialty.name}</td>
+            <td>{itemDisc.semester}</td>
+            <td className="p-0">
+              <XCircle
+                className="m-1"
+                type="button"
+                onClick={(e) => {
+                  if (item.id) {
+                    // При редактировании
+                    DelDiscFromSpecialty({
+                      variables: { id: Number(itemDisc.id) },
+                    }).then((res) => {
+                      handleUpdateItem(item);
+                      CreateNotification(
+                        res.data.DeleteDisciplineFromSpecialty
+                      );
+                    });
+                  } else {
+                    // При добавлении
+                    let arrDisc = item.assigned_disciplines.filter(
+                      (disc) => Number(disc.id) !== Number(itemDisc.id)
+                    );
+                    handleChangeItem("assigned_disciplines", arrDisc);
+                  }
+                }}
+              ></XCircle>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   );
 }
+
+function AddSpecialtyToDiscipline({
+  item,
+  handleUpdateItem,
+  handleAddDiscToSpec,
+  statusAddDisciplineToSpecialty,
+  handleChangeSelectedSpecialtyToAdd,
+  selectedSpecialtyToAdd,
+  handleValidationSelectedSpecialtyToAdd,
+  validatedSelectedSpecialtyToAdd,
+  handleChangeItem,
+  handleIncCounterSpecialties,
+  counterSpecialties,
+}) {
+  console.log(selectedSpecialtyToAdd);
+  const query = useQuery(GET_ALL_SPECIALTIES);
+  const [AddDiscToSpecialty, { loading, error }] = useMutation(
+    ADD_DISCIPLINE_TO_SPECIALTY,
+    {
+      refetchQueries: [GET_ALL_DISCIPLINES],
+    }
+  );
+  if (query.loading) return "Loading...";
+  if (query.error) return `Error! ${error}`;
+  let options = [];
+  query.data.GetAllSpecialties.forEach((element) => {
+    options.push({ label: element.name, value: Number(element.id) });
+  });
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error}`;
+
+  if (statusAddDisciplineToSpecialty) {
+    return (
+      <Form.Group as={Row} className="my-2 mx-2 px-0">
+        <Form.Label className="col-auto px-1">
+          Виберiть спеціальність
+        </Form.Label>
+        <Col className="px-1">
+          <Select
+            options={options}
+            placeholder="Спеціальність"
+            onChange={(e) => {
+              handleChangeSelectedSpecialtyToAdd({
+                id: e.value,
+                name: e.label,
+                semester: selectedSpecialtyToAdd
+                  ? selectedSpecialtyToAdd.semester
+                  : 0,
+              });
+              handleValidationSelectedSpecialtyToAdd({ status: true });
+            }}
+          ></Select>
+          {!validatedSelectedSpecialtyToAdd.status && (
+            <div className="text-danger">
+              {validatedSelectedSpecialtyToAdd.message}
+            </div>
+          )}
+        </Col>
+        <Col>
+          <Form.Control
+            required
+            type="number"
+            min="1"
+            max="13"
+            placeholder="Семестр"
+            onChange={(e) => {
+              handleChangeSelectedSpecialtyToAdd({
+                id: selectedSpecialtyToAdd ? selectedSpecialtyToAdd.id : 0,
+                name: selectedSpecialtyToAdd
+                  ? selectedSpecialtyToAdd.name
+                  : null,
+                semester: e.target.value,
+              });
+              handleValidationSelectedSpecialtyToAdd({ status: true });
+            }}
+          ></Form.Control>
+          <Form.Control.Feedback type="invalid">
+            Вкажіть семестр
+          </Form.Control.Feedback>
+        </Col>
+
+        <Col className="col-auto px-1">
+          <Button
+            onClick={(e) => {
+              if (selectedSpecialtyToAdd) {
+                if (
+                  selectedSpecialtyToAdd.name &&
+                  selectedSpecialtyToAdd.semester
+                ) {
+                  console.log(item.assigned_disciplines);
+                  const checkSelectedSpecialties =
+                    item.assigned_disciplines.filter(
+                      (disc) =>
+                        Number(disc.specialty.id) ===
+                          Number(selectedSpecialtyToAdd.id) &&
+                        Number(disc.semester) ===
+                          Number(selectedSpecialtyToAdd.semester)
+                    );
+                  if (!checkSelectedSpecialties.length) {
+                    // Проверка не добавлена ли эта кафедра уже в массив
+                    if (item.id) {
+                      console.log("yes");
+                      // Если редактирование элемента
+                      AddDiscToSpecialty({
+                        variables: {
+                          id_specialty: Number(selectedSpecialtyToAdd.id),
+                          semester: Number(selectedSpecialtyToAdd.semester),
+                          id_discipline: Number(item.id),
+                        },
+                      }).then((res) => {
+                        console.log(res);
+                        handleUpdateItem(item);
+                        CreateNotification(res.data.AddDisciplineToSpecialty);
+                        handleAddDiscToSpec(false);
+                        handleChangeSelectedSpecialtyToAdd(null);
+                      });
+                    } else {
+                      // Создание элемента
+                      let arrDisc = item.assigned_disciplines;
+                      arrDisc.push({
+                        id: counterSpecialties,
+                        semester: selectedSpecialtyToAdd.semester,
+                        specialty: {
+                          id: selectedSpecialtyToAdd.id,
+                          name: selectedSpecialtyToAdd.name,
+                        },
+                      });
+                      handleChangeItem("assigned_disciplines", arrDisc);
+                      handleIncCounterSpecialties();
+                      handleAddDiscToSpec(false);
+                      handleChangeSelectedSpecialtyToAdd(null);
+                    }
+                  } else {
+                    handleValidationSelectedSpecialtyToAdd({
+                      status: false,
+                      message: "Не можна додати однакових записів",
+                    });
+                  }
+                } else {
+                  handleValidationSelectedSpecialtyToAdd({
+                    status: false,
+                    message: "Виберіть спеціальність та вкажіть семестр!",
+                  });
+                }
+              } else {
+                handleValidationSelectedSpecialtyToAdd({
+                  status: false,
+                  message: "Спеціальність не вибрана!",
+                });
+              }
+            }}
+          >
+            Зберегти
+          </Button>
+        </Col>
+      </Form.Group>
+    );
+  } else {
+    return (
+      <Button onClick={(e) => handleAddDiscToSpec(true)}>
+        Додати Спеціальність
+      </Button>
+    );
+  }
+}
+
 class DisciplineModal extends React.Component {
   state = {
     validated: false,
-    isValidSpecialty: true,
-    selectedSpec: [],
-    update: false,
+    statusAddDisciplineToSpecialty: false, // Если тру то форма с добавлением кафедры
+    selectedSpecialtyToAdd: null, // выбранная кафедра для добавление к аудитории
+    validatedSelectedSpecialtyToAdd: { status: true }, // Проверка выбранной кафдеры
+    counterSpecialties: 0, // счётчик для ключей в массиве закрепленных кафедр
   };
+
+  //При выборке кафедры в селекте
+  handleChangeSelectedSpecialtyToAdd = (specialty) => {
+    this.setState({ selectedSpecialtyToAdd: specialty });
+  };
+
+  //Изменение отображение : формы или кнопки
+  handleAddDiscToSpec = (status) => {
+    this.setState({ statusAddDisciplineToSpecialty: status });
+  };
+
+  //Проверка на выбранную кафедру
+  handleValidationSelectedSpecialtyToAdd = (valid) => {
+    this.setState({ validatedSelectedSpecialtyToAdd: valid });
+  };
+
+  //Увелечиние счётчика кафедр
+  handleIncCounterSpecialties = () => {
+    this.setState((prevState) => ({
+      counterSpecialties: prevState.counterSpecialties + 1,
+    }));
+  };
+
   handleClose = () => {
-    this.setState({
-      validated: false,
-      isValidSpecialty: true,
-      selectedSpec: [],
-      update: false,
-    });
     this.props.handleCloseModal();
   };
 
@@ -141,71 +320,26 @@ class DisciplineModal extends React.Component {
     this.setState({ validated: status });
   };
 
-  handleValidationSpecialty = (status) => {
-    this.setState({ isValidSpecialty: status });
-  };
-  deleteSelectedSpec = (object, selectedSpec) => {
-    let arr = selectedSpec;
-    arr.splice(arr.indexOf(object), 1);
-    console.log(arr);
-    this.setState({
-      update: true,
-      selectedSpec: arr,
-    });
-    this.props.handleChangeItem("assigned_disciplines", arr);
-  };
-  setSelectedSpec = (item) => {
-    if (
-      item.assigned_disciplines.length &&
-      this.state.selectedSpec.length === 0 &&
-      !this.state.update
-    ) {
-      let arr = [];
-      item.assigned_disciplines.map((object) => {
-        arr.push({ specialty: object.specialty, semester: object.semester });
-      });
-      this.state.selectedSpec = arr;
-    }
-  };
-  setSemester = (id, semester) => {
-    if (semester < 1 || semester > 13) {
-      CreateNotification({
-        successful: false,
-        message: "Введіть правильний номер семестру",
-      });
-      return;
-    }
-    let arr = this.state.selectedSpec;
-    arr.map((object) => {
-      if (object.specialty.id === id) object.semester = semester;
-    });
-    this.setState({
-      selectedSpec: arr,
-    });
-    this.props.handleChangeItem("assigned_disciplines", arr);
-  };
-
   render() {
-    const { isopen, handleChangeItem, item } = this.props;
-    this.setSelectedSpec(item);
+    const { isopen, handleChangeItem, item, handleUpdateItem } = this.props;
     return (
       <>
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
               {item.id
-                ? "Редагувати запис дісципліни"
-                : "Створити запис дісципліни"}
+                ? `Редагувати запис дисципліни ${item.name}`
+                : "Створити запис дисципліни"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form noValidate validated={this.state.validated}>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Дісципліна</Form.Label>
+                <Form.Label className="col-2">Назва дисципліни</Form.Label>
                 <Col>
                   <Form.Control
                     required
-                    placeholder="дісципліна"
+                    placeholder="Дисципліни"
                     value={item.name}
                     onChange={(e) => {
                       handleChangeItem("name", e.target.value);
@@ -217,61 +351,41 @@ class DisciplineModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Спеціальності</Form.Label>
+                <Form.Label className="col-2">
+                  Закріплені спеціальності
+                </Form.Label>
                 <Col>
-                  <SelectSpecialties
-                    handleValidationSpecialty={this.handleValidationSpecialty}
-                    handleChangeItem={handleChangeItem}
+                  <AddSpecialtyToDiscipline
                     item={item}
-                    selectedSpec={this.state.selectedSpec}
-                  ></SelectSpecialties>
-                  {!this.state.isValidSpecialty && (
-                    <div className="text-danger">
-                      Виберіть хоч б одну спеціальність на якій ведеться ця
-                      дісципліна
-                    </div>
-                  )}
+                    handleUpdateItem={handleUpdateItem}
+                    statusAddDisciplineToSpecialty={
+                      this.state.statusAddDisciplineToSpecialty
+                    }
+                    handleAddDiscToSpec={this.handleAddDiscToSpec}
+                    handleChangeSelectedSpecialtyToAdd={
+                      this.handleChangeSelectedSpecialtyToAdd
+                    }
+                    validatedSelectedSpecialtyToAdd={
+                      this.state.validatedSelectedSpecialtyToAdd
+                    }
+                    handleValidationSelectedSpecialtyToAdd={
+                      this.handleValidationSelectedSpecialtyToAdd
+                    }
+                    selectedSpecialtyToAdd={this.state.selectedSpecialtyToAdd}
+                    handleChangeItem={handleChangeItem}
+                    handleIncCounterSpecialties={
+                      this.handleIncCounterSpecialties
+                    }
+                    counterSpecialties={this.state.counterSpecialties}
+                  ></AddSpecialtyToDiscipline>
+                  <SelectsSpecialties
+                    item={item}
+                    handleUpdateItem={handleUpdateItem}
+                    handleChangeItem={handleChangeItem}
+                  ></SelectsSpecialties>
                 </Col>
               </Form.Group>
             </Form>
-            <ListGroup variant="flush">
-              <ListGroup.Item>Обрані спеціальності: </ListGroup.Item>
-              {this.state.selectedSpec[0]
-                ? this.state.selectedSpec.map((object) => {
-                    return (
-                      <ListGroup.Item key={object.specialty.id}>
-                        <label className="col-9">{object.specialty.name}</label>
-                        <input
-                          placeholder="Семестр"
-                          value={object.semester}
-                          className="col-2"
-                          id={object.specialty.id}
-                          type="number"
-                          min="1"
-                          max="13"
-                          required
-                          onChange={(e) => {
-                            this.setSemester(
-                              object.specialty.id,
-                              e.target.value
-                            );
-                          }}
-                        ></input>
-                        <XCircle
-                          className="mx-1"
-                          type="button"
-                          onClick={(e) => {
-                            this.deleteSelectedSpec(
-                              object,
-                              this.state.selectedSpec
-                            );
-                          }}
-                        />
-                      </ListGroup.Item>
-                    );
-                  })
-                : ""}
-            </ListGroup>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
@@ -280,7 +394,6 @@ class DisciplineModal extends React.Component {
             <Save
               item={item}
               handleCloseModal={this.handleClose}
-              handleValidationSpecialty={this.handleValidationSpecialty}
               handleValidation={this.handleValidation}
             ></Save>
           </Modal.Footer>
@@ -289,4 +402,5 @@ class DisciplineModal extends React.Component {
     );
   }
 }
+
 export default DisciplineModal;

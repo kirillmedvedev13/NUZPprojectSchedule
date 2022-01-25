@@ -17,8 +17,14 @@ class Discipline extends React.Component {
       name: "",
       assigned_disciplines: [],
     },
+    updateItem: null,
     openModal: false,
     openDialog: false,
+  };
+  handleUpdateItem = (item) => {
+    this.setState({
+      updateItem: item,
+    });
   };
 
   handleOpenDialog = () => {
@@ -68,7 +74,7 @@ class Discipline extends React.Component {
     }));
   };
   render() {
-    const { filters, item, openModal, openDialog } = this.state;
+    const { filters, item, openModal, openDialog, updateItem } = this.state;
     return (
       <>
         <DisciplineModal
@@ -76,6 +82,7 @@ class Discipline extends React.Component {
           item={item}
           handleChangeItem={this.handleChangeItem}
           handleCloseModal={this.handleCloseModal}
+          handleUpdateItem={this.handleUpdateItem}
         ></DisciplineModal>
         <DisciplineDialog
           isopen={openDialog}
@@ -99,6 +106,8 @@ class Discipline extends React.Component {
           handleOpenDialog={this.handleOpenDialog}
           handleSetItem={this.handleSetItem}
           filters={filters}
+          handleUpdateItem={this.handleUpdateItem}
+          updateItem={updateItem}
         ></DisciplineTable>
       </>
     );
