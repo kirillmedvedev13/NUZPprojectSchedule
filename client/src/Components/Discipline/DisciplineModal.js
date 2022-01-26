@@ -25,6 +25,8 @@ function Save({
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
+  console.log("creeate");
+  console.log(item);
   const variables = item.id
     ? {
         variables: {
@@ -91,9 +93,11 @@ function SelectsSpecialties({ item, handleUpdateItem, handleChangeItem }) {
                 onClick={(e) => {
                   if (item.id) {
                     // При редактировании
+                    console.log("itemDisc", itemDisc);
                     DelDiscFromSpecialty({
                       variables: { id: Number(itemDisc.id) },
                     }).then((res) => {
+                      console.log(res);
                       handleUpdateItem(item);
                       CreateNotification(
                         res.data.DeleteDisciplineFromSpecialty
@@ -129,7 +133,6 @@ function AddSpecialtyToDiscipline({
   handleIncCounterSpecialties,
   counterSpecialties,
 }) {
-  console.log(selectedSpecialtyToAdd);
   const query = useQuery(GET_ALL_SPECIALTIES);
   const [AddDiscToSpecialty, { loading, error }] = useMutation(
     ADD_DISCIPLINE_TO_SPECIALTY,
@@ -204,7 +207,6 @@ function AddSpecialtyToDiscipline({
                   selectedSpecialtyToAdd.name &&
                   selectedSpecialtyToAdd.semester
                 ) {
-                  console.log(item.assigned_disciplines);
                   const checkSelectedSpecialties =
                     item.assigned_disciplines.filter(
                       (disc) =>
@@ -225,7 +227,6 @@ function AddSpecialtyToDiscipline({
                           id_discipline: Number(item.id),
                         },
                       }).then((res) => {
-                        console.log(res);
                         handleUpdateItem(item);
                         CreateNotification(res.data.AddDisciplineToSpecialty);
                         handleAddDiscToSpec(false);

@@ -13,7 +13,7 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = gql`
 `;
 export const DELETE_DISCIPLINE_FROM_SPECIALTY = gql`
   mutation ($id: ID!) {
-    DeleteAudience(id: $id) {
+    DeleteDisciplineFromSpecialty(id: $id) {
       message
       successful
     }
@@ -28,16 +28,16 @@ export const DELETE_DISCIPLINE = gql`
   }
 `;
 export const CREATE_DISCIPLINE = gql`
-  mutation ($name: String!, $input: String!) {
-    CreateDiscipline(name: $name, input: $input) {
+  mutation ($name: String!, $assigned_disciplines: String!) {
+    CreateDiscipline(name: $name, assigned_disciplines: $assigned_disciplines) {
       message
       successful
     }
   }
 `;
 export const UPDATE_DISCIPLINE = gql`
-  mutation ($id: ID!, $name: String!, $input: String!) {
-    UpdateDiscipline(id: $id, name: $name, input: $input) {
+  mutation ($id: ID!, $name: String!) {
+    UpdateDiscipline(id: $id, name: $name) {
       message
       successful
     }

@@ -17,10 +17,10 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_discipline",
     });
 
-    Discipline.belongsToMany(models.specialty, {
+    /* Discipline.belongsToMany(models.specialty, {
       foreignKey: "id_discipline",
       through: models.assigned_discipline,
-    });
+    });*/
   };
   return Discipline;
 };

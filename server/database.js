@@ -77,4 +77,5 @@ Object.keys(db).forEach((key) => {
 
 db.Connection = Connection;
 db.Sequelize = Sequelize;
+
 export default db;

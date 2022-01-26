@@ -6,23 +6,22 @@ export const CREATE_DISCIPLINE = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
-    input: { type: GraphQLString },
+    assigned_disciplines: { type: GraphQLString },
   },
-  async resolve(parent, { name, input }) {
+  async resolve(parent, { name, assigned_disciplines }) {
     const res1 = await db.discipline.create({
       name,
     });
-    const disc = await db.discipline.findOne({ where: { name } });
-    let arraySpec = JSON.parse(input);
-    const discID = disc.dataValues.id;
-    let assigned_discipline = arraySpec.map((object) => {
+    let arraySpec = JSON.parse(assigned_disciplines);
+    const discID = res1.dataValues.id;
+    let arrAssignDisc = arraySpec.map((object) => {
       return {
         id_discipline: discID,
         id_specialty: object.specialty.id,
         semester: object.semester,
       };
     });
-    const res2 = await db.assigned_discipline.bulkCreate(assigned_discipline);
+    const res2 = await db.assigned_discipline.bulkCreate(arrAssignDisc);
     return res2
       ? {
           successful: true,
@@ -55,9 +54,8 @@ export const UPDATE_DISCIPLINE = {
   args: {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
-    input: { type: GraphQLString },
   },
-  async resolve(parent, { id, name, input }) {
+  async resolve(parent, { id, name }) {
     let res = await db.discipline.update(
       { name },
       {
@@ -66,17 +64,8 @@ export const UPDATE_DISCIPLINE = {
         },
       }
     );
-    await db.assigned_discipline.destroy({ where: { id_discipline: id } });
-    let arraySpec = JSON.parse(input);
-    let assigned_discipline = arraySpec.map((object) => {
-      return {
-        id_discipline: id,
-        id_specialty: object.specialty.id,
-        semester: object.semester,
-      };
-    });
-    const res2 = await db.assigned_discipline.bulkCreate(assigned_discipline);
-    return res2
+
+    return res
       ? { successful: true, message: "Discipline was updated" }
       : { successful: false, message: "Discipline wasn`t updated" };
   },

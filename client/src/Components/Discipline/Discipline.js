@@ -52,6 +52,7 @@ class Discipline extends React.Component {
       },
     });
   };
+
   handleChangeItem = (name, value) => {
     this.setState((PrevState) => ({
       item: update(PrevState.item, { $merge: { [name]: value } }),
@@ -59,19 +60,15 @@ class Discipline extends React.Component {
   };
 
   handleChangeFilters = (name, value) => {
-    console.log("filters");
     this.setState((PrevState) => ({
       filters: update(PrevState.filters, { $merge: { [name]: value } }),
     }));
   };
+
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, {
-        $merge: {
-          ...item,
-        },
-      }),
-    }));
+    this.setState({
+      item,
+    });
   };
   render() {
     const { filters, item, openModal, openDialog, updateItem } = this.state;

@@ -11,7 +11,7 @@ const main = async () => {
 
   let corsOptions = {
     origin: "*",
-    credentials: true ,
+    credentials: true,
   };
   app.use(cors(corsOptions));
 
@@ -21,7 +21,6 @@ const main = async () => {
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-
 
   app.use(
     "/graphql",
