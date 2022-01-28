@@ -8,6 +8,13 @@ export const GET_ALL_SCHEDULES = {
   type: new GraphQLList(ScheduleType),
   async resolve() {
     const res = await db.schedule.findAll({
+      order: [
+        ["assigned_group", "group", "name", "ASC"],
+        ["number_pair", "ASC"],
+        ["id_day_week", "ASC"],
+
+        ["id_pair_type", "ASC"],
+      ],
       include: [
         {
           model: db.day_week,
@@ -64,11 +71,13 @@ export const GET_ALL_GROUP_SCHEDULES = {
   type: new GraphQLList(GroupType),
   async resolve() {
     const res = await db.group.findAll({
+      order: [["id", "ASC"]],
       include: {
         model: db.assigned_group,
 
         include: [
           {
+            order: ["id_day_week", "ASC"],
             model: db.schedule,
             include: [
               {

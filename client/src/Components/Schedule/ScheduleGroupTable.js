@@ -2,29 +2,9 @@ import { useQuery } from "@apollo/client";
 import React from "react";
 import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
-import { GET_WEEKS_DAY, GET_ALL_GROUP_SCHEDULES } from "./queries";
+import { GET_WEEKS_DAY, GET_ALL_SCHEDULES } from "./queries";
 
-function getAndSortGroupSchedule(assigned_groups) {
-  let arraySchedule = [];
-  assigned_groups.forEach((arr) => {
-    arr.schedules.forEach((pair) => {
-      arraySchedule.push(pair);
-    });
-  });
-  arraySchedule.sort((right, left) => {
-    if (right.day_week.id < left.day_week.id) return 1;
-    else return -1;
-  });
-  arraySchedule.sort((right, left) => {
-    if (right.number_pair < left.number_pair) return 1;
-    else return -1;
-  });
-  arraySchedule.sort((right, left) => {
-    if (right.pair_type.id < left.pair_type.id) return 1;
-    else return -1;
-  });
-  return arraySchedule;
-}
+function getAndSortGroupSchedule(assigned_groups) {}
 function DataTable({
   filters,
   handleSetItem,
@@ -33,24 +13,70 @@ function DataTable({
   handleUpdateItem,
   updateItem,
 }) {
-  const { loading, error, data } = useQuery(GET_ALL_GROUP_SCHEDULES, {});
+  const { loading, error, data } = useQuery(GET_ALL_SCHEDULES, {});
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let arrayData = data.GetAllGroupSchedules.map((item) => {
-    return {
-      id: item.id,
-      name: item.name,
-      schedule: getAndSortGroupSchedule(item.assigned_groups),
-    };
-  });
+  let temp;
+  function* foo() {
+    let i = 0;
+    yield* data.GetAllSchedules.map((object, index) => {
+      return object;
+    });
+  }
+  const schedules = foo();
+  let schedule = schedules.next();
+  const array = [1, 2, 3, 4, 5, 6];
   return (
     <tbody>
-      {arrayData.map((group) => {
-        return (
-          <tr key={group.id}>
-            <td>{group.name}</td>
-          </tr>
-        );
+      {[...Array(6)].map((i, number_pair) => {
+        [...Array(6)].map((j, day_week) => {
+          console.log(schedule.value.day_week.id, day_week);
+          console.log(schedule.value.number_pair, number_pair);
+          if (
+            Number(schedule.value.number_pair) === Number(number_pair) &&
+            Number(schedule.value.day_week.id) === Number(day_week)
+          ) {
+            let data;
+            switch (schedule.value.pair_type.id) {
+              case 1:
+                data = (
+                  <tr>
+                    <td>{schedule.value.assigned_group.discipline.name}</td>
+                    <td></td>
+                  </tr>
+                );
+                break;
+              case 2:
+                data = (
+                  <tr>
+                    <td></td>
+                    <td>
+                      {
+                        schedule.value.assigned_group.class.assigned_discipline
+                          .discipline.name
+                      }
+                    </td>
+                  </tr>
+                );
+                break;
+              default:
+                data = (
+                  <tr>
+                    <td>
+                      {
+                        schedule.value.assigned_group.class.assigned_discipline
+                          .discipline.name
+                      }
+                    </td>
+                  </tr>
+                );
+                break;
+            }
+            console.log(data);
+            schedule = schedules.next();
+            return data;
+          }
+        });
       })}
     </tbody>
   );
@@ -64,8 +90,9 @@ function TableHead() {
     <thead>
       <tr>
         <th></th>
+        <th>#</th>
         {data.GetWeeksDay.map((item) => {
-          return <th>{item.name}</th>;
+          return <th key={item.id}>{item.name}</th>;
         })}
       </tr>
     </thead>

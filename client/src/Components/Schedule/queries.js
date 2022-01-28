@@ -1,48 +1,46 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_GROUP_SCHEDULES = gql`
+export const GET_ALL_SCHEDULES = gql`
   query {
-    GetAllGroupSchedules {
+    GetAllSchedules {
       id
-      name
-      assigned_groups {
-        schedules {
+      number_pair
+      day_week {
+        id
+        name
+      }
+      pair_type {
+        id
+        parity
+      }
+      audience {
+        id
+        name
+      }
+      assigned_group {
+        group {
           id
-          number_pair
-          day_week {
+          name
+        }
+        class {
+          type_class {
             id
             name
           }
-          pair_type {
-            id
-            parity
+          assigned_discipline {
+            discipline {
+              id
+              name
+            }
           }
-          audience {
-            id
-            name
-          }
-          assigned_group {
-            class {
-              type_class {
-                id
+          assigned_teachers {
+            teacher {
+              id
+              surname
+              name
+              patronymic
+              cathedra {
                 name
-              }
-              assigned_discipline {
-                discipline {
-                  id
-                  name
-                }
-              }
-              assigned_teachers {
-                teacher {
-                  id
-                  surname
-                  name
-                  patronymic
-                  cathedra {
-                    name
-                  }
-                }
               }
             }
           }
