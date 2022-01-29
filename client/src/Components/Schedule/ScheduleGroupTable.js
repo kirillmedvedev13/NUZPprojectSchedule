@@ -214,7 +214,7 @@ class ScheduleGroupTable extends React.Component {
 
     return (
       <div className="container-fluid w-100">
-        <Table striped bordered hover>
+        <Table bordered >
           <TableHead />
           <DataTable
             filters={filters}
