@@ -63,18 +63,14 @@ class ScheduleTable extends React.Component {
     } = this.props;
     console.log(filters);
     return (
-      <div className="container-fluid w-100">
-        <Table striped bordered hover>
-          <SwitchTable
-            filters={filters}
-            handleSetItem={handleSetItem}
-            handleOpenDialog={handleOpenDialog}
-            handleOpenModal={handleOpenModal}
-            handleUpdateItem={handleUpdateItem}
-            updateItem={updateItem}
-          ></SwitchTable>
-        </Table>
-      </div>
+      <SwitchTable
+        filters={filters}
+        handleSetItem={handleSetItem}
+        handleOpenDialog={handleOpenDialog}
+        handleOpenModal={handleOpenModal}
+        handleUpdateItem={handleUpdateItem}
+        updateItem={updateItem}
+      ></SwitchTable>
     );
   }
 }
