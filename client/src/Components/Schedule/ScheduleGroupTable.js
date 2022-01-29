@@ -4,7 +4,7 @@ import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { GET_WEEKS_DAY, GET_ALL_SCHEDULES } from "./queries";
 
-function getAndSortGroupSchedule(assigned_groups) {}
+function getAndSortGroupSchedule(assigned_groups) { }
 function DataTable({
   filters,
   handleSetItem,
@@ -41,95 +41,141 @@ function DataTable({
   return (
     <tbody>
       {ArrGroups.map((group) => {
-        let arrIndexTotalPairType = [false, false, false, false, false, false];
         return (
           <Fragment key={group.key + "fr"}>
             <tr key={group.key}>
-              <td rowSpan="13" key={group.value.id + group.value.name}>
+              <td rowSpan="19" key={group.value.id + group.value.name}>
                 {group.value.name}
               </td>
             </tr>
-            {[...Array(12)].map((i, number_pair) => {
-              if ((number_pair + 1) % 2 === 1) {
-                // обновлять индексы для каждого номера пары
-                arrIndexTotalPairType = [
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                ];
-              }
+            {[...Array(6)].map((i, number_pair) => {
+              // обновлять индексы для каждого номера пары
+              let arrScheduleTop = [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+              ];
+              let arrScheduleBot = [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+              ];
               return (
-                <tr key={`${group.key}-data-${number_pair + 1}`}>
-                  {(number_pair + 1) % 2 === 1 && (
-                    <td rowSpan="2" key={`${group.key}-td-${number_pair + 1}`}>
-                      {number_pair / 2 + 1}
+                <Fragment>
+                  <tr key={`${group.key}-data-${number_pair + 1}`}>
+                    <td rowSpan="3">
+                      {number_pair + 1}
                     </td>
-                  )}
-                  {[...Array(6)].map((j, day_week) => {
-                    let td = (
-                      <td key={j + "numberPair" + day_week + group.key}></td>
-                    );
-                    if (arrIndexTotalPairType[day_week]) {
-                      // если тру нужно пропустить клетку
-                      td = null;
-                    } else {
+                  </tr>
+                  { // По числителю запоминать расписание
+                    [...Array(6)].forEach((j, day_week) => {
                       if (!schedule.done) {
                         // проверка на то не закончились ли занятия для всех групп
-                        if (
-                          Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
-                          (Number(schedule.value.number_pair) ===
-                            Number((number_pair + 1) / 2 + 0.5) ||
-                            Number(schedule.value.number_pair) ===
-                              Number((number_pair + 1) / 2))
-                        ) {
-                          const descripion = `
-                                ${
-                                  schedule.value.assigned_group.class.type_class
-                                    .name
-                                } ауд.${schedule.value.audience.name} ${
-                            schedule.value.assigned_group.class
-                              .assigned_discipline.discipline.name
-                          } ${schedule.value.assigned_group.class.assigned_teachers.map(
-                            ({ teacher }) => {
-                              return ` ${teacher.surname}`;
-                            }
-                          )}
-                              `;
-                          if (
-                            Number(schedule.value.pair_type.id) === 1 ||
-                            Number(schedule.value.pair_type.id) === 2
-                          ) {
-                            // числитель или знаментаель
-                            td = (
-                              <td
-                                key={descripion + "td" + group.key + day_week}
-                              >
-                                {descripion}
-                              </td>
-                            );
-                          } else {
-                            // если общая пара то вставляется в 2 строки один раз за числителем
-                            td = (
-                              <td
-                                rowSpan="2"
-                                key={descripion + group.key + day_week}
-                              >
-                                {descripion}
-                              </td>
-                            );
-                            arrIndexTotalPairType[day_week] = true; // отметка для того что бы в след строке не было клетки
+                        if (Number(schedule.value.day_week.id) === Number(day_week + 1) && Number(schedule.value.number_pair) === Number(number_pair + 1)) {
+                          if (Number(schedule.value.pair_type.id) === 1) {
+                            arrScheduleTop[day_week] = schedule.value;
+                            schedule = schedules.next();
                           }
-                          schedule = schedules.next();
                         }
                       }
+                    })
+                  }
+                  {// По знаменателю запоминать расписание
+                    [...Array(6)].forEach((j, day_week) => {
+                      if (!schedule.done) {
+                        // проверка на то не закончились ли занятия для всех групп
+                        if (Number(schedule.value.day_week.id) === Number(day_week + 1) && Number(schedule.value.number_pair) === Number(number_pair + 1)) {
+                          if (Number(schedule.value.pair_type.id) === 2) {
+                            arrScheduleBot[day_week] = schedule.value;
+                            schedule = schedules.next();
+                          }
+                        }
+                      }
+                    })
+                  }
+                  {// Общее запоминать расписание
+                    [...Array(6)].forEach((j, day_week) => {
+                      if (!schedule.done) {
+                        // проверка на то не закончились ли занятия для всех групп
+                        if (Number(schedule.value.day_week.id) === Number(day_week + 1) && Number(schedule.value.number_pair) === Number(number_pair + 1)) {
+                          if (Number(schedule.value.pair_type.id) === 3) {
+                            arrScheduleTop[day_week] = schedule.value;
+                            schedule = schedules.next();
+                          }
+                        }
+                      }
+                    })
+                  }
+                  <tr>
+                    {
+                      // Проходим по числителю
+                      arrScheduleTop.map(schedule => {
+                        if (schedule === null) {
+                          return <td></td>
+                        }
+                        else {
+                          const desciption = `
+                                ${schedule.assigned_group.class.type_class
+                              .name
+                            } ауд.${schedule.audience.name} ${schedule.assigned_group.class
+                              .assigned_discipline.discipline.name
+                            } ${schedule.assigned_group.class.assigned_teachers.map(
+                              ({ teacher }) => {
+                                return ` ${teacher.surname}`;
+                              }
+                            )}
+                              `;
+                          if (Number(schedule.pair_type.id) === 1) {
+                            return <td>{desciption}</td>
+                          }
+                          if (Number(schedule.pair_type.id) === 3) {
+                            return <td rowSpan="2">{desciption}</td>
+                          }
+                        }
+                      })
                     }
-                    return td;
-                  })}
-                </tr>
+                  </tr>
+                  <tr>
+                    {
+                      // Проходим по знаменателю
+                      arrScheduleBot.map((schedule, index) => {
+                        if (schedule === null) {
+                          if (arrScheduleTop[index] !== null) {
+                            if (Number(arrScheduleTop[index].pair_type.id) === 3) {
+                              return null
+                            }
+                            else{
+                              return <td></td>
+                            }
+                          }
+                          else {
+                            return <td></td>
+                          }
+                        }
+                        else {
+                          const desciption = `
+                                ${schedule.assigned_group.class.type_class
+                              .name
+                            } ауд.${schedule.audience.name} ${schedule.assigned_group.class
+                              .assigned_discipline.discipline.name
+                            } ${schedule.assigned_group.class.assigned_teachers.map(
+                              ({ teacher }) => {
+                                return ` ${teacher.surname}`;
+                              }
+                            )}
+                              `;
+                          return <td>{desciption}</td>
+                        }
+                      })
+                    }
+                  </tr>
+                </Fragment>
               );
             })}
           </Fragment>

@@ -11,9 +11,8 @@ export const GET_ALL_SCHEDULES = {
       order: [
         ["assigned_group", "group", "name", "ASC"],
         ["number_pair", "ASC"],
-        ["id_day_week", "ASC"],
-
         ["id_pair_type", "ASC"],
+        ["id_day_week", "ASC"],
       ],
       include: [
         {
