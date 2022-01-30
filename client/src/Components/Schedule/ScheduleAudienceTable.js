@@ -4,26 +4,39 @@ import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { GET_WEEKS_DAY, GET_ALL_AUDIENCE_SCHEDULES } from "./queries";
 
-function splitSamePairs(array) {
+function splitSamePairs(schedules) {
+  let array = JSON.parse(JSON.stringify(schedules));
   let tempArr = [];
-  array.map((object, index) => {
-    if (index != array.length - 1) {
-      console.log(object);
-      if (
-        object.day_week.id === array[index + 1].day_week.id &&
-        object.number_pair === array[index + 1].number_pair &&
-        object.pair_type.id === array[index + 1].pair_type.id
+  let index = 0;
+  let temp;
+  while (index != array.length - 1) {
+    if (
+      array[index].day_week.id === array[index + 1].day_week.id &&
+      array[index].number_pair === array[index + 1].number_pair &&
+      array[index].pair_type.id === array[index + 1].pair_type.id
+    ) {
+      temp = JSON.parse(JSON.stringify(array[index]));
+      temp.assigned_group.group.name +=
+        " " + array[index + 1].assigned_group.group.name;
+      array.slice(index + 1, 1);
+      index++;
+      while (
+        array[index].day_week.id === array[index + 1].day_week.id &&
+        array[index].number_pair === array[index + 1].number_pair &&
+        array[index].pair_type.id === array[index + 1].pair_type.id
       ) {
-        console.log(object);
-        let temp = object;
-
         temp.assigned_group.group.name +=
-          array[index + 1].assigned_group.group.name;
-        tempArr.push(temp);
+          " " + array[index + 1].assigned_group.group.name;
+        array.slice(index + 1, 1);
+        index++;
       }
+      tempArr.push(temp);
+    } else {
+      tempArr.push(array[index]);
     }
-    return tempArr;
-  });
+    index++;
+  }
+  return tempArr;
 }
 function DataTable({
   filters,
@@ -40,10 +53,10 @@ function DataTable({
   return (
     <tbody>
       {data.GetAllAudienceSchedules.map((audience) => {
-        audience.schedules = splitSamePairs(audience.schedules);
+        let newSchedules = splitSamePairs(audience.schedules);
         function* foo() {
           let i = 0;
-          yield* audience.schedules.map((object, index) => {
+          yield* newSchedules.map((object, index) => {
             return object;
           });
         }
