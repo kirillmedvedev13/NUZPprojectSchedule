@@ -60,8 +60,18 @@ export const GET_WEEKS_DAY = gql`
 `;
 
 export const GET_ALL_AUDIENCE_SCHEDULES = gql`
-  query {
-    GetAllAudienceSchedules {
+  query (
+    $id_discipline: Int
+    $id_group: Int
+    $id_teacher: Int
+    $id_audience: Int
+  ) {
+    GetAllAudienceSchedules(
+      id_discipline: $id_discipline
+      id_group: $id_group
+      id_teacher: $id_teacher
+      id_audience: $id_audience
+    ) {
       id
       name
       schedules {

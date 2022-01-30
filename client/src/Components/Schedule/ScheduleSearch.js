@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 import Select from "react-select";
 import { GET_ALL_DISCIPLINES } from "../Discipline/queries";
 import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
+import { GET_ALL_AUDIENCES } from "../Audience/queries";
 
 function SelectSpecialty({ handleChangeFilters }) {
   const { error, loading, data } = useQuery(GET_ALL_SPECIALTIES);
@@ -74,6 +75,29 @@ function SelectTeacher({ handleChangeFilters }) {
       placeholder="Викладач"
       onChange={(e) => {
         handleChangeFilters("id_teacher", e ? Number(e.value) : null);
+      }}
+    />
+  );
+}
+function SelectAudience({ handleChangeFilters }) {
+  const { error, loading, data } = useQuery(GET_ALL_AUDIENCES);
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error}`;
+  let options = [];
+  data.GetAllAudiences.forEach((item) => {
+    options.push({
+      label: item.name,
+      value: Number(item.id),
+    });
+  });
+  return (
+    <Select
+      className="col-12"
+      isClearable
+      options={options}
+      placeholder="Аудиторія"
+      onChange={(e) => {
+        handleChangeFilters("id_audience", e ? Number(e.value) : null);
       }}
     />
   );
@@ -158,6 +182,14 @@ class ScheduleSearch extends React.Component {
               <SelectGroup
                 handleChangeFilters={handleChangeFilters}
               ></SelectGroup>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
+            <Form.Label className="col-auto text-end">Аудиторія</Form.Label>
+            <Col className="col-10">
+              <SelectAudience
+                handleChangeFilters={handleChangeFilters}
+              ></SelectAudience>
             </Col>
           </Form.Group>
         </Form>

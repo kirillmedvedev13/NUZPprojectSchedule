@@ -10,8 +10,7 @@ class Schedule extends React.Component {
       id_discipline: null,
       id_teacher: null,
       id_group: null,
-      id_specialty: null,
-      semester: null,
+      id_audience: null,
     },
     item: {
       id: null,

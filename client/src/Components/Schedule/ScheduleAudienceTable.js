@@ -46,7 +46,15 @@ function DataTable({
   handleUpdateItem,
   updateItem,
 }) {
-  const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {});
+  const { id_audience, id_discipline, id_group, id_teacher } = filters;
+  const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {
+    variables: {
+      id_audience,
+      id_discipline,
+      id_group,
+      id_teacher,
+    },
+  });
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
