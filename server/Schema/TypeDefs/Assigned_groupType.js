@@ -1,7 +1,7 @@
 import { GraphQLID, GraphQLObjectType, GraphQLList } from "graphql";
 import ClassType from "./ClassType.js";
 import GroupType from "./GroupType.js";
-import { ScheduleType } from "./Schedule.js";
+import { ScheduleType } from "./ScheduleType.js";
 
 const Assigned_groupType = new GraphQLObjectType({
   name: "Assigned_group",

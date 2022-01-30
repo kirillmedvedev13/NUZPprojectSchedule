@@ -1,8 +1,9 @@
 import { GraphQLList } from "graphql";
 import db from "../../database.js";
 import Assigned_groupType from "../TypeDefs/Assigned_groupType.js";
+import AudienceType from "../TypeDefs/AudienceType.js";
 import GroupType from "../TypeDefs/GroupType.js";
-import { ScheduleType } from "../TypeDefs/Schedule.js";
+import { ScheduleType } from "../TypeDefs/ScheduleType.js";
 
 export const GET_ALL_SCHEDULES = {
   type: new GraphQLList(ScheduleType),
@@ -66,65 +67,60 @@ export const GET_ALL_SCHEDULES = {
     return res;
   },
 };
-export const GET_ALL_GROUP_SCHEDULES = {
-  type: new GraphQLList(GroupType),
+export const GET_ALL_AUDIENCE_SCHEDULES = {
+  type: new GraphQLList(AudienceType),
   async resolve() {
-    const res = await db.group.findAll({
-      order: [["id", "ASC"]],
+    const res = await db.audience.findAll({
+      order: [
+        ["schedules", "number_pair", "ASC"],
+        ["schedules", "id_pair_type", "ASC"],
+        ["schedules", "id_day_week", "ASC"],
+      ],
       include: {
-        model: db.assigned_group,
+        model: db.schedule,
 
         include: [
           {
-            order: ["id_day_week", "ASC"],
-            model: db.schedule,
+            model: db.day_week,
+          },
+          {
+            model: db.pair_type,
+          },
+          {
+            model: db.assigned_group,
             include: [
               {
-                model: db.day_week,
-              },
-              {
-                model: db.pair_type,
-              },
-              {
-                model: db.assigned_group,
+                model: db.class,
                 include: [
                   {
-                    model: db.class,
+                    model: db.type_class,
+                  },
+                  {
+                    model: db.assigned_discipline,
                     include: [
                       {
-                        model: db.type_class,
+                        model: db.discipline,
                       },
                       {
-                        model: db.assigned_discipline,
-                        include: [
-                          {
-                            model: db.discipline,
-                          },
-                          {
-                            model: db.specialty,
-                            include: {
-                              model: db.cathedra,
-                            },
-                          },
-                        ],
-                      },
-                      {
-                        model: db.assigned_teacher,
+                        model: db.specialty,
                         include: {
-                          model: db.teacher,
-                          include: {
-                            model: db.cathedra,
-                          },
+                          model: db.cathedra,
                         },
                       },
                     ],
                   },
-                  { model: db.group },
+                  {
+                    model: db.assigned_teacher,
+                    include: {
+                      model: db.teacher,
+                      include: {
+                        model: db.cathedra,
+                      },
+                    },
+                  },
                 ],
               },
-              {
-                model: db.audience,
-              },
+              { model: db.group },
             ],
           },
         ],
@@ -133,103 +129,3 @@ export const GET_ALL_GROUP_SCHEDULES = {
     return res;
   },
 };
-
-/*query{
-  GetAllSchedules {
-   id
-    number_pair
-    day_week {
-      id
-      name
-    }
-    pair_type {
-      id
-      parity
-    }
-    audience{
-      id
-      name
-    }
-    assigned_group {
-      group {
-        id
-        name
-      }
-      class {
-        type_class {
-          id
-          name
-        }
-        assigned_discipline {
-          discipline {
-            id
-            name
-          }
-        }
-        assigned_teachers {
-          teacher {
-            id
-            surname
-            name
-            patronymic
-            cathedra{
-              name
-            }
-          }
-        }
-      }
-    }
-  }
-}
- */
-
-/*query{
-  GetAllGroupSchedules {
-    id
-    name
-    assigned_groups {
-      schedules {
-        id
-    number_pair
-    day_week {
-      id
-      name
-    }
-    pair_type {
-      id
-      parity
-    }
-    audience{
-      id
-      name
-    }
-    assigned_group {
-      class {
-        type_class {
-          id
-          name
-        }
-        assigned_discipline {
-          discipline {
-            id
-            name
-          }
-        }
-        assigned_teachers {
-          teacher {
-            id
-            surname
-            name
-            patronymic
-            cathedra{
-              name
-            }
-          }
-        }
-      }
-    }
-      }
-    }
-  }
-}
- */
