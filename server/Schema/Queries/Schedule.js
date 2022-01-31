@@ -148,3 +148,59 @@ export const GET_ALL_AUDIENCE_SCHEDULES = {
     return res;
   },
 };
+
+export const GET_ALL_SCHEDULE_TEACHERS = {
+  type: new GraphQLList(ScheduleType),
+  async resolve() {
+    const res = await db.schedule.findAll({
+      order: [
+        ["number_pair", "ASC"],
+        ["id_pair_type", "ASC"],
+        ["id_day_week", "ASC"],
+      ],
+      include: [
+        {
+          model: db.day_week,
+        },
+        {
+          model: db.pair_type,
+        },
+        {
+          model: db.assigned_group,
+          include: [
+            {
+              model: db.class,
+              include: [
+                {
+                  model: db.type_class,
+                },
+                {
+                  model: db.assigned_discipline,
+                  include: [
+                    {
+                      model: db.discipline,
+                    },
+                  ],
+                },
+                {
+                  model: db.assigned_teacher,
+                  include: {
+                    model: db.teacher,
+                    include: {
+                      model: db.cathedra,
+                    },
+                  },
+                },
+              ],
+            },
+            { model: db.group },
+          ],
+        },
+        {
+          model: db.audience,
+        },
+      ],
+    });
+    return res;
+  },
+};

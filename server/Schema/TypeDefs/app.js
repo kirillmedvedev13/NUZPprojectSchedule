@@ -45,6 +45,7 @@ import { GET_ALL_CLASSES } from "../Queries/Class.js";
 import {
   GET_ALL_SCHEDULES,
   GET_ALL_AUDIENCE_SCHEDULES,
+  GET_ALL_SCHEDULE_TEACHERS,
 } from "../Queries/Schedule.js";
 import {
   CREATE_CLASS,
@@ -73,6 +74,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllClasses: GET_ALL_CLASSES,
     GetAllSchedules: GET_ALL_SCHEDULES,
     GetAllAudienceSchedules: GET_ALL_AUDIENCE_SCHEDULES,
+    GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
   },
 });
 
