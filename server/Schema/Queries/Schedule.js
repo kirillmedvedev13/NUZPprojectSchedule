@@ -7,7 +7,34 @@ import { Op } from "sequelize";
 
 export const GET_ALL_SCHEDULES = {
   type: new GraphQLList(ScheduleType),
-  async resolve() {
+  args: {
+    id_cathedra: { type: GraphQLInt },
+    id_specialty: { type: GraphQLInt },
+    id_group: { type: GraphQLInt },
+  },
+  async resolve(parent, { id_cathedra, id_specialty, id_group }) {
+    let FilterGroup = {};
+    if (id_group) FilterGroup = { id_group };
+    else if (id_specialty) {
+      let getSpecGroups = await db.group.findAll({ where: { id_specialty } });
+      let groups = getSpecGroups.map((object) => {
+        return object.dataValues.id;
+      });
+      FilterGroup = { id_group: groups };
+    } else if (id_cathedra) {
+      let getSpecs = await db.specialty.findAll({ where: { id_cathedra } });
+      let specialties = getSpecs.map((object) => {
+        return object.dataValues.id;
+      });
+      let getSpecGroups = await db.group.findAll({
+        where: { id_specialty: specialties },
+      });
+      let groups = getSpecGroups.map((object) => {
+        return object.dataValues.id;
+      });
+      FilterGroup = { id_group: groups };
+    }
+    console.log(FilterGroup);
     const res = await db.schedule.findAll({
       order: [
         ["assigned_group", "group", "name", "ASC"],
@@ -24,6 +51,7 @@ export const GET_ALL_SCHEDULES = {
         },
         {
           model: db.assigned_group,
+          where: FilterGroup,
           include: [
             {
               model: db.class,
@@ -33,6 +61,7 @@ export const GET_ALL_SCHEDULES = {
                 },
                 {
                   model: db.assigned_discipline,
+
                   include: [
                     {
                       model: db.discipline,
@@ -70,20 +99,22 @@ export const GET_ALL_SCHEDULES = {
 export const GET_ALL_AUDIENCE_SCHEDULES = {
   type: new GraphQLList(AudienceType),
   args: {
-    id_group: { type: GraphQLInt },
-    id_discipline: { type: GraphQLInt },
-    id_teacher: { type: GraphQLInt },
+    id_cathedra: { type: GraphQLInt },
     id_audience: { type: GraphQLInt },
   },
-  async resolve(parent, { id_group, id_audience, id_discipline, id_teacher }) {
-    const FilterAudience = id_audience ? { id: { [Op.eq]: id_audience } } : {};
-    const FilterGroup = id_group ? { id_group: { [Op.eq]: id_group } } : {};
-    const FilterDisc = id_discipline
-      ? { id_discipline: { [Op.eq]: id_discipline } }
-      : {};
-    const FilterTeach = id_teacher
-      ? { id_teacher: { [Op.eq]: id_teacher } }
-      : {};
+  async resolve(parent, { id_cathedra, id_audience }) {
+    let FilterAudience = {};
+    if (id_audience) FilterAudience = { id: { [Op.eq]: id_audience } };
+    else if (id_cathedra) {
+      let getCathAuds = await db.assigned_audience.findAll({
+        where: { id_cathedra },
+      });
+      let arrAuds = getCathAuds.map((object) => {
+        return object.dataValues.id_audience;
+      });
+      FilterAudience = { id: arrAuds };
+    }
+
     const res = await db.audience.findAll({
       where: FilterAudience,
       order: [
@@ -103,7 +134,7 @@ export const GET_ALL_AUDIENCE_SCHEDULES = {
           },
           {
             model: db.assigned_group,
-            where: FilterGroup,
+
             include: [
               {
                 model: db.class,
@@ -114,7 +145,7 @@ export const GET_ALL_AUDIENCE_SCHEDULES = {
                   },
                   {
                     model: db.assigned_discipline,
-                    where: FilterDisc,
+
                     include: [
                       {
                         model: db.discipline,
@@ -129,7 +160,7 @@ export const GET_ALL_AUDIENCE_SCHEDULES = {
                   },
                   {
                     model: db.assigned_teacher,
-                    where: FilterTeach,
+
                     include: {
                       model: db.teacher,
                       include: {

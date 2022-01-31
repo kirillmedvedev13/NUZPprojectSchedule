@@ -7,10 +7,11 @@ class Schedule extends React.Component {
   state = {
     filters: {
       scheduleType: "group",
-      id_discipline: null,
+      id_specialty: null,
       id_teacher: null,
       id_group: null,
       id_audience: null,
+      id_cathedra: null,
     },
     item: {
       id: null,
@@ -96,6 +97,7 @@ class Schedule extends React.Component {
     return (
       <>
         <ScheduleSearch
+          filters={filters}
           handleChangeFilters={this.handleChangeFilters}
         ></ScheduleSearch>
         <ScheduleTable
