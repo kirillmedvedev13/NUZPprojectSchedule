@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { rewriteURIForGET, useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
 import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
@@ -9,7 +9,7 @@ function splitSamePairs(schedules) {
   let tempArr = [];
   let index = 0;
   let temp;
-  while (index != array.length - 1) {
+  while (index !== array.length - 1) {
     if (
       array[index].day_week.id === array[index + 1].day_week.id &&
       array[index].number_pair === array[index + 1].number_pair &&
@@ -23,7 +23,8 @@ function splitSamePairs(schedules) {
       while (
         array[index].day_week.id === array[index + 1].day_week.id &&
         array[index].number_pair === array[index + 1].number_pair &&
-        array[index].pair_type.id === array[index + 1].pair_type.id
+        array[index].pair_type.id === array[index + 1].pair_type.id &&
+        index !== array.length - 1
       ) {
         temp.assigned_group.group.name +=
           " " + array[index + 1].assigned_group.group.name;
@@ -46,13 +47,11 @@ function DataTable({
   handleUpdateItem,
   updateItem,
 }) {
-  const { id_audience, id_discipline, id_group, id_teacher } = filters;
+  const { id_audience, id_cathedra } = filters;
   const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {
     variables: {
       id_audience,
-      id_discipline,
-      id_group,
-      id_teacher,
+      id_cathedra,
     },
   });
   if (loading) return null;
@@ -61,7 +60,17 @@ function DataTable({
   return (
     <tbody>
       {data.GetAllAudienceSchedules.map((audience) => {
-        let newSchedules = splitSamePairs(audience.schedules);
+        let newSchedules;
+        if (!audience.schedules.length)
+          return (
+            <tr>
+              <td>{audience.name}</td>
+              <td colSpan={7}>Розкладу не має</td>
+            </tr>
+          );
+        else if (audience.schedules.length === 1)
+          newSchedules = audience.schedules;
+        else newSchedules = splitSamePairs(audience.schedules);
         function* foo() {
           let i = 0;
           yield* newSchedules.map((object, index) => {
