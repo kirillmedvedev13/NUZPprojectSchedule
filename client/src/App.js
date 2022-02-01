@@ -1,10 +1,11 @@
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import NaviBar from "./Components/Navbar/Navibar";
 import React from "react";
 import ModalAuthorization from "./Components/Authorization/ModalAuthorization";
 import { AuthContext } from "./Components/Authorization/AuthContext";
 import { NotificationContainer } from "react-notifications";
 import { CreateNotification } from "./Components/Alert";
+
 class App extends React.Component {
   state = {
     openLogin: false,
@@ -12,6 +13,7 @@ class App extends React.Component {
     userID: "",
     userEmail: "",
   };
+
   loginSuccess = (data, token) => {
     this.setState({
       ...data,
@@ -19,7 +21,9 @@ class App extends React.Component {
     this.context.setUser(data.userId, data.userEmail);
     this.context.setToken(token);
   };
+
   alert = CreateNotification;
+
   componentDidMount() {
     const res = this.context.loadData();
     res.then((data) => {
@@ -35,6 +39,7 @@ class App extends React.Component {
       }
     });
   }
+
   handleOpenModalLogin = () => {
     if (this.state.isLoggin) {
       this.setState({ isLoggin: false, userID: null, userEmail: null });
@@ -52,6 +57,7 @@ class App extends React.Component {
       openLogin: false,
     });
   };
+
   render() {
     return (
       <Fragment>
@@ -65,8 +71,8 @@ class App extends React.Component {
           isLoggin={this.state.isLoggin}
           email={this.state.userEmail}
         />
-        <NotificationContainer />
         {this.props.children}
+        <NotificationContainer />
       </Fragment>
     );
   }

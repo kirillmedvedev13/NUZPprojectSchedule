@@ -31,6 +31,7 @@ export default (Sequelize, DataTypes) => {
     });
     Class.hasMany(models.assigned_teacher, {
       foreignKey: "id_class",
+      required: true,
     });
     Class.hasMany(models.assigned_group, {
       foreignKey: "id_class",
@@ -42,10 +43,12 @@ export default (Sequelize, DataTypes) => {
     Class.belongsToMany(models.teacher, {
       foreignKey: "id_class",
       through: models.assigned_teacher,
+      required: true,
     });
     Class.belongsToMany(models.group, {
       foreignKey: "id_class",
       through: models.assigned_group,
+      required: true,
     });
   };
   return Class;

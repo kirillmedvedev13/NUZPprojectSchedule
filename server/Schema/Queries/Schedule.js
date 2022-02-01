@@ -182,7 +182,21 @@ export const GET_ALL_AUDIENCE_SCHEDULES = {
 
 export const GET_ALL_SCHEDULE_TEACHERS = {
   type: new GraphQLList(ScheduleType),
-  async resolve() {
+  args: {
+    id_cathedra: { type: GraphQLInt },
+    id_teacher: { type: GraphQLInt },
+  },
+  async resolve(parent, { id_cathedra, id_teacher, }) {
+    let filterTeacher = {};
+    let filterCathedra = {};
+    if (id_teacher) {
+      filterTeacher = { id: { [Op.eq]: id_teacher } }
+    }
+    else {
+      if (id_cathedra) {
+        filterCathedra = { id_cathedra: { [Op.eq]: id_cathedra } }
+      }
+    }
     const res = await db.schedule.findAll({
       order: [
         ["number_pair", "ASC"],
@@ -217,6 +231,7 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
                   model: db.assigned_teacher,
                   include: {
                     model: db.teacher,
+                    where: { [Op.and]: [filterTeacher, filterCathedra] },
                     include: {
                       model: db.cathedra,
                     },

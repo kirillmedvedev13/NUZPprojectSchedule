@@ -1,10 +1,43 @@
 import { useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
 import { Table } from "react-bootstrap";
-import { XCircle, PencilSquare } from "react-bootstrap-icons";
-import { GET_WEEKS_DAY, GET_ALL_SCHEDULES } from "./queries";
+import { GET_WEEKS_DAY, GET_ALL_AUDIENCE_SCHEDULES } from "./queries";
 
-function getAndSortGroupSchedule(assigned_groups) {}
+function splitSamePairs(schedules) {
+  let array = JSON.parse(JSON.stringify(schedules));
+  let tempArr = [];
+  let index = 0;
+  let temp;
+  while (index !== array.length - 1) {
+    if (
+      array[index].day_week.id === array[index + 1].day_week.id &&
+      array[index].number_pair === array[index + 1].number_pair &&
+      array[index].pair_type.id === array[index + 1].pair_type.id
+    ) {
+      temp = JSON.parse(JSON.stringify(array[index]));
+      temp.assigned_group.group.name +=
+        " " + array[index + 1].assigned_group.group.name;
+      array.slice(index + 1, 1);
+      index++;
+      while (
+        array[index].day_week.id === array[index + 1].day_week.id &&
+        array[index].number_pair === array[index + 1].number_pair &&
+        array[index].pair_type.id === array[index + 1].pair_type.id &&
+        index !== array.length - 1
+      ) {
+        temp.assigned_group.group.name +=
+          " " + array[index + 1].assigned_group.group.name;
+        array.slice(index + 1, 1);
+        index++;
+      }
+      tempArr.push(temp);
+    } else {
+      tempArr.push(array[index]);
+    }
+    index++;
+  }
+  return tempArr;
+}
 function DataTable({
   filters,
   handleSetItem,
@@ -13,55 +46,52 @@ function DataTable({
   handleUpdateItem,
   updateItem,
 }) {
-  const { id_cathedra, id_group, id_specialty } = filters;
-  const { loading, error, data } = useQuery(GET_ALL_SCHEDULES, {
+  const { id_audience, id_cathedra } = filters;
+  const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {
     variables: {
-      id_specialty,
-      id_group,
+      id_audience,
       id_cathedra,
     },
   });
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
-  function* foo() {
-    let i = 0;
-    yield* data.GetAllSchedules.map((object, index) => {
-      return object;
-    });
-  }
-
-  const schedules = foo();
-  let schedule = schedules.next();
-  let MapGroups = new Map();
-  data.GetAllSchedules.map((schedule) => {
-    MapGroups.set(
-      schedule.assigned_group.group.id,
-      schedule.assigned_group.group
-    );
-  });
-  const ArrGroups = Array.from(MapGroups).map(([key, value]) => ({
-    key,
-    value,
-  }));
-
   return (
     <tbody>
-      {ArrGroups.map((group) => {
+      {data.GetAllAudienceSchedules.map((audience) => {
+        let newSchedules;
+        if (!audience.schedules.length)
+          return (
+            <tr>
+              <td>{audience.name}</td>
+              <td colSpan={7}>Розкладу не має</td>
+            </tr>
+          );
+        else if (audience.schedules.length === 1)
+          newSchedules = audience.schedules;
+        else newSchedules = splitSamePairs(audience.schedules);
+        function* foo() {
+          yield* newSchedules.map((object) => {
+            return object;
+          });
+        }
+        const schedules = foo();
+        let schedule = schedules.next();
         return (
-          <Fragment key={group.key + "fr"}>
-            <tr key={group.key}>
-              <td rowSpan="19" key={group.value.id + group.value.name}>
-                {group.value.name}
+          <Fragment key={audience.id + "fr"}>
+            <tr key={audience.id}>
+              <td rowSpan="19" key={audience.id + audience.name}>
+                {audience.name}
               </td>
             </tr>
+
             {[...Array(6)].map((i, number_pair) => {
               // обновлять индексы для каждого номера пары
               let arrScheduleTop = [null, null, null, null, null, null];
               let arrScheduleBot = [null, null, null, null, null, null];
               return (
                 <Fragment>
-                  <tr key={`${group.key}-data-${number_pair + 1}`}>
+                  <tr key={`${audience.key}-data-${number_pair + 1}`}>
                     <td rowSpan="3">{number_pair + 1}</td>
                   </tr>
                   {
@@ -77,6 +107,7 @@ function DataTable({
                         ) {
                           if (Number(schedule.value.pair_type.id) === 1) {
                             arrScheduleTop[day_week] = schedule.value;
+
                             schedule = schedules.next();
                           }
                         }
@@ -131,7 +162,7 @@ function DataTable({
                           const desciption = `
                                 ${
                                   schedule.assigned_group.class.type_class.name
-                                } ауд.${schedule.audience.name} ${
+                                } гр.${schedule.assigned_group.group.name} ${
                             schedule.assigned_group.class.assigned_discipline
                               .discipline.name
                           } ${schedule.assigned_group.class.assigned_teachers.map(
@@ -170,7 +201,7 @@ function DataTable({
                           const desciption = `
                                 ${
                                   schedule.assigned_group.class.type_class.name
-                                } ауд.${schedule.audience.name} ${
+                                } гр.${schedule.assigned_group.group.name} ${
                             schedule.assigned_group.class.assigned_discipline
                               .discipline.name
                           } ${schedule.assigned_group.class.assigned_teachers.map(
@@ -201,7 +232,7 @@ function TableHead() {
   return (
     <thead>
       <tr>
-        <th>Група</th>
+        <th>Аудиторія</th>
         <th>#</th>
         {data.GetWeeksDay.map((item) => {
           return <th key={item.id}>{item.name}</th>;
@@ -210,7 +241,7 @@ function TableHead() {
     </thead>
   );
 }
-class ScheduleGroupTable extends React.Component {
+class ScheduleTableAudience extends React.Component {
   render() {
     const {
       filters,
@@ -238,4 +269,4 @@ class ScheduleGroupTable extends React.Component {
     );
   }
 }
-export default ScheduleGroupTable;
+export default ScheduleTableAudience;

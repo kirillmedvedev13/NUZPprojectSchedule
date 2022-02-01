@@ -117,8 +117,8 @@ export const GET_ALL_AUDIENCE_SCHEDULES = gql`
 `;
 
 export const GET_ALL_SCHEDULE_TEACHERS = gql`
-query{
-  GetAllScheduleTeachers {
+query($id_teacher:Int, $id_cathedra: Int){
+  GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
       id
       number_pair
       day_week {

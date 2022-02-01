@@ -48,12 +48,6 @@ class NaviBar extends React.Component {
                 >
                   {isLoggin ? "Вийти" : "Увійти"}
                 </Button>
-                <Button
-                  className="mx-1  my-1 align-self-center"
-                  variant="secondary"
-                >
-                  Зареєструватися
-                </Button>
               </Nav>
             </Navbar.Collapse>
           </Container>

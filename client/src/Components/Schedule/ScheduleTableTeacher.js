@@ -6,14 +6,20 @@ import { Table } from "react-bootstrap";
 function DataTable({
   filters
 }) {
-  const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_TEACHERS, {});
+  const { id_cathedra, id_teacher } = filters;
+  const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_TEACHERS, {
+    variables: {
+      id_cathedra,
+      id_teacher,
+    },
+  });
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
   let MapTeacher = new Map();
 
-  data.GetAllScheduleTeachers.map((schedule) => {
-    schedule.assigned_group.class.assigned_teachers.map(at => {
+  data.GetAllScheduleTeachers.forEach((schedule) => {
+    schedule.assigned_group.class.assigned_teachers.forEach(at => {
       let data = null;
       let temp = MapTeacher.get(Number(at.teacher.id));
       if (temp) {
@@ -24,10 +30,9 @@ function DataTable({
       else {
         data = [schedule]
       }
-      MapTeacher.set(Number(at.teacher.id), {teacher: at.teacher, schedule:data});
+      MapTeacher.set(Number(at.teacher.id), { teacher: at.teacher, schedule: data });
     })
   });
-  console.log(MapTeacher)
 
   const ArrTeachers = Array.from(MapTeacher).map(([key, value]) => ({
     key,
@@ -35,7 +40,6 @@ function DataTable({
   }));
   const number_pairs = 6;
   const number_days = 6;
-  console.log(ArrTeachers)
   return (
     <tbody>
       {ArrTeachers.map((teacher) => {
@@ -79,7 +83,7 @@ function DataTable({
                         if (Number(teacher.value.schedule[currentIndexSchedule].day_week.id) === Number(day_week + 1) && Number(teacher.value.schedule[currentIndexSchedule].number_pair) === Number(number_pair + 1)) {
                           if (Number(teacher.value.schedule[currentIndexSchedule].pair_type.id) === 1) {
                             let currentTeacher = teacher.value.schedule[currentIndexSchedule];
-                            while (currentTeacher.day_week.id === teacher.value.schedule[currentIndexSchedule].day_week.id 
+                            while (currentTeacher.day_week.id === teacher.value.schedule[currentIndexSchedule].day_week.id
                               && currentTeacher.number_pair === teacher.value.schedule[currentIndexSchedule].number_pair
                               && currentTeacher.pair_type.id === teacher.value.schedule[currentIndexSchedule].pair_type.id) {
                               if (arrScheduleTop[day_week]) {
@@ -111,7 +115,7 @@ function DataTable({
                         if (Number(teacher.value.schedule[currentIndexSchedule].day_week.id) === Number(day_week + 1) && Number(teacher.value.schedule[currentIndexSchedule].number_pair) === Number(number_pair + 1)) {
                           if (Number(teacher.value.schedule[currentIndexSchedule].pair_type.id) === 2) {
                             let currentTeacher = teacher.value.schedule[currentIndexSchedule];
-                            while (currentTeacher.day_week.id === teacher.value.schedule[currentIndexSchedule].day_week.id 
+                            while (currentTeacher.day_week.id === teacher.value.schedule[currentIndexSchedule].day_week.id
                               && currentTeacher.number_pair === teacher.value.schedule[currentIndexSchedule].number_pair
                               && currentTeacher.pair_type.id === teacher.value.schedule[currentIndexSchedule].pair_type.id) {
                               if (arrScheduleBot[day_week]) {
@@ -143,7 +147,7 @@ function DataTable({
                         if (Number(teacher.value.schedule[currentIndexSchedule].day_week.id) === Number(day_week + 1) && Number(teacher.value.schedule[currentIndexSchedule].number_pair) === Number(number_pair + 1)) {
                           if (Number(teacher.value.schedule[currentIndexSchedule].pair_type.id) === 3) {
                             let currentTeacher = teacher.value.schedule[currentIndexSchedule];
-                            while (currentTeacher.day_week.id === teacher.value.schedule[currentIndexSchedule].day_week.id 
+                            while (currentTeacher.day_week.id === teacher.value.schedule[currentIndexSchedule].day_week.id
                               && currentTeacher.number_pair === teacher.value.schedule[currentIndexSchedule].number_pair
                               && currentTeacher.pair_type.id === teacher.value.schedule[currentIndexSchedule].pair_type.id) {
                               if (arrScheduleTop[day_week]) {
@@ -168,8 +172,6 @@ function DataTable({
                       }
                     })
                   }
-                  {console.log(arrScheduleTop)}
-                  {console.log(arrScheduleBot)}
                   <tr>
                     {
                       // Проходим по числителю
@@ -259,7 +261,7 @@ function TableHead() {
     </thead>
   );
 }
-class ScheduleTeacherTable extends React.Component {
+class ScheduleTableTeacher extends React.Component {
   render() {
     const {
       filters,
@@ -277,4 +279,4 @@ class ScheduleTeacherTable extends React.Component {
     );
   }
 }
-export default ScheduleTeacherTable;
+export default ScheduleTableTeacher;
