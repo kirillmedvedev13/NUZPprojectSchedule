@@ -3,9 +3,7 @@ import React, { Fragment } from "react";
 import { Table } from "react-bootstrap";
 import { GET_WEEKS_DAY, GET_ALL_SCHEDULES } from "./queries";
 
-function DataTable({
-  filters,
-}) {
+function DataTable({ filters }) {
   const { id_cathedra, id_group, id_specialty } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULES, {
     variables: {
@@ -52,9 +50,11 @@ function DataTable({
               let arrScheduleTop = [null, null, null, null, null, null];
               let arrScheduleBot = [null, null, null, null, null, null];
               return (
-                <Fragment>
+                <Fragment key={group.key + "frag" + number_pair}>
                   <tr key={`${group.key}-data-${number_pair + 1}`}>
-                    <td rowSpan="3">{number_pair + 1}</td>
+                    <td rowSpan="3" key={`${group.key}-td-${number_pair + 1}`}>
+                      {number_pair + 1}
+                    </td>
                   </tr>
                   {
                     // По числителю запоминать расписание
@@ -63,9 +63,9 @@ function DataTable({
                         // проверка на то не закончились ли занятия для всех групп
                         if (
                           Number(schedule.value.day_week.id) ===
-                          Number(day_week + 1) &&
+                            Number(day_week + 1) &&
                           Number(schedule.value.number_pair) ===
-                          Number(number_pair + 1)
+                            Number(number_pair + 1)
                         ) {
                           if (Number(schedule.value.pair_type.id) === 1) {
                             arrScheduleTop[day_week] = schedule.value;
@@ -82,9 +82,9 @@ function DataTable({
                         // проверка на то не закончились ли занятия для всех групп
                         if (
                           Number(schedule.value.day_week.id) ===
-                          Number(day_week + 1) &&
+                            Number(day_week + 1) &&
                           Number(schedule.value.number_pair) ===
-                          Number(number_pair + 1)
+                            Number(number_pair + 1)
                         ) {
                           if (Number(schedule.value.pair_type.id) === 2) {
                             arrScheduleBot[day_week] = schedule.value;
@@ -101,9 +101,9 @@ function DataTable({
                         // проверка на то не закончились ли занятия для всех групп
                         if (
                           Number(schedule.value.day_week.id) ===
-                          Number(day_week + 1) &&
+                            Number(day_week + 1) &&
                           Number(schedule.value.number_pair) ===
-                          Number(number_pair + 1)
+                            Number(number_pair + 1)
                         ) {
                           if (Number(schedule.value.pair_type.id) === 3) {
                             arrScheduleTop[day_week] = schedule.value;
@@ -113,34 +113,63 @@ function DataTable({
                       }
                     })
                   }
-                  <tr>
+                  <tr key={group.key + "trTop" + number_pair}>
                     {
                       // Проходим по числителю
-                      arrScheduleTop.map((schedule) => {
+                      arrScheduleTop.map((schedule, index) => {
                         if (schedule === null) {
-                          return <td></td>;
+                          return (
+                            <td
+                              key={group.key + "td" + number_pair + index}
+                            ></td>
+                          );
                         } else {
                           const desciption = `
-                                ${schedule.assigned_group.class.type_class.name
-                            } ауд.${schedule.audience.name} ${schedule.assigned_group.class.assigned_discipline
+                                ${
+                                  schedule.assigned_group.class.type_class.name
+                                } ауд.${schedule.audience.name} ${
+                            schedule.assigned_group.class.assigned_discipline
                               .discipline.name
-                            } ${schedule.assigned_group.class.assigned_teachers.map(
-                              ({ teacher }) => {
-                                return ` ${teacher.surname}`;
-                              }
-                            )}
+                          } ${schedule.assigned_group.class.assigned_teachers.map(
+                            ({ teacher }) => {
+                              return ` ${teacher.surname}`;
+                            }
+                          )}
                               `;
                           if (Number(schedule.pair_type.id) === 1) {
-                            return <td>{desciption}</td>;
+                            return (
+                              <td
+                                key={
+                                  group.key +
+                                  "td" +
+                                  desciption +
+                                  schedule.day_week.id
+                                }
+                              >
+                                {desciption}
+                              </td>
+                            );
                           }
                           if (Number(schedule.pair_type.id) === 3) {
-                            return <td rowSpan="2">{desciption}</td>;
+                            return (
+                              <td
+                                rowSpan="2"
+                                key={
+                                  group.key +
+                                  "td" +
+                                  desciption +
+                                  schedule.day_week.id
+                                }
+                              >
+                                {desciption}
+                              </td>
+                            );
                           }
                         }
                       })
                     }
                   </tr>
-                  <tr>
+                  <tr key={group.key + "trBot" + number_pair}>
                     {
                       // Проходим по знаменателю
                       arrScheduleBot.map((schedule, index) => {
@@ -151,23 +180,36 @@ function DataTable({
                             ) {
                               return null;
                             } else {
-                              return <td></td>;
+                              return <td key={group.key + "td" + index}></td>;
                             }
                           } else {
-                            return <td></td>;
+                            return <td key={group.key + "td" + index}></td>;
                           }
                         } else {
                           const desciption = `
-                                ${schedule.assigned_group.class.type_class.name
-                            } ауд.${schedule.audience.name} ${schedule.assigned_group.class.assigned_discipline
+                                ${
+                                  schedule.assigned_group.class.type_class.name
+                                } ауд.${schedule.audience.name} ${
+                            schedule.assigned_group.class.assigned_discipline
                               .discipline.name
-                            } ${schedule.assigned_group.class.assigned_teachers.map(
-                              ({ teacher }) => {
-                                return ` ${teacher.surname}`;
-                              }
-                            )}
+                          } ${schedule.assigned_group.class.assigned_teachers.map(
+                            ({ teacher }) => {
+                              return ` ${teacher.surname}`;
+                            }
+                          )}
                               `;
-                          return <td>{desciption}</td>;
+                          return (
+                            <td
+                              key={
+                                group.key +
+                                "td" +
+                                desciption +
+                                schedule.day_week.id
+                              }
+                            >
+                              {desciption}
+                            </td>
+                          );
                         }
                       })
                     }
@@ -205,9 +247,7 @@ class ScheduleTableGroup extends React.Component {
     return (
       <Table bordered>
         <TableHead />
-        <DataTable
-          filters={filters}
-        ></DataTable>
+        <DataTable filters={filters}></DataTable>
       </Table>
     );
   }

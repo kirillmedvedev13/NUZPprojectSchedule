@@ -38,9 +38,7 @@ function splitSamePairs(schedules) {
   }
   return tempArr;
 }
-function DataTable({
-  filters,
-}) {
+function DataTable({ filters }) {
   const { id_audience, id_cathedra } = filters;
   const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {
     variables: {
@@ -55,13 +53,7 @@ function DataTable({
     <tbody>
       {data.GetAllAudienceSchedules.map((audience) => {
         let newSchedules;
-        if (!audience.schedules.length)
-          return (
-            <tr>
-              <td>{audience.name}</td>
-              <td colSpan={7}>Розкладу не має</td>
-            </tr>
-          );
+        if (!audience.schedules.length) return;
         else if (audience.schedules.length === 1)
           newSchedules = audience.schedules;
         else newSchedules = splitSamePairs(audience.schedules);
@@ -85,9 +77,14 @@ function DataTable({
               let arrScheduleTop = [null, null, null, null, null, null];
               let arrScheduleBot = [null, null, null, null, null, null];
               return (
-                <Fragment>
-                  <tr key={`${audience.key}-data-${number_pair + 1}`}>
-                    <td rowSpan="3">{number_pair + 1}</td>
+                <Fragment key={audience.id + "frag" + number_pair}>
+                  <tr key={`${audience.id}-data-${number_pair + 1}`}>
+                    <td
+                      rowSpan="3"
+                      key={`${audience.id}-number-${number_pair + 1}`}
+                    >
+                      {number_pair + 1}
+                    </td>
                   </tr>
                   {
                     // По числителю запоминать расписание
@@ -147,12 +144,16 @@ function DataTable({
                       }
                     })
                   }
-                  <tr>
+                  <tr key={audience.id + "trTop" + number_pair}>
                     {
                       // Проходим по числителю
-                      arrScheduleTop.map((schedule) => {
+                      arrScheduleTop.map((schedule, index) => {
                         if (schedule === null) {
-                          return <td></td>;
+                          return (
+                            <td
+                              key={audience.id + "td" + number_pair + index}
+                            ></td>
+                          );
                         } else {
                           const desciption = `
                                 ${
@@ -167,16 +168,39 @@ function DataTable({
                           )}
                               `;
                           if (Number(schedule.pair_type.id) === 1) {
-                            return <td>{desciption}</td>;
+                            return (
+                              <td
+                                key={
+                                  audience.id +
+                                  "td" +
+                                  desciption +
+                                  schedule.day_week.id
+                                }
+                              >
+                                {desciption}
+                              </td>
+                            );
                           }
                           if (Number(schedule.pair_type.id) === 3) {
-                            return <td rowSpan="2">{desciption}</td>;
+                            return (
+                              <td
+                                rowSpan="2"
+                                key={
+                                  audience.id +
+                                  "td" +
+                                  desciption +
+                                  schedule.day_week.id
+                                }
+                              >
+                                {desciption}
+                              </td>
+                            );
                           }
                         }
                       })
                     }
                   </tr>
-                  <tr>
+                  <tr key={audience.id + "trBot" + number_pair}>
                     {
                       // Проходим по знаменателю
                       arrScheduleBot.map((schedule, index) => {
@@ -187,10 +211,18 @@ function DataTable({
                             ) {
                               return null;
                             } else {
-                              return <td></td>;
+                              return (
+                                <td
+                                  key={audience.id + "td" + number_pair + index}
+                                ></td>
+                              );
                             }
                           } else {
-                            return <td></td>;
+                            return (
+                              <td
+                                key={audience.id + "td" + number_pair + index}
+                              ></td>
+                            );
                           }
                         } else {
                           const desciption = `
@@ -205,7 +237,18 @@ function DataTable({
                             }
                           )}
                               `;
-                          return <td>{desciption}</td>;
+                          return (
+                            <td
+                              key={
+                                audience.id +
+                                "td" +
+                                desciption +
+                                schedule.day_week.id
+                              }
+                            >
+                              {desciption}
+                            </td>
+                          );
                         }
                       })
                     }
@@ -239,17 +282,13 @@ function TableHead() {
 
 class ScheduleTableAudience extends React.Component {
   render() {
-    const {
-      filters,
-    } = this.props;
+    const { filters } = this.props;
 
     return (
-        <Table bordered>
-          <TableHead />
-          <DataTable
-            filters={filters}
-          ></DataTable>
-        </Table>
+      <Table bordered>
+        <TableHead />
+        <DataTable filters={filters}></DataTable>
+      </Table>
     );
   }
 }
