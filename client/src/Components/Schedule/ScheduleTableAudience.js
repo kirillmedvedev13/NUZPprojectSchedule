@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
-import { Table } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import { GET_WEEKS_DAY, GET_ALL_AUDIENCE_SCHEDULES } from "./queries";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
@@ -287,15 +287,18 @@ class ScheduleTableAudience extends React.Component {
 
     return (
       <>
-        <ReactHTMLTableToExcel
-          id="test-table-xls-button"
-          className="download-table-xls-button"
-          table="table-to-xls"
-          filename="tablexls"
-          sheet="tablexls"
-          buttonText="Download as XLS"
-        />
-        <Table bordered id={"table-to-xls"}>
+        <div className="d-flex justify-content-end my-2">
+          <ReactHTMLTableToExcel
+            id="test-table-xls-button"
+            className="btn btn-primary"
+            table="tableAudience"
+            filename="tableAudienceSchedule"
+            sheet="tablexls"
+            buttonText="Завантажити XLS"
+          />
+        </div>
+
+        <Table bordered id={"tableAudience"}>
           <TableHead />
           <DataTable filters={filters}></DataTable>
         </Table>
