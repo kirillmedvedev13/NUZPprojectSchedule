@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
 import { Table } from "react-bootstrap";
 import { GET_WEEKS_DAY, GET_ALL_AUDIENCE_SCHEDULES } from "./queries";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 function splitSamePairs(schedules) {
   let array = JSON.parse(JSON.stringify(schedules));
@@ -285,10 +286,20 @@ class ScheduleTableAudience extends React.Component {
     const { filters } = this.props;
 
     return (
-      <Table bordered>
-        <TableHead />
-        <DataTable filters={filters}></DataTable>
-      </Table>
+      <>
+        <ReactHTMLTableToExcel
+          id="test-table-xls-button"
+          className="download-table-xls-button"
+          table="table-to-xls"
+          filename="tablexls"
+          sheet="tablexls"
+          buttonText="Download as XLS"
+        />
+        <Table bordered id={"table-to-xls"}>
+          <TableHead />
+          <DataTable filters={filters}></DataTable>
+        </Table>
+      </>
     );
   }
 }

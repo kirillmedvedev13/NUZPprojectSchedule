@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import update from "react-addons-update";
+import { Button } from "react-bootstrap";
 import ScheduleSearch from "./ScheduleSearch";
 import ScheduleTableTeacher from "./ScheduleTableTeacher";
 import ScheduleTableAudience from "./ScheduleTableAudience";
@@ -23,30 +24,19 @@ class Schedule extends React.Component {
     }));
   };
 
-
   render() {
-    function SwitchTable({
-      filters,
-    }) {
+    function SwitchTable({ filters }) {
       switch (filters.scheduleType) {
         case "teacher":
           return (
-            <ScheduleTableTeacher
-              filters={filters}
-            ></ScheduleTableTeacher>
+            <ScheduleTableTeacher filters={filters}></ScheduleTableTeacher>
           );
         case "audience":
           return (
-            <ScheduleTableAudience
-              filters={filters}
-            ></ScheduleTableAudience>
+            <ScheduleTableAudience filters={filters}></ScheduleTableAudience>
           );
         default:
-          return (
-            <ScheduleTableGroup
-              filters={filters}
-            ></ScheduleTableGroup>
-          );
+          return <ScheduleTableGroup filters={filters}></ScheduleTableGroup>;
       }
     }
     const { filters } = this.state;
@@ -56,6 +46,7 @@ class Schedule extends React.Component {
           filters={filters}
           handleChangeFilters={this.handleChangeFilters}
         ></ScheduleSearch>
+
         <div className="container-fluid w-100">
           <SwitchTable filters={filters}></SwitchTable>
         </div>
