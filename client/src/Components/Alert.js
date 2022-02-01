@@ -1,4 +1,3 @@
-import React from "react";
 import { NotificationManager } from "react-notifications";
 
 export const CreateNotification = (message) => {

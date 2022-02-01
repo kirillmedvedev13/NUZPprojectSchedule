@@ -1,7 +1,7 @@
 import React from "react";
 import { GET_ALL_TEACHERS } from "../Teacher/queries";
 import { GET_ALL_GROUPS } from "../Group/queries";
-import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import Select from "react-select";
 import { GET_ALL_DISCIPLINES } from "../Discipline/queries";

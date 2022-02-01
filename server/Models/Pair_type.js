@@ -12,7 +12,7 @@ export default (Sequelize, DataTypes) => {
     },
   });
   Pair_type.associate = (models) => {
-    Pair_type.hasMany(models.schedule, {foreignKey: "id_pair_type",});
+    Pair_type.hasMany(models.schedule, {foreignKey: "id_pair_type", required: true,});
   };
   return Pair_type;
 };

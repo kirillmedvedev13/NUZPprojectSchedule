@@ -23,7 +23,7 @@ class Schedule extends React.Component {
     }));
   };
 
-  
+
   render() {
     function SwitchTable({
       filters,
@@ -56,7 +56,9 @@ class Schedule extends React.Component {
           filters={filters}
           handleChangeFilters={this.handleChangeFilters}
         ></ScheduleSearch>
-        <SwitchTable filters={filters}></SwitchTable>
+        <div className="container-fluid w-100">
+          <SwitchTable filters={filters}></SwitchTable>
+        </div>
       </>
     );
   }

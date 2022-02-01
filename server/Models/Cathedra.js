@@ -22,6 +22,7 @@ export default (Sequelize, DataTypes) => {
     });
     Cathedra.hasMany(models.teacher, {
       foreignKey: "id_cathedra",
+      required: true,
     });
     Cathedra.hasMany(models.assigned_audience, {
       foreignKey: "id_cathedra",

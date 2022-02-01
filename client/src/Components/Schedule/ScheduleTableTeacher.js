@@ -268,14 +268,12 @@ class ScheduleTableTeacher extends React.Component {
     } = this.props;
 
     return (
-      <div className="container-fluid w-100">
         <Table bordered >
           <TableHead />
           <DataTable
             filters={filters}
           ></DataTable>
         </Table>
-      </div>
     );
   }
 }

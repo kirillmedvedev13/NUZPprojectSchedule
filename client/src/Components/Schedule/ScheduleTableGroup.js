@@ -63,9 +63,9 @@ function DataTable({
                         // проверка на то не закончились ли занятия для всех групп
                         if (
                           Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
+                          Number(day_week + 1) &&
                           Number(schedule.value.number_pair) ===
-                            Number(number_pair + 1)
+                          Number(number_pair + 1)
                         ) {
                           if (Number(schedule.value.pair_type.id) === 1) {
                             arrScheduleTop[day_week] = schedule.value;
@@ -82,9 +82,9 @@ function DataTable({
                         // проверка на то не закончились ли занятия для всех групп
                         if (
                           Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
+                          Number(day_week + 1) &&
                           Number(schedule.value.number_pair) ===
-                            Number(number_pair + 1)
+                          Number(number_pair + 1)
                         ) {
                           if (Number(schedule.value.pair_type.id) === 2) {
                             arrScheduleBot[day_week] = schedule.value;
@@ -101,9 +101,9 @@ function DataTable({
                         // проверка на то не закончились ли занятия для всех групп
                         if (
                           Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
+                          Number(day_week + 1) &&
                           Number(schedule.value.number_pair) ===
-                            Number(number_pair + 1)
+                          Number(number_pair + 1)
                         ) {
                           if (Number(schedule.value.pair_type.id) === 3) {
                             arrScheduleTop[day_week] = schedule.value;
@@ -121,16 +121,14 @@ function DataTable({
                           return <td></td>;
                         } else {
                           const desciption = `
-                                ${
-                                  schedule.assigned_group.class.type_class.name
-                                } ауд.${schedule.audience.name} ${
-                            schedule.assigned_group.class.assigned_discipline
+                                ${schedule.assigned_group.class.type_class.name
+                            } ауд.${schedule.audience.name} ${schedule.assigned_group.class.assigned_discipline
                               .discipline.name
-                          } ${schedule.assigned_group.class.assigned_teachers.map(
-                            ({ teacher }) => {
-                              return ` ${teacher.surname}`;
-                            }
-                          )}
+                            } ${schedule.assigned_group.class.assigned_teachers.map(
+                              ({ teacher }) => {
+                                return ` ${teacher.surname}`;
+                              }
+                            )}
                               `;
                           if (Number(schedule.pair_type.id) === 1) {
                             return <td>{desciption}</td>;
@@ -160,16 +158,14 @@ function DataTable({
                           }
                         } else {
                           const desciption = `
-                                ${
-                                  schedule.assigned_group.class.type_class.name
-                                } ауд.${schedule.audience.name} ${
-                            schedule.assigned_group.class.assigned_discipline
+                                ${schedule.assigned_group.class.type_class.name
+                            } ауд.${schedule.audience.name} ${schedule.assigned_group.class.assigned_discipline
                               .discipline.name
-                          } ${schedule.assigned_group.class.assigned_teachers.map(
-                            ({ teacher }) => {
-                              return ` ${teacher.surname}`;
-                            }
-                          )}
+                            } ${schedule.assigned_group.class.assigned_teachers.map(
+                              ({ teacher }) => {
+                                return ` ${teacher.surname}`;
+                              }
+                            )}
                               `;
                           return <td>{desciption}</td>;
                         }
@@ -204,29 +200,15 @@ function TableHead() {
 }
 class ScheduleTableGroup extends React.Component {
   render() {
-    const {
-      filters,
-      handleOpenModal,
-      handleOpenDialog,
-      handleSetItem,
-      updateItem,
-      handleUpdateItem,
-    } = this.props;
+    const { filters } = this.props;
 
     return (
-      <div className="container-fluid w-100">
-        <Table bordered>
-          <TableHead />
-          <DataTable
-            filters={filters}
-            handleSetItem={handleSetItem}
-            handleOpenDialog={handleOpenDialog}
-            handleOpenModal={handleOpenModal}
-            handleUpdateItem={handleUpdateItem}
-            updateItem={updateItem}
-          ></DataTable>
-        </Table>
-      </div>
+      <Table bordered>
+        <TableHead />
+        <DataTable
+          filters={filters}
+        ></DataTable>
+      </Table>
     );
   }
 }

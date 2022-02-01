@@ -40,11 +40,6 @@ function splitSamePairs(schedules) {
 }
 function DataTable({
   filters,
-  handleSetItem,
-  handleOpenDialog,
-  handleOpenModal,
-  handleUpdateItem,
-  updateItem,
 }) {
   const { id_audience, id_cathedra } = filters;
   const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {
@@ -241,31 +236,20 @@ function TableHead() {
     </thead>
   );
 }
+
 class ScheduleTableAudience extends React.Component {
   render() {
     const {
       filters,
-      handleOpenModal,
-      handleOpenDialog,
-      handleSetItem,
-      updateItem,
-      handleUpdateItem,
     } = this.props;
 
     return (
-      <div className="container-fluid w-100">
         <Table bordered>
           <TableHead />
           <DataTable
             filters={filters}
-            handleSetItem={handleSetItem}
-            handleOpenDialog={handleOpenDialog}
-            handleOpenModal={handleOpenModal}
-            handleUpdateItem={handleUpdateItem}
-            updateItem={updateItem}
           ></DataTable>
         </Table>
-      </div>
     );
   }
 }

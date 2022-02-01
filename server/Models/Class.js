@@ -35,6 +35,7 @@ export default (Sequelize, DataTypes) => {
     });
     Class.hasMany(models.assigned_group, {
       foreignKey: "id_class",
+      required: true,
     });
     Class.belongsToMany(models.audience, {
       foreignKey: "id_class",
