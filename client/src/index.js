@@ -17,6 +17,7 @@ import Teacher from "./Components/Teacher/Teacher";
 import AuthProvider from "./Components/Authorization/AuthProvider";
 import "react-notifications/lib/notifications.css";
 import "./App.css";
+import Admin from "./Components/Admin/Admin";
 const client = new ApolloClient({
   uri: "http://localhost:3002/graphql",
   cache: new InMemoryCache(),
@@ -38,6 +39,7 @@ ReactDOM.render(
               <Route path="/classes" element={<Class></Class>} />
               <Route path="/groups" element={<Group></Group>} />
               <Route path="/teachers" element={<Teacher></Teacher>} />
+              <Route path="/admin" element={<Admin></Admin>} />
               <Route path="*" element={<Error></Error>} />
             </Routes>
           </App>

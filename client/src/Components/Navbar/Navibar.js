@@ -38,6 +38,9 @@ class NaviBar extends React.Component {
                 <Link className="mx-1" to="/teachers">
                   Вчителі
                 </Link>
+                <Link className="mx-1" to="/admin">
+                  Адмін
+                </Link>
               </Nav>
               <Nav className="mx-2 ">
                 <Navbar.Brand>{isLoggin ? email : ""}</Navbar.Brand>
