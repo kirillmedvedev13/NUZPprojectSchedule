@@ -15,9 +15,10 @@ const main = async () => {
   };
   app.use(cors(corsOptions));
 
-  await db.Connection.sync({})
+  res = await db.Connection.sync({})
     .then((result) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
+  
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
