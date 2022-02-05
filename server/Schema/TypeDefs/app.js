@@ -43,8 +43,8 @@ import {
 } from "../Mutations/Discipline.js";
 import { GET_ALL_CLASSES } from "../Queries/Class.js";
 import {
-  GET_ALL_SCHEDULES,
-  GET_ALL_AUDIENCE_SCHEDULES,
+  GET_ALL_SCHEDULE_GROUPS,
+  GET_ALL_SCHEDULE_AUDIENCES,
   GET_ALL_SCHEDULE_TEACHERS,
 } from "../Queries/Schedule.js";
 import {
@@ -72,8 +72,8 @@ const RootQuery = new GraphQLObjectType({
     GetAllGroups: GET_ALL_GROUPS,
     GetAllDisciplines: GET_ALL_DISCIPLINES,
     GetAllClasses: GET_ALL_CLASSES,
-    GetAllSchedules: GET_ALL_SCHEDULES,
-    GetAllAudienceSchedules: GET_ALL_AUDIENCE_SCHEDULES,
+    GetAllScheduleGroups: GET_ALL_SCHEDULE_GROUPS,
+    GetAllScheduleAudiences: GET_ALL_SCHEDULE_AUDIENCES,
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
   },
 });

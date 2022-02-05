@@ -20,8 +20,8 @@ export const CREATE_GROUP = {
       capacity,
     });
     return res
-      ? { successful: true, message: "Group was created" }
-      : { successful: false, message: "Group wasn`t created" };
+      ? { successful: true, message: "Запис групи успішно створено" }
+      : { successful: false, message: "Помилка при створенні запису групи" };
   },
 };
 
@@ -37,8 +37,8 @@ export const DELETE_GROUP = {
       },
     });
     return res
-      ? { successful: true, message: "Group was deleted" }
-      : { successful: false, message: "Group wasn`t deleted" };
+      ? { successful: true, message: "Запис групи успішно видалено" }
+      : { successful: false, message: "Помилка при видаленні запису групи" };
   },
 };
 
@@ -62,7 +62,7 @@ export const UPDATE_GROUP = {
       }
     );
     return res[0]
-      ? { successful: true, message: "Group was updated" }
-      : { successful: false, message: "Group wasn`t updated" };
+      ? { successful: true, message: "Запис групи успішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису групи" };
   },
 };

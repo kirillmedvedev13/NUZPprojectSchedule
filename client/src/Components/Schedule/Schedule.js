@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
+import React from "react";
 import update from "react-addons-update";
-import { Button } from "react-bootstrap";
 import ScheduleSearch from "./ScheduleSearch";
 import ScheduleTableTeacher from "./ScheduleTableTeacher";
 import ScheduleTableAudience from "./ScheduleTableAudience";

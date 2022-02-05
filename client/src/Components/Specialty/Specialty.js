@@ -15,6 +15,7 @@ class Specialty extends React.Component {
     item: {
       id: null,
       name: "",
+      code: null,
       id_cathedra: null,
     },
     openModal: false,
@@ -45,6 +46,7 @@ class Specialty extends React.Component {
       item: {
         id: null,
         name: "",
+        code: null,
         id_cathedra: null,
       },
     });

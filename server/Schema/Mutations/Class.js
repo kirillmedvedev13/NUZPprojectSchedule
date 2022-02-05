@@ -36,8 +36,8 @@ export const CREATE_CLASS = {
       }
     }
     return res
-      ? { successful: true, message: "Class was created" }
-      : { successful: false, message: "Class wasn`t created" };
+      ? { successful: true, message: "Запис заняття успішно створено" }
+      : { successful: false, message: "Помилка при створенні запису заняття" };
   },
 };
 
@@ -59,8 +59,8 @@ export const UPDATE_CLASS = {
       }
     );
     return res[0]
-      ? { successful: true, message: "Class was updated" }
-      : { successful: false, message: "Class wasn`t updated" };
+      ? { successful: true, message: "Запис заняття успішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису заняття" };
   },
 };
 
@@ -76,8 +76,8 @@ export const DELETE_CLASS = {
       },
     });
     return res
-      ? { successful: true, message: "Class was deleted" }
-      : { successful: false, message: "Class wasn`t deleted" };
+      ? { successful: true, message: "Запис заняття успішно видалено" }
+      : { successful: false, message: "Помилка при видаленні запису заняття" };
   },
 };
 export const ADD_TEACHER_TO_CLASS = {
@@ -92,17 +92,17 @@ export const ADD_TEACHER_TO_CLASS = {
         id: id_teacher,
       },
     });
-    if (!teach) return { successful: false, message: "Cannot find teacher" };
+    if (!teach) return { successful: false, message: "Не знайдено викладача" };
     let classes = await db.class.findOne({
       where: {
         id: id_class,
       },
     });
-    if (!classes) return { successful: false, message: "Cannot find class" };
+    if (!classes) return { successful: false, message: "Не знайдено заняття" };
     let res = await classes.addTeacher(teach);
     return res
-      ? { successful: true, message: "Teacher was added to Class" }
-      : { successful: false, message: "Teacher wasn`t added to Class" };
+      ? { successful: true, message: "Викладач успішно додан до заняття" }
+      : { successful: false, message: "Помилка при додаванні викладача до заняття" };
   },
 };
 export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
@@ -118,17 +118,17 @@ export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
       },
     });
     if (!audience)
-      return { successful: false, message: "Cannot find audience" };
+      return { successful: false, message: "Не знайдено аудиторії" };
     let classes = await db.class.findOne({
       where: {
         id: id_class,
       },
     });
-    if (!classes) return { successful: false, message: "Cannot find class" };
+    if (!classes) return { successful: false, message: "Не знайдено заняття" };
     let res = await classes.addAudience(audience);
     return res
-      ? { successful: true, message: "Audience was added to Class" }
-      : { successful: false, message: "Audience wasn`t added to Class" };
+      ? { successful: true, message: "Рекомендована аудиторія успішно додана до заняття" }
+      : { successful: false, message: "Помилка при додаванні рекомендованної аудиторії до заняття" };
   },
 };
 
@@ -145,17 +145,17 @@ export const ADD_GROUP_TO_CLASS = {
       },
     });
     if (!group)
-      return { successful: false, message: "Cannot find group" };
+      return { successful: false, message: "Не знайдено групи" };
     let classes = await db.class.findOne({
       where: {
         id: id_class,
       },
     });
-    if (!classes) return { successful: false, message: "Cannot find class" };
+    if (!classes) return { successful: false, message: "Не знайдено заняття" };
     let res = await classes.addGroup(group);
     return res
-      ? { successful: true, message: "Group was added to Class" }
-      : { successful: false, message: "Group wasn`t added to Class" };
+      ? { successful: true, message: "Група успішно додана до заняття" }
+      : { successful: false, message: "Помилка при додаванні групи до заняття" };
   },
 };
 
@@ -171,8 +171,8 @@ export const DELETE_TEACHER_FROM_CLASS = {
       },
     });
     return res
-      ? { successful: true, message: "Teacher was deleted from Class" }
-      : { successful: false, message: "Teacher wasn`t deleted from Class" };
+      ? { successful: true, message: "Викладач успішно видален від заняття" }
+      : { successful: false, message: "Помилка при видаленні викладача від заняття" };
   },
 };
 export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
@@ -187,8 +187,8 @@ export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
       },
     });
     return res
-      ? { successful: true, message: "Recommended audience was deleted from Class" }
-      : { successful: false, message: "Recommended audience wasn`t deleted from Class" };
+      ? { successful: true, message: "Рекомендована аудиторія успішно видалена від заняття" }
+      : { successful: false, message: "Помилка при видаленні рекомендованної аудиторії від заняття" };
   },
 };
 export const DELETE_GROUP_FROM_CLASS = {
@@ -203,7 +203,7 @@ export const DELETE_GROUP_FROM_CLASS = {
       },
     });
     return res
-      ? { successful: true, message: "Group was deleted from Class" }
-      : { successful: false, message: "Group wasn`t deleted from Class" };
+      ? { successful: true, message: "Група успішно видалена від заняття" }
+      : { successful: false, message: "Помилка при видаленні групи від заняття" };
   },
 };

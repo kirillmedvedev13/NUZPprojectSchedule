@@ -6,14 +6,16 @@ export const CREATE_CATHEDRA = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
+    short_name: { type: GraphQLString },
   },
-  async resolve(parent, { name }) {
+  async resolve(parent, { name, short_name }) {
     let res = await db.cathedra.create({
       name,
+      short_name,
     });
     return res
-      ? { successful: true, message: "Cathedra was created" }
-      : { successful: false, message: "Cathedra wasn`t created" };
+      ? { successful: true, message: "Запис кафедри успішно створено" }
+      : { successful: false, message: "Помилка при створенні запису кафедри" };
   },
 };
 
@@ -29,8 +31,8 @@ export const DELETE_CATHEDRA = {
       },
     });
     return res
-      ? { successful: true, message: "Cathedra was deleted" }
-      : { successful: false, message: "Cathedra wasn`t deleted" };
+      ? { successful: true, message: "Запис кафедри успішно видалено" }
+      : { successful: false, message: "Помилка при видаленні запису кафедри" };
   },
 };
 
@@ -39,10 +41,11 @@ export const UPDATE_CATHEDRA = {
   args: {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
+    short_name: { type: GraphQLString },
   },
   async resolve(parent, { id, name }) {
     let res = await db.cathedra.update(
-      { name },
+      { name, short_name },
       {
         where: {
           id,
@@ -50,7 +53,7 @@ export const UPDATE_CATHEDRA = {
       }
     );
     return res[0]
-      ? { successful: true, message: "Cathedra was updated" }
-      : { successful: false, message: "Cathedra wasn`t updated" };
+      ? { successful: true, message: "Запис кафедри успішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису кафедри" };
   },
 };

@@ -7,12 +7,13 @@ export const CREATE_SPECIALTY = {
   args: {
     name: { type: GraphQLString },
     id_cathedra: { type: GraphQLInt },
+    code: { type: GraphQLInt },
   },
-  async resolve(parent, { name, id_cathedra }) {
-    let res = await db.specialty.create({ name, id_cathedra });
+  async resolve(parent, { name, id_cathedra, code }) {
+    let res = await db.specialty.create({ name, id_cathedra, code });
     return res
-      ? { successful: true, message: "Specialty was created" }
-      : { successful: false, message: "Specialty wasn`t created" };
+      ? { successful: true, message: "Запис спеціальності успішно створено" }
+      : { successful: false, message: "Помилка при створенні запису спеціальності" };
   },
 };
 
@@ -28,8 +29,8 @@ export const DELETE_SPECIALTY = {
       },
     });
     return res
-      ? { successful: true, message: "Specialty was deleted" }
-      : { successful: false, message: "Specialty wasn`t deleted" };
+      ? { successful: true, message: "Запис спеціальності успішно видалено" }
+      : { successful: false, message: "Помилка при видаленні запису спеціальності" };
   },
 };
 
@@ -39,10 +40,11 @@ export const UPDATE_SPECIALTY = {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     id_cathedra: { type: GraphQLInt },
+    code: { type: GraphQLInt },
   },
-  async resolve(parent, { id,name, id_cathedra }) {
+  async resolve(parent, { id,name, id_cathedra, code }) {
     let res = await db.specialty.update(
-      { name, id_cathedra },
+      { name, id_cathedra, code },
       {
         where: {
           id,
@@ -50,7 +52,7 @@ export const UPDATE_SPECIALTY = {
       }
     );
     return res[0]
-      ? { successful: true, message: "Specialty was updated" }
-      : { successful: false, message: "Specialty wasn`t updated" };
+      ? { successful: true, message: "Запис спеціальності успішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису спеціальності" };
   },
 };

@@ -21,22 +21,23 @@ function Save({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: Number(item.id),
-          name: item.name,
-          id_cathedra: Number(item.id_cathedra),
-        },
-      }
-    : { variables: { name: item.name, id_cathedra: Number(item.id_cathedra) } };
+      variables: {
+        id: Number(item.id),
+        name: item.name,
+        code: Number(item.code),
+        id_cathedra: Number(item.id_cathedra),
+      },
+    }
+    : { variables: { name: item.name, id_cathedra: Number(item.id_cathedra), code: Number(item.code), } };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
-        if (!item.name) handleValidation(true);
+        if (!item.name || !item.code) handleValidation(true);
         if (!item.id_cathedra) {
           handleValidationCathedra(false);
         }
-        if (item.name && item.id_cathedra) {
+        if (item.name && item.id_cathedra && item.code) {
           handleValidation(true, false);
           mutateFunction(variables).then((res) => {
             CreateNotification(
@@ -119,10 +120,29 @@ class SpecialtyModal extends React.Component {
                     value={item.name}
                     onChange={(e) => {
                       handleChangeItem("name", e.target.value);
+                      this.handleValidation(false);
                     }}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Назва не повинна бути пуста
+                  </Form.Control.Feedback>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <Form.Label className="col-2">Код спеціальності</Form.Label>
+                <Col>
+                  <Form.Control
+                    type="number"
+                    required
+                    placeholder="Код спеціальності"
+                    value={item.code}
+                    onChange={(e) => {
+                      handleChangeItem("code", e.target.value);
+                      this.handleValidation(false);
+                    }}
+                  ></Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    Код спеціальності не повинний бути пустим
                   </Form.Control.Feedback>
                 </Col>
               </Form.Group>

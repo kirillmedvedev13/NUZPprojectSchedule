@@ -27,8 +27,8 @@ export const CREATE_AUDIENCE = {
       await db.assigned_audience.bulkCreate(arrAssigned_cathedras)
     }
     return res
-      ? { successful: true, message: "Audience was created" }
-      : { successful: false, message: "Audience wasn`t created" };
+      ? { successful: true, message: "Запис аудиторії успішно створено" }
+      : { successful: false, message: "Помилка при створенні запису аудиторії" };
   },
 };
 
@@ -50,8 +50,8 @@ export const UPDATE_AUDIENCE = {
       }
     );
     return res[0]
-      ? { successful: true, message: "Audience was updated" }
-      : { successful: false, message: "Audience wasn`t updated" };
+      ? { successful: true, message: "Запис аудиторії успішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису аудиторії" };
   },
 };
 
@@ -67,8 +67,8 @@ export const DELETE_AUDIENCE = {
       },
     });
     return res
-      ? { successful: true, message: "Audience was deleted " }
-      : { successful: false, message: "Audience wasn`t deleted " };
+      ? { successful: true, message: "Запис аудиторії успішно видалено" }
+      : { successful: false, message: "Помилка при видаленні запису аудиторії" };
   },
 };
 
@@ -84,17 +84,17 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
         id: id_audience,
       },
     });
-    if (!aud) return { successful: false, message: "Cannot find audience" };
+    if (!aud) return { successful: false, message: "Не знайдено аудиторії" };
     let cath = await db.cathedra.findOne({
       where: {
         id: id_cathedra,
       },
     });
-    if (!cath) return { successful: false, message: "Cannot find cathedra" };
+    if (!cath) return { successful: false, message: "Не знайдено кафедри" };
     let res = await aud.addCathedra(cath);
     return res
-      ? { successful: true, message: "Audience was added to Cathedra" }
-      : { successful: false, message: "Audience wasn`t added to Cathedra" };
+      ? { successful: true, message: "Аудиторія успішно додана до кафедри" }
+      : { successful: false, message: "Помилка при додаванні аудиторії до кафедри" };
   },
 };
 
@@ -110,8 +110,8 @@ export const DELETE_AUDIENCE_FROM_CATHEDRA = {
       },
     });
     return res
-      ? { successful: true, message: "Audience was deleted from Cathedra" }
-      : { successful: false, message: "Audience wasn`t deleted from Cathedra" };
+      ? { successful: true, message: "Аудиторія успішно видалена від кафедри" }
+      : { successful: false, message: "Помилка при видаленні аудиторії від кафедри" };
   },
 };
 

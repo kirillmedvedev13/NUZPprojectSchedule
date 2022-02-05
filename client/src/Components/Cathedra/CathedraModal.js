@@ -13,13 +13,13 @@ function Save({ item, handleCloseModal, handleValidation }) {
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
-    ? { variables: { id: Number(item.id), name: item.name } }
-    : { variables: { name: item.name } };
+    ? { variables: { id: Number(item.id), name: item.name, short_name: item.short_name } }
+    : { variables: { name: item.name, short_name: item.short_name } };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
-        if (item.name) {
+        if (item.name && item.short_name) {
           mutateFunction(variables).then((res) => {
             CreateNotification(
               item.id ? res.data.UpdateCathedra : res.data.CreateCathedra
@@ -70,10 +70,28 @@ class CathedraModal extends React.Component {
                     value={item.name}
                     onChange={(e) => {
                       handleChangeItem("name", e.target.value);
+                      this.handleValidation(false);
                     }}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Назва не повинна бути пуста
+                  </Form.Control.Feedback>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <Form.Label className="col-2">Скорочена назва</Form.Label>
+                <Col>
+                  <Form.Control
+                    required
+                    placeholder="Скорочена назва"
+                    value={item.short_name}
+                    onChange={(e) => {
+                      handleChangeItem("short_name", e.target.value);
+                      this.handleValidation(false);
+                    }}
+                  ></Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    Скорочена назва не повинна бути пуста
                   </Form.Control.Feedback>
                 </Col>
               </Form.Group>

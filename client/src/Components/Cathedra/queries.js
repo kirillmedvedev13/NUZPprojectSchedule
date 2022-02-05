@@ -5,6 +5,7 @@ export const GET_ALL_CATHEDRAS = gql`
     GetAllCathedras(name: $name) {
       id
       name
+      short_name
     }
   }
 `;

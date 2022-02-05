@@ -1,11 +1,10 @@
 import { GraphQLList, GraphQLInt } from "graphql";
 import db from "../../database.js";
 import AudienceType from "../TypeDefs/AudienceType.js";
-import GroupType from "../TypeDefs/GroupType.js";
 import { ScheduleType } from "../TypeDefs/ScheduleType.js";
 import { Op } from "sequelize";
 
-export const GET_ALL_SCHEDULES = {
+export const GET_ALL_SCHEDULE_GROUPS = {
   type: new GraphQLList(ScheduleType),
   args: {
     id_cathedra: { type: GraphQLInt },
@@ -34,7 +33,6 @@ export const GET_ALL_SCHEDULES = {
       });
       FilterGroup = { id_group: groups };
     }
-    console.log(FilterGroup);
     const res = await db.schedule.findAll({
       order: [
         ["assigned_group", "group", "name", "ASC"],
@@ -96,7 +94,7 @@ export const GET_ALL_SCHEDULES = {
     return res;
   },
 };
-export const GET_ALL_AUDIENCE_SCHEDULES = {
+export const GET_ALL_SCHEDULE_AUDIENCES = {
   type: new GraphQLList(AudienceType),
   args: {
     id_cathedra: { type: GraphQLInt },

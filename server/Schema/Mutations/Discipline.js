@@ -26,9 +26,9 @@ export const CREATE_DISCIPLINE = {
       ? {
           successful: true,
           message:
-            "Discipline was created and all specialties was added to discipline",
+            "Запис дисципліни успішно створено і додані зв'язки",
         }
-      : { successful: false, message: "Discipline wasn`t created" };
+      : { successful: false, message: "Помилка при створені запису дисципліни" };
   },
 };
 
@@ -44,8 +44,8 @@ export const DELETE_DISCIPLINE = {
       },
     });
     return res
-      ? { successful: true, message: "Discipline was deleted" }
-      : { successful: false, message: "Discipline wasn`t deleted" };
+      ? { successful: true, message: "Запис дисципліни успішо видалено" }
+      : { successful: false, message: "Помилка при видаленні запису дисципліни" };
   },
 };
 
@@ -66,8 +66,8 @@ export const UPDATE_DISCIPLINE = {
     );
 
     return res
-      ? { successful: true, message: "Discipline was updated" }
-      : { successful: false, message: "Discipline wasn`t updated" };
+      ? { successful: true, message: "Запис дисципліни успішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису дисципліни" };
   },
 };
 
@@ -84,13 +84,13 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
         id: id_specialty,
       },
     });
-    if (!spec) return { successful: false, message: "Cannot find specialty" };
+    if (!spec) return { successful: false, message: "Не знайдено спеціальність" };
     let disc = await db.discipline.findOne({
       where: {
         id: id_discipline,
       },
     });
-    if (!disc) return { successful: false, message: "Cannot find discipline" };
+    if (!disc) return { successful: false, message: "Не знайдено дисципліну" };
     let res = await db.assigned_discipline.create({
       id_discipline,
       id_specialty,
@@ -98,8 +98,8 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
     });
     console.log(res);
     return res
-      ? { successful: true, message: "Discipline was added to Specialty" }
-      : { successful: false, message: "Discipline wasn`t added to Specialty" };
+      ? { successful: true, message: "Дисципліна успішно додана до спеціальності" }
+      : { successful: false, message: "Помилка при додаванні дисципліни до спеціальності" };
   },
 };
 
@@ -115,10 +115,10 @@ export const DELETE_DISCIPLINE_FROM_SPECIALTY = {
       },
     });
     return res
-      ? { successful: true, message: "Discipline was deleted from Specialty" }
+      ? { successful: true, message: "Дисципліну успішно видалено від спеціальності" }
       : {
           successful: false,
-          message: "Discipline wasn`t deleted from Specialty",
+          message: "Помилка при видаленні дисципліни від спеціальності",
         };
   },
 };

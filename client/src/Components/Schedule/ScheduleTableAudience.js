@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
-import { Container, Table } from "react-bootstrap";
-import { GET_WEEKS_DAY, GET_ALL_AUDIENCE_SCHEDULES } from "./queries";
+import { Table } from "react-bootstrap";
+import { GET_WEEKS_DAY, GET_ALL_SCHEDULE_AUDIENCES } from "./queries";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 function splitSamePairs(schedules) {
@@ -41,7 +41,7 @@ function splitSamePairs(schedules) {
 }
 function DataTable({ filters }) {
   const { id_audience, id_cathedra } = filters;
-  const { loading, error, data } = useQuery(GET_ALL_AUDIENCE_SCHEDULES, {
+  const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_AUDIENCES, {
     variables: {
       id_audience,
       id_cathedra,
@@ -52,7 +52,7 @@ function DataTable({ filters }) {
 
   return (
     <tbody>
-      {data.GetAllAudienceSchedules.map((audience) => {
+      {data.GetAllScheduleAudiences.map((audience) => {
         let newSchedules;
         if (!audience.schedules.length) return;
         else if (audience.schedules.length === 1)

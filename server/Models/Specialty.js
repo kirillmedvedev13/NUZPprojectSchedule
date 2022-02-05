@@ -10,6 +10,10 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    code: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
   Specialty.associate = (models) => {
     Specialty.belongsTo(models.cathedra, { foreignKey: "id_cathedra" });

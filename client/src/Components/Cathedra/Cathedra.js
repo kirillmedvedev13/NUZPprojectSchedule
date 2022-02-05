@@ -14,6 +14,7 @@ class Cathedra extends React.Component {
     item: {
       id: null,
       name: "",
+      short_name: "",
     },
     openModal: false,
     openDialog: false,
@@ -43,6 +44,7 @@ class Cathedra extends React.Component {
       item: {
         id: null,
         name: "",
+        short_name: "",
       },
     });
   };

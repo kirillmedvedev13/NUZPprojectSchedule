@@ -20,6 +20,7 @@ function DataTable({
       {data.GetAllCathedras.map((item) => (
         <tr key={item.id}>
           <td>{item.name}</td>
+          <td>{item.short_name}</td>
           <td className="col-2" onClick={(e) => handleSetItem(item)}>
             <PencilSquare
               className="mx-1"
@@ -48,6 +49,7 @@ class CathedraTable extends React.Component {
           <thead>
             <tr>
               <th>Назва кафедри</th>
+              <th>Скорочена назва</th>
             </tr>
           </thead>
           <DataTable

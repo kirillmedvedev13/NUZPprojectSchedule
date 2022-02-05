@@ -10,6 +10,9 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    short_name: {
+      type: DataTypes.STRING(10),
+    }
   });
 
   Cathedra.associate = (models) => {

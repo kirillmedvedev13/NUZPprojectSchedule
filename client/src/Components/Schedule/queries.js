@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_SCHEDULES = gql`
+export const GET_ALL_SCHEDULE_GROUPS = gql`
   query ($id_cathedra: Int, $id_group: Int, $id_specialty: Int) {
-    GetAllSchedules(
+    GetAllScheduleGroups(
       id_cathedra: $id_cathedra
       id_group: $id_group
       id_specialty: $id_specialty
@@ -63,9 +63,9 @@ export const GET_WEEKS_DAY = gql`
   }
 `;
 
-export const GET_ALL_AUDIENCE_SCHEDULES = gql`
+export const GET_ALL_SCHEDULE_AUDIENCES = gql`
   query ($id_cathedra: Int, $id_audience: Int) {
-    GetAllAudienceSchedules(
+    GetAllScheduleAudiences(
       id_cathedra: $id_cathedra
       id_audience: $id_audience
     ) {

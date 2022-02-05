@@ -17,11 +17,11 @@ class NaviBar extends React.Component {
                 <Link className="mx-1" to="/schedules">
                   Розклад
                 </Link>
-                <Link className="mx-1" to="/cathedras">
-                  Кафедри
-                </Link>
                 <Link className="mx-1" to="/audiences">
                   Аудиторії
+                </Link>
+                <Link className="mx-1" to="/cathedras">
+                  Кафедри
                 </Link>
                 <Link className="mx-1" to="/specialties">
                   Спеціальності

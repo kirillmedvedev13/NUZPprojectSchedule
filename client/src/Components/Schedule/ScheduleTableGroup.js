@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
 import { Table } from "react-bootstrap";
-import { GET_WEEKS_DAY, GET_ALL_SCHEDULES } from "./queries";
+import { GET_WEEKS_DAY, GET_ALL_SCHEDULE_GROUPS } from "./queries";
 
 function DataTable({ filters }) {
   const { id_cathedra, id_group, id_specialty } = filters;
-  const { loading, error, data } = useQuery(GET_ALL_SCHEDULES, {
+  const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_GROUPS, {
     variables: {
       id_specialty,
       id_group,
@@ -16,7 +16,7 @@ function DataTable({ filters }) {
   if (error) return `Error! ${error}`;
 
   function* foo() {
-    yield* data.GetAllSchedules.map((object) => {
+    yield* data.GetAllScheduleGroups.map((object) => {
       return object;
     });
   }
@@ -24,7 +24,7 @@ function DataTable({ filters }) {
   const schedules = foo();
   let schedule = schedules.next();
   let MapGroups = new Map();
-  data.GetAllSchedules.forEach((schedule) => {
+  data.GetAllScheduleGroups.forEach((schedule) => {
     MapGroups.set(
       schedule.assigned_group.group.id,
       schedule.assigned_group.group
@@ -165,6 +165,7 @@ function DataTable({ filters }) {
                               </td>
                             );
                           }
+                          return <td  key={group.key + "td" + number_pair + index}></td>
                         }
                       })
                     }

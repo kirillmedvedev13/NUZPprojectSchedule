@@ -18,8 +18,8 @@ export const CREATE_TEACHER = {
       id_cathedra,
     });
     return res
-      ? { successful: true, message: "Teacher was created" }
-      : { successful: false, message: "Teacher wasn`t created" };
+      ? { successful: true, message: "Запис викладача успішно створено" }
+      : { successful: false, message: "Помилка при створенні запису викладача" };
   },
 };
 
@@ -35,8 +35,8 @@ export const DELETE_TEACHER = {
       },
     });
     return res
-      ? { successful: true, message: "Teacher was deleted" }
-      : { successful: false, message: "Teacher wasn`t deleted" };
+      ? { successful: true, message: "Запис викладача успішно видалено" }
+      : { successful: false, message: "Помилка при видаленні запису викладача" };
   },
 };
 
@@ -59,7 +59,7 @@ export const UPDATE_TEACHER = {
       }
     );
     return res[0]
-      ? { successful: true, message: "Teacher was updated" }
-      : { successful: false, message: "Teacher wasn`t updated" };
+      ? { successful: true, message: "Запис викладача усішно оновлено" }
+      : { successful: false, message: "Помилка при оновленні запису викладача" };
   },
 };

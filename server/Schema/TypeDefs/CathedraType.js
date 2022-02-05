@@ -5,6 +5,7 @@ const CathedraType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
+    short_name: { type: GraphQLString },
   }),
 });
 
