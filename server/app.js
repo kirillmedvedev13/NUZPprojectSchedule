@@ -15,7 +15,7 @@ const main = async () => {
   };
   app.use(cors(corsOptions));
 
-  res = await db.Connection.sync({})
+  await db.Connection.sync({})
     .then((result) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
   
