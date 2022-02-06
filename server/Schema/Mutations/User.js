@@ -21,7 +21,7 @@ export const LOGIN_USER = {
       accessToken: "",
       isAuth: {
         successful: false,
-        message: "Password or email are not correct",
+        message: "Почта або пароль некоректні",
       },
     };
     if (!check) return incorrect;
@@ -38,7 +38,7 @@ export const LOGIN_USER = {
         accessToken: "",
         isAuth: {
           successful: false,
-          message: "User doesn't exist. Please sign up",
+          message: "Користувача не знайдено",
         },
       };
     let user = res.dataValues;
@@ -49,7 +49,7 @@ export const LOGIN_USER = {
       { id: user.id, email: user.email },
       config.jwtAccessSecret,
       {
-        expiresIn: "2h",
+        expiresIn: "30d",
       }
     );
     db.user.update({ accessToken }, { where: { id: user.id } });
@@ -60,7 +60,7 @@ export const LOGIN_USER = {
       accessToken,
       isAuth: {
         successful: true,
-        message: "You're logged in",
+        message: "Вхід успішний",
       },
     };
   },
@@ -73,8 +73,8 @@ export const LOGOUT_USER = {
   async resolve(parent, { email }) {
     let res = await db.user.update({ accessToken: null }, { where: { email } });
     return res
-      ? { successful: true, message: "Log out" }
-      : { successful: true, message: "Some error" };
+      ? { successful: true, message: "Успішний вихід" }
+      : { successful: true, message: "Помилка при виході" };
   },
 };
 
@@ -90,7 +90,7 @@ export const RELOGIN_USER = {
       accessToken: "",
       isAuth: {
         successful: false,
-        message: "Please log in",
+        message: "Увійдйіть до облікового запису",
       },
     };
 
@@ -108,7 +108,7 @@ export const RELOGIN_USER = {
         accessToken,
         isAuth: {
           successful: true,
-          message: "You're logged in",
+          message: "Вхід успішний",
         },
       };
     } catch (error) {

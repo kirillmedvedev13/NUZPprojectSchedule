@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Style from "./Style";
@@ -17,30 +17,34 @@ class NaviBar extends React.Component {
                 <Link className="mx-1" to="/schedules">
                   Розклад
                 </Link>
-                <Link className="mx-1" to="/audiences">
-                  Аудиторії
-                </Link>
-                <Link className="mx-1" to="/cathedras">
-                  Кафедри
-                </Link>
-                <Link className="mx-1" to="/specialties">
-                  Спеціальності
-                </Link>
-                <Link className="mx-1" to="/disciplines">
-                  Дисципліни
-                </Link>
-                <Link className="mx-1" to="/classes">
-                  Заняття
-                </Link>
-                <Link className="mx-1" to="/groups">
-                  Групи
-                </Link>
-                <Link className="mx-1" to="/teachers">
-                  Вчителі
-                </Link>
-                <Link className="mx-1" to="/admin">
-                  Адмін
-                </Link>
+                {isLoggin &&
+                  <Fragment>
+                    <Link className="mx-1" to="/audiences">
+                      Аудиторії
+                    </Link>
+                    <Link className="mx-1" to="/cathedras">
+                      Кафедри
+                    </Link>
+                    <Link className="mx-1" to="/specialties">
+                      Спеціальності
+                    </Link>
+                    <Link className="mx-1" to="/disciplines">
+                      Дисципліни
+                    </Link>
+                    <Link className="mx-1" to="/classes">
+                      Заняття
+                    </Link>
+                    <Link className="mx-1" to="/groups">
+                      Групи
+                    </Link>
+                    <Link className="mx-1" to="/teachers">
+                      Вчителі
+                    </Link>
+                    <Link className="mx-1" to="/admin">
+                      Адмін
+                    </Link>
+                  </Fragment>
+                }
               </Nav>
               <Nav className="mx-2 ">
                 <Navbar.Brand>{isLoggin ? email : ""}</Navbar.Brand>

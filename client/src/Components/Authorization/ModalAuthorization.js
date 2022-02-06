@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Row } from "react-bootstrap";
+import { Button, Modal, Form, } from "react-bootstrap";
 import { LoginUser } from "./mutations";
 import { useMutation } from "@apollo/client";
 import { CreateNotification } from "../Alert";
@@ -8,7 +8,7 @@ import { Table } from "react-bootstrap";
 function ModalAuthorization(props) {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [loginUser, { data, error }] = useMutation(LoginUser);
+  const [loginUser] = useMutation(LoginUser);
   const { open } = props;
 
   const handleChange = (event) => {
@@ -87,7 +87,7 @@ function ModalAuthorization(props) {
             Закрити
           </Button>
           <Button variant="primary" onClick={handleLogin}>
-            Авторизоватися
+            Авторизуватися
           </Button>
         </Modal.Footer>
       </Modal>

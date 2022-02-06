@@ -5,6 +5,18 @@ import ModalAuthorization from "./Components/Authorization/ModalAuthorization";
 import { AuthContext } from "./Components/Authorization/AuthContext";
 import { NotificationContainer } from "react-notifications";
 import { CreateNotification } from "./Components/Alert";
+import Schedule from "./Components/Schedule/Schedule";
+import Error from "./Components/Error/Error";
+import Cathedra from "./Components/Cathedra/Cathedra";
+import Audience from "./Components/Audience/Audience";
+import Specialty from "./Components/Specialty/Specialty";
+import Discipline from "./Components/Discipline/Discipline";
+import Class from "./Components/Class/Class";
+import Group from "./Components/Group/Group";
+import Teacher from "./Components/Teacher/Teacher";
+import Admin from "./Components/Admin/Admin";
+import { Routes, Route } from "react-router-dom";
+
 
 class App extends React.Component {
   state = {
@@ -44,7 +56,7 @@ class App extends React.Component {
     if (this.state.isLoggin) {
       this.setState({ isLoggin: false, userID: null, userEmail: null });
       this.context.logOut();
-      CreateNotification({ successful: true, message: "You're logged out" });
+      CreateNotification({ successful: true, message: "Успішний вихід" });
     } else {
       this.setState({
         openLogin: true,
@@ -71,7 +83,22 @@ class App extends React.Component {
           isLoggin={this.state.isLoggin}
           email={this.state.userEmail}
         />
-        {this.props.children}
+        <Routes>
+          <Route exact path="/" element={<Schedule></Schedule>} />
+          <Route path="/schedules" element={<Schedule></Schedule>} />
+          {this.state.isLoggin &&
+            <Fragment>
+              <Route path="/cathedras" element={<Cathedra></Cathedra>} />
+              <Route path="/audiences" element={<Audience></Audience>} />
+              <Route path="/specialties" element={<Specialty></Specialty>} />
+              <Route path="/disciplines" element={<Discipline></Discipline>} />
+              <Route path="/classes" element={<Class></Class>} />
+              <Route path="/groups" element={<Group></Group>} />
+              <Route path="/teachers" element={<Teacher></Teacher>} />
+              <Route path="/admin" element={<Admin></Admin>} />
+            </Fragment>}
+          <Route path="*" element={<Error></Error>} />
+        </Routes>
         <NotificationContainer />
       </Fragment>
     );
