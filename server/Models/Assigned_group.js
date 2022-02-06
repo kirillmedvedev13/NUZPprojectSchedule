@@ -19,16 +19,13 @@ export default (Sequelize, DataTypes) => {
     Assigned_group.belongsTo(models.group, {
       foreignKey: "id_group",
       onDelete: "cascade",
-      required: true,
     });
     Assigned_group.belongsTo(models.class, {
       foreignKey: "id_class",
       onDelete: "cascade",
-      required: true,
     });
     Assigned_group.hasMany(models.schedule, {
       foreignKey: "id_assigned_group",
-      required: true,
     });
   };
 

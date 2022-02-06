@@ -33,7 +33,6 @@ function DataTable({ filters }) {
       });
     });
   });
-
   const ArrTeachers = Array.from(MapTeacher).map(([key, value]) => ({
     key,
     value,
@@ -394,7 +393,7 @@ function TableHead() {
   return (
     <thead>
       <tr>
-        <th>Вчитель</th>
+        <th>Викладач</th>
         <th>#</th>
         {data.GetWeeksDay.map((item) => {
           return <th key={item.id}>{item.name}</th>;

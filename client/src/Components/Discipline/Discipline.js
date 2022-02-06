@@ -95,7 +95,7 @@ class Discipline extends React.Component {
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати Дісципліну
+            Додати Дисципліну
           </Button>
         </div>
         <DisciplineTable

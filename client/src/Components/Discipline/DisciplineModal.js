@@ -25,8 +25,6 @@ function Save({
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
-  console.log("creeate");
-  console.log(item);
   const variables = item.id
     ? {
         variables: {

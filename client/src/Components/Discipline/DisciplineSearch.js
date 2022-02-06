@@ -38,7 +38,7 @@ class DisciplineSearch extends React.Component {
                 <Search></Search>
               </InputGroup.Text>
               <FormControl
-                placeholder="Назва дісципліни"
+                placeholder="Назва дисципліни"
                 onChange={(e) => handleChangeFilters("name", e.target.value)}
               />
             </InputGroup>

@@ -1,11 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_SCHEDULE_GROUPS = gql`
-  query ($id_cathedra: Int, $id_group: Int, $id_specialty: Int) {
+  query ($id_cathedra: Int, $id_group: Int, $id_specialty: Int, $semester: Int) {
     GetAllScheduleGroups(
       id_cathedra: $id_cathedra
       id_group: $id_group
       id_specialty: $id_specialty
+      semester: $semester
     ) {
       id
       number_pair

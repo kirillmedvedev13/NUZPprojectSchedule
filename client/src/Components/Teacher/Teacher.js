@@ -17,8 +17,9 @@ class Teacher extends React.Component {
       name: "",
       surname: "",
       patronymic: "",
-      id_cathedra: null,
-      cathedra: {},
+      cathedra: {
+        id: null,
+      },
     },
     openModal: false,
     openDialog: false,
@@ -50,8 +51,9 @@ class Teacher extends React.Component {
         name: "",
         surname: "",
         patronymic: "",
-        id_cathedra: null,
-        cathedra: {},
+        cathedra: {
+          id: null,
+        },
       },
     });
   };
@@ -98,7 +100,7 @@ class Teacher extends React.Component {
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати Вчителя
+            Додати Викладача
           </Button>
         </div>
         <TeacherTable

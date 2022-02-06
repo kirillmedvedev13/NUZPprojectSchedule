@@ -18,11 +18,9 @@ export default (Sequelize, DataTypes) => {
   Assigned_teacher.associate = (models) => {
     Assigned_teacher.belongsTo(models.teacher, {
       foreignKey: "id_teacher",
-      required: true,
     });
     Assigned_teacher.belongsTo(models.class, {
       foreignKey: "id_class",
-      required: true,
     });
   };
 

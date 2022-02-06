@@ -32,7 +32,7 @@ function DataTable({
           <tr key={item.id}>
             <td>{item.name}</td>
             <td>
-              <ul>
+              <ul className="px-0">
                 {item.assigned_disciplines.map((item1) => {
                   return (
                     <li key={item1.id}>
@@ -75,9 +75,8 @@ class DisciplineTable extends React.Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Дісципліна</th>
+              <th>Дисципліна</th>
               <th>Спеціальність - Семестер</th>
-
               <th></th>
             </tr>
           </thead>
