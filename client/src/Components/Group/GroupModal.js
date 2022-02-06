@@ -21,31 +21,38 @@ function Save({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: Number(item.id),
-          name: item.name,
-          number_students: Number(item.number_students),
-          semester: Number(item.semester),
-          id_specialty: Number(item.id_specialty),
-        },
-      }
+      variables: {
+        id: Number(item.id),
+        name: item.name,
+        number_students: Number(item.number_students),
+        semester: Number(item.semester),
+        id_specialty: Number(item.specialty.id),
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          number_students: Number(item.number_students),
-          semester: Number(item.semester),
-          id_specialty: Number(item.id_specialty),
-        },
-      };
+      variables: {
+        name: item.name,
+        number_students: Number(item.number_students),
+        semester: Number(item.semester),
+        id_specialty: Number(item.specialty.id),
+      },
+    };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
+        if (!item.name ||
+          !item.number_students ||
+          !item.semester)
+          handleValidation(true);
+        if (!item.specialty.id) {
+          handleValidationSpecialty(false);
+        }
         if (
           item.name &&
           item.number_students &&
           item.semester &&
-          item.id_specialty
+          item.specialty.id
         ) {
           mutateFunction(variables).then((res) => {
             CreateNotification(
@@ -53,13 +60,6 @@ function Save({
             );
             handleCloseModal();
           });
-        } else {
-          handleValidation(true);
-          if (item.id_specialty) {
-            handleValidationSpecialty(true);
-          } else {
-            handleValidationSpecialty(false);
-          }
         }
       }}
     >
@@ -92,8 +92,8 @@ function SelectSpecialties({
       }
       onChange={(e) => {
         handleValidationSpecialty(true);
-        handleChangeItem("id_specialty", Number(e.value));
-        e.value = item.id_specialty;
+        handleChangeItem("specialty", { id: Number(e.value) });
+        e.value = item.specialty.id;
       }}
     />
   );
@@ -107,6 +107,10 @@ class GroupModal extends React.Component {
 
   handleClose = () => {
     this.props.handleCloseModal();
+    this.setState({
+      validated: false,
+      isValidSpecialty: true,
+    })
   };
 
   handleValidation = (status) => {

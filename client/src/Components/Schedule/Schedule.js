@@ -14,6 +14,7 @@ class Schedule extends React.Component {
       id_group: null,
       id_audience: null,
       id_cathedra: null,
+      semester: null,
     },
   };
 

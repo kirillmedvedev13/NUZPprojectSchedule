@@ -62,10 +62,8 @@ class Cathedra extends React.Component {
   };
 
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, { $merge: item }),
-    }));
-  };
+    this.setState({ item })
+  }
 
   render() {
     const { filters, item, openModal, openDialog } = this.state;

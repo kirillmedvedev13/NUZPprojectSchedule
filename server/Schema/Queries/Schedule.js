@@ -10,8 +10,9 @@ export const GET_ALL_SCHEDULE_GROUPS = {
     id_cathedra: { type: GraphQLInt },
     id_specialty: { type: GraphQLInt },
     id_group: { type: GraphQLInt },
+    semester: { type: GraphQLInt },
   },
-  async resolve(parent, { id_cathedra, id_specialty, id_group }) {
+  async resolve(parent, { id_cathedra, id_specialty, id_group, semester }) {
     let FilterGroup = {};
     if (id_group) FilterGroup = { id_group };
     else if (id_specialty) {
@@ -210,34 +211,44 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
         },
         {
           model: db.assigned_group,
+          required: true,
           include: [
             {
               model: db.class,
+              required: true,
               include: [
                 {
                   model: db.type_class,
                 },
                 {
                   model: db.assigned_discipline,
+                  required: true,
                   include: [
                     {
                       model: db.discipline,
+                      required: true,
                     },
                   ],
                 },
                 {
                   model: db.assigned_teacher,
+                  required: true,
                   include: {
                     model: db.teacher,
+                    required: true,
                     where: { [Op.and]: [filterTeacher, filterCathedra] },
                     include: {
                       model: db.cathedra,
+                      required: true,
                     },
                   },
                 },
               ],
             },
-            { model: db.group },
+            {
+              model: db.group,
+              required: true,
+            },
           ],
         },
         {

@@ -25,19 +25,20 @@ function Save({
         id: Number(item.id),
         name: item.name,
         code: Number(item.code),
-        id_cathedra: Number(item.id_cathedra),
+        id_cathedra: Number(item.cathedra.id),
       },
     }
-    : { variables: { name: item.name, id_cathedra: Number(item.id_cathedra), code: Number(item.code), } };
+    : { variables: { name: item.name, id_cathedra: Number(item.cathedra.id), code: Number(item.code), } };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
-        if (!item.name || !item.code) handleValidation(true);
-        if (!item.id_cathedra) {
+        if (!item.name || !item.code)
+          handleValidation(true);
+        if (!item.cathedra.id) {
           handleValidationCathedra(false);
         }
-        if (item.name && item.id_cathedra && item.code) {
+        if (item.name && item.cathedra.id && item.code) {
           handleValidation(true, false);
           mutateFunction(variables).then((res) => {
             CreateNotification(
@@ -73,8 +74,8 @@ function SelectCathedras({ item, handleChangeItem, handleValidationCathedra }) {
       }
       onChange={(e) => {
         handleValidationCathedra(true);
-        handleChangeItem("id_cathedra", Number(e.value));
-        e.value = item.id_cathedra;
+        handleChangeItem("cathedra", { id: Number(e.value) });
+        e.value = item.cathedra.id;
       }}
     />
   );
@@ -87,6 +88,10 @@ class SpecialtyModal extends React.Component {
   };
   handleClose = () => {
     this.props.handleCloseModal();
+    this.setState({
+      validated: false,
+      isValidCathedra: true,
+    })
   };
 
   handleValidation = (status) => {

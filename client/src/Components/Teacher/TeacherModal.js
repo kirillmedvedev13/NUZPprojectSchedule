@@ -19,35 +19,36 @@ function Save({
   });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
-  console.log(item.id_cathedra);
   const variables = item.id
     ? {
-        variables: {
-          id: Number(item.id),
-          name: item.name,
-          surname: item.surname,
-          patronymic: item.patronymic,
-          id_cathedra: Number(item.id_cathedra),
-        },
-      }
+      variables: {
+        id: Number(item.id),
+        name: item.name,
+        surname: item.surname,
+        patronymic: item.patronymic,
+        id_cathedra: Number(item.cathedra.id),
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          surname: item.surname,
-          patronymic: item.patronymic,
-          id_cathedra: Number(item.id_cathedra),
-        },
-      };
+      variables: {
+        name: item.name,
+        surname: item.surname,
+        patronymic: item.patronymic,
+        id_cathedra: Number(item.cathedra.id),
+      },
+    };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
-        if (!item.id_cathedra) {
+        if (!item.cathedra.id) {
           handleValidationCathedra(false);
         }
-        if (item.name && item.surname && item.patronymic) {
+        if (!item.name || !item.surname || !item.patronymic) {
+          handleValidation(true);
+        } 
+        if(item.name && item.surname && item.patronymic && item.cathedra.id) {
           mutateFunction(variables).then((res) => {
-            console.log(res);
             if (item.id) {
               CreateNotification(res.data.UpdateTeacher);
             } else {
@@ -55,8 +56,6 @@ function Save({
             }
             handleCloseModal();
           });
-        } else {
-          handleValidation(true);
         }
       }}
     >
@@ -84,8 +83,8 @@ function SelectCathedras({ item, handleChangeItem, handleValidationCathedra }) {
       }
       onChange={(e) => {
         handleValidationCathedra(true);
-        handleChangeItem("id_cathedra", Number(e.value));
-        e.value = item.id_cathedra;
+        handleChangeItem("cathedra", { id: Number(e.value) });
+        e.value = item.cathedra.id;
       }}
     />
   );
@@ -99,6 +98,10 @@ class TeacherModal extends React.Component {
 
   handleClose = () => {
     this.props.handleCloseModal();
+    this.setState({
+      validated: false,
+      isValidCathedra: true,
+    })
   };
 
   handleValidation = (status) => {
@@ -115,7 +118,7 @@ class TeacherModal extends React.Component {
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {item.id ? "Редагувати запис вчителя" : "Створити запис вчителя"}
+              {item.id ? "Редагувати запис викладача" : "Створити запис викладача"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>

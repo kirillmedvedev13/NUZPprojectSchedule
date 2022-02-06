@@ -28,13 +28,12 @@ export default (Sequelize, DataTypes) => {
     },
   });
   Schedule.associate = (models) => {
-    Schedule.belongsTo(models.day_week, { foreignKey: "id_day_week", required: true, });
-    Schedule.belongsTo(models.pair_type, { foreignKey: "id_pair_type", required: true });
+    Schedule.belongsTo(models.day_week, { foreignKey: "id_day_week", });
+    Schedule.belongsTo(models.pair_type, { foreignKey: "id_pair_type",  });
     Schedule.belongsTo(models.audience, { foreignKey: "id_audience" });
     Schedule.belongsTo(models.assigned_group, {
       foreignKey: "id_assigned_group",
       onDelete: "cascade",
-      required: true,
     });
   };
   return Schedule;

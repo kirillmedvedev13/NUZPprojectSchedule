@@ -267,7 +267,7 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Закріплені кафедри</Form.Label>
+                <Form.Label className="col-2">Закріплені викладачі</Form.Label>
                 <Col>
                   <AddTeacherToClass
                     item={item}
@@ -318,7 +318,7 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Закріплені групи</Form.Label>
+                <Form.Label className="col-2">Рекомендовані аудиторії</Form.Label>
                 <Col>
                   <AddRecAudienceToClass
                     item={item}

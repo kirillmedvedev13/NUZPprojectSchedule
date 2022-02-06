@@ -38,7 +38,7 @@ class NaviBar extends React.Component {
                       Групи
                     </Link>
                     <Link className="mx-1" to="/teachers">
-                      Вчителі
+                      Викладачі
                     </Link>
                     <Link className="mx-1" to="/admin">
                       Адмін

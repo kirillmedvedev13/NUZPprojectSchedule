@@ -132,7 +132,6 @@ function SelectScheduleType({ handleChangeFilters }) {
   return (
     <Select
       className="col-12"
-      isClearable
       options={options}
       placeholder="Вид розкладу"
       defaultValue={{ value: "group", label: "По групам" }}
@@ -188,6 +187,18 @@ function SwitchFilters({ filters, handleChangeFilters }) {
               <SelectSpecialty
                 handleChangeFilters={handleChangeFilters}
               ></SelectSpecialty>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
+            <Form.Label className="col-auto text-end">Семестр</Form.Label>
+            <Col className="col-10">
+              <Form.Control
+              type="number"
+              onChange={(e) => {
+                handleChangeFilters("semester", e ? Number(e.value) : null)
+              }}
+              >
+              </Form.Control>
             </Col>
           </Form.Group>
         </>
