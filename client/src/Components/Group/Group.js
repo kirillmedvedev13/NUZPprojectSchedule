@@ -15,7 +15,9 @@ class Group extends React.Component {
     item: {
       id: null,
       name: "",
-      id_specialty: null,
+      specialty: {
+        id: null
+      },
       number_students: "",
       semester: "",
     },
@@ -47,7 +49,9 @@ class Group extends React.Component {
       item: {
         id: null,
         name: "",
-        id_specialty: null,
+        specialty: {
+          id: null
+        },
         number_students: "",
         semester: "",
       },
@@ -67,11 +71,9 @@ class Group extends React.Component {
   };
 
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, {
-        $merge: { ...item, id_specialty: Number(item.specialty.id) },
-      }),
-    }));
+    this.setState(
+      { item }
+    );
   };
 
   render() {

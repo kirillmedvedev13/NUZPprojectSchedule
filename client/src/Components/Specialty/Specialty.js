@@ -16,7 +16,9 @@ class Specialty extends React.Component {
       id: null,
       name: "",
       code: "",
-      id_cathedra: null,
+      cathedra: {
+        id: null,
+      },
     },
     openModal: false,
     openDialog: false,
@@ -47,7 +49,9 @@ class Specialty extends React.Component {
         id: null,
         name: "",
         code: "",
-        id_cathedra: null,
+        cathedra: {
+          id: null,
+        },
       },
     });
   };
@@ -65,11 +69,9 @@ class Specialty extends React.Component {
   };
 
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, {
-        $merge: { ...item, id_cathedra: Number(item.cathedra.id) },
-      }),
-    }));
+    this.setState(
+      { item }
+    );
   };
 
   render() {

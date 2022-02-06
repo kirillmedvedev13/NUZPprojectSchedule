@@ -71,9 +71,9 @@ class Teacher extends React.Component {
   };
 
   handleSetItem = (item) => {
-    this.setState((PrevState) => ({
-      item: update(PrevState.item, { $merge: item }),
-    }));
+    this.setState(
+      { item }
+    );
   };
 
   render() {

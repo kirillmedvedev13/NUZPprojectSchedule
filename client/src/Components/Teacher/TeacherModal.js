@@ -44,9 +44,10 @@ function Save({
         if (!item.cathedra.id) {
           handleValidationCathedra(false);
         }
-        else if (!item.name || !item.surname || !item.patronymic) {
+        if (!item.name || !item.surname || !item.patronymic) {
           handleValidation(true);
-        } else {
+        } 
+        if(item.name && item.surname && item.patronymic && item.cathedra.id) {
           mutateFunction(variables).then((res) => {
             if (item.id) {
               CreateNotification(res.data.UpdateTeacher);
@@ -97,6 +98,10 @@ class TeacherModal extends React.Component {
 
   handleClose = () => {
     this.props.handleCloseModal();
+    this.setState({
+      validated: false,
+      isValidCathedra: true,
+    })
   };
 
   handleValidation = (status) => {
