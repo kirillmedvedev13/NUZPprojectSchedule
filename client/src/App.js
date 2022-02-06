@@ -17,7 +17,6 @@ import Teacher from "./Components/Teacher/Teacher";
 import Admin from "./Components/Admin/Admin";
 import { Routes, Route } from "react-router-dom";
 
-
 class App extends React.Component {
   state = {
     openLogin: false,
@@ -38,6 +37,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const res = this.context.loadData();
+
     res.then((data) => {
       if (data) {
         if (data.isAuth.successful) {
@@ -86,7 +86,7 @@ class App extends React.Component {
         <Routes>
           <Route exact path="/" element={<Schedule></Schedule>} />
           <Route path="/schedules" element={<Schedule></Schedule>} />
-          {this.state.isLoggin &&
+          {this.state.isLoggin && (
             <Fragment>
               <Route path="/cathedras" element={<Cathedra></Cathedra>} />
               <Route path="/audiences" element={<Audience></Audience>} />
@@ -96,7 +96,8 @@ class App extends React.Component {
               <Route path="/groups" element={<Group></Group>} />
               <Route path="/teachers" element={<Teacher></Teacher>} />
               <Route path="/admin" element={<Admin></Admin>} />
-            </Fragment>}
+            </Fragment>
+          )}
           <Route path="*" element={<Error></Error>} />
         </Routes>
         <NotificationContainer />

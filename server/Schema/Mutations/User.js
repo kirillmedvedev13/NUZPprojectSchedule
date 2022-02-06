@@ -90,7 +90,7 @@ export const RELOGIN_USER = {
       accessToken: "",
       isAuth: {
         successful: false,
-        message: "Увійдйіть до облікового запису",
+        message: "Увійдіть до облікового запису",
       },
     };
 
