@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import Select from "react-select";
 import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import { Form, Button, Card } from "react-bootstrap";
+import { CreateNotification } from "../Alert";
 
 function SelectCathedra({ setCathedra }) {
   const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
@@ -32,58 +33,44 @@ class Admin extends React.Component {
     id_cathedra: null,
   };
 
-  handleClick(e) {
-    this.refs.fileUploader.click();
-  }
-
-  filePathset(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    var file = e.target.files[0];
+  filePathSet(file) {
     console.log(file);
     this.setState({ file });
-
-    console.log(this.state.file);
   }
 
   readFile() {
-    var f = this.state.file;
-    var name = f.name;
+    const file = this.state.file;
     const reader = new FileReader();
-    reader.onload = (evt) => {
-      const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: "binary" });
-      console.log(wb);
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-      console.log("Data>>>" + data);
-      console.log(this.convertToJson(data));
+    const rABS = !!reader.readAsBinaryString;
+    reader.onload = (e) => {
+      const bufferStr = e.target.result;
+      const workBook = XLSX.read(bufferStr, {
+        type: rABS ? "binary" : "array",
+      });
+      const workSheetName = workBook.SheetNames[0];
+      const workSheet = workBook.Sheets[workSheetName];
+      const dataCSV = XLSX.utils.sheet_to_csv(workSheet, { header: 1 });
+      const dataJSON = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
+      console.log("Data>>>" + dataCSV);
+      //console.log("DataJSon>>>" + dataJSON);
+      this.parseData(dataCSV);
+      //console.log(this.convertToJson(dataCSV));
     };
-    reader.readAsBinaryString(f);
+    reader.readAsBinaryString(file);
   }
   setCathedra = (id_cathedra) => {
     console.log(id_cathedra);
     this.setState({ id_cathedra });
   };
-  convertToJson(csv) {
-    var lines = csv.split("\n");
-
-    var result = [];
-
-    var headers = lines[0].split(",");
-
-    for (var i = 1; i < lines.length; i++) {
-      var obj = {};
-      var currentline = lines[i].split(",");
-
-      for (var j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentline[j];
-      }
-
-      result.push(obj);
-    }
-    return JSON.stringify(result);
+  parseData(csv) {
+    let lines = csv.split("\n");
+    //console.log(lines);
+    let arrLines = lines.map((line) => {
+      return line.split(/[,|+|_]/);
+    });
+    console.log(arrLines);
+    let DATA = {};
+    DATA.id_cathedra = this.state.id_cathedra;
   }
 
   render() {
@@ -96,8 +83,9 @@ class Admin extends React.Component {
               <Form.Control
                 type="file"
                 size="md"
-                ref="fileUploader"
-                onChange={this.filePathset.bind(this)}
+                onChange={(e) => {
+                  this.filePathSet(e.target.files[0]);
+                }}
               />
               <SelectCathedra setCathedra={this.setCathedra}></SelectCathedra>
             </Form.Group>
@@ -105,6 +93,12 @@ class Admin extends React.Component {
               <Button
                 className="col-12"
                 onClick={() => {
+                  if (!this.state.id_cathedra || !this.state.file) {
+                    return CreateNotification({
+                      succesful: false,
+                      message: "Заповніть дані в таблиці!",
+                    });
+                  }
                   this.readFile();
                 }}
               >

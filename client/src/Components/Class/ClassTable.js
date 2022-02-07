@@ -9,7 +9,7 @@ function DataTable({
   handleOpenDialog,
   handleOpenModal,
   handleUpdateItem,
-  updateItem
+  updateItem,
 }) {
   const { loading, error, data } = useQuery(GET_ALL_CLASSES, {
     variables: filters,
@@ -19,6 +19,7 @@ function DataTable({
 
   return (
     <tbody>
+      {console.log(data)}
       {data.GetAllClasses.map((item) => {
         if (updateItem) {
           if (Number(updateItem.id) === Number(item.id)) {
@@ -88,16 +89,21 @@ function DataTable({
               />
             </td>
           </tr>
-        )
-      })
-      }
+        );
+      })}
     </tbody>
   );
 }
 class DisciplineTable extends React.Component {
   render() {
-    const { filters, handleOpenModal, handleOpenDialog, handleSetItem, updateItem, handleUpdateItem } =
-      this.props;
+    const {
+      filters,
+      handleOpenModal,
+      handleOpenDialog,
+      handleSetItem,
+      updateItem,
+      handleUpdateItem,
+    } = this.props;
     return (
       <div className="container-fluid w-100">
         <Table striped bordered hover>
