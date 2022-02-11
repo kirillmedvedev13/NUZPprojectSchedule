@@ -19,7 +19,6 @@ function DataTable({
 
   return (
     <tbody>
-      {console.log(data)}
       {data.GetAllClasses.map((item) => {
         if (updateItem) {
           if (Number(updateItem.id) === Number(item.id)) {

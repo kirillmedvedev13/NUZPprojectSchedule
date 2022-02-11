@@ -1,10 +1,10 @@
 import React from "react";
-import * as XLSX from "xlsx";
 import { useQuery } from "@apollo/client";
 import Select from "react-select";
 import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import { Form, Button, Card } from "react-bootstrap";
 import { CreateNotification } from "../Alert";
+import { Workbook } from "exceljs"
 
 function SelectCathedra({ setCathedra }) {
   const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
@@ -41,23 +41,26 @@ class Admin extends React.Component {
   readFile() {
     const file = this.state.file;
     const reader = new FileReader();
-    const rABS = !!reader.readAsBinaryString;
-    reader.onload = (e) => {
-      const bufferStr = e.target.result;
-      const workBook = XLSX.read(bufferStr, {
-        type: rABS ? "binary" : "array",
-      });
-      const workSheetName = workBook.SheetNames[0];
-      const workSheet = workBook.Sheets[workSheetName];
-      const dataCSV = XLSX.utils.sheet_to_csv(workSheet, { header: 1 });
-      const dataJSON = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
-      console.log("Data>>>" + dataCSV);
-      //console.log("DataJSon>>>" + dataJSON);
-      this.parseData(dataCSV);
-      //console.log(this.convertToJson(dataCSV));
-    };
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file);
+    reader.onload = () => {
+      const buffer = reader.result;
+      const wb = new Workbook();
+      wb.xlsx
+        .load(buffer)
+        .then(workbook => {
+          console.log(workbook, 'workbook instance')
+          workbook.eachSheet((sheet, id) => {
+            sheet.eachRow((row, rowIndex) => {
+              console.log(row.values, rowIndex)
+            })
+          })
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }
   }
+
   setCathedra = (id_cathedra) => {
     console.log(id_cathedra);
     this.setState({ id_cathedra });
