@@ -24,7 +24,8 @@ function SubmitData({ id_cathedra, file, sheetIndex }) {
           });
         }
         readFile(file, sheetIndex).then(data => {
-          const variables = { variables: { data } }
+          console.log(JSON.parse(data));
+          const variables = { variables: { data, id_cathedra } }
           SetClasses(variables).then((res) => {
             CreateNotification(res.data.SetClasses);
           })
@@ -37,7 +38,7 @@ function SubmitData({ id_cathedra, file, sheetIndex }) {
   )
 }
 
-async function readFile(file, sheetIndex, id_cathedra) {
+async function readFile(file, sheetIndex) {
   const reader = new FileReader();
   reader.readAsArrayBuffer(file);
   let promise = new Promise((resolve, reject) => {
@@ -52,7 +53,7 @@ async function readFile(file, sheetIndex, id_cathedra) {
           sheet.eachRow((row, rowIndex) => {
             dataRows.push(row.values);
           });
-          parseData(dataRows, id_cathedra).then((data) => {
+          parseData(dataRows).then((data) => {
             resolve(data);
           });
         })
@@ -77,7 +78,7 @@ function compareClasses(prev, current) {
   else return false;
 }
 
-async function parseData(sheet, id_cathedra) {
+async function parseData(sheet) {
   let Data = {};
   let classes = [];
   let counter = 1;
@@ -129,13 +130,25 @@ async function parseData(sheet, id_cathedra) {
               break;
           }
           if (key) {
-            if (key === "groups") {
-              let groups = sheet[i][j].split("-")[1];
-              lesson[key] = groups.split(/[,|+]/);
-            } else if (key === "audiences") {
-              let aud = String(sheet[i][j]);
-              lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
-            } else lesson[key] = sheet[i][j];
+            switch (key) {
+              case "groups":
+                let groups = sheet[i][j].split("-")[1];
+                lesson[key] = groups.split(/[,|+]/);
+                break
+              case "audiences":
+                let aud = String(sheet[i][j]);
+                lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
+                break;
+              case "type_class":
+                if (sheet[i][j] === "лекції")
+                  lesson[key] = 1;
+                else
+                  lesson[key] = 2;
+                break;
+              default:
+                lesson[key] = sheet[i][j];
+                break;
+            }
           }
         }
         classes.push(lesson);
@@ -155,9 +168,7 @@ async function parseData(sheet, id_cathedra) {
       }
     }
   }
-
   Data["classes"] = classes;
-  Data["cathedra"] = id_cathedra;
   return JSON.stringify(Data);
 }
 
