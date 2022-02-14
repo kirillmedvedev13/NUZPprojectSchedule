@@ -52,10 +52,9 @@ class Admin extends React.Component {
           let sheet = workbook.worksheets[0];
           let dataRows = [];
           sheet.eachRow((row, rowIndex) => {
-            console.log(row.values);
             dataRows.push(row.values);
           });
-          // this.parseData(dataRows);
+          this.parseData(dataRows);
         })
         .catch((err) => {
           CreateNotification({
@@ -66,13 +65,20 @@ class Admin extends React.Component {
         });
     };
   }
-  compareClasses(prev, current) {}
+  compareClasses(prev, current) {
+    if (
+      prev[2] === current[2] &&
+      prev[3] === current[3] &&
+      prev[4] === current[4]
+    )
+      return true;
+    else return false;
+  }
   parseData(sheet) {
     let Data = {};
     let classes = [];
-    console.log(sheet);
+    //console.log(sheet);
     Data["semester"] = sheet[4][1].richText[1].text;
-    let prevData = null;
     for (let i = 8; i < sheet.length - 4; i++) {
       let object = sheet[i];
       let lesson = {};
@@ -83,51 +89,62 @@ class Admin extends React.Component {
         object[2] !== "Нормоконтроль" &&
         Number(object[1])
       ) {
-        let check = prevData ? this.compareClasses(prevData, object) : false;
-        while (j <= 12) {
-          let key;
-          switch (j) {
-            case 2:
-              key = "discipline";
-              break;
-            case 3:
-              key = "groups";
-              break;
-            case 4:
-              key = "type_class";
-              break;
-            case 5:
-              key = object[j] ? "audience" : null;
-              break;
-            case 6:
-              key = object[j] ? "audiences" : null;
-              break;
-            case 8:
-              key = "teacher";
-              break;
-            case 10:
-              key = object[j] ? "numberClasses" : null;
-              break;
-            case 12:
-              key = object[j] ? "numberClasses" : null;
-              break;
+        let checkLesson =
+          i !== 8 ? this.compareClasses(sheet[i - 1], object) : false;
+        if (!checkLesson) {
+          while (j <= 12) {
+            let key;
+            switch (j) {
+              case 2:
+                key = "discipline";
+                break;
+              case 3:
+                key = "groups";
+                break;
+              case 4:
+                key = "type_class";
+                break;
+              case 5:
+                key = object[j] ? "audiences" : null;
+                break;
+              case 6:
+                key = object[j] ? "audiences" : null;
+                break;
+              case 8:
+                key = "teacher";
+                break;
+              case 10:
+                key = object[j] ? "numberClasses" : null;
+                break;
+              case 12:
+                key = object[j] ? "numberClasses" : null;
+                break;
+            }
+            if (key) {
+              if (key === "groups") {
+                let groups = object[j].split("-")[1];
+                lesson[key] = groups.split(/[,|+]/);
+              } else if (key === "audiences") {
+                let aud = String(object[j]);
+                lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
+              } else lesson[key] = object[j];
+            }
+            j++;
           }
-          if (key) {
-            if (key === "groups") {
-              let groups = object[j].split("-")[1];
-              lesson[key] = groups.split(/[,|+]/);
-            } else if (key === "audiences") {
-              let aud = String(object[j]);
-              lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
-            } else lesson[key] = object[j];
-          }
+        } else {
+          let prev = classes[classes.length - 1];
+          let teach = object[8];
+          let teachers = [];
+          teachers.push(teach);
+          teachers.push(prev.teacher);
+          prev.teacher = teachers;
+          let auds = [];
+          auds.push(String(object[5]));
+          auds.push(String(prev.audiences));
+          prev.audiences = auds;
+          classes[classes.length - 1] = prev;
         }
-
-        j++;
       }
-
-      prevData = lesson;
-
       if (Object.keys(lesson).length !== 0) classes.push(lesson);
     }
 
