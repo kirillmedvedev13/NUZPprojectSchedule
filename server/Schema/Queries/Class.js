@@ -12,10 +12,11 @@ export const GET_ALL_CLASSES = {
     id_specialty: { type: GraphQLInt },
     semester: { type: GraphQLInt },
   },
-  async resolve(parent, { id_group, id_discipline, id_teacher, id_specialty, semester }) {
-    const FilterGroup = id_group
-      ? { id_group: { [Op.eq]: id_group } }
-      : {};
+  async resolve(
+    parent,
+    { id_group, id_discipline, id_teacher, id_specialty, semester }
+  ) {
+    const FilterGroup = id_group ? { id_group: { [Op.eq]: id_group } } : {};
     const FilterDisc = id_discipline
       ? { id_discipline: { [Op.eq]: id_discipline } }
       : {};
@@ -25,9 +26,7 @@ export const GET_ALL_CLASSES = {
     const FilterSpec = id_specialty
       ? { id_specialty: { [Op.eq]: id_specialty } }
       : {};
-    const FilterSemester = semester
-      ? { semester: { [Op.eq]: semester } }
-      : {};
+    const FilterSemester = semester ? { semester: { [Op.eq]: semester } } : {};
     let arrIDsFilteredClasses = [];
     let FilterIDsClasses = {};
     if (semester || id_specialty || id_discipline || id_group || id_teacher) {
@@ -36,7 +35,7 @@ export const GET_ALL_CLASSES = {
           {
             model: db.assigned_discipline,
             where: {
-              [Op.and]: [FilterDisc, FilterSpec, FilterSemester,],
+              [Op.and]: [FilterDisc, FilterSpec, FilterSemester],
             },
           },
           {
@@ -46,13 +45,17 @@ export const GET_ALL_CLASSES = {
           {
             model: db.assigned_group,
             where: FilterGroup,
+            include: {
+              model: db.group,
+              whete: FilterSemester,
+            },
           },
         ],
       });
-      filterClasses.forEach(element => {
-        arrIDsFilteredClasses.push(element.dataValues.id)
+      filterClasses.forEach((element) => {
+        arrIDsFilteredClasses.push(element.dataValues.id);
       });
-      FilterIDsClasses = { id: arrIDsFilteredClasses }
+      FilterIDsClasses = { id: arrIDsFilteredClasses };
     }
 
     const res = await db.class.findAll({

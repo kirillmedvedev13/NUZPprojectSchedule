@@ -193,12 +193,16 @@ function SwitchFilters({ filters, handleChangeFilters }) {
             <Form.Label className="col-auto text-end">Семестр</Form.Label>
             <Col className="col-10">
               <Form.Control
-              type="number"
-              onChange={(e) => {
-                handleChangeFilters("semester", e ? Number(e.value) : null)
-              }}
-              >
-              </Form.Control>
+                type="number"
+                min={1}
+                max={14}
+                onChange={(e) => {
+                  handleChangeFilters(
+                    "semester",
+                    e ? Number(e.target.value) : null
+                  );
+                }}
+              ></Form.Control>
             </Col>
           </Form.Group>
         </>

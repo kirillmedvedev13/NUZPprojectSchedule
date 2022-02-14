@@ -5,7 +5,7 @@ import { Form, Row, Col } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import Select from "react-select";
 import { GET_ALL_DISCIPLINES } from "../Discipline/queries";
-import { GET_ALL_SPECIALTIES } from "../Specialty/queries"
+import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
 
 function SelectSpecialty({ handleChangeFilters }) {
   const { error, loading, data } = useQuery(GET_ALL_SPECIALTIES);
@@ -145,16 +145,20 @@ class ClassSearch extends React.Component {
             <Form.Label className="col-auto text-end">Семестр</Form.Label>
             <Col className="col-10">
               <Form.Control
-                placeholder="Семестр"
+                type="number"
+                min={1}
+                max={14}
                 onChange={(e) => {
-                  handleChangeFilters("semester", Number(e.target.value))
-                }
-                }
+                  handleChangeFilters(
+                    "semester",
+                    e ? Number(e.target.value) : null
+                  );
+                }}
               ></Form.Control>
             </Col>
           </Form.Group>
         </Form>
-      </div >
+      </div>
     );
   }
 }

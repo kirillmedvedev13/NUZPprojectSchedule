@@ -52,9 +52,10 @@ class Admin extends React.Component {
           let sheet = workbook.worksheets[0];
           let dataRows = [];
           sheet.eachRow((row, rowIndex) => {
+            console.log(row.values);
             dataRows.push(row.values);
           });
-          this.parseData(dataRows);
+          // this.parseData(dataRows);
         })
         .catch((err) => {
           CreateNotification({
@@ -65,20 +66,24 @@ class Admin extends React.Component {
         });
     };
   }
+  compareClasses(prev, current) {}
   parseData(sheet) {
     let Data = {};
     let classes = [];
     console.log(sheet);
     Data["semester"] = sheet[4][1].richText[1].text;
+    let prevData = null;
     for (let i = 8; i < sheet.length - 4; i++) {
       let object = sheet[i];
       let lesson = {};
       let j = 0;
+
       if (
         object[2] !== "Виробнича практика" &&
         object[2] !== "Нормоконтроль" &&
         Number(object[1])
-      )
+      ) {
+        let check = prevData ? this.compareClasses(prevData, object) : false;
         while (j <= 12) {
           let key;
           switch (j) {
@@ -108,16 +113,21 @@ class Admin extends React.Component {
               break;
           }
           if (key) {
-            if (key == "groups") {
+            if (key === "groups") {
               let groups = object[j].split("-")[1];
               lesson[key] = groups.split(/[,|+]/);
-            } else if (key == "audiences") {
+            } else if (key === "audiences") {
               let aud = String(object[j]);
               lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
             } else lesson[key] = object[j];
           }
-          j++;
         }
+
+        j++;
+      }
+
+      prevData = lesson;
+
       if (Object.keys(lesson).length !== 0) classes.push(lesson);
     }
 

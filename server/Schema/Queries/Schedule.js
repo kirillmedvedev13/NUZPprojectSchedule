@@ -14,6 +14,7 @@ export const GET_ALL_SCHEDULE_GROUPS = {
   },
   async resolve(parent, { id_cathedra, id_specialty, id_group, semester }) {
     let FilterGroup = {};
+    const FilterSemester = semester ? { semester } : {};
     if (id_group) FilterGroup = { id_group };
     else if (id_specialty) {
       let getSpecGroups = await db.group.findAll({ where: { id_specialty } });
@@ -84,7 +85,7 @@ export const GET_ALL_SCHEDULE_GROUPS = {
                 },
               ],
             },
-            { model: db.group },
+            { model: db.group, where: FilterSemester },
           ],
         },
         {
@@ -185,15 +186,14 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
     id_cathedra: { type: GraphQLInt },
     id_teacher: { type: GraphQLInt },
   },
-  async resolve(parent, { id_cathedra, id_teacher, }) {
+  async resolve(parent, { id_cathedra, id_teacher }) {
     let filterTeacher = {};
     let filterCathedra = {};
     if (id_teacher) {
-      filterTeacher = { id: { [Op.eq]: id_teacher } }
-    }
-    else {
+      filterTeacher = { id: { [Op.eq]: id_teacher } };
+    } else {
       if (id_cathedra) {
-        filterCathedra = { id_cathedra: { [Op.eq]: id_cathedra } }
+        filterCathedra = { id_cathedra: { [Op.eq]: id_cathedra } };
       }
     }
     const res = await db.schedule.findAll({

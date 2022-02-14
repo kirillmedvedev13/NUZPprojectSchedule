@@ -4,12 +4,13 @@ import { Table } from "react-bootstrap";
 import { GET_WEEKS_DAY, GET_ALL_SCHEDULE_GROUPS } from "./queries";
 
 function DataTable({ filters }) {
-  const { id_cathedra, id_group, id_specialty } = filters;
+  const { id_cathedra, id_group, id_specialty, semester } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_GROUPS, {
     variables: {
       id_specialty,
       id_group,
       id_cathedra,
+      semester,
     },
   });
   if (loading) return null;
@@ -165,7 +166,11 @@ function DataTable({ filters }) {
                               </td>
                             );
                           }
-                          return <td  key={group.key + "td" + number_pair + index}></td>
+                          return (
+                            <td
+                              key={group.key + "td" + number_pair + index}
+                            ></td>
+                          );
                         }
                       })
                     }
