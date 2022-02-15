@@ -203,7 +203,8 @@ export const SET_CLASSES = {
                     let found_cathedra = null;
                     //Поиск кафедры
                     for (const cath of cathedras) {
-                        if (cath.dataValues.short_name === clas.short_name_cathedra) {
+                        console.log(cath.dataValues.short_name)
+                        if (String(cath.dataValues.short_name) === String(clas.short_name_cathedra)) {
                             found_cathedra = cath;
                             //Поиск специальности для кафедры
                             for (const spec of specialties) {
