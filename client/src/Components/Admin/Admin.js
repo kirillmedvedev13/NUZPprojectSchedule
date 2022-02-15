@@ -5,7 +5,7 @@ import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import { Form, Button, Card } from "react-bootstrap";
 import { CreateNotification } from "../Alert";
 import { Workbook } from "exceljs";
-import { SET_CLASSES } from "./mutations.js"
+import { SET_CLASSES } from "./mutations.js";
 
 function SubmitData({ id_cathedra, file, sheetIndex }) {
   const [SetClasses, { loading, error }] = useMutation(SET_CLASSES, {
@@ -23,19 +23,18 @@ function SubmitData({ id_cathedra, file, sheetIndex }) {
             message: "Заповніть дані у формi!",
           });
         }
-        readFile(file, sheetIndex).then(data => {
+        readFile(file, sheetIndex).then((data) => {
           console.log(JSON.parse(data));
-          const variables = { variables: { data, id_cathedra } }
-          SetClasses(variables).then((res) => {
+          const variables = { variables: { data, id_cathedra } };
+          /* SetClasses(variables).then((res) => {
             CreateNotification(res.data.SetClasses);
-          })
+          });*/
         });
-      }
-      }
+      }}
     >
       Завантажити дані
     </Button>
-  )
+  );
 }
 
 async function readFile(file, sheetIndex) {
@@ -64,7 +63,7 @@ async function readFile(file, sheetIndex) {
           });
         });
     };
-  })
+  });
   return await promise;
 }
 
@@ -78,14 +77,25 @@ function compareClasses(prev, current) {
   else return false;
 }
 
+function getColumKey(row) {
+  console.log(row);
+}
+
 async function parseData(sheet) {
   let Data = {};
   let classes = [];
+  let columnKey = {};
   let counter = 1;
-  let firstRow = false; //Что бы пропускать первую строку с счётчиком 
-  for (let i = 0; i < sheet.length; i++) { // Проход по строкам
+  let firstRow = false; //Что бы пропускать первую строку с счётчиком
+  for (let i = 0; i < sheet.length; i++) {
+    // Проход по строкам
     let lesson = {};
-    if (sheet[i][1] === counter || sheet[i][1] === counter + 1) { // Если номер записи равен счётчику
+
+    if (sheet[i][1] === "№\nз/п") {
+      columnKey = getColumKey(sheet[i]);
+    }
+    if (sheet[i][1] === counter || sheet[i][1] === counter + 1) {
+      // Если номер записи равен счётчику
       if (sheet[i][1] === counter + 1) {
         counter++;
       }
@@ -94,7 +104,8 @@ async function parseData(sheet) {
         continue;
       }
       const checkLesson = compareClasses(sheet[i - 1], sheet[i]);
-      if (!checkLesson) { // если пред строка не равна текущей
+      if (!checkLesson) {
+        // если пред строка не равна текущей
         for (let j = 1; j <= 12; j++) {
           let key;
           switch (j) {
@@ -132,18 +143,17 @@ async function parseData(sheet) {
           if (key) {
             switch (key) {
               case "groups":
-                let groups = sheet[i][j].split("-")[1];
-                lesson[key] = groups.split(/[,|+]/);
-                break
+                let groups = sheet[i][j].split("-");
+                lesson[key] = groups[1].split(/[,|+]/);
+                lesson["short_name_cathedra"] = groups[0];
+                break;
               case "audiences":
                 let aud = String(sheet[i][j]);
                 lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
                 break;
               case "type_class":
-                if (sheet[i][j] === "лекції")
-                  lesson[key] = 1;
-                else
-                  lesson[key] = 2;
+                if (sheet[i][j] === "лекції") lesson[key] = 1;
+                else lesson[key] = 2;
                 break;
               default:
                 lesson[key] = sheet[i][j];
@@ -152,8 +162,8 @@ async function parseData(sheet) {
           }
         }
         classes.push(lesson);
-      }
-      else { // если пред строка равна текущей
+      } else {
+        // если пред строка равна текущей
         let prev = classes[classes.length - 1];
         let teach = sheet[i][8];
         let teachers = [];
@@ -213,9 +223,9 @@ class Admin extends React.Component {
         .load(buffer)
         .then((workbook) => {
           let sheets = [];
-          workbook.worksheets.forEach(sh => {
+          workbook.worksheets.forEach((sh) => {
             sheets.push(sh.name);
-          })
+          });
           this.setState({ sheets, sheetIndex: 0 });
         })
         .catch((err) => {
@@ -224,9 +234,8 @@ class Admin extends React.Component {
             message: "Помилка завантаження даних!",
           });
         });
-    }
+    };
   }
-
 
   setCathedra = (id_cathedra) => {
     this.setState({ id_cathedra });
@@ -249,11 +258,15 @@ class Admin extends React.Component {
               <SelectCathedra setCathedra={this.setCathedra}></SelectCathedra>
               <Form.Select
                 onChange={(e) => {
-                  this.setState({ sheetIndex: e.target.value })
+                  this.setState({ sheetIndex: e.target.value });
                 }}
               >
                 {this.state.sheets.map((sh, index) => {
-                  return <option key={index} value={index}>{sh}</option>
+                  return (
+                    <option key={index} value={index}>
+                      {sh}
+                    </option>
+                  );
                 })}
               </Form.Select>
             </Form.Group>
@@ -262,8 +275,7 @@ class Admin extends React.Component {
                 id_cathedra={this.state.id_cathedra}
                 file={this.state.file}
                 sheetIndex={this.state.sheetIndex}
-              >
-              </SubmitData>
+              ></SubmitData>
             </Card.Footer>
           </Card.Body>
         </Card>
