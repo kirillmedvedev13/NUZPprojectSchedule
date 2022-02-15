@@ -26,9 +26,9 @@ function SubmitData({ id_cathedra, file, sheetIndex }) {
         readFile(file, sheetIndex).then((data) => {
           console.log(JSON.parse(data));
           const variables = { variables: { data, id_cathedra } };
-          /* SetClasses(variables).then((res) => {
+          SetClasses(variables).then((res) => {
             CreateNotification(res.data.SetClasses);
-          });*/
+          });
         });
       }}
     >
