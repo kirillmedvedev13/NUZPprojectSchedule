@@ -325,15 +325,15 @@ export const SET_CLASSES = {
                     }
                 }
                 // Создание занятий
-                const new_class = await db.class.create({ id_type_class: clas.type_class, times_per_week: clas.number_classes, id_assigned_discipline });
+                const new_class = await db.class.create({ id_type_class: clas.type_class, times_per_week: clas.numberClasses, id_assigned_discipline });
                 const id_class = new_class.dataValues.id;
-                await db.recommended_audience.buklCreate(arr_aud_ids.map(id_audience => {
+                await db.recommended_audience.bulkCreate(arr_aud_ids.map(id_audience => {
                     return { id_audience, id_class }
                 }))
-                await db.assigned_teacher.buklCreate(arr_teach_ids.map(id_teacher => {
+                await db.assigned_teacher.bulkCreate(arr_teach_ids.map(id_teacher => {
                     return { id_teacher, id_class }
                 }))
-                await db.assigned_group.buklCreate(arr_groups_ids.map(id_group => {
+                await db.assigned_group.bulkCreate(arr_groups_ids.map(id_group => {
                     return { id_group, id_class }
                 }))
             }
