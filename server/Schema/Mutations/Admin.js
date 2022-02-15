@@ -52,7 +52,6 @@ export const SET_CLASSES = {
                 return disc.dataValues.name === clas.discipline
             });
             let id_assigned_discipline = null;
-            debugger;
             arr_disc.forEach(disc => {
                 disc.assigned_disciplines.forEach(ad => {
                     // Если найдена в базе дисциплина за специальностью
@@ -110,6 +109,19 @@ export const SET_CLASSES = {
                     disciplines[index_disc].assigned_disciplines.push(new_assigned_discipine);
                 }
             }
+            // Поиск учитилей в бд
+            const arr_teach = [];
+            classes.teacher.forEach(teacher => {
+                const { surname, name, patronymic } = classes.teacher.split(/[ |.]/);
+                console.log(surname)
+                console.log(name)
+                console.log(patronymic)
+                teachers.filter(teacherdb => {
+
+                })
+            })
+
+
         }
         const res = true;
         return res
