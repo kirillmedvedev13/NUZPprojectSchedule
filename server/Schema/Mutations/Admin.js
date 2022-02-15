@@ -78,7 +78,7 @@ export const SET_CLASSES = {
                 let disc = null;
                 let index_disc = null;
                 disciplines.filter((dis, index) => {
-                    if (dis.name === clas.discipline) {
+                    if (dis.dataValues.name === clas.discipline) {
                         disc = dis;
                         index_disc = index;
                         return true;
@@ -88,11 +88,11 @@ export const SET_CLASSES = {
                     }
                 });
                 if (disc) { // если в базе есть дисциплина с таким названием
-                    id_disc = disc.id;
+                    id_disc = disc.dataValues.id;
                 }
                 else { // Дисциплины в базе нет, её нужно создать
                     new_disc = await db.discipline.create({ name: clas.discipline });
-                    id_disc = new_disc.id;
+                    id_disc = new_disc.dataValues.id;
                 }
                 let new_assigned_discipine = await db.assigned_discipline.create({ id_specialty: id_spec, id_discipline: id_disc, semester })
                 id_assigned_discipline = new_assigned_discipine.id;
