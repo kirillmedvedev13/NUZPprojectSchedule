@@ -43,7 +43,7 @@ export const UPDATE_CATHEDRA = {
     name: { type: GraphQLString },
     short_name: { type: GraphQLString },
   },
-  async resolve(parent, { id, name }) {
+  async resolve(parent, { id, name, short_name  }) {
     let res = await db.cathedra.update(
       { name, short_name },
       {

@@ -51,6 +51,7 @@ class CathedraModal extends React.Component {
 
   render() {
     const { isopen, handleChangeItem, item } = this.props;
+    console.log(item);
     return (
       <>
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
