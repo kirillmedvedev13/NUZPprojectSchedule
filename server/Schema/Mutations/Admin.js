@@ -17,10 +17,6 @@ export const SET_CLASSES = {
                 include: {
                     model: db.specialty,
                     required: true,
-                    include: {
-                        model: db.cathedra,
-                        required: true,
-                    }
                 }
             }
         })
@@ -43,25 +39,75 @@ export const SET_CLASSES = {
             }
         })
         for (const clas of classes) {
-            const code_spec = Number(clas.groups[0].charAt(0)); // первая цифра первой группы это код специальности
-            const arr_disc = disciplines.filter(disc => disc.name === clas.discipline
-                && disc.assigned_discipline.specialty.code === code_spec
-                && disc.assigned_discipline.specialty.id_cathedra === id_cathedra);
-            let id_assigned_discipline = null;
-            if (arr_disc.length) { // Если найдена в базе дисциплина за специальностью
-                id_assigned_discipline = arr_disc[0].assigned_discipline.id;
+            const date = new Date();
+            let semester = Number(date.getFullYear().toString().charAt(3)) - Number(clas.groups[0].charAt(2)); // Год вступления, что бы узнать семестр для дисциплины
+            if (semester < 0) {
+                semester = 10 + semester;
             }
-            else {
-                const arr_spec = specialties.filter(spec => spec.code === code_spec && spec.id_cathedra === id_cathedra);
-                console.log("lenght")
-                console.log(specialties)
+            if (date.getMonth() > 5 && date.getMonth() < 13) {
+                semester++;
+            }
+            const code_spec = Number(clas.groups[0].charAt(0)); // первая цифра первой группы это код специальности
+            const arr_disc = disciplines.filter(disc => {
+                return disc.dataValues.name === clas.discipline
+            });
+            let id_assigned_discipline = null;
+            debugger;
+            arr_disc.forEach(disc => {
+                disc.assigned_disciplines.forEach(ad => {
+                    // Если найдена в базе дисциплина за специальностью
+                    if (ad.dataValues.semester === semester && ad.specialty.code === code_spec && ad.specialty.id_cathedra === id_cathedra) {
+                        id_assigned_discipline = ad.id;
+                    }
+                })
+            });
+            if (!id_assigned_discipline) { // дисциплина за специальностью не найдена
                 let id_spec = null;
+                let id_disc = null;
+                let new_disc = null;
+                let new_spec = null;
+                const arr_spec = specialties.filter(spec => spec.code === code_spec && spec.id_cathedra === id_cathedra);
                 if (arr_spec.length) { //Если найдена в базе специальность за кафедрой
                     id_spec = arr_spec[0].id;
                 }
                 else { // Специальность не найденна, её нужно создать
-                    const new_spec = await db.specialty.create({ name: "", id_cathedra, code: code_spec });
+                    new_spec = await db.specialty.create({ name: "", id_cathedra, code: code_spec });
                     specialties.push(new_spec);
+                    id_spec = new_spec.id;
+                }
+                let disc = null;
+                let index_disc = null;
+                disciplines.filter((dis, index) => {
+                    if (dis.dataValues.name === clas.discipline) {
+                        disc = dis;
+                        index_disc = index;
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
+                if (disc) { // если в базе есть дисциплина с таким названием
+                    id_disc = disc.dataValues.id;
+                }
+                else { // Дисциплины в базе нет, её нужно создать
+                    new_disc = await db.discipline.create({ name: clas.discipline });
+                    id_disc = new_disc.dataValues.id;
+                }
+                let new_assigned_discipine = await db.assigned_discipline.create({ id_specialty: id_spec, id_discipline: id_disc, semester })
+                id_assigned_discipline = new_assigned_discipine.id;
+                if (new_spec) {// Если создана новая специальность, её нужно занести к закрепленным дисциплинам
+                    new_assigned_discipine.specialty = new_spec;
+                }
+                else {// Специальность уже есть в базе, её нужно вставить к закрепленным дисциплинам
+                    new_assigned_discipine.specialty = arr_spec[0];
+                }
+                if (new_disc) {//Если создана новая дисицплина, её нужно занести в массив дисциплин
+                    const temp = { ...new_disc.dataValues, assigned_disciplines: [new_assigned_discipine] }
+                    disciplines.push({ ...new_disc, dataValues: temp, assigned_disciplines: [new_assigned_discipine] });
+                }
+                else {
+                    disciplines[index_disc].assigned_disciplines.push(new_assigned_discipine);
                 }
             }
         }
