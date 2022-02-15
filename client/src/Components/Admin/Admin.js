@@ -5,7 +5,7 @@ import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import { Form, Button, Card } from "react-bootstrap";
 import { CreateNotification } from "../Alert";
 import { Workbook } from "exceljs";
-import { SET_CLASSES } from "./mutations.js";
+import { DELETE_ALL_DATA, SET_CLASSES } from "./mutations.js";
 
 function SubmitData({ id_cathedra, file, sheetIndex }) {
   const [SetClasses, { loading, error }] = useMutation(SET_CLASSES, {
@@ -243,12 +243,32 @@ function SelectCathedra({ setCathedra }) {
   );
 }
 
+function DeleteAllData() {
+  const [DeleteAllData, { loading, error }] = useMutation(DELETE_ALL_DATA, {
+    refetchQueries: [],
+  });
+  if (loading) return "Submitting...";
+  if (error) return `Submission error! ${error.message}`;
+
+  return (
+    <Button
+      onClick={() => {
+        DeleteAllData().then((res) => {
+          CreateNotification(res.data.DeleteAllData);
+        });
+      }}
+    >
+      DELETE DATA
+    </Button>
+  );
+}
 class Admin extends React.Component {
   state = {
     file: "",
     id_cathedra: null,
     sheets: [],
     sheetIndex: null,
+    onDelete: false,
   };
 
   setFile(file) {
@@ -283,43 +303,50 @@ class Admin extends React.Component {
 
   render() {
     return (
-      <div className="d-flex justify-content-center  ">
-        <Card className="my-2">
-          <Card.Header className="text-center">Відомість заручень</Card.Header>
-          <Card.Body>
-            <Form.Group controlId="formFileLg" className=" bg-light mb-3">
-              <Form.Control
-                type="file"
-                size="md"
-                onChange={(e) => {
-                  this.setFile(e.target.files[0]);
-                }}
-              />
-              <SelectCathedra setCathedra={this.setCathedra}></SelectCathedra>
-              <Form.Select
-                onChange={(e) => {
-                  this.setState({ sheetIndex: e.target.value });
-                }}
-              >
-                {this.state.sheets.map((sh, index) => {
-                  return (
-                    <option key={index} value={index}>
-                      {sh}
-                    </option>
-                  );
-                })}
-              </Form.Select>
-            </Form.Group>
-            <Card.Footer>
-              <SubmitData
-                id_cathedra={this.state.id_cathedra}
-                file={this.state.file}
-                sheetIndex={this.state.sheetIndex}
-              ></SubmitData>
-            </Card.Footer>
-          </Card.Body>
-        </Card>
-      </div>
+      <>
+        <div className="d-flex justify-content-center  ">
+          <DeleteAllData></DeleteAllData>
+        </div>
+        <div className="d-flex justify-content-center  ">
+          <Card className="my-2">
+            <Card.Header className="text-center">
+              Відомість заручень
+            </Card.Header>
+            <Card.Body>
+              <Form.Group controlId="formFileLg" className=" bg-light mb-3">
+                <Form.Control
+                  type="file"
+                  size="md"
+                  onChange={(e) => {
+                    this.setFile(e.target.files[0]);
+                  }}
+                />
+                <SelectCathedra setCathedra={this.setCathedra}></SelectCathedra>
+                <Form.Select
+                  onChange={(e) => {
+                    this.setState({ sheetIndex: e.target.value });
+                  }}
+                >
+                  {this.state.sheets.map((sh, index) => {
+                    return (
+                      <option key={index} value={index}>
+                        {sh}
+                      </option>
+                    );
+                  })}
+                </Form.Select>
+              </Form.Group>
+              <Card.Footer>
+                <SubmitData
+                  id_cathedra={this.state.id_cathedra}
+                  file={this.state.file}
+                  sheetIndex={this.state.sheetIndex}
+                ></SubmitData>
+              </Card.Footer>
+            </Card.Body>
+          </Card>
+        </div>
+      </>
     );
   }
 }

@@ -8,3 +8,11 @@ export const SET_CLASSES = gql`
     }
   }
 `;
+export const DELETE_ALL_DATA = gql`
+  mutation {
+    DeleteAllData {
+      message
+      successful
+    }
+  }
+`;
