@@ -78,7 +78,7 @@ function compareClasses(prev, current) {
 }
 
 function getColumKey(row) {
-  /*let columnKey = {};
+  let columnKey = {};
   for (let j = 1; j <= 12; j++) {
     if (row[j]) {
       switch (j) {
@@ -105,25 +105,33 @@ function getColumKey(row) {
             columnKey[j] = "audiences";
           break;
         case 8:
-          key = "teachers";
+          columnKey[j] = "teachers";
+          break;
+        case 9:
+          if (row[j] === "Пропозиції до складання розкладу занять")
+            columnKey[j] = "audiences";
           break;
         case 10:
-          key = sheet[i][j] ? "numberClasses" : null;
+          if (row[j] === "Лекції") columnKey[j] = "numberClasses";
           break;
         case 11:
-          key = sheet[i][j] ? "numberClasses" : null;
+          if (row[j] === "Практичні") columnKey[j] = "numberClasses";
           break;
         case 12:
-          key = sheet[i][j] ? "numberClasses" : null;
-          break;
-        default:
-          key = null;
+          if (row[j] === "Лабораторні") columnKey[j] = "numberClasses";
           break;
       }
     }
-  }*/
+  }
+  return columnKey;
 }
 
+function getKey(columnKey, value) {
+  for (let key in columnKey) {
+    if (columnKey[key] === value) return key;
+  }
+  return null;
+}
 async function parseData(sheet) {
   let Data = {};
   let classes = [];
@@ -137,9 +145,13 @@ async function parseData(sheet) {
     if (sheet[i][1] === "№\nз/п") {
       columnKey = getColumKey(sheet[i]);
     }
-    if (sheet[i][1] === counter || sheet[i][1] === counter + 1) {
+    let indexRow =
+      sheet[i][1] && sheet[i][1].hasOwnProperty("result")
+        ? sheet[i][1].result
+        : sheet[i][1];
+    if (indexRow === counter || indexRow === counter + 1) {
       // Если номер записи равен счётчику
-      if (sheet[i][1] === counter + 1) {
+      if (indexRow === counter + 1) {
         counter++;
       }
       if (!firstRow) {
@@ -150,44 +162,13 @@ async function parseData(sheet) {
       if (!checkLesson) {
         // если пред строка не равна текущей
         for (let j = 1; j <= 12; j++) {
-          let key;
-          switch (j) {
-            case 2:
-              key = "discipline";
-              break;
-            case 3:
-              key = "groups";
-              break;
-            case 4:
-              key = "type_class";
-              break;
-            case 5:
-              key = sheet[i][j] ? "audiences" : null;
-              break;
-            case 6:
-              key = sheet[i][j] ? "audiences" : null;
-              break;
-            case 8:
-              key = "teachers";
-              break;
-            case 10:
-              key = sheet[i][j] ? "numberClasses" : null;
-              break;
-            case 11:
-              key = sheet[i][j] ? "numberClasses" : null;
-              break;
-            case 12:
-              key = sheet[i][j] ? "numberClasses" : null;
-              break;
-            default:
-              key = null;
-              break;
-          }
-          if (key) {
+          let key = columnKey[j] ? columnKey[j] : null;
+
+          if (key && sheet[i][j]) {
             switch (key) {
               case "groups":
                 let groups = sheet[i][j].split("-");
-                lesson[key] = groups[1].split(/[,|+]/);
+                lesson[key] = groups[1].split(/[,|+|;]/);
                 lesson["short_name_cathedra"] = groups[0];
                 break;
               case "audiences":
@@ -200,10 +181,17 @@ async function parseData(sheet) {
                 break;
               case "teachers":
                 let temp = [];
-                temp.push(sheet[i][j]);
+                let teach = String(sheet[i][j]);
+                teach = teach.indexOf("\n") ? teach.replace("\n", "") : teach;
+                temp.push(teach);
                 lesson[key] = temp;
                 break;
-
+              case "discipline":
+                let disc = String(sheet[i][j]);
+                lesson[key] = disc.indexOf("\n")
+                  ? disc.replace("\n", "")
+                  : disc;
+                break;
               default:
                 lesson[key] = sheet[i][j];
                 break;
@@ -214,11 +202,10 @@ async function parseData(sheet) {
       } else {
         // если пред строка равна текущей
         let prev = classes[classes.length - 1];
-        let teach = sheet[i][8];
-
+        let teach = sheet[i][getKey(columnKey, "teachers")];
         prev.teachers.push(teach);
         let auds = [];
-        auds.push(String(sheet[i][5]));
+        auds.push(String(sheet[i][getKey(columnKey, "audiences")]));
         auds.push(String(prev.audiences));
         prev.audiences = auds;
         classes[classes.length - 1] = prev;
