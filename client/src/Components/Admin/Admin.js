@@ -163,7 +163,13 @@ async function parseData(sheet) {
         // если пред строка не равна текущей
         for (let j = 1; j <= 12; j++) {
           let key = columnKey[j] ? columnKey[j] : null;
-
+          if (
+            key === "audiences" &&
+            !sheet[i][j] &&
+            !lesson.hasOwnProperty("audiences")
+          ) {
+            lesson[key] = [];
+          }
           if (key && sheet[i][j]) {
             switch (key) {
               case "groups":
