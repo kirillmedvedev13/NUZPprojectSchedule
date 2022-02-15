@@ -78,7 +78,50 @@ function compareClasses(prev, current) {
 }
 
 function getColumKey(row) {
-  console.log(row);
+  /*let columnKey = {};
+  for (let j = 1; j <= 12; j++) {
+    if (row[j]) {
+      switch (j) {
+        case 2:
+          columnKey[j] = "discipline";
+          break;
+        case 3:
+          columnKey[j] = "groups";
+          break;
+        case 4:
+          columnKey[j] = "type_class";
+
+          break;
+        case 5:
+          if (row[j] === "Загальна кількість годин за видом занять")
+            columnKey[j] = "numberClasses";
+          else columnKey[j] = "audiences";
+          break;
+        case 6:
+          if (
+            row[j] ===
+            "Пропозиції кафедри щодо № аудиторії для проведення  даного виду навчальних занять"
+          )
+            columnKey[j] = "audiences";
+          break;
+        case 8:
+          key = "teachers";
+          break;
+        case 10:
+          key = sheet[i][j] ? "numberClasses" : null;
+          break;
+        case 11:
+          key = sheet[i][j] ? "numberClasses" : null;
+          break;
+        case 12:
+          key = sheet[i][j] ? "numberClasses" : null;
+          break;
+        default:
+          key = null;
+          break;
+      }
+    }
+  }*/
 }
 
 async function parseData(sheet) {
@@ -125,7 +168,7 @@ async function parseData(sheet) {
               key = sheet[i][j] ? "audiences" : null;
               break;
             case 8:
-              key = "teacher";
+              key = "teachers";
               break;
             case 10:
               key = sheet[i][j] ? "numberClasses" : null;
@@ -155,6 +198,12 @@ async function parseData(sheet) {
                 if (sheet[i][j] === "лекції") lesson[key] = 1;
                 else lesson[key] = 2;
                 break;
+              case "teachers":
+                let temp = [];
+                temp.push(sheet[i][j]);
+                lesson[key] = temp;
+                break;
+
               default:
                 lesson[key] = sheet[i][j];
                 break;
@@ -166,10 +215,8 @@ async function parseData(sheet) {
         // если пред строка равна текущей
         let prev = classes[classes.length - 1];
         let teach = sheet[i][8];
-        let teachers = [];
-        teachers.push(teach);
-        teachers.push(prev.teacher);
-        prev.teacher = teachers;
+
+        prev.teachers.push(teach);
         let auds = [];
         auds.push(String(sheet[i][5]));
         auds.push(String(prev.audiences));
