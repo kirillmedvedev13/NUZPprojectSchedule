@@ -340,7 +340,6 @@ export const DELETE_ALL_DATA = {
       await db.group.destroy({ truncate: { cascade: true } });
       await db.class.destroy({ truncate: { cascade: true } });
       await db.specialty.destroy({ truncate: { cascade: true } });
-      await db.cathedra.destroy({ truncate: { cascade: true } });
       return { successful: true, message: "YEs" };
     } catch (err) {
       return { successful: false, message: "Some error" };
