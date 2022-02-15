@@ -28,10 +28,15 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_audience",
       through: models.recommended_audience,
     });
-    Audience.hasMany(models.assigned_audience, {foreignKey: "id_audience",});
-    Audience.belongsTo(models.type_class, {foreignKey: "id_type_class",});
-    Audience.belongsToMany(models.cathedra, {foreignKey: "id_audience", through: models.assigned_audience});
-    Audience.hasMany(models.schedule, {foreignKey: "id_audience",});
+    Audience.hasMany(models.assigned_audience, {
+      foreignKey: "id_audience",
+    });
+    Audience.belongsTo(models.type_class, { foreignKey: "id_type_class" });
+    Audience.belongsToMany(models.cathedra, {
+      foreignKey: "id_audience",
+      through: models.assigned_audience,
+    });
+    Audience.hasMany(models.schedule, { foreignKey: "id_audience" });
   };
 
   return Audience;
