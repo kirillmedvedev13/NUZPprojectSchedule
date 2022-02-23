@@ -36,7 +36,14 @@ function DataTable({
             <td>
               <ul className="mx-0 px-0">
                 {item.assigned_audiences.map((item) => {
-                  return <li key={item.cathedra.id}>{item.cathedra.name}</li>;
+                  return (
+                    <li key={item.cathedra.id}>
+                      {item.cathedra.name +
+                        " (" +
+                        item.cathedra.short_name +
+                        ")"}
+                    </li>
+                  );
                 })}
               </ul>
             </td>

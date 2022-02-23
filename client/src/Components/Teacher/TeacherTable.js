@@ -22,7 +22,7 @@ function DataTable({
           <td>{item.surname}</td>
           <td>{item.name}</td>
           <td>{item.patronymic}</td>
-          <td>{item.cathedra.name}</td>
+          <td>{item.cathedra.name + " (" + item.cathedra.short_name + ")"}</td>
           <td className="col-2" onClick={(e) => handleSetItem(item)}>
             <PencilSquare
               className="mx-1"

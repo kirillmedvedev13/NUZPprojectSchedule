@@ -19,7 +19,8 @@ function DataTable({
     <tbody>
       {data.GetAllGroups.map((item) => (
         <tr key={item.id}>
-          <td>{item.name}</td>
+          {console.log(item)}
+          <td>{item.specialty.cathedra.short_name + "-" + item.name}</td>
           <td>{item.number_students}</td>
           <td>{item.semester}</td>
           <td>{item.specialty.name}</td>

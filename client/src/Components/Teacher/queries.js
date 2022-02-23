@@ -9,6 +9,7 @@ export const GET_ALL_TEACHERS = gql`
       cathedra {
         id
         name
+        short_name
       }
     }
   }

@@ -8,6 +8,7 @@ export const GET_ALL_SPECIALTIES = gql`
       cathedra {
         id
         name
+        short_name
       }
     }
   }
