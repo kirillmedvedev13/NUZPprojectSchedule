@@ -204,6 +204,12 @@ async function parseData(sheet) {
             }
           }
         }
+        /*console.log(
+          encodeURIComponent(lesson.short_name_cathedra),
+          " ",
+          lesson.short_name_cathedra
+        );
+        console.log(lesson.short_name_cathedra == "КНТ");*/
         classes.push(lesson);
       } else {
         // если пред строка равна текущей

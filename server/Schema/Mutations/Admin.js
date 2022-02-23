@@ -99,7 +99,8 @@ export const SET_CLASSES = {
           let new_disc = null;
           let new_spec = null;
           const arr_spec = specialties.filter(
-            (spec) => spec.code === code_spec && spec.id_cathedra === id_cathedra
+            (spec) =>
+              spec.code === code_spec && spec.id_cathedra === id_cathedra
           );
           if (arr_spec.length) {
             //Если найдена в базе специальность за кафедрой
@@ -213,10 +214,12 @@ export const SET_CLASSES = {
               }
               if (!checkCathedra) {
                 // Если аудитория не закреплена за кафедрой
-                const new_assigned_audience = await db.assigned_audience.create({
-                  id_audience,
-                  id_cathedra,
-                });
+                const new_assigned_audience = await db.assigned_audience.create(
+                  {
+                    id_audience,
+                    id_cathedra,
+                  }
+                );
                 audiencedb.assigned_audiences.push(new_assigned_audience);
               }
               break;
@@ -250,7 +253,7 @@ export const SET_CLASSES = {
             if (
               groupdb.dataValues.name === group &&
               groupdb.specialty.cathedra.dataValues.short_name ===
-              clas.short_name_cathedra &&
+                clas.short_name_cathedra &&
               groupdb.specialty.dataValues.code === code_spec
             ) {
               //найдена группа в базе
@@ -325,28 +328,37 @@ export const SET_CLASSES = {
           }
         }
         // Создание занятий
-        const new_class = await db.class.create({ id_type_class: clas.type_class, times_per_week: clas.numberClasses, id_assigned_discipline });
+        const new_class = await db.class.create({
+          id_type_class: clas.type_class,
+          times_per_week: clas.numberClasses,
+          id_assigned_discipline,
+        });
         const id_class = new_class.dataValues.id;
-        await db.recommended_audience.bulkCreate(arr_aud_ids.map(id_audience => {
-          return { id_audience, id_class }
-        }))
-        await db.assigned_teacher.bulkCreate(arr_teach_ids.map(id_teacher => {
-          return { id_teacher, id_class }
-        }))
-        await db.assigned_group.bulkCreate(arr_groups_ids.map(id_group => {
-          return { id_group, id_class }
-        }))
-        return { successful: true, message: "Данi завантаженi успiшно" };
+        await db.recommended_audience.bulkCreate(
+          arr_aud_ids.map((id_audience) => {
+            return { id_audience, id_class };
+          })
+        );
+        await db.assigned_teacher.bulkCreate(
+          arr_teach_ids.map((id_teacher) => {
+            return { id_teacher, id_class };
+          })
+        );
+        await db.assigned_group.bulkCreate(
+          arr_groups_ids.map((id_group) => {
+            return { id_group, id_class };
+          })
+        );
       }
-    }
-    catch (e) {
+      return { successful: true, message: "Данi завантаженi успiшно" };
+    } catch (e) {
       return {
         successful: false,
         message: "Помилка при завантаженi даних" + e,
       };
     }
-  }
-}
+  },
+};
 
 export const DELETE_ALL_DATA = {
   type: MessageType,
