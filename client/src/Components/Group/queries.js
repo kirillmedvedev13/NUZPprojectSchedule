@@ -9,6 +9,10 @@ export const GET_ALL_GROUPS = gql`
       specialty {
         id
         name
+        code
+        cathedra {
+          short_name
+        }
       }
     }
   }

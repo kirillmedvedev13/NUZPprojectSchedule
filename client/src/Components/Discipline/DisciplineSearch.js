@@ -11,7 +11,10 @@ function SelectSpecialty({ handleChangeFilters }) {
   if (error) return `Error! ${error}`;
   let options = [];
   data.GetAllSpecialties.forEach((item) => {
-    options.push({ label: item.name, value: Number(item.id) });
+    options.push({
+      label: item.name,
+      value: Number(item.id),
+    });
   });
   return (
     <Select

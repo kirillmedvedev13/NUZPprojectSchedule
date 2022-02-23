@@ -86,7 +86,7 @@ function SelectGroup({ handleChangeFilters }) {
   let options = [];
   data.GetAllGroups.forEach((item) => {
     options.push({
-      label: item.name,
+      label: item.specialty.cathedra.short_name + "-" + item.name,
       value: Number(item.id),
     });
   });

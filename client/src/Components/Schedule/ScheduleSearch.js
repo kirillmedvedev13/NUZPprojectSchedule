@@ -84,7 +84,10 @@ function SelectCathedra({ handleChangeFilters }) {
   if (error) return `Error! ${error}`;
   let options = [];
   data.GetAllCathedras.forEach((item) => {
-    options.push({ label: item.name, value: Number(item.id) });
+    options.push({
+      label: item.name + " (" + item.short_name + ")",
+      value: Number(item.id),
+    });
   });
   return (
     <Select
@@ -106,7 +109,7 @@ function SelectGroup({ handleChangeFilters }) {
   let options = [];
   data.GetAllGroups.forEach((item) => {
     options.push({
-      label: item.name,
+      label: item.specialty.cathedra.short_name + "-" + item.name,
       value: Number(item.id),
     });
   });

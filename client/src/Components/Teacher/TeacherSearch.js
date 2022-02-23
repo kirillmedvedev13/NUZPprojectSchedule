@@ -10,8 +10,12 @@ function SelectCathedra({ handleChangeFilters }) {
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
   let options = [];
+  console.log(data);
   data.GetAllCathedras.forEach((item) => {
-    options.push({ label: item.name, value: Number(item.id) });
+    options.push({
+      label: item.name + " (" + item.short_name + ")",
+      value: Number(item.id),
+    });
   });
   return (
     <Select

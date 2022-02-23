@@ -11,6 +11,10 @@ export const GET_ALL_DISCIPLINES = gql`
         specialty {
           id
           name
+          code
+          cathedra {
+            short_name
+          }
         }
       }
     }

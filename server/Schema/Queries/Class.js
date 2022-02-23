@@ -72,6 +72,9 @@ export const GET_ALL_CLASSES = {
             },
             {
               model: db.specialty,
+              include: {
+                model: db.cathedra,
+              },
             },
           ],
         },

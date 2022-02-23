@@ -42,7 +42,7 @@ function DataTable({
                     return (
                       <tr key={obj.teacher.id}>
                         <td>{obj.teacher.surname + " " + obj.teacher.name}</td>
-                        <td>{obj.teacher.cathedra.name}</td>
+                        <td>{obj.teacher.cathedra.short_name}</td>
                       </tr>
                     );
                   })}
@@ -55,7 +55,12 @@ function DataTable({
                   {item.assigned_groups.map((obj) => {
                     return (
                       <tr key={obj.group.id}>
-                        <td>{obj.group.name}</td>
+                        <td>
+                          {item.assigned_discipline.specialty.cathedra
+                            .short_name +
+                            "-" +
+                            obj.group.name}
+                        </td>
                       </tr>
                     );
                   })}
