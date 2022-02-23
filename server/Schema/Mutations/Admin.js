@@ -1,21 +1,46 @@
-import bodyParser from "body-parser";
 import { GraphQLString, GraphQLInt } from "graphql";
 import db from "../../database.js";
-import Type_class from "../../Models/Type_class.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-function GetSemester(group_name) {
+function GetSemester(group, isAutumn) {
   const date = new Date();
-  let semester =
-    Number(date.getFullYear().toString().charAt(3)) -
-    Number(group_name.charAt(2)); // Год вступления, что бы узнать семестр для дисциплины
+  let semester;
+  if (group.length >= 3) { // все группы
+    semester =
+      Number(date.getFullYear().toString().charAt(3)) -
+      Number(group.charAt(2)); // Год вступления, что бы узнать семестр для дисциплины
+  }
+  else if (group.charAt(0) === "А") { // аспиранты
+    semester =
+      Number(date.getFullYear().toString().charAt(3)) -
+      Number(group.charAt(1)); // Год вступления, что бы узнать семестр для дисциплины
+  }
   if (semester < 0) {
     semester = 10 + semester;
   }
-  if (date.getMonth() > 5 && date.getMonth() < 13) {
-    semester++;
+  //проверка на магистров
+  if (group.length > 3 && group.charAt(3) === "м") {
+    semester += 4;
+  }
+  //проверка на ускоренное обучение
+  if (group.length > 3 && group.charAt(4) === "с" && group.charAt(5) === "п") {
+    semester += 1;
+  }
+  //текущий курс перевести в семестр
+  semester *= 2;
+  if (isAutumn) { // если осенний семестр
+    semester--;
   }
   return semester;
+}
+
+function GetCodeSpec(group) {
+  if (group.length >= 3) {
+    return Number(group.charAt(0));
+  }
+  if (group.charAt(0) === "А") {
+    return 0;
+  }
 }
 
 export const SET_CLASSES = {
@@ -66,289 +91,207 @@ export const SET_CLASSES = {
         },
       });
       for (const clas of classes) {
-        const date = new Date();
         let semester = GetSemester(clas.groups[0]);
-        const code_spec = Number(clas.groups[0].charAt(0)); // первая цифра первой группы это код специальности
-        const arr_disc = disciplines.filter((disc) => {
+        const code_spec = GetCodeSpec(clas.groups[0]); // первая цифра первой группы это код специальности
+        let discipline = null;
+        discipline = disciplines.find((disc) => { // Поиск дсциплины в бд
           return disc.dataValues.name === clas.discipline;
         });
         let id_assigned_discipline = null;
         let cathedra = null;
-        for (const cath of cathedras) {
-          // поиск кафедры
-          if (cath.dataValues.id === id_cathedra) {
-            cathedra = cath;
+        cathedra = cathedras.find((cath) => { // поиск кафедры
+          return cath.dataValues.id === id_cathedra
+        });
+        if (discipline) {
+          let ad = discipline.assigned_disciplines.find((ad) => {// Если найдена в базе дисциплина за специальностью
+            return ad.dataValues.semester === semester &&
+              ad.specialty.dataValues.code === code_spec &&
+              ad.specialty.dataValues.id_cathedra === id_cathedra
+          });
+          if (ad) {
+            id_assigned_discipline = ad.dataValues.id;
           }
         }
-        arr_disc.forEach((disc) => {
-          disc.assigned_disciplines.forEach((ad) => {
-            // Если найдена в базе дисциплина за специальностью
-            if (
-              ad.dataValues.semester === semester &&
-              ad.specialty.code === code_spec &&
-              ad.specialty.id_cathedra === id_cathedra
-            ) {
-              id_assigned_discipline = ad.id;
-            }
-          });
-        });
         if (!id_assigned_discipline) {
           // дисциплина за специальностью не найдена
-          let id_spec = null;
-          let id_disc = null;
-          let new_disc = null;
-          let new_spec = null;
-          const arr_spec = specialties.filter(
-            (spec) =>
-              spec.code === code_spec && spec.id_cathedra === id_cathedra
+          let specialty = null;
+          specialty = specialties.find((spec) =>
+            spec.code === code_spec && spec.id_cathedra === id_cathedra
           );
-          if (arr_spec.length) {
-            //Если найдена в базе специальность за кафедрой
-            id_spec = arr_spec[0].id;
-          } else {
-            // Специальность не найденна, её нужно создать
-            new_spec = await db.specialty.create({
-              name: "",
+          if (!specialty) { // Специальность не найдена, её нужно создать
+            specialty = await db.specialty.create({
+              name: cathedra.short_name + " - " + String(code_spec),
               id_cathedra,
               code: code_spec,
             });
-            new_spec.cathedra = cathedra;
-            specialties.push(new_spec);
-            id_spec = new_spec.id;
+            specialty.cathedra = cathedra;
+            specialties.push(specialty);
           }
-          let disc = null;
-          let index_disc = null;
-          disciplines.filter((dis, index) => {
+          let discipline = null;
+          let new_disc = false;
+          let index_disc = null; // индекс дисциплины в массиве
+          discipline = disciplines.find((dis, index) => {
             if (dis.dataValues.name === clas.discipline) {
-              disc = dis;
               index_disc = index;
               return true;
-            } else {
-              return false;
             }
           });
-          if (disc) {
-            // если в базе есть дисциплина с таким названием
-            id_disc = disc.dataValues.id;
-          } else {
+          if (!discipline) {
             // Дисциплины в базе нет, её нужно создать
-            new_disc = await db.discipline.create({ name: clas.discipline });
-            id_disc = new_disc.dataValues.id;
+            discipline = await db.discipline.create({ name: clas.discipline });
+            new_disc = true;
           }
-          let new_assigned_discipine = await db.assigned_discipline.create({
-            id_specialty: id_spec,
-            id_discipline: id_disc,
+          let assigned_discipine = await db.assigned_discipline.create({
+            id_specialty: specialty.dataValues.id,
+            id_discipline: discipline.dataValues.id,
             semester,
           });
-          id_assigned_discipline = new_assigned_discipine.id;
-          if (new_spec) {
-            // Если создана новая специальность, её нужно занести к закрепленным дисциплинам
-            new_assigned_discipine.specialty = new_spec;
-          } else {
-            // Специальность уже есть в базе, её нужно вставить к закрепленным дисциплинам
-            new_assigned_discipine.specialty = arr_spec[0];
-          }
+          id_assigned_discipline = assigned_discipine.dataValues.id;
+          // Добавление специальности к закрепленным
+          assigned_discipine.specialty = specialty;
           if (new_disc) {
-            //Если создана новая дисицплина, её нужно занести в массив дисциплин
-            const temp = {
-              ...new_disc.dataValues,
-              assigned_disciplines: [new_assigned_discipine],
-            };
+            // Добавление дисциплины к массиву из бд
             disciplines.push({
-              ...new_disc,
-              dataValues: temp,
-              assigned_disciplines: [new_assigned_discipine],
+              ...discipline,
+              assigned_disciplines: [assigned_discipine],
             });
-          } else {
+          } else { // изменение массива
             disciplines[index_disc].assigned_disciplines.push(
-              new_assigned_discipine
+              assigned_discipine
             );
           }
-        }
-        // Поиск учитилей в бд
-        const arr_teach_ids = [];
-        for (const teacher of clas.teachers) {
-          const temp = teacher.split(/[ |.]/);
-          const surname = temp[0];
-          const name = temp[1];
-          const patronymic = temp[2];
-          let id_teacher = null;
-          for (const teacherdb of teachers) {
-            if (
-              teacherdb.dataValues.surname === surname &&
-              teacherdb.dataValues.name.charAt(0) === name.charAt(0) &&
-              teacherdb.dataValues.patronymic.charAt(0) === patronymic.charAt(0)
-            ) {
-              id_teacher = teacherdb.dataValues.id;
-              arr_teach_ids.push(id_teacher);
+
+          // Поиск учителей в бд
+          const arr_teach_ids = [];
+          for (const teacher_name of clas.teachers) {
+            const temp = teacher_name.split(/[ |.]/);
+            const surname = temp[0];
+            const name = temp[1];
+            const patronymic = temp[2];
+            let teacher = null;
+            teacher = teachers.find((teach) => {
+              return teach.dataValues.surname === surname &&
+                teach.dataValues.name.charAt(0) === name.charAt(0) &&
+                teach.dataValues.patronymic.charAt(0) === patronymic.charAt(0)
+            })
+            if (!teacher) {
+              // Если учитель не найден в бд
+              teacher = await db.teacher.create({
+                name,
+                surname,
+                patronymic,
+                id_cathedra,
+              });
+              teachers.push(teacher);
             }
+            arr_teach_ids.push(teacher.dataValues.id);
           }
-          if (!id_teacher) {
-            // Если учитель не найден в бд
-            const new_teach = await db.teacher.create({
-              name,
-              surname,
-              patronymic,
-              id_cathedra,
-            });
-            arr_teach_ids.push(new_teach.dataValues.id);
-            teachers.push(new_teach);
-          }
-        }
-        // Поиск аудиторий
-        const arr_aud_ids = [];
-        for (const audience of clas.audiences) {
-          let id_audience = null;
-          for (const audiencedb of audiences) {
-            if (audiencedb.dataValues.name === audience) {
-              // Найдена аудитория в базе
-              id_audience = audiencedb.dataValues.id;
-              arr_aud_ids.push(id_audience);
-              let checkCathedra = false;
-              for (const au of audiencedb.assigned_audiences) {
-                // проверка на закрепленную кафедру
-                if (au.dataValues.id_cathedra === id_cathedra) {
-                  checkCathedra = true;
-                  break;
-                }
-              }
-              if (!checkCathedra) {
-                // Если аудитория не закреплена за кафедрой
-                const new_assigned_audience = await db.assigned_audience.create(
-                  {
-                    id_audience,
-                    id_cathedra,
-                  }
-                );
-                audiencedb.assigned_audiences.push(new_assigned_audience);
-              }
-              break;
+          // Поиск аудиторий
+          const arr_aud_ids = [];
+          for (const name_audience of clas.audiences) {
+            let audience = null;
+            audience = audiences.find((aud) => {
+              return aud.name === name_audience;
+            })
+            if (!audience) {
+              audience = await db.audience.create({
+                name: name_audience,
+                id_type_class: 1,
+                capacity: 0,
+              });
+              audiences.push(audience);
             }
+            arr_aud_ids.push(audience.id);
           }
-          if (!id_audience) {
-            // Если аудитория не найдена в бд
-            let new_audience = await db.audience.create({
-              name: audience,
-              id_type_class: 1,
-              capacity: 0,
-            });
-            id_audience = new_audience.dataValues.id;
-            arr_aud_ids.push(id_audience);
-            let new_assigned_audience = await db.assigned_audience.create({
-              id_audience,
-              id_cathedra,
-            });
-            audiences.push({
-              ...new_audience,
-              assigned_audiences: [new_assigned_audience],
-            });
-          }
-        }
-        // Поиск групп
-        const arr_groups_ids = [];
-        for (const group of clas.groups) {
-          let found_group = null;
-          const code_spec = Number(group.charAt(0)); // первая цифра группы это код специальности
-          for (const groupdb of groups) {
-            if (
-              groupdb.dataValues.name === group &&
-              groupdb.specialty.cathedra.dataValues.short_name ===
-                clas.short_name_cathedra &&
-              groupdb.specialty.dataValues.code === code_spec
-            ) {
-              //найдена группа в базе
-              found_group = groupdb;
-              arr_groups_ids.push(found_group.dataValues.id);
-              break;
-            }
-          }
-          if (!found_group) {
-            //Если не найдена группа
-            let found_specialty = null;
-            let found_cathedra = null;
-            //Поиск кафедры
-            for (const cath of cathedras) {
-              console.log(cath.dataValues.short_name);
-              if (
-                String(cath.dataValues.short_name) ===
-                String(clas.short_name_cathedra)
-              ) {
-                found_cathedra = cath;
-                //Поиск специальности для кафедры
-                for (const spec of specialties) {
-                  if (
-                    spec.dataValues.code === code_spec &&
-                    spec.dataValues.id_cathedra === cath.dataValues.id
-                  ) {
-                    // Найдена специальность с кафедрой
-                    found_specialty = spec;
-                    break;
-                  }
-                }
-              }
-            }
-            if (found_cathedra) {
-              // если кафедра найденa
-              if (!found_specialty) {
-                //если не найдена специальность
-                found_specialty = await db.specialty.create({
-                  name: "",
-                  code: code_spec,
-                  id_cathedra: found_cathedra.dataValues.id,
+          // Поиск групп
+          const arr_groups_ids = [];
+          for (const group_name of clas.groups) {
+            let group = null;
+            let specialty = null;
+            const code_spec = GetCodeSpec(group_name);
+            group = groups.find((grp) => {
+              return grp.dataValues.name === group_name
+                && grp.specialty.cathedra.dataValues.short_name === clas.short_name_cathedra
+                && grp.specialty.dataValues.code === code_spec
+            })
+            if (!group) {
+              //Если не найдена группа
+              let cathedra = null;
+              let new_cath = false;
+              //Поиск кафедры
+              cathedra = cathedras.find((cath) => {
+                return cath.dataValues.short_name === clas.short_name_cathedra;
+              })
+              if (!cathedra) {
+                // если кафедра не найденa
+                cathedra = await db.cathedra.create({
+                  name: clas.short_name_cathedra,
+                  short_name: clas.short_name_cathedra,
                 });
-                found_specialty.cathedra = found_cathedra;
-                specialties.push(found_specialty);
+                cathedras.push(cathedra);
+                new_cath = true;
               }
-            } else {
-              // если кафедра не найденa
-              found_cathedra = await db.cathedra.create({
-                name: "",
-                short_name: clas.short_name_cathedra,
+              if (new_cath) { // если создана кафедра то нужно создать специальность
+                specialty = await db.specialty.create({
+                  name: cathedra.name + " - " + String(code_spec),
+                  code: code_spec,
+                  id_cathedra: cathedra.dataValues.id,
+                });
+                specialty.cathedra = cathedra;
+                specialties.push(specialty);
+              }
+              else { // если кафедра уже есть то нужно найти или создать специальность для группы
+                specialty = null;
+                specialty = specialties.find((spec) => {
+                  return spec.dataValues.code === code_spec
+                    && spec.cathedra.short_name === clas.short_name_cathedra
+                })
+                if (!specialty) { // если специальность не найдена её нужно создать
+                  specialty = await db.specialty.create({
+                    name: cathedra.short_name + " - " + String(code_spec),
+                    code: code_spec,
+                    id_cathedra: cathedra.dataValues.id,
+                  });
+                  specialty.cathedra = cathedra;
+                  specialties.push(specialty);
+                }
+              }
+              //Создание группы
+              const semester = GetSemester(group_name);
+              group = await db.group.create({
+                name: group_name,
+                number_students: 0,
+                semester,
+                id_specialty: specialty.dataValues.id,
               });
-              cathedras.push(found_cathedra);
-              found_specialty = await db.specialty.create({
-                name: "",
-                code: code_spec,
-                id_cathedra: found_cathedra.dataValues.id,
-              });
-              found_specialty.cathedra = found_cathedra;
-              specialties.push(found_specialty);
+              group.specialty = specialty;
+              groups.push(group);
             }
-            //Создание группы
-            const semester = GetSemester(group);
-            found_group = await db.group.create({
-              name: group,
-              number_students: 0,
-              semester,
-              id_specialty: found_specialty.dataValues.id,
-            });
-            arr_groups_ids.push(found_group.dataValues.id);
-            found_group.specialty = found_specialty;
-            groups.push(found_group);
+            arr_groups_ids.push(group.dataValues.id);
           }
+          // Создание занятий
+          const new_class = await db.class.create({
+            id_type_class: clas.type_class,
+            times_per_week: clas.numberClasses,
+            id_assigned_discipline,
+          });
+          const id_class = new_class.dataValues.id;
+          await db.recommended_audience.bulkCreate(
+            arr_aud_ids.map((id_audience) => {
+              return { id_audience, id_class };
+            })
+          );
+          await db.assigned_teacher.bulkCreate(
+            arr_teach_ids.map((id_teacher) => {
+              return { id_teacher, id_class };
+            })
+          );
+          await db.assigned_group.bulkCreate(
+            arr_groups_ids.map((id_group) => {
+              return { id_group, id_class };
+            })
+          );
         }
-        // Создание занятий
-        const new_class = await db.class.create({
-          id_type_class: clas.type_class,
-          times_per_week: clas.numberClasses,
-          id_assigned_discipline,
-        });
-        const id_class = new_class.dataValues.id;
-        await db.recommended_audience.bulkCreate(
-          arr_aud_ids.map((id_audience) => {
-            return { id_audience, id_class };
-          })
-        );
-        await db.assigned_teacher.bulkCreate(
-          arr_teach_ids.map((id_teacher) => {
-            return { id_teacher, id_class };
-          })
-        );
-        await db.assigned_group.bulkCreate(
-          arr_groups_ids.map((id_group) => {
-            return { id_group, id_class };
-          })
-        );
       }
       return { successful: true, message: "Данi завантаженi успiшно" };
     } catch (e) {
@@ -371,9 +314,9 @@ export const DELETE_ALL_DATA = {
       await db.group.destroy({ truncate: { cascade: true } });
       await db.class.destroy({ truncate: { cascade: true } });
       await db.specialty.destroy({ truncate: { cascade: true } });
-      return { successful: true, message: "YEs" };
+      return { successful: true, message: "Дані успішно видалено з БД" };
     } catch (err) {
-      return { successful: false, message: "Some error" };
+      return { successful: false, message: "Помилка при видалені даних з БД" };
     }
   },
 };
