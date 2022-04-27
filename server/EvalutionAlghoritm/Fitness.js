@@ -69,6 +69,12 @@ export default function fitnessByGroups(
               }
             }
           }
+          if (
+            detectedSchedules[index].number_pair ==
+            detectedSchedules[index + 1].number_pair
+          ) {
+            index++;
+          }
           index++;
         }
       }
