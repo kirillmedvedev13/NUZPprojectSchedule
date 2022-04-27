@@ -52,7 +52,13 @@ export const RUN_EA = {
     );
 
     populations.forEach((individ) => {
-      fitnessByGroups(individ, groups, classes, max_day, max_pair);
+      let fitGroup = fitnessByGroups(
+        individ,
+        groups,
+        classes,
+        max_day,
+        max_pair
+      );
     });
   },
 };

@@ -5,8 +5,8 @@ export default function fitnessByGroups(
   max_day,
   max_pair
 ) {
+  let fitnessValue = 0;
   groups.forEach((group) => {
-    let fitnessValue = 0;
     let detectedAG = [];
     classes.map((clas) => {
       clas.assigned_groups.map((ag) => {
@@ -32,55 +32,58 @@ export default function fitnessByGroups(
     let index = 0;
     for (let i = 0; i < max_day; i++) {
       for (let j = 0; j < max_pair; j++) {
-        if (
-          detectedSchedules[index].id_day_week == i &&
-          detectedSchedules[index].number_pair == j
-        ) {
-          if (index != 0) {
-            if (
-              detectedSchedules[index - 1].id_day_week ==
-                detectedSchedules[index].id_day_week &&
-              detectedSchedules[index - 1].number_pair !=
-                detectedSchedules[index].number_pair
-            ) {
+        if (index != detectedSchedules.length) {
+          if (
+            detectedSchedules[index].id_day_week == i &&
+            detectedSchedules[index].number_pair == j
+          ) {
+            if (index != 0) {
               if (
-                detectedSchedules[index - 1].pair_type ==
-                  detectedSchedules[index].pair_type ||
-                detectedSchedules[index].pair_type == 3
+                detectedSchedules[index - 1].id_day_week ==
+                  detectedSchedules[index].id_day_week &&
+                detectedSchedules[index - 1].number_pair !=
+                  detectedSchedules[index].number_pair
               ) {
-                if (index > 1) {
-                  if (
-                    detectedSchedules[index].pair_type == 3 &&
-                    detectedSchedules[index - 2].number_pair ==
-                      detectedSchedules[index - 1].number_pair &&
-                    detectedSchedules[index - 2].id_day_week ==
-                      detectedSchedules[index].id_day_week
-                  ) {
-                    fitnessValue +=
-                      detectedSchedules[index].number_pair -
-                      detectedSchedules[index - 2].number_pair -
-                      1;
+                if (
+                  detectedSchedules[index - 1].pair_type ==
+                    detectedSchedules[index].pair_type ||
+                  detectedSchedules[index].pair_type == 3
+                ) {
+                  if (index > 1) {
+                    if (
+                      detectedSchedules[index].pair_type == 3 &&
+                      detectedSchedules[index - 2].number_pair ==
+                        detectedSchedules[index - 1].number_pair &&
+                      detectedSchedules[index - 2].id_day_week ==
+                        detectedSchedules[index].id_day_week
+                    ) {
+                      fitnessValue +=
+                        detectedSchedules[index].number_pair -
+                        detectedSchedules[index - 2].number_pair -
+                        1;
+                    }
                   }
+                  fitnessValue +=
+                    detectedSchedules[index].number_pair -
+                    detectedSchedules[index - 1].number_pair -
+                    1;
                 }
-                fitnessValue +=
-                  detectedSchedules[index].number_pair -
-                  detectedSchedules[index - 1].number_pair -
-                  1;
               }
             }
-          }
-          if (
-            detectedSchedules[index].id_day_week ==
-              detectedSchedules[index + 1].id_day_week &&
-            detectedSchedules[index].number_pair ==
-              detectedSchedules[index + 1].number_pair
-          ) {
+
             index++;
+            if (index != detectedSchedules.length)
+              if (
+                detectedSchedules[index].id_day_week ==
+                  detectedSchedules[index - 1].id_day_week &&
+                detectedSchedules[index].number_pair ==
+                  detectedSchedules[index - 1].number_pair
+              )
+                index++;
           }
-          index++;
         }
       }
     }
-    console.log(fitnessValue);
   });
+  return fitnessValue;
 }
