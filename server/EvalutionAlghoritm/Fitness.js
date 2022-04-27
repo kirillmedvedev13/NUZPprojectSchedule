@@ -70,8 +70,10 @@ export default function fitnessByGroups(
             }
           }
           if (
+            detectedSchedules[index].id_day_week ==
+              detectedSchedules[index + 1].id_day_week &&
             detectedSchedules[index].number_pair ==
-            detectedSchedules[index + 1].number_pair
+              detectedSchedules[index + 1].number_pair
           ) {
             index++;
           }
