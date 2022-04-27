@@ -6,6 +6,7 @@ import { Form, Button, Card } from "react-bootstrap";
 import { CreateNotification } from "../Alert";
 import { Workbook } from "exceljs";
 import { DELETE_ALL_DATA, SET_CLASSES } from "./mutations.js";
+import RunEA from "./RunEA";
 
 function SubmitData({ id_cathedra, file, sheetIndex }) {
   const [SetClasses, { loading, error }] = useMutation(SET_CLASSES, {
@@ -268,6 +269,7 @@ function DeleteAllData() {
     </Button>
   );
 }
+
 class Admin extends React.Component {
   state = {
     file: "",
@@ -313,6 +315,7 @@ class Admin extends React.Component {
         <div className="d-flex justify-content-center  ">
           <DeleteAllData></DeleteAllData>
         </div>
+        <RunEA></RunEA>
         <div className="d-flex justify-content-center  ">
           <Card className="my-2">
             <Card.Header className="text-center">

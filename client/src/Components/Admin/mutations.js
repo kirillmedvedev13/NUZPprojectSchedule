@@ -16,3 +16,11 @@ export const DELETE_ALL_DATA = gql`
     }
   }
 `;
+export const RUN_EA = gql`
+  mutation{
+    RunEA{
+      message
+      successful
+    }
+  }
+`;

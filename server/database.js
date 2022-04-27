@@ -18,6 +18,7 @@ import Assigned_teacher from "./Models/Assigned_teacher.js";
 import Schedule from "./Models/Schedule.js";
 import User from "./Models/User.js";
 import Assigned_group from "./Models/Assigned_group.js";
+import Info from "./Models/Info.js";
 
 const db = {};
 
@@ -39,6 +40,7 @@ const models = [
   Schedule,
   Assigned_group,
   User,
+  Info
 ];
 
 const Connection = new Sequelize(
