@@ -1,19 +1,13 @@
-export default function fitness(individ, groups, classes, teachers) {
+export default function fitness(individ, mapGroupAndAG, mapTeacherAndAG) {
   let fitnessValue = 0;
-  fitnessValue += fitnessByGroups(individ, groups, classes);
-  fitnessValue += fitnessByTeachers(individ, teachers, classes);
+  fitnessValue += fitnessByGroups(individ, mapGroupAndAG);
+  fitnessValue += fitnessByTeachers(individ, mapTeacherAndAG);
   return fitnessValue;
 }
 
-function fitnessByGroups(individ, groups, classes) {
+function fitnessByGroups(individ, mapGroupAndAG) {
   let fitnessValue = 0;
-  groups.forEach((group) => {
-    let detectedAG = [];
-    classes.map((clas) => {
-      clas.assigned_groups.map((ag) => {
-        if (ag.id_group == group.id) detectedAG.push(ag.id);
-      });
-    });
+  mapGroupAndAG.forEach((detectedAG) => {
     let detectedSchedules = individ.filter((schedule) => {
       if (detectedAG.indexOf(schedule.id_assigned_group) != -1) {
         return schedule;
@@ -98,8 +92,7 @@ function fitnessDSLateSchedule(detectedSchedules) {
   while (index < detectedSchedules.length) {
     fitnessValue += detectedSchedules[index - 1].number_pair;
     while (
-      detectedSchedules[index - 1].day_week ==
-      detectedSchedules[index].day_week
+      detectedSchedules[index - 1].day_week == detectedSchedules[index].day_week
     ) {
       index++;
       if (index == detectedSchedules.length) break;
@@ -121,8 +114,7 @@ function fitnessEquelSchedule(detectedSchedules) {
   let index = 1;
   while (index < detectedSchedules.length) {
     if (
-      detectedSchedules[index - 1].day_week ==
-      detectedSchedules[index].day_week
+      detectedSchedules[index - 1].day_week == detectedSchedules[index].day_week
     ) {
       if (
         detectedSchedules[index - 1].number_pair !=
@@ -144,17 +136,9 @@ function fitnessEquelSchedule(detectedSchedules) {
   return max - min;
 }
 
-function fitnessByTeachers(individ, teachers, classes) {
+function fitnessByTeachers(individ, mapTeacherAndAG) {
   let fitnessValue = 0;
-  teachers.forEach((teacher) => {
-    let detectedAG = [];
-    classes.map((clas) => {
-      clas.assigned_groups.map((ag) => {
-        teacher.assigned_teachers.map((at) => {
-          if (ag.id_class == at.id_class) detectedAG.push(ag.id);
-        });
-      });
-    });
+  mapTeacherAndAG.forEach((detectedAG) => {
     let detectedSchedules = individ.filter((schedule) => {
       if (detectedAG.indexOf(schedule.id_assigned_group) != -1) {
         return schedule;

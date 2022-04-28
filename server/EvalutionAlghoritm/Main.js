@@ -2,6 +2,7 @@ import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
 import fitness from "./Fitness.js";
 import Init from "./Init.js";
+import TournamentSelect from "./TournamentSelect.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -52,10 +53,9 @@ export const RUN_EA = {
     for (const group of groups) {
       let temp = [];
       for (const cl of classes) {
-        cl.assigned_groups.map(ag => {
-          if (ag.id_group === group.id)
-            temp.push(ag.id);
-        })
+        cl.assigned_groups.map((ag) => {
+          if (ag.id_group === group.id) temp.push(ag.id);
+        });
       }
       mapGroupAndAG.set(group.id, temp);
     }
@@ -63,15 +63,15 @@ export const RUN_EA = {
     let mapTeacherAndAG = new Map();
     for (const teacher of teachers) {
       let temp = [];
-      teacher.assigned_teachers.map(at => {
+      teacher.assigned_teachers.map((at) => {
         let detected_classes = [];
-        detected_classes = classes.filter(cl => cl.id === at.id_class);
-        detected_classes.map(dt => {
-          dt.assigned_groups.map(ag => {
+        detected_classes = classes.filter((cl) => cl.id === at.id_class);
+        detected_classes.map((dt) => {
+          dt.assigned_groups.map((ag) => {
             temp.push(ag.id);
           });
-        })
-      })
+        });
+      });
       mapTeacherAndAG.set(teacher.id, temp);
     }
 
@@ -85,14 +85,17 @@ export const RUN_EA = {
       mapTeacherAndAG
     );
 
-    populations.sort(function (individ1, individ2) {
-      individ1.fitnessValue = fitness(individ1, groups, classes, teachers);
-      individ2.fitnessValue = fitness(individ2, groups, classes, teachers);
+    /*populations.sort(function (individ1, individ2) {
+      individ1.fitnessValue = fitness(individ1, mapGroupAndAG, mapTeacherAndAG);
+      individ2.fitnessValue = fitness(individ2, mapGroupAndAG, mapTeacherAndAG);
       if (individ1.fitnessValue > individ2.fitnessValue) return 1;
       else if (individ1.fitnessValue == individ2.fitnessValue) return 0;
       else return -1;
+    });*/
+    populations.forEach((individ) => {
+      individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
     });
-
+    populations = TournamentSelect(populations, population_size);
     return;
   },
 };
