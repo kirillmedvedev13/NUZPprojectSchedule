@@ -1,61 +1,70 @@
-import GetAudienceForClass from "./GetAudienceForClass.js";
+import GetIdAudienceForClass from "./GetIdAudienceForClass.js";
 import GetRndInteger from "./GetRndInteger.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
-
+import CheckPutClassLecture from "./CheckPutClassLecture.js";
+import CheckPutClassPractice from "./CheckPutClassPractice.js";
 export default function (
-  classes,
-  population_size,
-  max_day,
-  max_pair,
-  audiences
+    classes,
+    population_size,
+    max_day,
+    max_pair,
+    audiences
 ) {
-  let populations = new Array(population_size);
-  for (let i = 0; i < population_size; i++) {
-    let schedule = [];
-    classes.forEach((clas) => {
-      const info = GetPairTypeForClass(clas);
-      for (let j = 0; j < info.num_input; j++) {
-        let isPut = false;
-        while (!isPut) {
-          const day_week = GetRndInteger(1, max_day);
-          const number_pair = GetRndInteger(1, max_pair);
-          const id_audience = GetAudienceForClass(clas, audiences);
-          let wrongSchedules = schedule.filter((sch) => {
-            if (
-              sch.number_pair === number_pair &&
-              sch.id_day_week === day_week
-            ) {
-              if (
-                (info.pair_type === 1 || info.pair_type === 2) &&
-                sch.id_pair_type === 3
-              ) {
-                return true;
-              }
-              if (
-                info.pair_type === 3 &&
-                (sch.id_pair_type === 1 || sch.id_pair_type === 2)
-              ) {
-                return true;
-              }
+    let populations = new Array(population_size);
+    for (let i = 0; i < population_size; i++) {
+        let schedule = [];
+        classes.forEach((clas) => {
+            // Случайная вставка в расписание
+            const info = GetPairTypeForClass(clas);
+            // Сколько раз вставлять данное занятие в разное время
+            for (let j = 0; j < info.length; j++) {
+                let isPut = false;
+                while (!isPut) {
+                    const id_audience = GetIdAudienceForClass(clas, audiences);
+                    // Если лекция то для всех групп в одно и тоже время
+                    if (clas.id_type_class === 1) {
+                        const day_week = GetRndInteger(1, max_day);
+                        const number_pair = GetRndInteger(1, max_pair);
+                        //Если в это время нету пары для всех групп
+                        if (CheckPutClassLecture(classes, clas, schedule, day_week, number_pair, info[j])) {
+                            clas.assigned_groups.map((ag) => {
+                                schedule.push({
+                                    number_pair,
+                                    id_day_week: day_week,
+                                    id_pair_type: info.pair_type,
+                                    id_audience,
+                                    id_assigned_group: ag.id,
+                                });
+                            });
+                            isPut = true;
+                        }
+                    }
+                    // Если практика то для каждой группы своё время
+                    else if (clas.id_type_class === 2) {
+                        clas.assigned_groups.map(ag => {
+                            let isPutZnam = false;
+                            while (!isPutZnam) {
+                                const day_week = GetRndInteger(1, max_day);
+                                const number_pair = GetRndInteger(1, max_pair);
+                                // Если в это время нету пары для конкретной группы
+                                if (CheckPutClassPractice(classes, id_group, schedule, day_week, number_pair, info[j])) {
+                                        schedule.push({
+                                            number_pair,
+                                            id_day_week: day_week,
+                                            id_pair_type: info.pair_type,
+                                            id_audience,
+                                            id_assigned_group: ag.id,
+                                        });
+                                    isPutZnam = true;
+                                }
+                            }
+                            isPut = true;
+                        })
+                    }
+                }
             }
-            return false;
-          });
-          if (!wrongSchedules.length) {
-            clas.assigned_groups.map((ag) => {
-              schedule.push({
-                number_pair,
-                id_day_week: day_week,
-                id_pair_type: info.pair_type,
-                id_audience,
-                id_assigned_group: ag.id,
-              });
-            });
-            isPut = true;
-          }
-        }
-      }
-    });
-    populations[i] = schedule;
-  }
-  return populations;
+        });
+        populations[i] = schedule;
+    }
+    return populations;
 }
