@@ -25,7 +25,9 @@ function fitnessByGroups(individ, groups, classes) {
       detectedSchedules.length == 1
         ? detectedSchedules[0].number_pair
         : fitnessDSLateSchedule(detectedSchedules);
+    fitnessValue += fitnessEquelSchedule(detectedSchedules);
   });
+
   return fitnessValue;
 }
 function sortDS(detectedSchedules) {
@@ -115,14 +117,18 @@ function fitnessDSLateSchedule(detectedSchedules) {
 function fitnessEquelSchedule(detectedSchedules) {
   let max = -1;
   let min = max;
-  let temp = 0;
+  let temp = 1;
   let index = 1;
   while (index < detectedSchedules.length) {
     if (
       detectedSchedules[index - 1].id_day_week ==
       detectedSchedules[index].id_day_week
     ) {
-      temp++;
+      if (
+        detectedSchedules[index - 1].number_pair !=
+        detectedSchedules[index].number_pair
+      )
+        temp++;
     } else {
       if (max == -1) {
         max = temp;
@@ -131,11 +137,11 @@ function fitnessEquelSchedule(detectedSchedules) {
         if (temp > max) max = temp;
         if (temp < min) min = temp;
       }
-      temp = 0;
+      temp = 1;
     }
     index++;
   }
-  console.log("hello");
+  return max - min;
 }
 
 function fitnessByTeachers(individ, teachers, classes) {
@@ -160,6 +166,8 @@ function fitnessByTeachers(individ, teachers, classes) {
       detectedSchedules.length == 1
         ? detectedSchedules[0].number_pair
         : fitnessDSLateSchedule(detectedSchedules);
+    fitnessValue += fitnessEquelSchedule(detectedSchedules);
   });
+
   return fitnessValue;
 }
