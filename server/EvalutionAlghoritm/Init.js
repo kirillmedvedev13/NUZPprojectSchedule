@@ -1,15 +1,17 @@
 import GetIdAudienceForClass from "./GetIdAudienceForClass.js";
 import GetRndInteger from "./GetRndInteger.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
-import CheckPutClassLecture from "./CheckPutClassLecture.js";
-import CheckPutClassPractice from "./CheckPutClassPractice.js";
+import CheckPutClassLectureForGroup from "./CheckPutClassLectureForGroup.js";
+import CheckPutClassPracticeForGroup from "./CheckPutClassPracticeForGroup.js";
+import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
 export default function (
     classes,
     population_size,
     max_day,
     max_pair,
     audiences,
-    mapGroupAndAG
+    mapGroupAndAG,
+    mapTeacherAndAG
 ) {
     let populations = new Array(population_size);
     for (let i = 0; i < population_size; i++) {
@@ -27,7 +29,8 @@ export default function (
                         const day_week = GetRndInteger(1, max_day);
                         const number_pair = GetRndInteger(1, max_pair);
                         //Если в это время нету пары для всех групп
-                        if (CheckPutClassLecture(clas, schedule, day_week, number_pair, info[j], mapGroupAndAG)) {
+                        if (CheckPutClassLectureForGroup(clas, schedule, day_week, number_pair, info[j], mapGroupAndAG) &&
+                            CheckPutClassForTeacher(clas, schedule, day_week, number_pair, info[j], mapTeacherAndAG)) {
                             clas.assigned_groups.map((ag) => {
                                 schedule.push({
                                     number_pair,
@@ -48,14 +51,15 @@ export default function (
                                 const day_week = GetRndInteger(1, max_day);
                                 const number_pair = GetRndInteger(1, max_pair);
                                 // Если в это время нету пары для конкретной группы
-                                if (CheckPutClassPractice(ag.id_group, schedule, day_week, number_pair, info[j], mapGroupAndAG)) {
-                                        schedule.push({
-                                            number_pair,
-                                            id_day_week: day_week,
-                                            id_pair_type: info[j],
-                                            id_audience,
-                                            id_assigned_group: ag.id ,
-                                        });
+                                if (CheckPutClassPracticeForGroup(ag.id_group, schedule, day_week, number_pair, info[j], mapGroupAndAG) &&
+                                    CheckPutClassForTeacher(clas, schedule, day_week, number_pair, info[j], mapTeacherAndAG)) {
+                                    schedule.push({
+                                        number_pair,
+                                        id_day_week: day_week,
+                                        id_pair_type: info[j],
+                                        id_audience,
+                                        id_assigned_group: ag.id,
+                                    });
                                     isPutZnam = true;
                                 }
                             }

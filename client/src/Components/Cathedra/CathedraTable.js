@@ -50,6 +50,7 @@ class CathedraTable extends React.Component {
             <tr>
               <th>Назва кафедри</th>
               <th>Скорочена назва</th>
+              <th></th>
             </tr>
           </thead>
           <DataTable

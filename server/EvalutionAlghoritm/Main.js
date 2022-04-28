@@ -59,6 +59,21 @@ export const RUN_EA = {
       }
       mapGroupAndAG.set(group.id, temp);
     }
+    // Стркуктура для каждого учителя массив закрепленных для него занятий
+    let mapTeacherAndAG = new Map();
+    for (const teacher of teachers) {
+      let temp = [];
+      teacher.assigned_teachers.map(at => {
+        let detected_classes = [];
+        detected_classes = classes.filter(cl => cl.id === at.id_class);
+        detected_classes.map(dt => {
+          dt.assigned_groups.map(ag => {
+            temp.push(ag.id);
+          });
+        })
+      })
+      mapTeacherAndAG.set(teacher.id, temp);
+    }
 
     let populations = Init(
       classes,
@@ -66,7 +81,8 @@ export const RUN_EA = {
       max_day,
       max_pair,
       audiences,
-      mapGroupAndAG
+      mapGroupAndAG,
+      mapTeacherAndAG
     );
 
     populations.sort(function (individ1, individ2) {

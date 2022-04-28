@@ -52,6 +52,7 @@ class SpecialtyTable extends React.Component {
               <th>Назва спеціальності</th>
               <th>Код спеціальності</th>
               <th>Назва кафедри</th>
+              <th></th>
             </tr>
           </thead>
           <DataTable

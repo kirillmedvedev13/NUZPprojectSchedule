@@ -55,6 +55,7 @@ class GroupTable extends React.Component {
               <th>Кількість студентів</th>
               <th>Семестр</th>
               <th>Спеціальність</th>
+              <th></th>
             </tr>
           </thead>
           <DataTable
