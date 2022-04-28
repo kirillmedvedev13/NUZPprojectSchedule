@@ -21,20 +21,14 @@ export default function (classes, clas, schedule, day_week, number_pair, pair_ty
             const detected_sch = ids_assigned_groups.find(id_ag => sch.id_assigned_group === id_ag);
             // Если текущее расписание касается какой то группы из переданного занятия
             if (detected_sch) {
-                // Если нужно вставить занятие по числ или знамен, то проверяется общая в расписании 
-                if (
-                    (pair_type === 1 || pair_type === 2) &&
-                    sch.id_pair_type === 3
-                ) {
+                // Если нужно вставить занятие по числ , то проверяется знам в расписании 
+                if (pair_type === 1 && sch.id_pair_type === 2)
+                    return false;
+                // Если нужно вставить по знамен, то проверяется на числитель
+                else if (pair_type === 2 && sch.id_pair_type === 1)
+                    return false;
+                else
                     return true;
-                }
-                // Если нужно вставить по общему, то проверяется на числитель или знаменатель
-                if (
-                    pair_type === 3 &&
-                    (sch.id_pair_type === 1 || sch.id_pair_type === 2)
-                ) {
-                    return true;
-                }
             }
         }
         return false;
