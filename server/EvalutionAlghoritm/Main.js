@@ -1,6 +1,6 @@
 import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
-import fitnessByGroups from "./Fitness.js";
+import fitness from "./Fitness.js";
 import Init from "./Init.js";
 
 export const RUN_EA = {
@@ -42,6 +42,11 @@ export const RUN_EA = {
       },
     });
     const groups = await db.group.findAll();
+    const teachers = await db.teacher.findAll({
+      include: {
+        model: db.assigned_teacher,
+      },
+    });
 
     let populations = Init(
       classes,
@@ -51,14 +56,13 @@ export const RUN_EA = {
       audiences
     );
 
-    populations.forEach((individ) => {
-      let fitGroup = fitnessByGroups(
-        individ,
-        groups,
-        classes,
-        max_day,
-        max_pair
-      );
+    populations.sort(function (individ1, individ2) {
+      individ1.fitnessValue = fitness(individ1, groups, classes, teachers);
+      individ2.fitnessValue = fitness(individ2, groups, classes, teachers);
+      if (individ1.fitnessValue > individ2.fitnessValue) return 1;
+      else if (individ1.fitnessValue == individ2.fitnessValue) return 0;
+      else return -1;
     });
+    console.log("Hello");
   },
 };

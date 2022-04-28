@@ -1,10 +1,11 @@
-export default function fitnessByGroups(
-  individ,
-  groups,
-  classes,
-  max_day,
-  max_pair
-) {
+export default function fitness(individ, groups, classes, teachers) {
+  let fitnessValue = 0;
+  fitnessValue += fitnessByGroups(individ, groups, classes);
+  fitnessByTeachers(individ, teachers, classes);
+  return fitnessValue;
+}
+
+function fitnessByGroups(individ, groups, classes) {
   let fitnessValue = 0;
   groups.forEach((group) => {
     let detectedAG = [];
@@ -29,61 +30,70 @@ export default function fitnessByGroups(
         } else return -1;
       } else return -1;
     });
-    let index = 0;
-    for (let i = 0; i < max_day; i++) {
-      for (let j = 0; j < max_pair; j++) {
-        if (index != detectedSchedules.length) {
-          if (
-            detectedSchedules[index].id_day_week == i &&
-            detectedSchedules[index].number_pair == j
-          ) {
-            if (index != 0) {
-              if (
-                detectedSchedules[index - 1].id_day_week ==
-                  detectedSchedules[index].id_day_week &&
-                detectedSchedules[index - 1].number_pair !=
-                  detectedSchedules[index].number_pair
-              ) {
-                if (
-                  detectedSchedules[index - 1].pair_type ==
-                    detectedSchedules[index].pair_type ||
-                  detectedSchedules[index].pair_type == 3
-                ) {
-                  if (index > 1) {
-                    if (
-                      detectedSchedules[index].pair_type == 3 &&
-                      detectedSchedules[index - 2].number_pair ==
-                        detectedSchedules[index - 1].number_pair &&
-                      detectedSchedules[index - 2].id_day_week ==
-                        detectedSchedules[index].id_day_week
-                    ) {
-                      fitnessValue +=
-                        detectedSchedules[index].number_pair -
-                        detectedSchedules[index - 2].number_pair -
-                        1;
-                    }
-                  }
-                  fitnessValue +=
-                    detectedSchedules[index].number_pair -
-                    detectedSchedules[index - 1].number_pair -
-                    1;
-                }
-              }
+    let index = 1;
+    while (index < detectedSchedules.length) {
+      if (
+        detectedSchedules[index - 1].id_day_week ==
+          detectedSchedules[index].id_day_week &&
+        detectedSchedules[index - 1].number_pair !=
+          detectedSchedules[index].number_pair
+      ) {
+        if (
+          detectedSchedules[index - 1].pair_type ==
+            detectedSchedules[index].pair_type ||
+          detectedSchedules[index].pair_type == 3
+        ) {
+          if (index > 1) {
+            if (
+              detectedSchedules[index].pair_type == 3 &&
+              detectedSchedules[index - 2].number_pair ==
+                detectedSchedules[index - 1].number_pair &&
+              detectedSchedules[index - 2].id_day_week ==
+                detectedSchedules[index].id_day_week
+            ) {
+              fitnessValue +=
+                detectedSchedules[index].number_pair -
+                detectedSchedules[index - 2].number_pair -
+                1;
             }
-
-            index++;
-            if (index != detectedSchedules.length)
-              if (
-                detectedSchedules[index].id_day_week ==
-                  detectedSchedules[index - 1].id_day_week &&
-                detectedSchedules[index].number_pair ==
-                  detectedSchedules[index - 1].number_pair
-              )
-                index++;
           }
+          fitnessValue +=
+            detectedSchedules[index].number_pair -
+            detectedSchedules[index - 1].number_pair -
+            1;
         }
       }
+
+      index++;
+      if (index < detectedSchedules.length)
+        if (
+          detectedSchedules[index].id_day_week ==
+            detectedSchedules[index - 1].id_day_week &&
+          detectedSchedules[index].number_pair ==
+            detectedSchedules[index - 1].number_pair
+        )
+          index++;
     }
   });
   return fitnessValue;
+}
+
+function fitnessByTeachers(individ, teachers, classes) {
+  let fitnessValue = 0;
+  teachers.forEach((teacher) => {
+    let detectedAG = [];
+    classes.map((clas) => {
+      clas.assigned_groups.map((ag) => {
+        teacher.assigned_teachers.map((at) => {
+          if (ag.id_class == at.id_class) detectedAG.push(ag.id);
+        });
+      });
+    });
+    let detectedSchedules = individ.filter((schedule) => {
+      if (detectedAG.indexOf(schedule.id_assigned_group) != -1) {
+        return schedule;
+      }
+    });
+    console.log("hello");
+  });
 }
