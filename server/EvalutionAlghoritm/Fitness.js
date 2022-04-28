@@ -114,7 +114,7 @@ function fitnessDSLateSchedule(detectedSchedules) {
 }
 function fitnessEquelSchedule(detectedSchedules) {
   let max = -1;
-  let min = -1;
+  let min = max;
   let temp = 0;
   let index = 1;
   while (index < detectedSchedules.length) {
@@ -131,9 +131,11 @@ function fitnessEquelSchedule(detectedSchedules) {
         if (temp > max) max = temp;
         if (temp < min) min = temp;
       }
+      temp = 0;
     }
     index++;
   }
+  console.log("hello");
 }
 
 function fitnessByTeachers(individ, teachers, classes) {
