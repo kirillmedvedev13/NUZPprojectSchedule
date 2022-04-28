@@ -25,7 +25,6 @@ import {
   DELETE_SPECIALTY,
   UPDATE_SPECIALTY,
 } from "../Mutations/Specialty.js";
-import { GET_WEEKS_DAY } from "../Queries/Day_week.js";
 import { GET_ALL_TYPE_CLASSES } from "../Queries/Type_class.js";
 import { GET_ALL_GROUPS } from "../Queries/Group.js";
 import {
@@ -62,6 +61,7 @@ import { LOGIN_USER, LOGOUT_USER, RELOGIN_USER } from "../Mutations/User.js";
 import { SET_CLASSES } from "../Mutations/Admin.js";
 import { DELETE_ALL_DATA } from "../Mutations/Admin.js";
 import { RUN_EA } from "../../EvalutionAlghoritm/Main.js";
+import { GET_INFO } from "../Queries/Info.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -70,7 +70,6 @@ const RootQuery = new GraphQLObjectType({
     GetAllAudiences: GET_ALL_AUDIENCES,
     GetAllCathedras: GET_ALL_CATHEDRAS,
     GetAllSpecialties: GET_ALL_SPECIALTY,
-    GetWeeksDay: GET_WEEKS_DAY,
     GetAllTypeClasses: GET_ALL_TYPE_CLASSES,
     GetAllGroups: GET_ALL_GROUPS,
     GetAllDisciplines: GET_ALL_DISCIPLINES,
@@ -78,6 +77,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllScheduleGroups: GET_ALL_SCHEDULE_GROUPS,
     GetAllScheduleAudiences: GET_ALL_SCHEDULE_AUDIENCES,
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
+    GetInfo: GET_INFO,
   },
 });
 

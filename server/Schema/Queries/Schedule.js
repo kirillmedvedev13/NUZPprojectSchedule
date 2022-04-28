@@ -39,16 +39,10 @@ export const GET_ALL_SCHEDULE_GROUPS = {
       order: [
         ["assigned_group", "group", "name", "ASC"],
         ["number_pair", "ASC"],
-        ["id_pair_type", "ASC"],
-        ["id_day_week", "ASC"],
+        ["pair_type", "ASC"],
+        ["day_week", "ASC"],
       ],
       include: [
-        {
-          model: db.day_week,
-        },
-        {
-          model: db.pair_type,
-        },
         {
           model: db.assigned_group,
           where: FilterGroup,
@@ -119,19 +113,13 @@ export const GET_ALL_SCHEDULE_AUDIENCES = {
       where: FilterAudience,
       order: [
         ["schedules", "number_pair", "ASC"],
-        ["schedules", "id_pair_type", "ASC"],
-        ["schedules", "id_day_week", "ASC"],
+        ["schedules", "pair_type", "ASC"],
+        ["schedules", "day_week", "ASC"],
       ],
       include: {
         model: db.schedule,
 
         include: [
-          {
-            model: db.day_week,
-          },
-          {
-            model: db.pair_type,
-          },
           {
             model: db.assigned_group,
 
@@ -199,16 +187,10 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
     const res = await db.schedule.findAll({
       order: [
         ["number_pair", "ASC"],
-        ["id_pair_type", "ASC"],
-        ["id_day_week", "ASC"],
+        ["pair_type", "ASC"],
+        ["day_week", "ASC"],
       ],
       include: [
-        {
-          model: db.day_week,
-        },
-        {
-          model: db.pair_type,
-        },
         {
           model: db.assigned_group,
           required: true,

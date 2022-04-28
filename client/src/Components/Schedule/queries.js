@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client";
 
+export const GET_INFO = gql`
+  query{
+    GetInfo{
+      max_day
+      max_pair
+    }
+  }
+`
+
 export const GET_ALL_SCHEDULE_GROUPS = gql`
   query ($id_cathedra: Int, $id_group: Int, $id_specialty: Int, $semester: Int) {
     GetAllScheduleGroups(
@@ -10,14 +19,8 @@ export const GET_ALL_SCHEDULE_GROUPS = gql`
     ) {
       id
       number_pair
-      day_week {
-        id
-        name
-      }
-      pair_type {
-        id
-        parity
-      }
+      day_week
+      pair_type
       audience {
         id
         name
@@ -55,15 +58,6 @@ export const GET_ALL_SCHEDULE_GROUPS = gql`
   }
 `;
 
-export const GET_WEEKS_DAY = gql`
-  query {
-    GetWeeksDay {
-      id
-      name
-    }
-  }
-`;
-
 export const GET_ALL_SCHEDULE_AUDIENCES = gql`
   query ($id_cathedra: Int, $id_audience: Int) {
     GetAllScheduleAudiences(
@@ -75,14 +69,8 @@ export const GET_ALL_SCHEDULE_AUDIENCES = gql`
       schedules {
         id
         number_pair
-        day_week {
-          id
-          name
-        }
-        pair_type {
-          id
-          parity
-        }
+        day_week
+        pair_type
         assigned_group {
           group {
             id
@@ -122,14 +110,8 @@ query($id_teacher:Int, $id_cathedra: Int){
   GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
       id
       number_pair
-      day_week {
-        id
-        name
-      }
-      pair_type {
-        id
-        parity
-      }
+      day_week
+      pair_type
       audience {
         id
         name

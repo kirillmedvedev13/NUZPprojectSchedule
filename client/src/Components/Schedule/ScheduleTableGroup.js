@@ -1,9 +1,24 @@
 import { useQuery } from "@apollo/client";
 import React, { Fragment } from "react";
 import { Table } from "react-bootstrap";
-import { GET_WEEKS_DAY, GET_ALL_SCHEDULE_GROUPS } from "./queries";
+import { GET_ALL_SCHEDULE_GROUPS } from "./queries";
+import { DaysWeek } from "./DaysWeek";
 
-function DataTable({ filters }) {
+function getDescription(schedule) {
+  console.log(schedule)
+  const desciption = `
+  ${schedule.assigned_group.class.type_class.name
+    } ауд.${schedule.audience.name} ${schedule.assigned_group.class.assigned_discipline
+      .discipline.name
+    } ${schedule.assigned_group.class.assigned_teachers.map(
+      ({ teacher }) => {
+        return ` ${teacher.surname}`;
+      }
+    )}
+`;
+  return desciption;
+}
+function DataTable({ filters, info }) {
   const { id_cathedra, id_group, id_specialty, semester } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_GROUPS, {
     variables: {
@@ -16,244 +31,120 @@ function DataTable({ filters }) {
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
-  function* foo() {
-    yield* data.GetAllScheduleGroups.map((object) => {
-      return object;
-    });
-  }
+  let curGroup = null;
+  let MapGroup = new Map();
+  let temp = [];
+  data.GetAllScheduleGroups.map(schedule => {
+    if (schedule.assigned_group.group !== curGroup && !curGroup) {
+      curGroup = schedule.assigned_group.group
+    }
+    if (schedule.assigned_group.group !== curGroup && curGroup) {
+      MapGroup.set(curGroup, temp);
+      curGroup = schedule.assigned_group.group
+      temp = [];
+    }
+    temp.push(schedule);
+  })
+  MapGroup.set(curGroup, temp);
 
-  const schedules = foo();
-  let schedule = schedules.next();
-  let MapGroups = new Map();
-  data.GetAllScheduleGroups.forEach((schedule) => {
-    MapGroups.set(
-      schedule.assigned_group.group.id,
-      schedule.assigned_group.group
-    );
-  });
-  const ArrGroups = Array.from(MapGroups).map(([key, value]) => ({
-    key,
-    value,
-  }));
-
-  return (
-    <tbody>
-      {ArrGroups.map((group) => {
-        return (
-          <Fragment key={group.key + "fr"}>
-            <tr key={group.key}>
-              <td rowSpan="19" key={group.value.id + group.value.name}>
-                {group.value.name}
+  return <tbody>
+    {[...MapGroup].map(map => {
+       let currentIndexSchedule = 0;
+      return <Fragment>
+      <tr key={map[0].id}>
+        <td rowSpan={3 * info.max_pair + 1} key={map[0].id + map[0].name}>
+          {map[0].name}
+        </td>
+      </tr>
+      {
+        [...Array(info.max_pair)].map((i, number_pair) => {
+          console.log(currentIndexSchedule)
+          let arrScheduleTop = [...Array(info.max_day)];
+          let arrScheduleBot = [...Array(info.max_day)];
+          // По числителю запоминать расписание
+          while (+map[1][currentIndexSchedule]?.pair_type === 1 && +map[1][currentIndexSchedule]?.number_pair === number_pair + 1) {
+            arrScheduleTop[+map[1][currentIndexSchedule].day_week - 1] = map[1][currentIndexSchedule];
+            currentIndexSchedule++;
+          }
+          // По знамен запоминать расписание
+          while (+map[1][currentIndexSchedule]?.pair_type === 2 && +map[1][currentIndexSchedule]?.number_pair === number_pair + 1) {
+            arrScheduleBot[+map[1][currentIndexSchedule].day_week - 1] = map[1][currentIndexSchedule];
+            currentIndexSchedule++;
+          }
+          // По общему запоминать расписание
+          while (+map[1][currentIndexSchedule]?.pair_type === 3 && +map[1][currentIndexSchedule]?.number_pair === number_pair + 1) {
+            arrScheduleTop[+map[1][currentIndexSchedule].day_week - 1] = map[1][currentIndexSchedule];
+            currentIndexSchedule++;
+          }
+          { console.log(arrScheduleTop) }
+          { console.log(arrScheduleBot) }
+          return <Fragment>
+            <tr key={`${map[0].id}-data-${number_pair}`}>
+              <td rowSpan="3" key={`${map[0].id}-td-${number_pair}`}>
+                {number_pair + 1}
               </td>
             </tr>
-            {[...Array(6)].map((i, number_pair) => {
-              // обновлять индексы для каждого номера пары
-              let arrScheduleTop = [null, null, null, null, null, null];
-              let arrScheduleBot = [null, null, null, null, null, null];
-              return (
-                <Fragment key={group.key + "frag" + number_pair}>
-                  <tr key={`${group.key}-data-${number_pair + 1}`}>
-                    <td rowSpan="3" key={`${group.key}-td-${number_pair + 1}`}>
-                      {number_pair + 1}
+            <tr key={map[0].id + "trTop" + number_pair}>
+              {
+                // Проходим по числителю
+                arrScheduleTop.map((schedule, index) => {
+                  if (schedule) {
+                    if (+schedule.pair_type === 1) {
+                      return <td key={map[0].id + "tdTop" + number_pair + index}>
+                        {getDescription(schedule)}
+                      </td>
+                    }
+                    if (+schedule.pair_type === 3) {
+                      return <td rowSpan="2" key={map[0].id + "tdTotal" + number_pair + index}>
+                        {getDescription(schedule)}
+                      </td>
+                    }
+                  }
+                  return <td key={map[0].id + "tdNull" + number_pair + index}></td>
+                }
+                )
+              }
+            </tr>
+            <tr key={map[0].id + "trBot" + number_pair}>
+              {
+                // Проходим по знаменателю
+                arrScheduleBot.map((schedule, index) => {
+                  if (schedule) {
+                    return <td key={map[0].id + "tdBot" + number_pair + index}>
+                      {getDescription(schedule)}
                     </td>
-                  </tr>
-                  {
-                    // По числителю запоминать расписание
-                    [...Array(6)].forEach((j, day_week) => {
-                      if (!schedule.done) {
-                        // проверка на то не закончились ли занятия для всех групп
-                        if (
-                          Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
-                          Number(schedule.value.number_pair) ===
-                            Number(number_pair + 1)
-                        ) {
-                          if (Number(schedule.value.pair_type.id) === 1) {
-                            arrScheduleTop[day_week] = schedule.value;
-                            schedule = schedules.next();
-                          }
-                        }
-                      }
-                    })
-                  }
-                  {
-                    // По знаменателю запоминать расписание
-                    [...Array(6)].forEach((j, day_week) => {
-                      if (!schedule.done) {
-                        // проверка на то не закончились ли занятия для всех групп
-                        if (
-                          Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
-                          Number(schedule.value.number_pair) ===
-                            Number(number_pair + 1)
-                        ) {
-                          if (Number(schedule.value.pair_type.id) === 2) {
-                            arrScheduleBot[day_week] = schedule.value;
-                            schedule = schedules.next();
-                          }
-                        }
-                      }
-                    })
-                  }
-                  {
-                    // Общее запоминать расписание
-                    [...Array(6)].forEach((j, day_week) => {
-                      if (!schedule.done) {
-                        // проверка на то не закончились ли занятия для всех групп
-                        if (
-                          Number(schedule.value.day_week.id) ===
-                            Number(day_week + 1) &&
-                          Number(schedule.value.number_pair) ===
-                            Number(number_pair + 1)
-                        ) {
-                          if (Number(schedule.value.pair_type.id) === 3) {
-                            arrScheduleTop[day_week] = schedule.value;
-                            schedule = schedules.next();
-                          }
-                        }
-                      }
-                    })
-                  }
-                  <tr key={group.key + "trTop" + number_pair}>
-                    {
-                      // Проходим по числителю
-                      arrScheduleTop.map((schedule, index) => {
-                        if (schedule === null) {
-                          return (
-                            <td
-                              key={group.key + "td" + number_pair + index}
-                            ></td>
-                          );
-                        } else {
-                          const desciption = `
-                                ${
-                                  schedule.assigned_group.class.type_class.name
-                                } ауд.${schedule.audience.name} ${
-                            schedule.assigned_group.class.assigned_discipline
-                              .discipline.name
-                          } ${schedule.assigned_group.class.assigned_teachers.map(
-                            ({ teacher }) => {
-                              return ` ${teacher.surname}`;
-                            }
-                          )}
-                              `;
-                          if (Number(schedule.pair_type.id) === 1) {
-                            return (
-                              <td
-                                key={
-                                  group.key +
-                                  "td" +
-                                  desciption +
-                                  schedule.day_week.id
-                                }
-                              >
-                                {desciption}
-                              </td>
-                            );
-                          }
-                          if (Number(schedule.pair_type.id) === 3) {
-                            return (
-                              <td
-                                rowSpan="2"
-                                key={
-                                  group.key +
-                                  "td" +
-                                  desciption +
-                                  schedule.day_week.id
-                                }
-                              >
-                                {desciption}
-                              </td>
-                            );
-                          }
-                          return (
-                            <td
-                              key={group.key + "td" + number_pair + index}
-                            ></td>
-                          );
-                        }
-                      })
+                  } else {
+                    if (+arrScheduleTop[index].pair_type === 3) {
+                      return null;
                     }
-                  </tr>
-                  <tr key={group.key + "trBot" + number_pair}>
-                    {
-                      // Проходим по знаменателю
-                      arrScheduleBot.map((schedule, index) => {
-                        if (schedule === null) {
-                          if (arrScheduleTop[index] !== null) {
-                            if (
-                              Number(arrScheduleTop[index].pair_type.id) === 3
-                            ) {
-                              return null;
-                            } else {
-                              return <td key={group.key + "td" + index}></td>;
-                            }
-                          } else {
-                            return <td key={group.key + "td" + index}></td>;
-                          }
-                        } else {
-                          const desciption = `
-                                ${
-                                  schedule.assigned_group.class.type_class.name
-                                } ауд.${schedule.audience.name} ${
-                            schedule.assigned_group.class.assigned_discipline
-                              .discipline.name
-                          } ${schedule.assigned_group.class.assigned_teachers.map(
-                            ({ teacher }) => {
-                              return ` ${teacher.surname}`;
-                            }
-                          )}
-                              `;
-                          return (
-                            <td
-                              key={
-                                group.key +
-                                "td" +
-                                desciption +
-                                schedule.day_week.id
-                              }
-                            >
-                              {desciption}
-                            </td>
-                          );
-                        }
-                      })
-                    }
-                  </tr>
-                </Fragment>
-              );
-            })}
+                    return <td key={map[0].id + "tdNull" + number_pair + index}></td>
+                  }
+                })
+              }
+            </tr>
           </Fragment>
-        );
-      })}
-    </tbody>
-  );
+        })
+      }
+    </Fragment>
+    })}
+  </tbody>
 }
 
-function TableHead() {
-  const { loading, error, data } = useQuery(GET_WEEKS_DAY, {});
-  if (loading) return null;
-  if (error) return `Error! ${error}`;
-  return (
-    <thead>
-      <tr>
-        <th>Група</th>
-        <th>#</th>
-        {data.GetWeeksDay.map((item) => {
-          return <th key={item.id}>{item.name}</th>;
-        })}
-      </tr>
-    </thead>
-  );
-}
 class ScheduleTableGroup extends React.Component {
   render() {
-    const { filters } = this.props;
-
+    const { filters, info } = this.props;
     return (
       <Table bordered>
-        <TableHead />
-        <DataTable filters={filters}></DataTable>
+        <thead>
+          <tr>
+            <th>Група</th>
+            <th>#</th>
+            {[...Array(info?.max_day)].map((item, index) => {
+              return <th key={index}>{DaysWeek[index]}</th>;
+            })}
+          </tr>
+        </thead>
+        <DataTable filters={filters} info={info}></DataTable>
       </Table>
     );
   }

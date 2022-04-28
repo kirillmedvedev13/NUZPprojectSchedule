@@ -198,7 +198,7 @@ function SwitchFilters({ filters, handleChangeFilters }) {
               <Form.Control
                 type="number"
                 min={1}
-                max={14}
+                max={20}
                 onChange={(e) => {
                   handleChangeFilters(
                     "semester",

@@ -4,6 +4,17 @@ import ScheduleSearch from "./ScheduleSearch";
 import ScheduleTableTeacher from "./ScheduleTableTeacher";
 import ScheduleTableAudience from "./ScheduleTableAudience";
 import ScheduleTableGroup from "./ScheduleTableGroup";
+import { GET_INFO } from "./queries";
+import { useQuery } from "@apollo/client";
+
+function GetInfo({ handleChangeInfo, info }) {
+  const { loading, error, data } = useQuery(GET_INFO, {});
+  if (loading) return null;
+  if (error) return `Error! ${error}`;
+  if (info !== data.GetInfo)
+    handleChangeInfo(data.GetInfo);
+  return <></>
+}
 
 class Schedule extends React.Component {
   state = {
@@ -16,6 +27,7 @@ class Schedule extends React.Component {
       id_cathedra: null,
       semester: null,
     },
+    info: null,
   };
 
   handleChangeFilters = (name, value) => {
@@ -24,31 +36,34 @@ class Schedule extends React.Component {
     }));
   };
 
+  handleChangeInfo = (info) => {
+    this.setState({ info });
+  }
+
   render() {
-    function SwitchTable({ filters }) {
+    function SwitchTable({ filters, info }) {
       switch (filters.scheduleType) {
         case "teacher":
-          return (
-            <ScheduleTableTeacher filters={filters}></ScheduleTableTeacher>
-          );
+          return <ScheduleTableTeacher filters={filters} info={info}></ScheduleTableTeacher>
         case "audience":
-          return (
-            <ScheduleTableAudience filters={filters}></ScheduleTableAudience>
-          );
+          return <ScheduleTableAudience filters={filters} info={info}></ScheduleTableAudience>
+        case "group":
+          return <ScheduleTableGroup filters={filters} info={info}></ScheduleTableGroup>;
         default:
-          return <ScheduleTableGroup filters={filters}></ScheduleTableGroup>;
+          return <ScheduleTableGroup filters={filters} info={info}></ScheduleTableGroup>;
       }
     }
-    const { filters } = this.state;
+    const { filters, info } = this.state;
     return (
       <>
+        <GetInfo handleChangeInfo={this.handleChangeInfo} info={info}></GetInfo>
         <ScheduleSearch
           filters={filters}
           handleChangeFilters={this.handleChangeFilters}
         ></ScheduleSearch>
 
         <div className="container-fluid w-100">
-          <SwitchTable filters={filters}></SwitchTable>
+          <SwitchTable filters={filters} info={info}></SwitchTable>
         </div>
       </>
     );
