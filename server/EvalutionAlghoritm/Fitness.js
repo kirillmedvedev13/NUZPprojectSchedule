@@ -125,8 +125,14 @@ function fitnessEquelSchedule(detectedSchedules) {
       temp++;
     } else {
       if (max == -1) {
+        max = temp;
+        min = max;
+      } else {
+        if (temp > max) max = temp;
+        if (temp < min) min = temp;
       }
     }
+    index++;
   }
 }
 
