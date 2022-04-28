@@ -32,7 +32,7 @@ export default function (
                                 schedule.push({
                                     number_pair,
                                     id_day_week: day_week,
-                                    id_pair_type: info.pair_type,
+                                    id_pair_type: info[j],
                                     id_audience,
                                     id_assigned_group: ag.id,
                                 });
@@ -52,7 +52,7 @@ export default function (
                                         schedule.push({
                                             number_pair,
                                             id_day_week: day_week,
-                                            id_pair_type: info.pair_type,
+                                            id_pair_type: info[j],
                                             id_audience,
                                             id_assigned_group: ag.id ,
                                         });
