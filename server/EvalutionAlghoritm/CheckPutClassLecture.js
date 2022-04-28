@@ -1,14 +1,8 @@
-export default function (classes, clas, schedule, day_week, number_pair, pair_type) {
+export default function (clas, schedule, day_week, number_pair, pair_type, mapGroupAndAG) {
     // Поиск всех закрепленных груп в которых есть какая либо группа для переданого занятия
     let ids_assigned_groups = [];
-    for (const cl of classes) {
-        cl.assigned_groups.map(ag => {
-            // Поиск в закрепленных групах переданного занятия, совпадение группы со всем расписанием 
-            const detected_ag = clas.assigned_groups.find(cur_ag => cur_ag.id_group === ag.id_group);
-            if (detected_ag) {
-                ids_assigned_groups.push(detected_ag.id);
-            }
-        })
+    for (const ag of clas.assigned_groups) {
+        ids_assigned_groups.push(...mapGroupAndAG.get(ag.id_group));
     }
     // Поиск нету ли занятий в случаную пару для групп переданого занятия
     let wrongSchedules = schedule.filter((sch) => {
