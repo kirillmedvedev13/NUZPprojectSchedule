@@ -113,10 +113,21 @@ function fitnessDSLateSchedule(detectedSchedules) {
   return fitnessValue;
 }
 function fitnessEquelSchedule(detectedSchedules) {
-  let max = 0;
-  let min = 0;
+  let max = -1;
+  let min = -1;
   let temp = 0;
-  let index = 0;
+  let index = 1;
+  while (index < detectedSchedules.length) {
+    if (
+      detectedSchedules[index - 1].id_day_week ==
+      detectedSchedules[index].id_day_week
+    ) {
+      temp++;
+    } else {
+      if (max == -1) {
+      }
+    }
+  }
 }
 
 function fitnessByTeachers(individ, teachers, classes) {

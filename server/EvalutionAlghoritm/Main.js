@@ -63,6 +63,6 @@ export const RUN_EA = {
       else if (individ1.fitnessValue == individ2.fitnessValue) return 0;
       else return -1;
     });
-    console.log("Hello");
+    return;
   },
 };
