@@ -19,11 +19,11 @@ export default function(clas, audiences){
             return false;
         }
     })
-    // Если в списке всех аудиторий нашлась хоть одна подходящея с кафедрой и типом, то возвращаем её ид
+    // Если в списке всех аудиторий нашлась хоть одна подходящяя с кафедрой и типом, то возвращаем её ид
     if(detected_audiences.length){
         return detected_audiences[GetRndInteger(0, detected_audiences.length-1)].id;
     }
-    // Если не найдена ни одна адутитория за кафедрой, то выибраем случайную из всех
+    // Если не найдена ни одна адутитория за кафедрой, то выбираем случайную из всех по типу
     else{
         detected_audiences = audiences.filter(aud => {
             if(aud.id_type_class === clas.id_type_class){
