@@ -32,12 +32,12 @@ function fitnessByGroups(individ, groups, classes) {
 }
 function sortDS(detectedSchedules) {
   detectedSchedules.sort(function (schedule1, schedule2) {
-    if (schedule1.id_day_week > schedule2.id_day_week) return 1;
-    else if (schedule1.id_day_week == schedule2.id_day_week) {
+    if (schedule1.day_week > schedule2.day_week) return 1;
+    else if (schedule1.day_week == schedule2.day_week) {
       if (schedule1.number_pair > schedule2.number_pair) return 1;
       else if (schedule1.number_pair == schedule2.number_pair) {
-        if (schedule1.id_pair_type > schedule2.id_pair_type) return 1;
-        else if (schedule1.id_pair_type == schedule2.id_pair_type) {
+        if (schedule1.pair_type > schedule2.pair_type) return 1;
+        else if (schedule1.pair_type == schedule2.pair_type) {
         } else return -1;
       } else return -1;
     } else return -1;
@@ -49,8 +49,8 @@ function fitnessDSWindows(detectedSchedules) {
   let index = 1;
   while (index < detectedSchedules.length) {
     if (
-      detectedSchedules[index - 1].id_day_week ==
-        detectedSchedules[index].id_day_week &&
+      detectedSchedules[index - 1].day_week ==
+        detectedSchedules[index].day_week &&
       detectedSchedules[index - 1].number_pair !=
         detectedSchedules[index].number_pair
     ) {
@@ -64,8 +64,8 @@ function fitnessDSWindows(detectedSchedules) {
             detectedSchedules[index].pair_type == 3 &&
             detectedSchedules[index - 2].number_pair ==
               detectedSchedules[index - 1].number_pair &&
-            detectedSchedules[index - 2].id_day_week ==
-              detectedSchedules[index].id_day_week
+            detectedSchedules[index - 2].day_week ==
+              detectedSchedules[index].day_week
           ) {
             fitnessValue +=
               detectedSchedules[index].number_pair -
@@ -82,8 +82,8 @@ function fitnessDSWindows(detectedSchedules) {
     index++;
     if (index < detectedSchedules.length)
       if (
-        detectedSchedules[index].id_day_week ==
-          detectedSchedules[index - 1].id_day_week &&
+        detectedSchedules[index].day_week ==
+          detectedSchedules[index - 1].day_week &&
         detectedSchedules[index].number_pair ==
           detectedSchedules[index - 1].number_pair
       )
@@ -98,8 +98,8 @@ function fitnessDSLateSchedule(detectedSchedules) {
   while (index < detectedSchedules.length) {
     fitnessValue += detectedSchedules[index - 1].number_pair;
     while (
-      detectedSchedules[index - 1].id_day_week ==
-      detectedSchedules[index].id_day_week
+      detectedSchedules[index - 1].day_week ==
+      detectedSchedules[index].day_week
     ) {
       index++;
       if (index == detectedSchedules.length) break;
@@ -108,8 +108,8 @@ function fitnessDSLateSchedule(detectedSchedules) {
     if (index == detectedSchedules.length) break;
   }
   if (
-    detectedSchedules[detectedSchedules.length - 1].id_day_week !=
-    detectedSchedules[detectedSchedules.length - 2].id_day_week
+    detectedSchedules[detectedSchedules.length - 1].day_week !=
+    detectedSchedules[detectedSchedules.length - 2].day_week
   )
     fitnessValue += detectedSchedules[detectedSchedules.length - 1].number_pair;
   return fitnessValue;
@@ -121,8 +121,8 @@ function fitnessEquelSchedule(detectedSchedules) {
   let index = 1;
   while (index < detectedSchedules.length) {
     if (
-      detectedSchedules[index - 1].id_day_week ==
-      detectedSchedules[index].id_day_week
+      detectedSchedules[index - 1].day_week ==
+      detectedSchedules[index].day_week
     ) {
       if (
         detectedSchedules[index - 1].number_pair !=

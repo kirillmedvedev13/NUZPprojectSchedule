@@ -34,8 +34,8 @@ export default function (
                             clas.assigned_groups.map((ag) => {
                                 schedule.push({
                                     number_pair,
-                                    id_day_week: day_week,
-                                    id_pair_type: info[j],
+                                    day_week: day_week,
+                                    pair_type: info[j],
                                     id_audience,
                                     id_assigned_group: ag.id,
                                 });
@@ -55,8 +55,8 @@ export default function (
                                     CheckPutClassForTeacher(clas, schedule, day_week, number_pair, info[j], mapTeacherAndAG)) {
                                     schedule.push({
                                         number_pair,
-                                        id_day_week: day_week,
-                                        id_pair_type: info[j],
+                                        day_week: day_week,
+                                        pair_type: info[j],
                                         id_audience,
                                         id_assigned_group: ag.id,
                                     });

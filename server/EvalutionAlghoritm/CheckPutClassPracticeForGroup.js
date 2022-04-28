@@ -6,7 +6,7 @@ export default function (id_group, schedule, day_week, number_pair, pair_type, m
         // Сначало проверяется подходит ли расписание по номеру пары и дню недели
         if (
             sch.number_pair === number_pair &&
-            sch.id_day_week === day_week
+            sch.day_week === day_week
         ) {
             // Поиск текущее расписание имеет ли группу из переданного занятия?
             const detected_sch = ids_assigned_groups.find(id_ag => sch.id_assigned_group === id_ag);
@@ -15,14 +15,14 @@ export default function (id_group, schedule, day_week, number_pair, pair_type, m
                 // Если нужно вставить занятие по числ или знамен, то проверяется общая в расписании 
                 if (
                     (pair_type === 1 || pair_type === 2) &&
-                    sch.id_pair_type === 3
+                    sch.pair_type === 3
                 ) {
                     return true;
                 }
                 // Если нужно вставить по общему, то проверяется на числитель или знаменатель
                 if (
                     pair_type === 3 &&
-                    (sch.id_pair_type === 1 || sch.id_pair_type === 2)
+                    (sch.pair_type === 1 || sch.pair_type === 2)
                 ) {
                     return true;
                 }
