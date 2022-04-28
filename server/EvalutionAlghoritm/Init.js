@@ -8,7 +8,8 @@ export default function (
     population_size,
     max_day,
     max_pair,
-    audiences
+    audiences,
+    mapGroupAndAG
 ) {
     let populations = new Array(population_size);
     for (let i = 0; i < population_size; i++) {
@@ -26,7 +27,7 @@ export default function (
                         const day_week = GetRndInteger(1, max_day);
                         const number_pair = GetRndInteger(1, max_pair);
                         //Если в это время нету пары для всех групп
-                        if (CheckPutClassLecture(classes, clas, schedule, day_week, number_pair, info[j])) {
+                        if (CheckPutClassLecture(clas, schedule, day_week, number_pair, info[j], mapGroupAndAG)) {
                             clas.assigned_groups.map((ag) => {
                                 schedule.push({
                                     number_pair,
@@ -47,13 +48,13 @@ export default function (
                                 const day_week = GetRndInteger(1, max_day);
                                 const number_pair = GetRndInteger(1, max_pair);
                                 // Если в это время нету пары для конкретной группы
-                                if (CheckPutClassPractice(classes, id_group, schedule, day_week, number_pair, info[j])) {
+                                if (CheckPutClassPractice(ag.id_group, schedule, day_week, number_pair, info[j], mapGroupAndAG)) {
                                         schedule.push({
                                             number_pair,
                                             id_day_week: day_week,
                                             id_pair_type: info.pair_type,
                                             id_audience,
-                                            id_assigned_group: ag.id,
+                                            id_assigned_group: ag.id ,
                                         });
                                     isPutZnam = true;
                                 }

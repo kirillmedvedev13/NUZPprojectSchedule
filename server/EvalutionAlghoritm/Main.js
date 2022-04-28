@@ -47,13 +47,26 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
+    // Стркуктура для каждой группы массив закрепленных для неё занятий
+    let mapGroupAndAG = new Map();
+    for (const group of groups) {
+      let temp = [];
+      for (const cl of classes) {
+        cl.assigned_groups.map(ag => {
+          if (ag.id_group === group.id)
+            temp.push(ag.id);
+        })
+      }
+      mapGroupAndAG.set(group.id, temp);
+    }
 
     let populations = Init(
       classes,
       population_size,
       max_day,
       max_pair,
-      audiences
+      audiences,
+      mapGroupAndAG
     );
 
     populations.sort(function (individ1, individ2) {
@@ -63,6 +76,7 @@ export const RUN_EA = {
       else if (individ1.fitnessValue == individ2.fitnessValue) return 0;
       else return -1;
     });
+
     return;
   },
 };

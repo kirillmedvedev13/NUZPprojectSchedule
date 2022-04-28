@@ -1,12 +1,6 @@
-export default function (classes, id_group, schedule, day_week, number_pair, pair_type) {
+export default function (id_group, schedule, day_week, number_pair, pair_type, mapGroupAndAG) {
     // Поиск всех закрепленных груп в которых есть какая либо группа для переданого занятия
-    let ids_assigned_groups = [];
-    for (const cl of classes) {
-        cl.assigned_groups.map(ag => {
-            if (ag.id_group === id_group)
-                ids_assigned_groups.push(ag.id);
-        })
-    }
+    let ids_assigned_groups = [...mapGroupAndAG.get(id_group)];
     // Поиск нету ли занятий в случаную пару для групп переданого занятия
     let wrongSchedules = schedule.filter((sch) => {
         // Сначало проверяется подходит ли расписание по номеру пары и дню недели
