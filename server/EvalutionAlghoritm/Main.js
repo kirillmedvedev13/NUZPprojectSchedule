@@ -16,7 +16,7 @@ export const RUN_EA = {
     const population_size = 500;
     const max_generations = 500;
     const p_crossover = 0.9;
-    const p_mutation = 0.1;
+    const p_mutation = 0.01;
     const p_genes = 0;
     const classes = await db.class.findAll({
       include: [
@@ -113,7 +113,6 @@ export const RUN_EA = {
       }
       populations.forEach((mutant) => {
         if (Math.random() < p_mutation) {
-          p_genes = 1 / mutant.length;
           mutant = Mutation(
             mutant,
             p_genes,
@@ -128,7 +127,12 @@ export const RUN_EA = {
       populations.forEach((individ) => {
         individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
       });
-      maxFitnessValue = MaxFitnessValue(populations);
+      maxFitnessValue = MaxFitnessValue(
+        populations,
+        mapGroupAndAG,
+        mapTeacherAndAG
+      );
+      console.log(generationCount + "  " + maxFitnessValue);
     }
     return;
   },

@@ -1,10 +1,10 @@
-import CheckPutClassForTeacher from "./CheckPutClassForTeacher";
-import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture";
-import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice";
-import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture";
-import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice";
-import GetPairTypeForClass from "./GetPairTypeForClass";
-import GetRndInteger from "./GetRndInteger";
+import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
+import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js";
+import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js";
+import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
+import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
+import GetPairTypeForClass from "./GetPairTypeForClass.js";
+import GetRndInteger from "./GetRndInteger.js";
 
 export default function Mutation(
   individ,
@@ -69,16 +69,15 @@ export default function Mutation(
             pair_type == 1
               ? GetIdAudienceForClassLecture(clas, audiences)
               : GetIdAudienceForClassPractice(group, clas, audiences);
-        //  }
-
-        gene = {
-          number_pair,
-          day_week,
-          pair_type: gene.pair_type,
-          id_assigned_group: gene.id_assigned_group,
-          id_audience,
-        };
       }
+
+      gene = {
+        number_pair,
+        day_week,
+        pair_type: gene.pair_type,
+        id_assigned_group: gene.id_assigned_group,
+        id_audience,
+      };
     }
   });
   return individ;
