@@ -1,7 +1,10 @@
 import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
+import Crossing from "./Crossing.js";
 import fitness from "./Fitness.js";
 import Init from "./Init.js";
+import MaxFitnessValue from "./MaxFitnessValue.js";
+import Mutation from "./Mutation.js";
 import TournamentSelect from "./TournamentSelect.js";
 
 export const RUN_EA = {
@@ -11,8 +14,10 @@ export const RUN_EA = {
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
     const population_size = 500;
+    const max_generations = 500;
     const p_crossover = 0.9;
     const p_mutation = 0.1;
+    const p_genes = 0;
     const classes = await db.class.findAll({
       include: [
         {
@@ -89,17 +94,33 @@ export const RUN_EA = {
       mapTeacherAndAG
     );
 
-    /*populations.sort(function (individ1, individ2) {
-      individ1.fitnessValue = fitness(individ1, mapGroupAndAG, mapTeacherAndAG);
-      individ2.fitnessValue = fitness(individ2, mapGroupAndAG, mapTeacherAndAG);
-      if (individ1.fitnessValue > individ2.fitnessValue) return 1;
-      else if (individ1.fitnessValue == individ2.fitnessValue) return 0;
-      else return -1;
-    });*/
+    /**/
     populations.forEach((individ) => {
       individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
     });
-    populations = TournamentSelect(populations, population_size);
-    return;
+
+    let generationCount = 0;
+    let maxFitnessValue = MaxFitnessValue(populations);
+    while (maxFitnessValue > 0 || generationCount < max_generations) {
+      generationCount++;
+      populations = TournamentSelect(populations, population_size);
+      for (let i = 0; i < populations.length; i += 2) {
+        if (Math.random() < p_crossover) {
+          let parents = Crossing(populations[i], populations[i + 1]);
+          populations[i] = parents[0];
+          populations[i + 1] = parents[1];
+        }
+      }
+      populations.forEach((mutant) => {
+        if (Math.random() < p_mutation) {
+          p_genes = 1 / mutant.length;
+          mutant = Mutation(mutant, p_genes);
+        }
+      });
+      populations.forEach((individ) => {
+        individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
+      });
+      maxFitnessValue = MaxFitnessValue(populations);
+    }
   },
 };
