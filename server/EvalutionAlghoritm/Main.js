@@ -23,6 +23,10 @@ export const RUN_EA = {
         {
           model: db.assigned_group,
           required: true,
+          include: {
+            model: db.group,
+            required: true,
+          }
         },
         {
           model: db.assigned_teacher,
