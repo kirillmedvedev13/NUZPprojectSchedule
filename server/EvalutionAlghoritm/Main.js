@@ -129,6 +129,7 @@ export const RUN_EA = {
         individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
       });
       maxFitnessValue = MaxFitnessValue(populations);
+      console.log(maxFitnessValue)
     }
     return;
   },

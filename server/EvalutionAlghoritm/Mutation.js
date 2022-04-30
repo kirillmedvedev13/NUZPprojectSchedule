@@ -1,10 +1,10 @@
-import CheckPutClassForTeacher from "./CheckPutClassForTeacher";
-import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture";
-import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice";
-import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture";
-import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice";
-import GetPairTypeForClass from "./GetPairTypeForClass";
-import GetRndInteger from "./GetRndInteger";
+import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
+import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js";
+import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js";
+import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
+import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
+import GetPairTypeForClass from "./GetPairTypeForClass.js";
+import GetRndInteger from "./GetRndInteger.js";
 
 export default function Mutation(
   individ,
