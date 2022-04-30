@@ -26,7 +26,7 @@ export const RUN_EA = {
           include: {
             model: db.group,
             required: true,
-          }
+          },
         },
         {
           model: db.assigned_teacher,
@@ -114,7 +114,14 @@ export const RUN_EA = {
       populations.forEach((mutant) => {
         if (Math.random() < p_mutation) {
           p_genes = 1 / mutant.length;
-          mutant = Mutation(mutant, p_genes);
+          mutant = Mutation(
+            mutant,
+            p_genes,
+            max_day,
+            max_pair,
+            mapGroupAndAG,
+            mapTeacherAndAG
+          );
         }
       });
       populations.forEach((individ) => {
