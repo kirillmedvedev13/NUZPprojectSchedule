@@ -60,7 +60,7 @@ import {
 import { LOGIN_USER, LOGOUT_USER, RELOGIN_USER } from "../Mutations/User.js";
 import { SET_CLASSES } from "../Mutations/Admin.js";
 import { DELETE_ALL_DATA } from "../Mutations/Admin.js";
-import { RUN_EA } from "../../EvalutionAlghoritm/Main.js";
+import { RUN_EA } from "../../EvalutionAlghoritm2/Main.js";
 import { GET_INFO } from "../Queries/Info.js";
 
 const RootQuery = new GraphQLObjectType({
