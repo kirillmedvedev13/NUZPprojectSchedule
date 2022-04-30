@@ -1,6 +1,6 @@
 import GetRndInteger from "./GetRndInteger.js";
 
-export default function (group, clas, audiences) {
+export default function (group_capacity, clas, audiences) {
     // Если есть рекоменд аудитории, то выбирается случайная без доп условий
     if (clas.recommended_audiences?.length) {
         return clas.recommended_audiences[GetRndInteger(0, clas.recommended_audiences.length - 1)].id_audience;
@@ -8,7 +8,7 @@ export default function (group, clas, audiences) {
     // Если нету рек аудиторий, то ищется свободная среди кафедр и по типу, если такая не найденна, то выбирается случайная среди всех по типу
     // И проводится доп проверка на ёмкость групы и аудитории для занятия
     else {
-        let sum_students = group.capacity;
+        let sum_students = group_capacity;
         const id_cathedra = clas.assigned_discipline.specialty.id_cathedra;
         let detected_audiences = [];
         // Поиск аудиторий у которых закреплены нужные кафедры

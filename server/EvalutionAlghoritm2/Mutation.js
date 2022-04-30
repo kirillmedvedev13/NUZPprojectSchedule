@@ -1,3 +1,7 @@
+import CheckPutClassForAudience from "./CheckPutClassForAudience.js";
+import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js";
+import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js";
+import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
 import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
 import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
@@ -8,29 +12,18 @@ export default function Mutation(
   p_genes,
   max_day,
   max_pair,
-  classes,
-  audiences
+  audiences,
+  mapGroupAndAG,
+  mapTeacherAndAG
 ) {
   individ_schedule.map((sch) => {
     if (Math.random() < p_genes) {
       // Получить занятия для расписания
-      let clas = null;
-      let group = null;
-      let id_ag = null;
-      for (let cl of classes) {
-        cl.assigned_groups.map((ag) => {
-          if (ag.id === sch.id_assigned_group) {
-            clas = cl;
-            group = ag.group;
-            id_ag = ag.id;
-          }
-        });
-        if (clas) break;
-      }
+      let clas = sch.clas;
       let pair_types = GetPairTypeForClass(clas);
-      let ids_ag = clas.assigned_groups.map(ag => { return ag.id });
       // Если лекция, то удалить эти лекции у всех групп
       if (clas.id_type_class === 1) {
+        let ids_ag = clas.assigned_groups.map(ag => { return ag.id });
         individ_schedule = individ_schedule.filter(sc => {
           if (ids_ag.find(id => id === sc.id_assigned_group))
             return false;
@@ -41,28 +34,45 @@ export default function Mutation(
       // Если практика, то удалить практики только у одной группы
       else if (clas.id_type_class === 2) {
         individ_schedule = individ_schedule.filter(sc => {
-          if (sc.id_assigned_group === id_ag)
+          if (sc.id_assigned_group === sch.id_assigned_group)
             return false;
           else
             return true;
         })
       }
+      let ag = sch.clas.assigned_groups.find(ag => ag.id === sch.id_assigned_group);
+      let group = ag.group;
       for (let i = 0; i < pair_types.length; i++) {
         let pair_type = pair_types[i];
-        let day_week = GetRndInteger(0, max_day);
-        let number_pair = GetRndInteger(0, max_pair);
-        let id_audience = pair_type == 1
-          ? GetIdAudienceForClassLecture(clas, audiences)
-          : GetIdAudienceForClassPractice(group, clas, audiences);
+        let checkAud = false;
+        let checkTeach = false;
+        let checkGroup = false;
+        let day_week = null;
+        let number_pair = null;
+        let id_audience = null;
+        // Пока все условия не сойдутся, рандомно выбирать параметры
+        while (!checkAud || !checkTeach || !checkGroup) {
+          day_week = GetRndInteger(0, max_day);
+          number_pair = GetRndInteger(0, max_pair);
+          id_audience = clas.id_type_class === 1
+            ? GetIdAudienceForClassLecture(clas, audiences)
+            : GetIdAudienceForClassPractice(group.capacity, clas, audiences);
+          checkAud = CheckPutClassForAudience(id_audience, individ_schedule, day_week, number_pair, pair_type);
+          checkTeach = CheckPutClassForTeacher(clas, individ_schedule, day_week, number_pair, pair_type, mapTeacherAndAG);
+          checkGroup = clas.id_type_class === 1
+            ? CheckPutClassForGroupLecture(clas, individ_schedule, day_week, number_pair, pair_type, mapGroupAndAG)
+            : CheckPutClassForGroupPractice(group.id, individ_schedule, day_week, number_pair, pair_type, mapGroupAndAG)
+        }
         // Если лекция то вставить в расписание для всех групп
         if (clas.id_type_class === 1) {
-          ids_ag.map(id => {
+          clas.assigned_groups.map(ag => {
             individ_schedule.unshift({
               number_pair,
               day_week,
               pair_type,
-              id_assigned_group: id,
+              id_assigned_group: ag.id,
               id_audience,
+              clas,
             });
           })
         }
@@ -72,8 +82,9 @@ export default function Mutation(
             number_pair,
             day_week,
             pair_type,
-            id_assigned_group: id_ag,
+            id_assigned_group: ag.id,
             id_audience,
+            clas,
           });
         }
       }

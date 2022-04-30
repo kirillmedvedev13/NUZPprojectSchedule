@@ -15,12 +15,12 @@ export const RUN_EA = {
     const max_pair = info[0].dataValues.max_pair;
     const population_size = 1000;
     const max_generations = 500;
-    const p_crossover = 0.9;
-    const p_mutation = 0.1;
+    const p_crossover = 0.0;
+    const p_mutation = 0.9;
     const p_genes = p_mutation / population_size;
-    const penaltyGrWin = 1;
-    const penaltyTeachWin = 1;
-    const penaltyLateSc = 0.5;
+    const penaltyGrWin = 0;
+    const penaltyTeachWin = 0;
+    const penaltyLateSc = 0;
     const penaltyEqSc = 0;
     const penaltySameTimesSc = 5;
     const classes = await db.class.findAll({
@@ -137,8 +137,9 @@ export const RUN_EA = {
             p_genes,
             max_day,
             max_pair,
-            classes,
-            audiences
+            audiences,
+            mapGroupAndAG,
+            mapTeacherAndAG
           );
         }
       });
@@ -158,10 +159,10 @@ export const RUN_EA = {
       bestFitnessValue = MinFitnessValue(populations);
       console.log(
         generationCount +
-          " " +
-          bestFitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestFitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
     return bestFitnessValue;

@@ -77,7 +77,7 @@ export default function (
                 const day_week = GetRndInteger(1, max_day);
                 const number_pair = GetRndInteger(1, max_pair);
                 const id_audience = GetIdAudienceForClassPractice(
-                  ag.group,
+                  ag.group.capacity,
                   clas,
                   audiences
                 );
