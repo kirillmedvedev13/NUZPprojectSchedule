@@ -1,7 +1,10 @@
 import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
+import Crossing from "./Crossing.js";
 import fitness from "./Fitness.js";
+import GetRndDouble from "./GetRndDouble.js";
 import Init from "./Init.js";
+import Mutation from "./Mutation.js";
 import TournamentSelect from "./TournamentSelect.js";
 
 export const RUN_EA = {
@@ -11,6 +14,7 @@ export const RUN_EA = {
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
     const population_size = 500;
+    const max_generations = 500;
     const p_crossover = 0.9;
     const p_mutation = 0.1;
     const classes = await db.class.findAll({
@@ -95,7 +99,21 @@ export const RUN_EA = {
     populations.forEach((individ) => {
       individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
     });
-    populations = TournamentSelect(populations, population_size);
-    return;
+
+    let generationCount = 0;
+    while (generationCount < max_generations) {
+      generationCount++;
+      populations = TournamentSelect(populations, population_size);
+      for (let i = 0; i < populations.length; i += 2) {
+        if (GetRndDouble() < p_crossover)
+          Crossing(populations[i], populations[i + 1]);
+      }
+      populations.forEach((mutant) => {
+        if (GetRndDouble() < p_mutation) Mutation(mutant);
+      });
+      populations.forEach((individ) => {
+        individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
+      });
+    }
   },
 };
