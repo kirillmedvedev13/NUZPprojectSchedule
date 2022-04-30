@@ -6,23 +6,23 @@ import Init from "./Init.js";
 import Mutation from "./Mutation.js";
 import TournamentSelect from "./TournamentSelect.js";
 import MinFitnessValue from "./MinFitnessValue.js";
-
+import MeanFitnessValue from "./MeanFitnessValue.js";
 export const RUN_EA = {
   type: MessageType,
   async resolve(parent) {
     const info = await db.info.findAll();
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
-    const population_size = 500;
+    const population_size = 1000;
     const max_generations = 500;
-    const p_crossover = 0.9;
-    const p_mutation = 0.5;
-    const p_genes = 0.1;
-    const penaltyGrWin = 1;
-    const penaltyTeachWin = 1;
-    const penaltyLateSc = 3;
-    const penaltyEqSc = 0.5;
-    const penaltySameTimesSc = 5;
+    const p_crossover = 0.5;
+    const p_mutation = 0.1;
+    const p_genes = p_mutation / population_size;
+    const penaltyGrWin = 0;
+    const penaltyTeachWin = 0;
+    const penaltyLateSc = 0;
+    const penaltyEqSc = 0;
+    const penaltySameTimesSc = 0;
     const classes = await db.class.findAll({
       include: [
         {
@@ -89,12 +89,15 @@ export const RUN_EA = {
       mapTeacherAndAG.set(teacher.id, temp);
     }
 
+    // Инициализация
     let populations = Init(
       classes,
       population_size,
       max_day,
       max_pair,
       audiences,
+      mapGroupAndAG,
+      mapTeacherAndAG
     );
 
     /**/
@@ -113,14 +116,14 @@ export const RUN_EA = {
     let generationCount = 0;
     let bestFitnessValue = MinFitnessValue(populations);
 
-    while (bestFitnessValue > 0 || generationCount < max_generations) {
+    while (bestFitnessValue > 0 && generationCount < max_generations) {
       generationCount++;
+      // Отбор
       populations = TournamentSelect(populations, population_size);
+      // Скрещивание
       for (let i = 0; i < populations.length; i += 2) {
         if (Math.random() < p_crossover) {
-          let parents = Crossing(populations[i], populations[i + 1]);
-          populations[i] = parents[0];
-          populations[i + 1] = parents[1];
+          Crossing(populations[i].schedule, populations[i + 1].schedule, classes);
         }
       }
       populations.map((mutant) => {
@@ -149,7 +152,8 @@ export const RUN_EA = {
       });
 
       bestFitnessValue = MinFitnessValue(populations);
-      console.log(generationCount + " " + bestFitnessValue);
+      console.log(generationCount + " " + bestFitnessValue + " Mean " + MeanFitnessValue(populations));
     }
+    return bestFitnessValue;
   },
 };
