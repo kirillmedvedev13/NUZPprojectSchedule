@@ -1,4 +1,4 @@
-import GetRndInteger from "./GetRndInteger";
+import GetRndInteger from "./GetRndInteger.js";
 
 export default function Mutation(individ, p_genes) {
   individ.forEach((gene) => {

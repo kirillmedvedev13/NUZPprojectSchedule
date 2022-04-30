@@ -17,6 +17,7 @@ export default function (
 ) {
   let populations = new Array(population_size);
   for (let i = 0; i < population_size; i++) {
+    console.log(i);
     let schedule = [];
     classes.forEach((clas) => {
       // Случайная вставка в расписание - где возвращается массив, каждая ячейка которого парность в расписании
@@ -30,6 +31,27 @@ export default function (
             const day_week = GetRndInteger(1, max_day);
             const number_pair = GetRndInteger(1, max_pair);
             const id_audience = GetIdAudienceForClassLecture(clas, audiences);
+            // console.log("Lecture")
+            // console.log("PutGroup")
+            // console.log(CheckPutClassForGroupLecture(
+            //   clas,
+            //   schedule,
+            //   day_week,
+            //   number_pair,
+            //   info[j],
+            //   mapGroupAndAG
+            // ));
+            // console.log("PutTeacher")
+            // console.log(CheckPutClassForTeacher(
+            //   clas,
+            //   schedule,
+            //   day_week,
+            //   number_pair,
+            //   info[j],
+            //   mapTeacherAndAG
+            // ));
+            // console.log("PutAudience")
+            // console.log(CheckPutClassForAudience(id_audience, schedule,day_week,number_pair,info[j]));
             //Если в это время нету пары для всех групп
             if (
               CheckPutClassForGroupLecture(
@@ -69,6 +91,8 @@ export default function (
                 const day_week = GetRndInteger(1, max_day);
                 const number_pair = GetRndInteger(1, max_pair);
                 const id_audience = GetIdAudienceForClassPractice(ag.group, clas, audiences);
+                // console.log("Practice")
+                // console.log(id_audience)
                 // Если в это время нету пары для конкретной группы
                 if (
                   CheckPutClassForGroupPractice(
