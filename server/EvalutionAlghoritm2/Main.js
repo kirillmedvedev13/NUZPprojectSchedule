@@ -90,8 +90,6 @@ export const RUN_EA = {
       max_day,
       max_pair,
       audiences,
-      mapGroupAndAG,
-      mapTeacherAndAG
     );
 
     /**/
@@ -122,8 +120,6 @@ export const RUN_EA = {
             p_genes,
             max_day,
             max_pair,
-            mapGroupAndAG,
-            mapTeacherAndAG,
             classes,
             audiences
           );
