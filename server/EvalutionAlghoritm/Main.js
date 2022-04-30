@@ -120,7 +120,8 @@ export const RUN_EA = {
             max_day,
             max_pair,
             mapGroupAndAG,
-            mapTeacherAndAG
+            mapTeacherAndAG,
+            classes
           );
         }
       });
@@ -129,5 +130,6 @@ export const RUN_EA = {
       });
       maxFitnessValue = MaxFitnessValue(populations);
     }
+    return;
   },
 };
