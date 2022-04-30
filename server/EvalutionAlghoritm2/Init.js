@@ -17,7 +17,6 @@ export default function (
 ) {
   let populations = new Array(population_size);
   for (let i = 0; i < population_size; i++) {
-    //console.log(i)
     let schedule = [];
     classes.forEach((clas) => {
       // Случайная вставка в расписание - где возвращается массив, каждая ячейка которого парность в расписании
@@ -64,6 +63,7 @@ export default function (
                   pair_type: info[j],
                   id_audience,
                   id_assigned_group: ag.id,
+                  clas,
                 });
               });
               isPut = true;
@@ -81,8 +81,6 @@ export default function (
                   clas,
                   audiences
                 );
-                // console.log("Practice")
-                // console.log(id_audience)
                 // Если в это время нету пары для конкретной группы
                 if (
                   CheckPutClassForGroupPractice(
@@ -115,6 +113,7 @@ export default function (
                     pair_type: info[j],
                     id_audience,
                     id_assigned_group: ag.id,
+                    clas,
                   });
                   isPutPractice = true;
                 }
