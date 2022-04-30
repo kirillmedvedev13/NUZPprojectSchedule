@@ -18,6 +18,11 @@ export const RUN_EA = {
     const p_crossover = 0.9;
     const p_mutation = 0.5;
     const p_genes = 0.1;
+    const penaltyGrWin = 1;
+    const penaltyTeachWin = 1;
+    const penaltyLateSc = 3;
+    const penaltyEqSc = 0.5;
+    const penaltySameTimesSc = 5;
     const classes = await db.class.findAll({
       include: [
         {
@@ -99,7 +104,12 @@ export const RUN_EA = {
       individ.fitnessValue = fitness(
         individ.schedule,
         mapGroupAndAG,
-        mapTeacherAndAG
+        mapTeacherAndAG,
+        penaltyGrWin,
+        penaltyTeachWin,
+        penaltyLateSc,
+        penaltyEqSc,
+        penaltySameTimesSc
       );
     });
     let generationCount = 0;
@@ -133,7 +143,12 @@ export const RUN_EA = {
         individ.fitnessValue = fitness(
           individ.schedule,
           mapGroupAndAG,
-          mapTeacherAndAG
+          mapTeacherAndAG,
+          penaltyGrWin,
+          penaltyTeachWin,
+          penaltyLateSc,
+          penaltyEqSc,
+          penaltySameTimesSc
         );
       });
 
