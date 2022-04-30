@@ -31,27 +31,6 @@ export default function (
             const day_week = GetRndInteger(1, max_day);
             const number_pair = GetRndInteger(1, max_pair);
             const id_audience = GetIdAudienceForClassLecture(clas, audiences);
-            // console.log("Lecture")
-            // console.log("PutGroup")
-            // console.log(CheckPutClassForGroupLecture(
-            //   clas,
-            //   schedule,
-            //   day_week,
-            //   number_pair,
-            //   info[j],
-            //   mapGroupAndAG
-            // ));
-            // console.log("PutTeacher")
-            // console.log(CheckPutClassForTeacher(
-            //   clas,
-            //   schedule,
-            //   day_week,
-            //   number_pair,
-            //   info[j],
-            //   mapTeacherAndAG
-            // ));
-            // console.log("PutAudience")
-            // console.log(CheckPutClassForAudience(id_audience, schedule,day_week,number_pair,info[j]));
             //Если в это время нету пары для всех групп
             if (
               CheckPutClassForGroupLecture(
@@ -128,7 +107,7 @@ export default function (
         }
       }
     });
-    populations[i] = schedule;
+    populations[i] = {schedule, fitnessValue: null};
   }
   return populations;
 }

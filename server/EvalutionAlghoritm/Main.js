@@ -3,7 +3,7 @@ import MessageType from "../Schema/TypeDefs/MessageType.js";
 import Crossing from "./Crossing.js";
 import fitness from "./Fitness.js";
 import Init from "./Init.js";
-import MaxFitnessValue from "./MaxFitnessValue.js";
+import OrderAndGetBestFitness from "./OrderAndGetBestFitness.js";
 import Mutation from "./Mutation.js";
 import TournamentSelect from "./TournamentSelect.js";
 
@@ -95,13 +95,13 @@ export const RUN_EA = {
     );
 
     /**/
-    populations.forEach((individ) => {
-      individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
+    populations.map((individ) => {
+      individ.fitnessValue = fitness(individ.schedule, mapGroupAndAG, mapTeacherAndAG);
     });
-
     let generationCount = 0;
-    let maxFitnessValue = MaxFitnessValue(populations);
-    while (maxFitnessValue > 0 || generationCount < max_generations) {
+    let bestFitnessValue = OrderAndGetBestFitness(populations);
+    
+    while (bestFitnessValue > 0 || generationCount < max_generations) {
       generationCount++;
       populations = TournamentSelect(populations, population_size);
       for (let i = 0; i < populations.length; i += 2) {
@@ -111,11 +111,11 @@ export const RUN_EA = {
           populations[i + 1] = parents[1];
         }
       }
-      populations.forEach((mutant) => {
+      populations.map((mutant) => {
         if (Math.random() < p_mutation) {
           p_genes = 1 / mutant.length;
-          mutant = Mutation(
-            mutant,
+          mutant.schedule = Mutation(
+            mutant.schedule,
             p_genes,
             max_day,
             max_pair,
@@ -125,11 +125,11 @@ export const RUN_EA = {
           );
         }
       });
-      populations.forEach((individ) => {
-        individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
+      populations.map((individ) => {
+        individ.fitnessValue = fitness(individ.schedule, mapGroupAndAG, mapTeacherAndAG);
       });
-      maxFitnessValue = MaxFitnessValue(populations);
-      console.log(maxFitnessValue)
+      bestFitnessValue = OrderAndGetBestFitness(populations);
+      console.log(bestFitnessValue)
     }
     return;
   },
