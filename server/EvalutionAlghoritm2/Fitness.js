@@ -245,11 +245,13 @@ function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
           detectedSchedules[index - 1].pair_type ==
             detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type == 3 ||
-          (detectedSchedules[index].pair_type == 3 &&
-            detectedSchedules[index - 1].clas.id !=
-              detectedSchedules[index].clas.id)
+          detectedSchedules[index].pair_type == 3
         )
-          fitnessValue += penaltySameTimesSc;
+          if (
+            detectedSchedules[index - 1].clas.id !=
+            detectedSchedules[index].clas.id
+          )
+            fitnessValue += penaltySameTimesSc;
       }
     }
     index++;

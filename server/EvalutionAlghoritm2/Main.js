@@ -15,11 +15,11 @@ export const RUN_EA = {
     const max_pair = info[0].dataValues.max_pair;
     const population_size = 1000;
     const max_generations = 500;
-    const p_crossover = 0.0;
-    const p_mutation = 0.9;
-    const p_genes = p_mutation / population_size;
+    const p_crossover = 0;
+    const p_mutation = 0.7;
+    const p_genes = 0.01;
     const penaltyGrWin = 0;
-    const penaltyTeachWin = 0;
+    const penaltyTeachWin = 1;
     const penaltyLateSc = 0;
     const penaltyEqSc = 0;
     const penaltySameTimesSc = 5;
@@ -159,10 +159,10 @@ export const RUN_EA = {
       bestFitnessValue = MinFitnessValue(populations);
       console.log(
         generationCount +
-        " " +
-        bestFitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestFitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
     return bestFitnessValue;
