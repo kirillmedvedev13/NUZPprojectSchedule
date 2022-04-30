@@ -17,7 +17,7 @@ export default function (
 ) {
   let populations = new Array(population_size);
   for (let i = 0; i < population_size; i++) {
-    console.log(i)
+    //console.log(i)
     let schedule = [];
     classes.forEach((clas) => {
       // Случайная вставка в расписание - где возвращается массив, каждая ячейка которого парность в расписании

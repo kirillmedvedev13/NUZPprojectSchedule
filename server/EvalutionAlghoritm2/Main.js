@@ -123,7 +123,11 @@ export const RUN_EA = {
       // Скрещивание
       for (let i = 0; i < populations.length; i += 2) {
         if (Math.random() < p_crossover) {
-          Crossing(populations[i].schedule, populations[i + 1].schedule, classes);
+          Crossing(
+            populations[i].schedule,
+            populations[i + 1].schedule,
+            classes
+          );
         }
       }
       populations.map((mutant) => {
@@ -152,7 +156,13 @@ export const RUN_EA = {
       });
 
       bestFitnessValue = MinFitnessValue(populations);
-      console.log(generationCount + " " + bestFitnessValue + " Mean " + MeanFitnessValue(populations));
+      console.log(
+        generationCount +
+          " " +
+          bestFitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
+      );
     }
     return bestFitnessValue;
   },
