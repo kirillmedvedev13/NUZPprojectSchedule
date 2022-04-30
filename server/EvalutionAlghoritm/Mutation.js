@@ -13,14 +13,15 @@ export default function Mutation(
   max_pair,
   mapGroupAndAG,
   mapTeacherAndAG,
-  classes
+  classes,
+  audiences
 ) {
   individ.forEach((gene) => {
     if (Math.random() < p_genes) {
       let clas = null;
       let group = null;
       for (let cl of classes) {
-        clas = cl.assigned_groups.map((ag) => {
+        cl.assigned_groups.map((ag) => {
           if (ag.id === gene.id_assigned_group) {
             clas = cl;
             group = ag.group;
@@ -28,19 +29,23 @@ export default function Mutation(
         });
         if (clas) break;
       }
-      let pair_types = GetPairTypeForClass(clas);
+      //let pair_types = GetPairTypeForClass(clas);
+      let pair_type = gene.pair_type;
 
       //for (let i = 0; i < pair_types.length; i++) {
       let checkGroup = false;
       let checkTeach = false;
       let checkAud = false;
+      let number_pair;
+      let day_week;
+      let id_audience;
       while (!checkGroup && !checkTeach && !checkAud) {
-        let pair_type = pair_types[i];
-        let day_week = GetRndInteger(0, max_day);
-        let number_pair = GetRndInteger(0, max_pair);
+        //let pair_type = pair_types[i];
+        day_week = GetRndInteger(0, max_day);
+        number_pair = GetRndInteger(0, max_pair);
         checkTeach = CheckPutClassForTeacher(
           clas,
-          gene,
+          individ,
           day_week,
           number_pair,
           pair_type,
@@ -50,7 +55,7 @@ export default function Mutation(
           clas.id_type_class == 1
             ? CheckPutClassForGroupLecture(
                 clas,
-                schedule,
+                individ,
                 day_week,
                 number_pair,
                 pair_type,
@@ -58,7 +63,7 @@ export default function Mutation(
               )
             : CheckPutClassForGroupPractice(
                 group.id,
-                schedule,
+                individ,
                 day_week,
                 number_pair,
                 pair_type,

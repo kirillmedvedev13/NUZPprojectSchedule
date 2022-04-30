@@ -3,9 +3,9 @@ import MessageType from "../Schema/TypeDefs/MessageType.js";
 import Crossing from "./Crossing.js";
 import fitness from "./Fitness.js";
 import Init from "./Init.js";
-import MaxFitnessValue from "./MaxFitnessValue.js";
 import Mutation from "./Mutation.js";
 import TournamentSelect from "./TournamentSelect.js";
+import MinFitnessValue from "./MinFitnessValue.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -16,8 +16,8 @@ export const RUN_EA = {
     const population_size = 500;
     const max_generations = 500;
     const p_crossover = 0.9;
-    const p_mutation = 0.01;
-    const p_genes = 0;
+    const p_mutation = 0.5;
+    const p_genes = 0.1;
     const classes = await db.class.findAll({
       include: [
         {
@@ -95,13 +95,17 @@ export const RUN_EA = {
     );
 
     /**/
-    populations.forEach((individ) => {
-      individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
+    populations.map((individ) => {
+      individ.fitnessValue = fitness(
+        individ.schedule,
+        mapGroupAndAG,
+        mapTeacherAndAG
+      );
     });
-
     let generationCount = 0;
-    let maxFitnessValue = MaxFitnessValue(populations);
-    while (maxFitnessValue > 0 || generationCount < max_generations) {
+    let bestFitnessValue = MinFitnessValue(populations);
+
+    while (bestFitnessValue > 0 || generationCount < max_generations) {
       generationCount++;
       populations = TournamentSelect(populations, population_size);
       for (let i = 0; i < populations.length; i += 2) {
@@ -111,29 +115,30 @@ export const RUN_EA = {
           populations[i + 1] = parents[1];
         }
       }
-      populations.forEach((mutant) => {
+      populations.map((mutant) => {
         if (Math.random() < p_mutation) {
-          mutant = Mutation(
-            mutant,
+          mutant.schedule = Mutation(
+            mutant.schedule,
             p_genes,
             max_day,
             max_pair,
             mapGroupAndAG,
             mapTeacherAndAG,
-            classes
+            classes,
+            audiences
           );
         }
       });
-      populations.forEach((individ) => {
-        individ.fitnessValue = fitness(individ, mapGroupAndAG, mapTeacherAndAG);
+      populations.map((individ) => {
+        individ.fitnessValue = fitness(
+          individ.schedule,
+          mapGroupAndAG,
+          mapTeacherAndAG
+        );
       });
-      maxFitnessValue = MaxFitnessValue(
-        populations,
-        mapGroupAndAG,
-        mapTeacherAndAG
-      );
-      console.log(generationCount + "  " + maxFitnessValue);
+
+      bestFitnessValue = MinFitnessValue(populations);
+      console.log(generationCount + " " + bestFitnessValue);
     }
-    return;
   },
 };

@@ -1,14 +1,14 @@
-export default function fitness(individ, mapGroupAndAG, mapTeacherAndAG) {
+export default function fitness(individ_schedule, mapGroupAndAG, mapTeacherAndAG) {
   let fitnessValue = 0;
-  fitnessValue += fitnessByGroups(individ, mapGroupAndAG);
-  fitnessValue += fitnessByTeachers(individ, mapTeacherAndAG);
+  fitnessValue += fitnessByGroups(individ_schedule, mapGroupAndAG);
+  fitnessValue += fitnessByTeachers(individ_schedule, mapTeacherAndAG);
   return fitnessValue;
 }
 
-function fitnessByGroups(individ, mapGroupAndAG) {
+function fitnessByGroups(individ_schedule, mapGroupAndAG) {
   let fitnessValue = 0;
   mapGroupAndAG.forEach((detectedAG) => {
-    let detectedSchedules = individ.filter((schedule) => {
+    let detectedSchedules = individ_schedule.filter((schedule) => {
       if (detectedAG.indexOf(schedule.id_assigned_group) != -1) {
         return schedule;
       }
@@ -136,10 +136,10 @@ function fitnessEquelSchedule(detectedSchedules) {
   return max - min;
 }
 
-function fitnessByTeachers(individ, mapTeacherAndAG) {
+function fitnessByTeachers(individ_schedule, mapTeacherAndAG) {
   let fitnessValue = 0;
   mapTeacherAndAG.forEach((detectedAG) => {
-    let detectedSchedules = individ.filter((schedule) => {
+    let detectedSchedules = individ_schedule.filter((schedule) => {
       if (detectedAG.indexOf(schedule.id_assigned_group) != -1) {
         return schedule;
       }

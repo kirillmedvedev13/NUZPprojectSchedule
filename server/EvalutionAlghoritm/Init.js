@@ -47,7 +47,14 @@ export default function (
                 number_pair,
                 info[j],
                 mapTeacherAndAG
-              ) && CheckPutClassForAudience(id_audience, schedule,day_week,number_pair,info[j])
+              ) &&
+              CheckPutClassForAudience(
+                id_audience,
+                schedule,
+                day_week,
+                number_pair,
+                info[j]
+              )
             ) {
               clas.assigned_groups.map((ag) => {
                 schedule.push({
@@ -68,7 +75,13 @@ export default function (
               while (!isPutPractice) {
                 const day_week = GetRndInteger(1, max_day);
                 const number_pair = GetRndInteger(1, max_pair);
-                const id_audience = GetIdAudienceForClassPractice(ag.group, clas, audiences);
+                const id_audience = GetIdAudienceForClassPractice(
+                  ag.group,
+                  clas,
+                  audiences
+                );
+                // console.log("Practice")
+                // console.log(id_audience)
                 // Если в это время нету пары для конкретной группы
                 if (
                   CheckPutClassForGroupPractice(
@@ -86,7 +99,14 @@ export default function (
                     number_pair,
                     info[j],
                     mapTeacherAndAG
-                  ) && CheckPutClassForAudience(id_audience, schedule,day_week,number_pair,info[j])
+                  ) &&
+                  CheckPutClassForAudience(
+                    id_audience,
+                    schedule,
+                    day_week,
+                    number_pair,
+                    info[j]
+                  )
                 ) {
                   schedule.push({
                     number_pair,
@@ -104,7 +124,7 @@ export default function (
         }
       }
     });
-    populations[i] = schedule;
+    populations[i] = { schedule, fitnessValue: null };
   }
   return populations;
 }
