@@ -4,22 +4,25 @@ import Crossing from "./Crossing.js";
 import fitness from "./Fitness.js";
 import Init from "./Init.js";
 import Mutation from "./Mutation.js";
-import TournamentSelect from "./TournamentSelect.js";
+import SelectTournament from "./SelectTournament.js";
 import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
+import GetRndInteger from "./GetRndInteger.js";
+import SelectRoulette from "./SelectRoulette.js";
+
 export const RUN_EA = {
   type: MessageType,
   async resolve(parent) {
     const info = await db.info.findAll();
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
-    const population_size = 1000;
-    const max_generations = 500;
-    const p_crossover = 0;
-    const p_mutation = 0.7;
+    const population_size = 200;
+    const max_generations = 200;
+    const p_crossover = 0.5;
+    const p_mutation = 0.1;
     const p_genes = 0.01;
-    const penaltyGrWin = 0;
-    const penaltyTeachWin = 1;
+    const penaltyGrWin = 1;
+    const penaltyTeachWin = 0;
     const penaltyLateSc = 0;
     const penaltyEqSc = 0;
     const penaltySameTimesSc = 5;
@@ -62,7 +65,9 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
-    // Стркуктура для каждой группы массив закрепленных для неё занятий
+    await db.schedule.destroy({ truncate: true });
+
+    // Структура для каждой группы массив закрепленных для неё занятий
     let mapGroupAndAG = new Map();
     for (const group of groups) {
       let temp = [];
@@ -100,7 +105,7 @@ export const RUN_EA = {
       mapTeacherAndAG
     );
 
-    /**/
+    // Установка целевого значения
     populations.map((individ) => {
       individ.fitnessValue = fitness(
         individ.schedule,
@@ -113,23 +118,27 @@ export const RUN_EA = {
         penaltySameTimesSc
       );
     });
-    let generationCount = 0;
-    let bestFitnessValue = MinFitnessValue(populations);
 
+    let generationCount = 0;
+    let { bestFitnessValue, bestPopulation } = MinFitnessValue(populations, { fitnessValue: Number.MAX_VALUE });
     while (bestFitnessValue > 0 && generationCount < max_generations) {
       generationCount++;
       // Отбор
-      populations = TournamentSelect(populations, population_size);
+      //populations = SelectTournament(populations, population_size);
+      populations = SelectRoulette(populations);
       // Скрещивание
       for (let i = 0; i < populations.length; i += 2) {
         if (Math.random() < p_crossover) {
           Crossing(
-            populations[i].schedule,
-            populations[i + 1].schedule,
-            classes
+            populations[GetRndInteger(0, populations.length - 1)].schedule,
+            populations[GetRndInteger(0, populations.length - 1)].schedule,
+            classes,
+            mapGroupAndAG,
+            mapTeacherAndAG
           );
         }
       }
+      // Мутации
       populations.map((mutant) => {
         if (Math.random() < p_mutation) {
           mutant.schedule = Mutation(
@@ -156,15 +165,28 @@ export const RUN_EA = {
         );
       });
 
-      bestFitnessValue = MinFitnessValue(populations);
+      let res = MinFitnessValue(populations, bestPopulation);
+      bestFitnessValue = res.bestFitnessValue;
+      bestPopulation = res.bestPopulation;
+      console.log(bestPopulation.schedule.length)
       console.log(
         generationCount +
-          " " +
-          bestFitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestFitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
-    return bestFitnessValue;
+
+    let isBulk = await db.schedule.bulkCreate(bestPopulation.schedule.map(schedule => {
+      return {
+        number_pair: schedule.number_pair, day_week: schedule.day_week,
+        pair_type: schedule.pair_type, id_assigned_group: schedule.id_assigned_group, id_audience: schedule.id_audience
+      }
+    }))
+    if (isBulk)
+      return { successful: true, message: `Total Fitness: ${bestPopulation.fitnessValue}` };
+    else
+      return { successful: false, message: `Some error` };
   },
 };
