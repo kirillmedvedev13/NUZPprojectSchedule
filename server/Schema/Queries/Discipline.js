@@ -10,9 +10,9 @@ export const GET_ALL_DISCIPLINES = {
     id_specialty: { type: GraphQLInt },
   },
   async resolve(parent, { name, id_specialty }) {
-    let array = [];
-    let isFilters = {};
-    let isFilters1 = {};
+    let ids_disc = [];
+    let FilterName = {};
+    let FilterSpecialty = {};
     let str = "";
     if (name) {
       const arr = name.split(" ");
@@ -23,41 +23,38 @@ export const GET_ALL_DISCIPLINES = {
           str += word;
         }
       });
-      isFilters = {
+      FilterName = {
         name: {
           [Op.regexp]: str,
         },
       };
     }
     if (id_specialty) {
-      isFilters1 = {
+      FilterSpecialty = {
         id_specialty: {
           [Op.eq]: id_specialty,
         },
       };
-      const res1 = await db.discipline.findAll({
+      const disciplines = await db.discipline.findAll({
         include: {
           model: db.assigned_discipline,
-          where: isFilters1,
+          where: FilterSpecialty,
           include: {
             model: db.specialty,
           },
         },
       });
-      res1.map((disc) => {
-        array.push(disc.dataValues.id);
+      ids_disc = disciplines.map((disc) => {
+        return disc.dataValues.id;
       });
-    }
-    console.log(isFilters);
-    let isFilterID = {};
-    if (array.length) {
-      isFilterID = {
-        id: array,
-      };
+      FilterSpecialty = { id: ids_disc };
     }
     let res = await db.discipline.findAll({
+      order: [
+        ["name", "ASC"]
+      ],
       where: {
-        [Op.and]: [isFilters, isFilterID],
+        [Op.and]: [FilterName, FilterSpecialty],
       },
       include: {
         model: db.assigned_discipline,

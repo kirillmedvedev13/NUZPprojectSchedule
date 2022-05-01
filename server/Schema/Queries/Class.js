@@ -59,6 +59,9 @@ export const GET_ALL_CLASSES = {
     }
 
     const res = await db.class.findAll({
+      order: [
+        ["assigned_discipline", "discipline", "name", "ASC"]
+      ],
       where: FilterIDsClasses,
       include: [
         {

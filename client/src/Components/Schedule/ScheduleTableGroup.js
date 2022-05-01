@@ -32,27 +32,28 @@ function DataTable({ filters, info }) {
   if (error) return `Error! ${error}`;
   let curGroup = null;
   let MapGroup = new Map();
-  let temp = [];
+  let temp_schedule = [];
   data.GetAllScheduleGroups.forEach(schedule => {
     if (schedule.assigned_group.group !== curGroup && !curGroup) {
       curGroup = schedule.assigned_group.group
     }
     if (schedule.assigned_group.group !== curGroup && curGroup) {
-      MapGroup.set(curGroup, temp);
+      MapGroup.set(curGroup, temp_schedule);
       curGroup = schedule.assigned_group.group
-      temp = [];
+      temp_schedule = [];
     }
-    temp.push(schedule);
+    temp_schedule.push(schedule);
   })
-  MapGroup.set(curGroup, temp);
-
+  if (curGroup)
+    MapGroup.set(curGroup, temp_schedule);
   return <tbody>
     {[...MapGroup].map(map => {
+      // Счётчик расписания для 1 группы
       let currentIndexSchedule = 0;
       return (<Fragment key={`${map[0].id}-Frag1`}>
         <tr key={map[0].id}>
           <td rowSpan={3 * info.max_pair + 1} key={map[0].id + map[0].name}>
-            {map[0].name}
+            {`${map[0].specialty.cathedra.short_name}-${map[0].name}`}
           </td>
         </tr>
         {
@@ -127,22 +128,22 @@ function DataTable({ filters, info }) {
   </tbody>
 }
 
-function TableHead({filters}) {
+function TableHead({ filters }) {
   const { loading, error, data } = useQuery(GET_INFO, {});
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
     <>
-    <thead>
-      <tr>
-        <th>Викладач</th>
-        <th>#</th>
-        {[...Array(data.GetInfo.max_day)].map((i, index) => {
-          return <th key={DaysWeek[index]}>{DaysWeek[index]}</th>
-        })}
-      </tr>
-    </thead>
-    <DataTable filters={filters} info={data.GetInfo}></DataTable>
+      <thead>
+        <tr>
+          <th>Група</th>
+          <th>#</th>
+          {[...Array(data.GetInfo.max_day)].map((i, index) => {
+            return <th key={DaysWeek[index]}>{DaysWeek[index]}</th>
+          })}
+        </tr>
+      </thead>
+      <DataTable filters={filters} info={data.GetInfo}></DataTable>
     </>
   );
 }

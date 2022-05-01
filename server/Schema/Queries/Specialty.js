@@ -10,7 +10,8 @@ export const GET_ALL_SPECIALTY = {
     id_cathedra: { type: GraphQLInt },
   },
   async resolve(parent, { name, id_cathedra }) {
-    let isFilters = {};
+    let FilterCathedra = {};
+    let FilterName = {};
     let str = "";
     if (name) {
       const arr = name.split(" ");
@@ -21,36 +22,26 @@ export const GET_ALL_SPECIALTY = {
           str += word;
         }
       });
-      isFilters = id_cathedra
-        ? {
-            [Op.and]: {
-              name: {
-                [Op.regexp]: str,
-              },
-              id_cathedra: {
-                [Op.eq]: id_cathedra,
-              },
-            },
-          }
-        : {
-            name: {
-              [Op.regexp]: str,
-            },
-          };
-    } else {
-      isFilters = id_cathedra
-        ? {
-            id_cathedra: {
-              [Op.eq]: id_cathedra,
-            },
-          }
-        : {};
+      FilterName = {
+        name: {
+          [Op.regexp]: str
+        }
+      }
     }
+    if (id_cathedra) {
+      FilterCathedra: {
+        id_cathedra
+      }
+    }
+
     const res = await db.specialty.findAll({
+      order: [
+        ["name", "ASC"]
+      ],
       include: {
         model: db.cathedra,
       },
-      where: isFilters,
+      where: [FilterCathedra, FilterName],
     });
     return res;
   },

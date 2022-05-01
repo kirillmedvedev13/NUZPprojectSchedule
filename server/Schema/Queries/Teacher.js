@@ -11,8 +11,8 @@ export const GET_ALL_TEACHERS = {
   },
   async resolve(parent, { surname, id_cathedra }) {
     let FilterSurname = {};
-    let FilterCath = id_cathedra
-      ? { id_cathedra: { [Op.eq]: id_cathedra } }
+    let FilterCathedra = id_cathedra
+      ? { id_cathedra }
       : {};
     let str = "";
     if (surname) {
@@ -32,8 +32,12 @@ export const GET_ALL_TEACHERS = {
     }
 
     let res = await db.teacher.findAll({
-      where: FilterSurname,
-      where: FilterCath,
+      order: [
+        ["surname", "ASC"],
+        ["name", "ASC"],
+        ["patronymic", "ASC"]
+      ],
+      where: [FilterSurname, FilterCathedra],
       include: {
         model: db.cathedra,
       },
