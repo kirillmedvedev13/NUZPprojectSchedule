@@ -34,8 +34,8 @@ export const GET_ALL_SCHEDULE_GROUPS = gql`
         group {
           id
           name
-          specialty{
-            cathedra{
+          specialty {
+            cathedra {
               short_name
             }
           }

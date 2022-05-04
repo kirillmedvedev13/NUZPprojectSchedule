@@ -85,9 +85,9 @@ export const GET_ALL_SCHEDULE_GROUPS = {
               include: {
                 model: db.specialty,
                 include: {
-                  model: db.cathedra
-                }
-              }
+                  model: db.cathedra,
+                },
+              },
             },
           ],
         },
@@ -121,9 +121,9 @@ export const GET_ALL_SCHEDULE_AUDIENCES = {
     const res = await db.audience.findAll({
       where: FilterAudience,
       order: [
+        ["schedules", "day_week", "ASC"],
         ["schedules", "number_pair", "ASC"],
         ["schedules", "pair_type", "ASC"],
-        ["schedules", "day_week", "ASC"],
       ],
       include: {
         model: db.schedule,
@@ -195,9 +195,9 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
     }
     const res = await db.schedule.findAll({
       order: [
+        ["day_week", "ASC"],
         ["number_pair", "ASC"],
         ["pair_type", "ASC"],
-        ["day_week", "ASC"],
       ],
       include: [
         {
