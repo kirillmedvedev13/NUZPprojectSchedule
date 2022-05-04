@@ -1,16 +1,21 @@
 import { gql } from "@apollo/client";
 
 export const GET_INFO = gql`
-  query{
-    GetInfo{
+  query {
+    GetInfo {
       max_day
       max_pair
     }
   }
-`
+`;
 
 export const GET_ALL_SCHEDULE_GROUPS = gql`
-  query ($id_cathedra: Int, $id_group: Int, $id_specialty: Int, $semester: Int) {
+  query (
+    $id_cathedra: Int
+    $id_group: Int
+    $id_specialty: Int
+    $semester: Int
+  ) {
     GetAllScheduleGroups(
       id_cathedra: $id_cathedra
       id_group: $id_group
@@ -106,8 +111,8 @@ export const GET_ALL_SCHEDULE_AUDIENCES = gql`
 `;
 
 export const GET_ALL_SCHEDULE_TEACHERS = gql`
-query($id_teacher:Int, $id_cathedra: Int){
-  GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
+  query ($id_teacher: Int, $id_cathedra: Int) {
+    GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
       id
       number_pair
       day_week
@@ -122,6 +127,7 @@ query($id_teacher:Int, $id_cathedra: Int){
           name
         }
         class {
+          id
           type_class {
             id
             name
@@ -146,5 +152,5 @@ query($id_teacher:Int, $id_cathedra: Int){
         }
       }
     }
-}
-`
+  }
+`;
