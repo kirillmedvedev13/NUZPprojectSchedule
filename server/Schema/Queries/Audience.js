@@ -40,20 +40,23 @@ export const GET_ALL_AUDIENCES = {
       }
       const res = await db.audience.findAll({
         include: {
-            model: db.assigned_audience,
-            where: FilterCathedra
-          },
+          model: db.assigned_audience,
+          where: FilterCathedra
+        },
       });
       res.map((aud) => {
         arrIDsAudiences.push(aud.dataValues.id)
       })
     }
-    if(arrIDsAudiences.length){
+    if (arrIDsAudiences.length) {
       FilterIDsAudiences = {
         id: arrIDsAudiences
       }
     }
     const res = await db.audience.findAll({
+      order: [
+        ["name", "ASC"]
+      ],
       where: {
         [Op.and]: [FilterName, FilterIDsAudiences]
       },
@@ -67,7 +70,7 @@ export const GET_ALL_AUDIENCES = {
             model: db.cathedra
           }
         }
-    ]
+      ]
     });
     return res;
   },

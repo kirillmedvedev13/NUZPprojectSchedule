@@ -35,6 +35,9 @@ export const GET_ALL_GROUPS = {
       };
     }
     const res = await db.group.findAll({
+      order: [
+        ["name", "ASC"]
+      ],
       include: {
         model: db.specialty,
         include: {

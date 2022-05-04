@@ -79,7 +79,16 @@ export const GET_ALL_SCHEDULE_GROUPS = {
                 },
               ],
             },
-            { model: db.group, where: FilterSemester },
+            {
+              model: db.group,
+              where: FilterSemester,
+              include: {
+                model: db.specialty,
+                include: {
+                  model: db.cathedra
+                }
+              }
+            },
           ],
         },
         {
