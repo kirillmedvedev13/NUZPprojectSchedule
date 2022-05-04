@@ -31,19 +31,13 @@ function DataTable({ filters, info }) {
   if (error) return `Error! ${error}`;
   let curGroup = null;
   let MapGroup = new Map();
-<<<<<<< HEAD
   let temp = [];
   if (!data.GetAllScheduleGroups.length) return <tbody></tbody>;
   data.GetAllScheduleGroups.forEach((schedule) => {
-=======
-  let temp_schedule = [];
-  data.GetAllScheduleGroups.forEach(schedule => {
->>>>>>> 6572df2d115a7ae8e4eb42994643a87172da40c9
     if (schedule.assigned_group.group !== curGroup && !curGroup) {
       curGroup = schedule.assigned_group.group;
     }
     if (schedule.assigned_group.group !== curGroup && curGroup) {
-<<<<<<< HEAD
       MapGroup.set(curGroup, temp);
       curGroup = schedule.assigned_group.group;
       temp = [];
@@ -101,65 +95,6 @@ function DataTable({ filters, info }) {
                       key={`${map[0].id}-td-${number_pair}`}
                       className={
                         number_pair % 2 == 0 ? "table-active" : "table-default"
-=======
-      MapGroup.set(curGroup, temp_schedule);
-      curGroup = schedule.assigned_group.group
-      temp_schedule = [];
-    }
-    temp_schedule.push(schedule);
-  })
-  if (curGroup)
-    MapGroup.set(curGroup, temp_schedule);
-  return <tbody>
-    {[...MapGroup].map(map => {
-      // Счётчик расписания для 1 группы
-      let currentIndexSchedule = 0;
-      return (<Fragment key={`${map[0].id}-Frag1`}>
-        <tr key={map[0].id}>
-          <td rowSpan={3 * info.max_pair + 1} key={map[0].id + map[0].name}>
-            {`${map[0].specialty.cathedra.short_name}-${map[0].name}`}
-          </td>
-        </tr>
-        {
-          [...Array(info.max_pair)].map((i, number_pair) => {
-            let arrScheduleTop = [...Array(info.max_day)];
-            let arrScheduleBot = [...Array(info.max_day)];
-            // По числителю запоминать расписание
-            while (+map[1][currentIndexSchedule]?.pair_type === 1 && +map[1][currentIndexSchedule]?.number_pair === number_pair + 1) {
-              arrScheduleTop[+map[1][currentIndexSchedule].day_week - 1] = map[1][currentIndexSchedule];
-              currentIndexSchedule++;
-            }
-            // По знамен запоминать расписание
-            while (+map[1][currentIndexSchedule]?.pair_type === 2 && +map[1][currentIndexSchedule]?.number_pair === number_pair + 1) {
-              arrScheduleBot[+map[1][currentIndexSchedule].day_week - 1] = map[1][currentIndexSchedule];
-              currentIndexSchedule++;
-            }
-            // По общему запоминать расписание
-            while (+map[1][currentIndexSchedule]?.pair_type === 3 && +map[1][currentIndexSchedule]?.number_pair === number_pair + 1) {
-              arrScheduleTop[+map[1][currentIndexSchedule].day_week - 1] = map[1][currentIndexSchedule];
-              currentIndexSchedule++;
-            }
-            return (<Fragment key={`${map[0].id}-Frag2-${number_pair}`}>
-              <tr key={`${map[0].id}-data-${number_pair}`}>
-                <td rowSpan="3" key={`${map[0].id}-td-${number_pair}`}>
-                  {number_pair + 1}
-                </td>
-              </tr>
-              <tr key={map[0].id + "trTop" + number_pair}>
-                {
-                  // Проходим по числителю
-                  arrScheduleTop.map((schedule, index) => {
-                    if (schedule) {
-                      if (+schedule.pair_type === 1) {
-                        return <td key={map[0].id + "tdTop" + number_pair + index}>
-                          {getDescription(schedule)}
-                        </td>
-                      }
-                      if (+schedule.pair_type === 3) {
-                        return <td rowSpan="2" key={map[0].id + "tdTotal" + number_pair + index}>
-                          {getDescription(schedule)}
-                        </td>
->>>>>>> 6572df2d115a7ae8e4eb42994643a87172da40c9
                       }
                     >
                       {number_pair + 1}
@@ -246,17 +181,10 @@ function TableHead({ filters }) {
     <>
       <thead>
         <tr>
-<<<<<<< HEAD
           <th>Викладач</th>
           <th>#</th>
           {[...Array(data.GetInfo.max_day)].map((i, index) => {
             return <th key={DaysWeek[index]}>{DaysWeek[index]}</th>;
-=======
-          <th>Група</th>
-          <th>#</th>
-          {[...Array(data.GetInfo.max_day)].map((i, index) => {
-            return <th key={DaysWeek[index]}>{DaysWeek[index]}</th>
->>>>>>> 6572df2d115a7ae8e4eb42994643a87172da40c9
           })}
         </tr>
       </thead>
