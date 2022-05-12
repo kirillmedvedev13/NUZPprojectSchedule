@@ -17,12 +17,12 @@ export const RUN_EA = {
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
     const population_size = 100;
-    const max_generations = 200;
+    const max_generations = 1000;
     const p_crossover = 0.5;
     const p_mutation = 0.1;
-    const p_genes = 0.1;
+    const p_genes = 0.01;
     const penaltyGrWin = 1;
-    const penaltyTeachWin = 0;
+    const penaltyTeachWin = 2;
     const penaltyLateSc = 0;
     const penaltyEqSc = 0;
     const penaltySameTimesSc = 5;
@@ -66,7 +66,7 @@ export const RUN_EA = {
       },
     });
     // Очистка расписания
-    await db.schedule.destroy({ truncate: true });
+    //await db.schedule.destroy({ truncate: true });
 
     // Структура для каждой группы массив закрепленных для неё занятий
     let mapGroupAndAG = new Map();
@@ -121,8 +121,13 @@ export const RUN_EA = {
     });
 
     let generationCount = 0;
-    let bestPopulation = MinFitnessValue(populations, { fitnessValue: Number.MAX_VALUE });
-    while (bestPopulation.fitnessValue > 0 && generationCount < max_generations) {
+    let bestPopulation = MinFitnessValue(populations, {
+      fitnessValue: Number.MAX_VALUE,
+    });
+    while (
+      bestPopulation.fitnessValue > 0 &&
+      generationCount < max_generations
+    ) {
       generationCount++;
 
       // Скрещивание
@@ -179,23 +184,30 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
 
     // Вставка в бд
-    let isBulk = await db.schedule.bulkCreate(bestPopulation.schedule.map(schedule => {
-      return {
-        number_pair: schedule.number_pair, day_week: schedule.day_week,
-        pair_type: schedule.pair_type, id_assigned_group: schedule.id_assigned_group, id_audience: schedule.id_audience
-      }
-    }))
+    /*let isBulk = await db.schedule.bulkCreate(
+      bestPopulation.schedule.map((schedule) => {
+        return {
+          number_pair: schedule.number_pair,
+          day_week: schedule.day_week,
+          pair_type: schedule.pair_type,
+          id_assigned_group: schedule.id_assigned_group,
+          id_audience: schedule.id_audience,
+        };
+      })
+    );
     if (isBulk)
-      return { successful: true, message: `Total Fitness: ${bestPopulation.fitnessValue}` };
-    else
-      return { successful: false, message: `Some error` };
+      return {
+        successful: true,
+        message: `Total Fitness: ${bestPopulation.fitnessValue}`,
+      };
+    else*/ return { successful: false, message: `Some error` };
   },
 };
