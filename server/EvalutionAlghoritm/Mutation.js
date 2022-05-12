@@ -1,89 +1,94 @@
-import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
+import CheckPutClassForAudience from "./CheckPutClassForAudience.js";
 import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js";
 import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js";
+import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
 import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
 import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
 import GetRndInteger from "./GetRndInteger.js";
 
 export default function Mutation(
-  individ,
+  individ_schedule,
   p_genes,
   max_day,
   max_pair,
+  audiences,
   mapGroupAndAG,
-  mapTeacherAndAG,
-  classes,
-  audiences
+  mapTeacherAndAG
 ) {
-  individ.forEach((gene) => {
+  individ_schedule.map((sch) => {
     if (Math.random() < p_genes) {
-      let clas = null;
-      let group = null;
-      for (let cl of classes) {
-        cl.assigned_groups.map((ag) => {
-          if (ag.id === gene.id_assigned_group) {
-            clas = cl;
-            group = ag.group;
-          }
-        });
-        if (clas) break;
+      // Получить занятия для расписания
+      let clas = sch.clas;
+      let pair_types = GetPairTypeForClass(clas);
+      // Если лекция, то удалить эти лекции у всех групп
+      if (clas.id_type_class === 1) {
+        let ids_ag = clas.assigned_groups.map(ag => { return ag.id });
+        individ_schedule = individ_schedule.filter(sc => {
+          if (ids_ag.find(id => id === sc.id_assigned_group))
+            return false;
+          else
+            return true;
+        })
       }
-      //let pair_types = GetPairTypeForClass(clas);
-      let pair_type = gene.pair_type;
-
-      //for (let i = 0; i < pair_types.length; i++) {
-      let checkGroup = false;
-      let checkTeach = false;
-      let checkAud = false;
-      let number_pair;
-      let day_week;
-      let id_audience;
-      while (!checkGroup && !checkTeach && !checkAud) {
-        //let pair_type = pair_types[i];
-        day_week = GetRndInteger(0, max_day);
-        number_pair = GetRndInteger(0, max_pair);
-        checkTeach = CheckPutClassForTeacher(
-          clas,
-          individ,
-          day_week,
-          number_pair,
-          pair_type,
-          mapTeacherAndAG
-        );
-        checkGroup =
-          clas.id_type_class == 1
-            ? CheckPutClassForGroupLecture(
-                clas,
-                individ,
-                day_week,
-                number_pair,
-                pair_type,
-                mapGroupAndAG
-              )
-            : CheckPutClassForGroupPractice(
-                group.id,
-                individ,
-                day_week,
-                number_pair,
-                pair_type,
-                mapGroupAndAG
-              );
-        if (!checkAud)
-          id_audience =
-            pair_type == 1
-              ? GetIdAudienceForClassLecture(clas, audiences)
-              : GetIdAudienceForClassPractice(group, clas, audiences);
+      // Если практика, то удалить практики только у одной группы
+      else if (clas.id_type_class === 2) {
+        individ_schedule = individ_schedule.filter(sc => {
+          if (sc.id_assigned_group === sch.id_assigned_group)
+            return false;
+          else
+            return true;
+        })
       }
-
-      gene = {
-        number_pair,
-        day_week,
-        pair_type: gene.pair_type,
-        id_assigned_group: gene.id_assigned_group,
-        id_audience,
-      };
+      let ag = sch.clas.assigned_groups.find(ag => ag.id === sch.id_assigned_group);
+      let group = ag.group;
+      for (let i = 0; i < pair_types.length; i++) {
+        let pair_type = pair_types[i];
+        let checkAud = false;
+        let checkTeach = false;
+        let checkGroup = false;
+        let day_week = null;
+        let number_pair = null;
+        let id_audience = null;
+        // Пока все условия не сойдутся, рандомно выбирать параметры
+        while (!checkAud || !checkTeach || !checkGroup) {
+          day_week = GetRndInteger(0, max_day);
+          number_pair = GetRndInteger(0, max_pair);
+          id_audience = clas.id_type_class === 1
+            ? GetIdAudienceForClassLecture(clas, audiences)
+            : GetIdAudienceForClassPractice(group.capacity, clas, audiences);
+          checkAud = CheckPutClassForAudience(id_audience, individ_schedule, day_week, number_pair, pair_type);
+          checkTeach = CheckPutClassForTeacher(clas, individ_schedule, day_week, number_pair, pair_type, mapTeacherAndAG);
+          checkGroup = clas.id_type_class === 1
+            ? CheckPutClassForGroupLecture(clas, individ_schedule, day_week, number_pair, pair_type, mapGroupAndAG)
+            : CheckPutClassForGroupPractice(group.id, individ_schedule, day_week, number_pair, pair_type, mapGroupAndAG)
+        }
+        // Если лекция то вставить в расписание для всех групп
+        if (clas.id_type_class === 1) {
+          clas.assigned_groups.map(ag => {
+            individ_schedule.unshift({
+              number_pair,
+              day_week,
+              pair_type,
+              id_assigned_group: ag.id,
+              id_audience,
+              clas,
+            });
+          })
+        }
+        // Если практика то вставить в расисание только для 1 группы
+        else if (clas.id_type_class === 2) {
+          individ_schedule.unshift({
+            number_pair,
+            day_week,
+            pair_type,
+            id_assigned_group: ag.id,
+            id_audience,
+            clas,
+          });
+        }
+      }
     }
   });
-  return individ;
+  return individ_schedule;
 }

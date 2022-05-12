@@ -1,11 +1,41 @@
-export default function fitness(individ_schedule, mapGroupAndAG, mapTeacherAndAG) {
+export default function fitness(
+  individ_schedule,
+  mapGroupAndAG,
+  mapTeacherAndAG,
+  penaltyGrWin,
+  penaltyTeachWin,
+  penaltyLateSc,
+  penaltyEqSc,
+  penaltySameTimesSc
+) {
   let fitnessValue = 0;
-  fitnessValue += fitnessByGroups(individ_schedule, mapGroupAndAG);
-  fitnessValue += fitnessByTeachers(individ_schedule, mapTeacherAndAG);
+  fitnessValue += fitnessByGroups(
+    individ_schedule,
+    mapGroupAndAG,
+    penaltyGrWin,
+    penaltyLateSc,
+    penaltyEqSc,
+    penaltySameTimesSc
+  );
+  fitnessValue += fitnessByTeachers(
+    individ_schedule,
+    mapTeacherAndAG,
+    penaltyTeachWin,
+    penaltyLateSc,
+    penaltyEqSc,
+    penaltySameTimesSc
+  );
   return fitnessValue;
 }
 
-function fitnessByGroups(individ_schedule, mapGroupAndAG) {
+function fitnessByGroups(
+  individ_schedule,
+  mapGroupAndAG,
+  penaltyGrWin,
+  penaltyLateSc,
+  penaltyEqSc,
+  penaltySameTimesSc
+) {
   let fitnessValue = 0;
   mapGroupAndAG.forEach((detectedAG) => {
     let detectedSchedules = individ_schedule.filter((schedule) => {
@@ -14,12 +44,16 @@ function fitnessByGroups(individ_schedule, mapGroupAndAG) {
       }
     });
     detectedSchedules = sortDS(detectedSchedules);
-    fitnessValue += fitnessDSWindows(detectedSchedules);
+    fitnessValue += fitnessDSWindows(detectedSchedules, penaltyGrWin);
     fitnessValue +=
       detectedSchedules.length == 1
-        ? detectedSchedules[0].number_pair
-        : fitnessDSLateSchedule(detectedSchedules);
-    fitnessValue += fitnessEquelSchedule(detectedSchedules);
+        ? detectedSchedules[0].number_pair * penaltyLateSc
+        : fitnessDSLateSchedule(detectedSchedules, penaltyLateSc);
+    fitnessValue += fitnessEquelSchedule(detectedSchedules, penaltyEqSc);
+    fitnessValue += fitnessSameTimesGroup(
+      detectedSchedules,
+      penaltySameTimesSc
+    );
   });
 
   return fitnessValue;
@@ -32,13 +66,14 @@ function sortDS(detectedSchedules) {
       else if (schedule1.number_pair == schedule2.number_pair) {
         if (schedule1.pair_type > schedule2.pair_type) return 1;
         else if (schedule1.pair_type == schedule2.pair_type) {
+          return 0;
         } else return -1;
       } else return -1;
     } else return -1;
   });
   return detectedSchedules;
 }
-function fitnessDSWindows(detectedSchedules) {
+function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
   let fitnessValue = 0;
   let index = 1;
   while (index < detectedSchedules.length) {
@@ -62,15 +97,17 @@ function fitnessDSWindows(detectedSchedules) {
               detectedSchedules[index].day_week
           ) {
             fitnessValue +=
-              detectedSchedules[index].number_pair -
-              detectedSchedules[index - 2].number_pair -
-              1;
+              (detectedSchedules[index].number_pair -
+                detectedSchedules[index - 2].number_pair -
+                1) *
+              penaltyGrWin;
           }
         }
         fitnessValue +=
-          detectedSchedules[index].number_pair -
-          detectedSchedules[index - 1].number_pair -
-          1;
+          (detectedSchedules[index].number_pair -
+            detectedSchedules[index - 1].number_pair -
+            1) *
+          penaltyGrWin;
       }
     }
     index++;
@@ -86,11 +123,11 @@ function fitnessDSWindows(detectedSchedules) {
   return fitnessValue;
 }
 
-function fitnessDSLateSchedule(detectedSchedules) {
+function fitnessDSLateSchedule(detectedSchedules, penaltyLateSc) {
   let fitnessValue = 0;
   let index = 1;
   while (index < detectedSchedules.length) {
-    fitnessValue += detectedSchedules[index - 1].number_pair;
+    fitnessValue += detectedSchedules[index - 1].number_pair * penaltyLateSc;
     while (
       detectedSchedules[index - 1].day_week == detectedSchedules[index].day_week
     ) {
@@ -104,10 +141,12 @@ function fitnessDSLateSchedule(detectedSchedules) {
     detectedSchedules[detectedSchedules.length - 1].day_week !=
     detectedSchedules[detectedSchedules.length - 2].day_week
   )
-    fitnessValue += detectedSchedules[detectedSchedules.length - 1].number_pair;
+    fitnessValue +=
+      detectedSchedules[detectedSchedules.length - 1].number_pair *
+      penaltyLateSc;
   return fitnessValue;
 }
-function fitnessEquelSchedule(detectedSchedules) {
+function fitnessEquelSchedule(detectedSchedules, penaltyEqSc) {
   let max = -1;
   let min = max;
   let temp = 1;
@@ -133,10 +172,17 @@ function fitnessEquelSchedule(detectedSchedules) {
     }
     index++;
   }
-  return max - min;
+  return (max - min) * penaltyEqSc;
 }
 
-function fitnessByTeachers(individ_schedule, mapTeacherAndAG) {
+function fitnessByTeachers(
+  individ_schedule,
+  mapTeacherAndAG,
+  penaltyTeachWin,
+  penaltyLateSc,
+  penaltyEqSc,
+  penaltySameTimesSc
+) {
   let fitnessValue = 0;
   mapTeacherAndAG.forEach((detectedAG) => {
     let detectedSchedules = individ_schedule.filter((schedule) => {
@@ -145,13 +191,70 @@ function fitnessByTeachers(individ_schedule, mapTeacherAndAG) {
       }
     });
     detectedSchedules = sortDS(detectedSchedules);
-    fitnessValue += fitnessDSWindows(detectedSchedules);
+    fitnessValue += fitnessDSWindows(detectedSchedules, penaltyTeachWin);
     fitnessValue +=
       detectedSchedules.length == 1
-        ? detectedSchedules[0].number_pair
-        : fitnessDSLateSchedule(detectedSchedules);
-    fitnessValue += fitnessEquelSchedule(detectedSchedules);
+        ? detectedSchedules[0].number_pair * penaltyLateSc
+        : fitnessDSLateSchedule(detectedSchedules, penaltyLateSc);
+    fitnessValue += fitnessEquelSchedule(detectedSchedules, penaltyEqSc);
+    fitnessValue += fitnessSameTimesTeacher(
+      detectedSchedules,
+      penaltySameTimesSc
+    );
   });
 
+  return fitnessValue;
+}
+
+function fitnessSameTimesGroup(detectedSchedules, penaltySameTimesSc) {
+  let fitnessValue = 0;
+  let index = 1;
+  while (index < detectedSchedules.length) {
+    if (
+      detectedSchedules[index - 1].day_week == detectedSchedules[index].day_week
+    ) {
+      if (
+        detectedSchedules[index - 1].number_pair ==
+        detectedSchedules[index].number_pair
+      ) {
+        if (
+          detectedSchedules[index - 1].pair_type ==
+            detectedSchedules[index].pair_type ||
+          detectedSchedules[index - 1].pair_type == 3 ||
+          detectedSchedules[index].pair_type == 3
+        )
+          fitnessValue += penaltySameTimesSc;
+      }
+    }
+    index++;
+  }
+  return fitnessValue;
+}
+function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
+  let fitnessValue = 0;
+  let index = 1;
+  while (index < detectedSchedules.length) {
+    if (
+      detectedSchedules[index - 1].day_week == detectedSchedules[index].day_week
+    ) {
+      if (
+        detectedSchedules[index - 1].number_pair ==
+        detectedSchedules[index].number_pair
+      ) {
+        if (
+          detectedSchedules[index - 1].pair_type ==
+            detectedSchedules[index].pair_type ||
+          detectedSchedules[index - 1].pair_type == 3 ||
+          detectedSchedules[index].pair_type == 3
+        )
+          if (
+            detectedSchedules[index - 1].clas.id !=
+            detectedSchedules[index].clas.id
+          )
+            fitnessValue += penaltySameTimesSc;
+      }
+    }
+    index++;
+  }
   return fitnessValue;
 }

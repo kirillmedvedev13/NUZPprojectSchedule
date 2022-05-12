@@ -63,6 +63,7 @@ export default function (
                   pair_type: info[j],
                   id_audience,
                   id_assigned_group: ag.id,
+                  clas,
                 });
               });
               isPut = true;
@@ -76,12 +77,10 @@ export default function (
                 const day_week = GetRndInteger(1, max_day);
                 const number_pair = GetRndInteger(1, max_pair);
                 const id_audience = GetIdAudienceForClassPractice(
-                  ag.group,
+                  ag.group.capacity,
                   clas,
                   audiences
                 );
-                // console.log("Practice")
-                // console.log(id_audience)
                 // Если в это время нету пары для конкретной группы
                 if (
                   CheckPutClassForGroupPractice(
@@ -114,6 +113,7 @@ export default function (
                     pair_type: info[j],
                     id_audience,
                     id_assigned_group: ag.id,
+                    clas,
                   });
                   isPutPractice = true;
                 }

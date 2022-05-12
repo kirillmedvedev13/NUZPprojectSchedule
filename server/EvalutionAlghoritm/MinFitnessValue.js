@@ -1,7 +1,14 @@
-export default function MinFitnessValue(populations) {
+export default function MinFitnessValue(populations, bestPopulation) {
   let min = Number.MAX_VALUE;
+  let min_index;
   for (let i = 0; i < populations.length; i++) {
-    if (populations[i].fitnessValue < min) min = populations[i].fitnessValue;
+    if (populations[i].fitnessValue < min) {
+      min = populations[i].fitnessValue;
+      min_index = i;
+    }
   }
-  return min;
+  if (bestPopulation.fitnessValue > min) {
+    bestPopulation = populations[min_index];
+  }
+  return { bestFitnessValue: min, bestPopulation };
 }

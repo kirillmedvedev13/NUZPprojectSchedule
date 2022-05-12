@@ -1,5 +1,5 @@
 import GetRndInteger from "./GetRndInteger.js";
-export default function TournamentSelect(populations, population_size) {
+export default function SelectTournament(populations, population_size) {
   let newPopulations = [];
   while (newPopulations.length < population_size) {
     let i1 = 0;

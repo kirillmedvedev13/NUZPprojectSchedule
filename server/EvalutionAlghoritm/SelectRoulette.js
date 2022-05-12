@@ -1,5 +1,3 @@
-import cloneDeep from "lodash/clonedeep.js";
-
 export default function SelectRoulette(populations) {
     let sumFitness = 0;
     populations.forEach(individ => {
@@ -18,7 +16,7 @@ export default function SelectRoulette(populations) {
         while (rand >= p_populations[index]) {
             index++;
         }
-        new_populations.push(cloneDeep(populations[index]));
+        new_populations.push(populations[index]);
     }
     return new_populations;
 }

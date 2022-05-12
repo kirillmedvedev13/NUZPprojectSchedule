@@ -16,11 +16,11 @@ export const RUN_EA = {
     const info = await db.info.findAll();
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
-    const population_size = 200;
+    const population_size = 100;
     const max_generations = 200;
     const p_crossover = 0.5;
     const p_mutation = 0.1;
-    const p_genes = 0.01;
+    const p_genes = 0.1;
     const penaltyGrWin = 1;
     const penaltyTeachWin = 0;
     const penaltyLateSc = 0;
@@ -65,6 +65,7 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
+    // Очистка расписания
     await db.schedule.destroy({ truncate: true });
 
     // Структура для каждой группы массив закрепленных для неё занятий
@@ -120,24 +121,26 @@ export const RUN_EA = {
     });
 
     let generationCount = 0;
-    let { bestFitnessValue, bestPopulation } = MinFitnessValue(populations, { fitnessValue: Number.MAX_VALUE });
-    while (bestFitnessValue > 0 && generationCount < max_generations) {
+    let bestPopulation = MinFitnessValue(populations, { fitnessValue: Number.MAX_VALUE });
+    while (bestPopulation.fitnessValue > 0 && generationCount < max_generations) {
       generationCount++;
-      // Отбор
-      //populations = SelectTournament(populations, population_size);
-      populations = SelectRoulette(populations);
+
       // Скрещивание
-      for (let i = 0; i < populations.length; i += 2) {
+      let population_child = [];
+      for (let i = 0; i < population_size / 4; i++) {
         if (Math.random() < p_crossover) {
           Crossing(
             populations[GetRndInteger(0, populations.length - 1)].schedule,
             populations[GetRndInteger(0, populations.length - 1)].schedule,
             classes,
             mapGroupAndAG,
-            mapTeacherAndAG
+            mapTeacherAndAG,
+            population_child
           );
         }
       }
+
+      populations.push(...population_child);
       // Мутации
       populations.map((mutant) => {
         if (Math.random() < p_mutation) {
@@ -152,6 +155,8 @@ export const RUN_EA = {
           );
         }
       });
+
+      // Установка фитнесс значения
       populations.map((individ) => {
         individ.fitnessValue = fitness(
           individ.schedule,
@@ -165,19 +170,23 @@ export const RUN_EA = {
         );
       });
 
-      let res = MinFitnessValue(populations, bestPopulation);
-      bestFitnessValue = res.bestFitnessValue;
-      bestPopulation = res.bestPopulation;
-      console.log(bestPopulation.schedule.length)
+      // Отбор
+      //populations = SelectRoulette(populations);
+      populations = SelectTournament(populations, population_size);
+
+      // Лучшая популяция
+      bestPopulation = MinFitnessValue(populations, bestPopulation);
+
       console.log(
         generationCount +
         " " +
-        bestFitnessValue +
+        bestPopulation.fitnessValue +
         " Mean " +
         MeanFitnessValue(populations)
       );
     }
 
+    // Вставка в бд
     let isBulk = await db.schedule.bulkCreate(bestPopulation.schedule.map(schedule => {
       return {
         number_pair: schedule.number_pair, day_week: schedule.day_week,

@@ -3,66 +3,75 @@ import CheckPutClassForAudience from "./CheckPutClassForAudience.js"
 import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js"
 import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js"
 import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js"
+import cloneDeep from "lodash/clonedeep.js";
 
-export default function Crossing(schedule1, schedule2, classes, mapGroupAndAG, mapTeacherAndAG) {
+export default function Crossing(schedule1, schedule2, classes, mapGroupAndAG, mapTeacherAndAG, population_child) {
   let s = GetRndInteger(0, classes.length - 1);
+  let current_schedule1 = cloneDeep(schedule1);
+  let current_schedule2 = cloneDeep(schedule2);
+
   for (let i = s; i < classes.length; i++) {
     let type_class = classes[i].id_type_class;
-    let temp1 = [];
-    let temp2 = [];
-    let new_schedule1 = [];
-    let new_schedule2 = [];
     // Если лекция, то меняется для всех групп
     if (type_class === 1) {
+      // Закре группы для текущего занятия
       let ids_ag = classes[i].assigned_groups.map(ag => {
         return ag.id;
       })
-      changeSchedule(ids_ag, temp1, temp2, schedule1, schedule2, new_schedule1, new_schedule2);
+      let { new_schedule1, new_schedule2, temp1, temp2 } = changeSchedule(ids_ag, current_schedule1, current_schedule2);
+      // Проверка на то можно ли вставить выбранные предметы из 1 во 2 расписание и наоборот
       let canPut1 = checkPutLecture(classes[i], temp1, new_schedule2, mapGroupAndAG, mapTeacherAndAG);
       let canPut2 = checkPutLecture(classes[i], temp2, new_schedule1, mapGroupAndAG, mapTeacherAndAG);
       if (canPut1 && canPut2) {
-        schedule1 = removeSchedule(ids_ag, schedule1);
-        schedule2 = removeSchedule(ids_ag, schedule2);
-        schedule1.push(...temp2);
-        schedule2.push(...temp1);
+        new_schedule1.push(...temp2);
+        new_schedule2.push(...temp1);
+        current_schedule1 = cloneDeep(new_schedule1);
+        current_schedule2 = cloneDeep(new_schedule2);
       }
     }
     //Если практика, то для каждой группы отдельно
     else if (type_class === 2) {
       classes[i].assigned_groups.forEach(ag => {
         let ids_ag = [ag.id];
-        temp1 = [];
-        temp2 = [];
-        changeSchedule(ids_ag, temp1, temp2, schedule1, schedule2, new_schedule1, new_schedule2);
+        let { new_schedule1, new_schedule2, temp1, temp2 } = changeSchedule(ids_ag, current_schedule1, current_schedule2);
+        // Проверка на то можно ли вставить выбранные предметы из 1 во 2 расписание и наоборот
         let canPut1 = checkPutPractice(classes[i], ag.id_group, temp1, new_schedule2, mapGroupAndAG, mapTeacherAndAG);
         let canPut2 = checkPutPractice(classes[i], ag.id_group, temp2, new_schedule1, mapGroupAndAG, mapTeacherAndAG);
         if (canPut1 && canPut2) {
-          schedule1 = removeSchedule(ids_ag, schedule1);
-          schedule2 = removeSchedule(ids_ag, schedule2);
-          schedule1.push(...temp2);
-          schedule2.push(...temp1);
+          new_schedule1.push(...temp2);
+          new_schedule2.push(...temp1);
+          current_schedule1 = cloneDeep(new_schedule1);
+          current_schedule2 = cloneDeep(new_schedule2);
         }
       })
     }
-
   }
+  population_child.push({ schedule: current_schedule1, fitnessValue: Number.MAX_VALUE });
+  population_child.push({ schedule: current_schedule2, fitnessValue: Number.MAX_VALUE });
 }
 
-function changeSchedule(ids_ag, temp1, temp2, schedule1, schedule2, new_schedule1, new_schedule2) {
-  new_schedule1 = schedule1.map(sc1 => {
+function changeSchedule(ids_ag, schedule1, schedule2) {
+  let temp1 = [];
+  let temp2 = [];
+  // Копия расписания 1 без предметов из ids_ag
+  let new_schedule1 = schedule1.filter(sc1 => {
     if (ids_ag.find(id => sc1.id_assigned_group === id)) {
       temp1.push(sc1);
+      return false;
     }
     else
-      return new_schedule1.push(sc1);
+      return true;
   })
-  schedule2.map(sc2 => {
+  // Копия расписания 2 без предметов из ids_ag
+  let new_schedule2 = schedule2.filter(sc2 => {
     if (ids_ag.find(id => sc2.id_assigned_group === id)) {
       temp2.push(sc2);
+      return false;
     }
     else
-      return new_schedule2.push(sc2);
+      return true;
   })
+  return { new_schedule1, new_schedule2, temp1, temp2 }
 }
 
 function checkPutLecture(clas, temp, schedule, mapGroupAndAG, mapTeacherAndAG) {
@@ -97,14 +106,4 @@ function checkPutPractice(clas, id_group, temp, schedule, mapGroupAndAG, mapTeac
     }
   }
   return canPut;
-}
-
-function removeSchedule(ids_ag, schedule) {
-  schedule = schedule.filter(sc => {
-    if (ids_ag.find(id => sc.id_assigned_group === id)) {
-      return false;
-    }
-    return true;
-  })
-  return schedule;
 }
