@@ -12,20 +12,46 @@ import SelectRoulette from "./SelectRoulette.js";
 
 export const RUN_EA = {
   type: MessageType,
-  async resolve(parent) {
+  args: {
+    population_size: { type: GraphQLInt },
+    max_generations: { type: GraphQLInt },
+    p_crossover: { type: GraphQLFloat },
+    p_mutation: { type: GraphQLFloat },
+    p_genes: { type: GraphQLFloat },
+    penaltyGrWin: { type: GraphQLInt },
+    penaltyTeachWin: { type: GraphQLInt },
+    penaltyLateSc: { type: GraphQLInt },
+    penaltyEqSc: { type: GraphQLInt },
+    penaltySameTimesSc: { type: GraphQLInt },
+  },
+  async resolve(
+    parent,
+    {
+      population_size,
+      max_generations,
+      p_crossover,
+      p_mutation,
+      p_genes,
+      penaltyGrWin,
+      penaltyTeachWin,
+      penaltyLateSc,
+      penaltyEqSc,
+      penaltySameTimesSc,
+    }
+  ) {
     const info = await db.info.findAll();
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
-    const population_size = 100;
-    const max_generations = 1000;
-    const p_crossover = 0.5;
-    const p_mutation = 0.1;
-    const p_genes = 0.01;
-    const penaltyGrWin = 1;
-    const penaltyTeachWin = 2;
-    const penaltyLateSc = 0;
-    const penaltyEqSc = 0;
-    const penaltySameTimesSc = 5;
+    population_size = 500;
+    max_generations = 1000;
+    p_crossover = 0.1;
+    p_mutation = 0.3;
+    p_genes = 0.01;
+    penaltyGrWin = 1;
+    penaltyTeachWin = 1;
+    penaltyLateSc = 0;
+    penaltyEqSc = 2;
+    penaltySameTimesSc = 10;
     const classes = await db.class.findAll({
       include: [
         {
