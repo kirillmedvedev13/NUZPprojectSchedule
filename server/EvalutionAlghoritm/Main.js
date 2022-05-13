@@ -1,15 +1,12 @@
 import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
-import fitness from "./Fitness.js";
 import Init from "./Init.js";
-import Mutation from "./Mutation.js";
-import SelectTournament from "./SelectTournament.js";
 import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
 import GetRndInteger from "./GetRndInteger.js";
 import { cpus } from "node:os"
-import { DynamicPool } from "node-worker-threads-pool"
-const numCPUs = cpus.length;
+import { StaticPool } from "node-worker-threads-pool"
+import cloneDeep from "lodash/clonedeep.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -66,6 +63,7 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
+
     // Очистка расписания
     // await db.schedule.destroy({ truncate: true });
 
@@ -97,7 +95,32 @@ export const RUN_EA = {
     }
 
     // Создание пула потоков
-    const dynamicPool = new DynamicPool(numCPUs);
+    const numCPUs = cpus().length;
+    const staticPoolCrossing = new StaticPool({
+      size: numCPUs,
+      task: "./EvalutionAlghoritm/Crossing.js"
+    });
+    const staticPoolMutation = new StaticPool({
+      size: numCPUs,
+      task: "./EvalutionAlghoritm/Mutation.js"
+    });
+    const staticPoolSelect = new StaticPool({
+      size: numCPUs,
+      task: "./EvalutionAlghoritm/SelectTournament.js"
+    })
+    const staticPoolFitness = new StaticPool({
+      size: numCPUs,
+      task: "./EvalutionAlghoritm/Fitness.js",
+      workerData: {
+        mapGroupAndAG,
+        mapTeacherAndAG,
+        penaltyGrWin,
+        penaltyTeachWin,
+        penaltyLateSc,
+        penaltyEqSc,
+        penaltySameTimesSc
+      }
+    })
 
     // Инициализация
     let populations = Init(
@@ -108,84 +131,107 @@ export const RUN_EA = {
       audiences
     );
 
+    let arr_promisses = [];
     // Установка целевого значения
-    populations.map((individ) => {
-      individ.fitnessValue = fitness(
-        individ.schedule,
-        mapGroupAndAG,
-        mapTeacherAndAG,
-        penaltyGrWin,
-        penaltyTeachWin,
-        penaltyLateSc,
-        penaltyEqSc,
-        penaltySameTimesSc
-      );
+    populations.map((individ, index) => {
+      const param = JSON.stringify({ schedule: individ.schedule, index });
+      arr_promisses.push(staticPoolFitness.exec(param));
     });
+    await Promise.all(arr_promisses).then(res => {
+      res.map((r) => {
+        populations[r.index].fitnessValue = r.value;
+      })
+    })
 
-    let generationCount = 0;
-    let bestPopulation = MinFitnessValue(populations, {
-      fitnessValue: Number.MAX_VALUE,
-    });
-    while (bestPopulation.fitnessValue > 0 && generationCount < max_generations) {
-      generationCount++;
+    let bestPopulation = { schedule: null, fitnessValue: null };
 
+    for (const generationCount of Array(max_generations).fill().map((v, i) => i + 1)) {
+
+      console.time("Cross")
       // Скрещивание
-      let arr_promisses = [];
-      for (let i = 0; i < population_size / 4; i++) {
+      arr_promisses = [];
+      for (let i = 0; i < population_size / 2; i++) {
         if (Math.random() < p_crossover) {
-          arr_promisses.push(dynamicPool.exec({
-            task: './Crossing.js',
-            param: {
-              schedule1: populations[GetRndInteger(0, populations.length - 1)].schedule,
-              schedule2: populations[GetRndInteger(0, populations.length - 1)].schedule,
-              classes,
-            }
+          const param = JSON.stringify({
+            schedule1: populations[GetRndInteger(0, populations.length - 1)].schedule,
+            schedule2: populations[GetRndInteger(0, populations.length - 1)].schedule,
+            classes
           })
-          )
+          arr_promisses.push(staticPoolCrossing.exec(param));
         }
       }
-
       await Promise.all(arr_promisses).then((res) => {
         res.map(r => {
           populations.push(r.population_child1);
           populations.push(r.population_child2);
         })
       })
-
-      populations.push(...population_child);
+      console.timeEnd("Cross")
+      console.time("Muta")
       // Мутации
-      populations.map((mutant) => {
+      arr_promisses = [];
+      populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
-          mutant.schedule = Mutation(
-            mutant.schedule,
+          const param = JSON.stringify({
+            schedule: mutant.schedule,
             p_genes,
             max_day,
             max_pair,
             audiences,
-          );
+          });
+          arr_promisses.push(staticPoolMutation.exec(param));
         }
       });
-
-      // Установка фитнесс значения
-      populations.map((individ) => {
-        individ.fitnessValue = fitness(
-          individ.schedule,
-          mapGroupAndAG,
-          mapTeacherAndAG,
-          penaltyGrWin,
-          penaltyTeachWin,
-          penaltyLateSc,
-          penaltyEqSc,
-          penaltySameTimesSc
-        );
+      await Promise.all(arr_promisses).then(res => {
+        res.map(r => {
+          populations.push({ schedule: r, fitnessValue: null });
+        })
       });
-
+      console.timeEnd("Muta")
+      console.time("Fitness")
+      // Установка фитнесс значения
+      populations.map((individ, index) => {
+        const param = JSON.stringify({ schedule: individ.schedule, index });
+        arr_promisses.push(staticPoolFitness.exec(param));
+      });
+      await Promise.all(arr_promisses).then(res => {
+        res.map((r) => {
+          populations[r.index].fitnessValue = r.value;
+        })
+      })
+      console.timeEnd("Fitness")
+      console.time("Select")
       // Отбор
-      //populations = SelectRoulette(populations);
-      populations = SelectTournament(populations, population_size);
-
+      arr_promisses = [];
+      for (let i = 0; i < population_size; i++) {
+        let i1 = 0;
+        let i2 = i1;
+        let i3 = i1;
+        while (i1 == i2 || i2 == i3 || i1 == i3) {
+          i1 = GetRndInteger(0, populations.length - 1);
+          i2 = GetRndInteger(0, populations.length - 1);
+          i3 = GetRndInteger(0, populations.length - 1);
+        }
+        const param = JSON.stringify({
+          population1: { fitnessValue: populations[i1].fitnessValue, index: i1 },
+          population2: { fitnessValue: populations[i1].fitnessValue, index: i2 },
+          population3: { fitnessValue: populations[i1].fitnessValue, index: i3 }
+        });
+        arr_promisses.push(staticPoolSelect.exec(param))
+      }
+      let new_populations = [];
+      await Promise.all(arr_promisses).then(res => {
+        res.map((index) => {
+          new_populations.push(cloneDeep(populations[index]));
+        })
+      })
+      populations = new_populations;
+      console.timeEnd("Select")
       // Лучшая популяция
       bestPopulation = MinFitnessValue(populations, bestPopulation);
+
+      if (bestPopulation.fitnessValue == 0)
+        break;
 
       console.log(
         generationCount +

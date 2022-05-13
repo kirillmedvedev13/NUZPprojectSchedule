@@ -1,25 +1,23 @@
 import GetRndInteger from "./GetRndInteger.js";
 import cloneDeep from "lodash/clonedeep.js";
-import { parentPort, workerData } from "node:worker_threads"
+import { parentPort } from "worker_threads";
 
-
-parentPort.on('message', ({ schedule1, schedule2, classes }) => {
-  const res = Crossing(...param);
-  console.log(workerData);
+parentPort.on("message", (param) => {
+  const res = Crossing(param);
   parentPort.postMessage(res);
-});
+})
 
-function Crossing(
-  schedule1,
-  schedule2,
-  classes
-) {
-
-  let s = GetRndInteger(classes.length / 4, classes.length - 1);
+function Crossing(param) {
+  const {
+    schedule1,
+    schedule2,
+    classes
+  } = JSON.parse(param);
+  let s = GetRndInteger(0, classes.length / 2);
 
   let current_schedule1 = cloneDeep(schedule1);
   let current_schedule2 = cloneDeep(schedule2);
-  for (let i = s; i < classes.length; i++) {
+  for (let i = s; i < 2 * s; i++) {
     let type_class = classes[i].id_type_class;
     // Если лекция, то меняется для всех групп
     if (type_class === 1) {

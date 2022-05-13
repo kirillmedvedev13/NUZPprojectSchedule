@@ -11,9 +11,9 @@ export default function MinFitnessValue(populations, bestPopulation) {
     }
   }
 
-  let newBestPop = Object.assign(cloneDeep(bestPopulation));
+  let newBestPop = cloneDeep(bestPopulation);
   if (bestPopulation.fitnessValue > min) {
-    newBestPop = Object.assign(cloneDeep(populations[min_index]));
+    newBestPop = cloneDeep(populations[min_index]);
   }
   return newBestPop;
 }

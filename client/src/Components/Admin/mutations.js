@@ -49,30 +49,8 @@ export const DELETE_ALL_DATA = gql`
   }
 `;
 export const RUN_EA = gql`
-  mutation (
-    $population_size: Int!
-    $max_generations: Int!
-    $p_crossover: Float!
-    $p_mutation: Float!
-    $p_genes: Float!
-    $penaltyGrWin: Int!
-    $penaltyTeachWin: Int!
-    $penaltyLateSc: Int!
-    $penaltyEqSc: Int!
-    $penaltySameTimesSc: Int!
-  ) {
-    RunEA(
-      population_size: $population_size
-      max_generations: $max_generations
-      p_crossover: $p_crossover
-      p_mutation: $p_mutation
-      p_genes: $p_genes
-      penaltyGrWin: $penaltyGrWin
-      penaltyTeachWin: $penaltyTeachWin
-      penaltyLateSc: $penaltyLateSc
-      penaltyEqSc: $penaltyEqSc
-      penaltySameTimesSc: $penaltySameTimesSc
-    ) {
+  mutation {
+    RunEA {
       message
       successful
     }
