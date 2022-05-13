@@ -4,8 +4,8 @@ import Init from "./Init.js";
 import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
 import GetRndInteger from "./GetRndInteger.js";
-import { cpus } from "node:os"
-import { StaticPool } from "node-worker-threads-pool"
+import { cpus } from "node:os";
+import { StaticPool } from "node-worker-threads-pool";
 import cloneDeep from "lodash/clonedeep.js";
 
 export const RUN_EA = {
@@ -98,16 +98,16 @@ export const RUN_EA = {
     const numCPUs = cpus().length;
     const staticPoolCrossing = new StaticPool({
       size: numCPUs,
-      task: "./EvalutionAlghoritm/Crossing.js"
+      task: "./EvalutionAlghoritm/Crossing.js",
     });
     const staticPoolMutation = new StaticPool({
       size: numCPUs,
-      task: "./EvalutionAlghoritm/Mutation.js"
+      task: "./EvalutionAlghoritm/Mutation.js",
     });
     const staticPoolSelect = new StaticPool({
       size: numCPUs,
-      task: "./EvalutionAlghoritm/SelectTournament.js"
-    })
+      task: "./EvalutionAlghoritm/SelectTournament.js",
+    });
     const staticPoolFitness = new StaticPool({
       size: numCPUs,
       task: "./EvalutionAlghoritm/Fitness.js",
@@ -118,9 +118,9 @@ export const RUN_EA = {
         penaltyTeachWin,
         penaltyLateSc,
         penaltyEqSc,
-        penaltySameTimesSc
-      }
-    })
+        penaltySameTimesSc,
+      },
+    });
 
     // Инициализация
     let populations = Init(
@@ -133,41 +133,35 @@ export const RUN_EA = {
 
     let arr_promisses = [];
     // Установка целевого значения
-    populations.map((individ, index) => {
-      const param = JSON.stringify({ schedule: individ.schedule, index });
-      arr_promisses.push(staticPoolFitness.exec(param));
-    });
-    await Promise.all(arr_promisses).then(res => {
-      res.map((r) => {
-        populations[r.index].fitnessValue = r.value;
-      })
-    })
 
-    let bestPopulation = { schedule: null, fitnessValue: null };
+    let bestPopulation = { schedule: null, fitnessValue: Number.MAX_VALUE };
 
-    for (const generationCount of Array(max_generations).fill().map((v, i) => i + 1)) {
-
-      console.time("Cross")
+    for (const generationCount of Array(max_generations)
+      .fill()
+      .map((v, i) => i + 1)) {
+      console.time("Cross");
       // Скрещивание
       arr_promisses = [];
       for (let i = 0; i < population_size / 2; i++) {
         if (Math.random() < p_crossover) {
           const param = JSON.stringify({
-            schedule1: populations[GetRndInteger(0, populations.length - 1)].schedule,
-            schedule2: populations[GetRndInteger(0, populations.length - 1)].schedule,
-            classes
-          })
+            schedule1:
+              populations[GetRndInteger(0, populations.length - 1)].schedule,
+            schedule2:
+              populations[GetRndInteger(0, populations.length - 1)].schedule,
+            classes,
+          });
           arr_promisses.push(staticPoolCrossing.exec(param));
         }
       }
       await Promise.all(arr_promisses).then((res) => {
-        res.map(r => {
+        res.map((r) => {
           populations.push(r.population_child1);
           populations.push(r.population_child2);
-        })
-      })
-      console.timeEnd("Cross")
-      console.time("Muta")
+        });
+      });
+      console.timeEnd("Cross");
+      console.time("Muta");
       // Мутации
       arr_promisses = [];
       populations.map((mutant, index) => {
@@ -182,25 +176,26 @@ export const RUN_EA = {
           arr_promisses.push(staticPoolMutation.exec(param));
         }
       });
-      await Promise.all(arr_promisses).then(res => {
-        res.map(r => {
+      await Promise.all(arr_promisses).then((res) => {
+        res.map((r) => {
           populations.push({ schedule: r, fitnessValue: null });
-        })
+        });
       });
-      console.timeEnd("Muta")
-      console.time("Fitness")
+      console.timeEnd("Muta");
+      console.time("Fitness");
       // Установка фитнесс значения
+      arr_promisses = [];
       populations.map((individ, index) => {
         const param = JSON.stringify({ schedule: individ.schedule, index });
         arr_promisses.push(staticPoolFitness.exec(param));
       });
-      await Promise.all(arr_promisses).then(res => {
+      await Promise.all(arr_promisses).then((res) => {
         res.map((r) => {
           populations[r.index].fitnessValue = r.value;
-        })
-      })
-      console.timeEnd("Fitness")
-      console.time("Select")
+        });
+      });
+      console.timeEnd("Fitness");
+      console.time("Select");
       // Отбор
       arr_promisses = [];
       for (let i = 0; i < population_size; i++) {
@@ -213,32 +208,40 @@ export const RUN_EA = {
           i3 = GetRndInteger(0, populations.length - 1);
         }
         const param = JSON.stringify({
-          population1: { fitnessValue: populations[i1].fitnessValue, index: i1 },
-          population2: { fitnessValue: populations[i1].fitnessValue, index: i2 },
-          population3: { fitnessValue: populations[i1].fitnessValue, index: i3 }
+          population1: {
+            fitnessValue: populations[i1].fitnessValue,
+            index: i1,
+          },
+          population2: {
+            fitnessValue: populations[i1].fitnessValue,
+            index: i2,
+          },
+          population3: {
+            fitnessValue: populations[i1].fitnessValue,
+            index: i3,
+          },
         });
-        arr_promisses.push(staticPoolSelect.exec(param))
+        arr_promisses.push(staticPoolSelect.exec(param));
       }
       let new_populations = [];
-      await Promise.all(arr_promisses).then(res => {
+      await Promise.all(arr_promisses).then((res) => {
         res.map((index) => {
           new_populations.push(cloneDeep(populations[index]));
-        })
-      })
+        });
+      });
       populations = new_populations;
-      console.timeEnd("Select")
+      console.timeEnd("Select");
       // Лучшая популяция
       bestPopulation = MinFitnessValue(populations, bestPopulation);
 
-      if (bestPopulation.fitnessValue == 0)
-        break;
+      if (bestPopulation.fitnessValue == 0) break;
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
 
@@ -259,7 +262,7 @@ export const RUN_EA = {
     //     successful: true,
     //     message: `Total Fitness: ${bestPopulation.fitnessValue}`,
     //   };
-    // else 
+    // else
     return { successful: false, message: `Some error` };
   },
 };

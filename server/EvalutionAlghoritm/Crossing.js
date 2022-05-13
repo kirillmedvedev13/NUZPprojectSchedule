@@ -5,14 +5,10 @@ import { parentPort } from "worker_threads";
 parentPort.on("message", (param) => {
   const res = Crossing(param);
   parentPort.postMessage(res);
-})
+});
 
 function Crossing(param) {
-  const {
-    schedule1,
-    schedule2,
-    classes
-  } = JSON.parse(param);
+  const { schedule1, schedule2, classes } = JSON.parse(param);
   let s = GetRndInteger(0, classes.length / 2);
 
   let current_schedule1 = cloneDeep(schedule1);
@@ -59,7 +55,7 @@ function Crossing(param) {
     schedule: current_schedule2,
     fitnessValue: null,
   };
-  return { population_child1, population_child2 }
+  return { population_child1, population_child2 };
 }
 
 function changeSchedule(ids_ag, schedule1, schedule2) {

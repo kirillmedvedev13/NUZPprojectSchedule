@@ -2,9 +2,13 @@ import { parentPort, workerData } from "worker_threads";
 
 parentPort.on("message", (param) => {
   const { index, schedule } = JSON.parse(param);
-  const res = fitness(schedule, workerData);
-  parentPort.postMessage({ value: res, index });
-})
+  const value = fitness(schedule, workerData);
+  const res = {
+    value,
+    index,
+  };
+  parentPort.postMessage(res);
+});
 
 function fitness(schedule, workerData) {
   const {
@@ -14,7 +18,7 @@ function fitness(schedule, workerData) {
     penaltyLateSc,
     penaltyEqSc,
     penaltySameTimesSc,
-    penaltyTeachWin
+    penaltyTeachWin,
   } = workerData;
   let fitnessValue = 0;
   fitnessValue += fitnessByGroups(
@@ -87,22 +91,22 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
   while (index < detectedSchedules.length) {
     if (
       detectedSchedules[index - 1].day_week ==
-      detectedSchedules[index].day_week &&
+        detectedSchedules[index].day_week &&
       detectedSchedules[index - 1].number_pair !=
-      detectedSchedules[index].number_pair
+        detectedSchedules[index].number_pair
     ) {
       if (
         detectedSchedules[index - 1].pair_type ==
-        detectedSchedules[index].pair_type ||
+          detectedSchedules[index].pair_type ||
         detectedSchedules[index].pair_type == 3
       ) {
         if (index > 1) {
           if (
             detectedSchedules[index].pair_type == 3 &&
             detectedSchedules[index - 2].number_pair ==
-            detectedSchedules[index - 1].number_pair &&
+              detectedSchedules[index - 1].number_pair &&
             detectedSchedules[index - 2].day_week ==
-            detectedSchedules[index].day_week
+              detectedSchedules[index].day_week
           ) {
             fitnessValue +=
               (detectedSchedules[index].number_pair -
@@ -122,9 +126,9 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
     if (index < detectedSchedules.length)
       if (
         detectedSchedules[index].day_week ==
-        detectedSchedules[index - 1].day_week &&
+          detectedSchedules[index - 1].day_week &&
         detectedSchedules[index].number_pair ==
-        detectedSchedules[index - 1].number_pair
+          detectedSchedules[index - 1].number_pair
       )
         index++;
   }
@@ -227,7 +231,7 @@ function fitnessSameTimesGroup(detectedSchedules, penaltySameTimesSc) {
       ) {
         if (
           detectedSchedules[index - 1].pair_type ==
-          detectedSchedules[index].pair_type ||
+            detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type == 3 ||
           detectedSchedules[index].pair_type == 3
         )
@@ -251,7 +255,7 @@ function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
       ) {
         if (
           detectedSchedules[index - 1].pair_type ==
-          detectedSchedules[index].pair_type ||
+            detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type == 3 ||
           detectedSchedules[index].pair_type == 3
         )
