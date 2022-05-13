@@ -62,6 +62,7 @@ import { SET_CLASSES } from "../Mutations/Admin.js";
 import { DELETE_ALL_DATA } from "../Mutations/Admin.js";
 import { RUN_EA } from "../../EvalutionAlghoritm/Main.js";
 import { GET_INFO } from "../Queries/Info.js";
+import { UPDATE_INFO } from "../Mutations/Info.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -120,6 +121,7 @@ const Mutation = new GraphQLObjectType({
     ReloginUser: RELOGIN_USER,
     SetClasses: SET_CLASSES,
     DeleteAllData: DELETE_ALL_DATA,
+    UpdateInfo: UPDATE_INFO,
     RunEA: RUN_EA,
   },
 });

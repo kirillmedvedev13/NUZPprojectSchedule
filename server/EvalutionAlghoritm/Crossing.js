@@ -1,12 +1,20 @@
 import GetRndInteger from "./GetRndInteger.js";
 import cloneDeep from "lodash/clonedeep.js";
+import { parentPort, workerData } from "node:worker_threads"
 
-export default function Crossing(
+
+parentPort.on('message', ({ schedule1, schedule2, classes }) => {
+  const res = Crossing(...param);
+  console.log(workerData);
+  parentPort.postMessage(res);
+});
+
+function Crossing(
   schedule1,
   schedule2,
-  classes,
-  population_child
+  classes
 ) {
+
   let s = GetRndInteger(classes.length / 4, classes.length - 1);
 
   let current_schedule1 = cloneDeep(schedule1);
@@ -45,14 +53,15 @@ export default function Crossing(
       });
     }
   }
-  population_child.push({
+  const population_child1 = {
     schedule: current_schedule1,
-    fitnessValue: Number.MAX_VALUE,
-  });
-  population_child.push({
+    fitnessValue: null,
+  };
+  const population_child2 = {
     schedule: current_schedule2,
-    fitnessValue: Number.MAX_VALUE,
-  });
+    fitnessValue: null,
+  };
+  return { population_child1, population_child2 }
 }
 
 function changeSchedule(ids_ag, schedule1, schedule2) {

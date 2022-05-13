@@ -1,6 +1,5 @@
 import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
-import Crossing from "./Crossing.js";
 import fitness from "./Fitness.js";
 import Init from "./Init.js";
 import Mutation from "./Mutation.js";
@@ -8,51 +7,26 @@ import SelectTournament from "./SelectTournament.js";
 import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
 import GetRndInteger from "./GetRndInteger.js";
-import SelectRoulette from "./SelectRoulette.js";
-import { GraphQLFloat, GraphQLInt } from "graphql";
+import { cpus } from "node:os"
+import { DynamicPool } from "node-worker-threads-pool"
+const numCPUs = cpus.length;
 
 export const RUN_EA = {
   type: MessageType,
-  args: {
-    population_size: { type: GraphQLInt },
-    max_generations: { type: GraphQLInt },
-    p_crossover: { type: GraphQLFloat },
-    p_mutation: { type: GraphQLFloat },
-    p_genes: { type: GraphQLFloat },
-    penaltyGrWin: { type: GraphQLInt },
-    penaltyTeachWin: { type: GraphQLInt },
-    penaltyLateSc: { type: GraphQLInt },
-    penaltyEqSc: { type: GraphQLInt },
-    penaltySameTimesSc: { type: GraphQLInt },
-  },
-  async resolve(
-    parent,
-    {
-      population_size,
-      max_generations,
-      p_crossover,
-      p_mutation,
-      p_genes,
-      penaltyGrWin,
-      penaltyTeachWin,
-      penaltyLateSc,
-      penaltyEqSc,
-      penaltySameTimesSc,
-    }
-  ) {
+  async resolve(parent) {
     const info = await db.info.findAll();
     const max_day = info[0].dataValues.max_day;
     const max_pair = info[0].dataValues.max_pair;
-    population_size = 500;
-    max_generations = 1000;
-    p_crossover = 0.1;
-    p_mutation = 0.3;
-    p_genes = 0.01;
-    penaltyGrWin = 1;
-    penaltyTeachWin = 1;
-    penaltyLateSc = 0;
-    penaltyEqSc = 2;
-    penaltySameTimesSc = 10;
+    const population_size = info[0].dataValues.population_size;
+    const max_generations = info[0].dataValues.max_generations;
+    const p_crossover = info[0].dataValues.p_crossover;
+    const p_mutation = info[0].dataValues.p_mutation;
+    const p_genes = info[0].dataValues.p_genes;
+    const penaltyGrWin = info[0].dataValues.penaltyGrWin;
+    const penaltyTeachWin = info[0].dataValues.penaltyTeachWin;
+    const penaltyLateSc = info[0].dataValues.penaltyLateSc;
+    const penaltyEqSc = info[0].dataValues.penaltyEqSc;
+    const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
     const classes = await db.class.findAll({
       include: [
         {
@@ -106,7 +80,7 @@ export const RUN_EA = {
       }
       mapGroupAndAG.set(group.id, temp);
     }
-    // Стркуктура для каждого учителя массив закрепленных для него занятий
+    // Структура для каждого учителя массив закрепленных для него занятий
     let mapTeacherAndAG = new Map();
     for (const teacher of teachers) {
       let temp = [];
@@ -121,6 +95,9 @@ export const RUN_EA = {
       });
       mapTeacherAndAG.set(teacher.id, temp);
     }
+
+    // Создание пула потоков
+    const dynamicPool = new DynamicPool(numCPUs);
 
     // Инициализация
     let populations = Init(
@@ -149,24 +126,31 @@ export const RUN_EA = {
     let bestPopulation = MinFitnessValue(populations, {
       fitnessValue: Number.MAX_VALUE,
     });
-    while (
-      bestPopulation.fitnessValue > 0 &&
-      generationCount < max_generations
-    ) {
+    while (bestPopulation.fitnessValue > 0 && generationCount < max_generations) {
       generationCount++;
 
       // Скрещивание
-      let population_child = [];
+      let arr_promisses = [];
       for (let i = 0; i < population_size / 4; i++) {
         if (Math.random() < p_crossover) {
-          Crossing(
-            populations[GetRndInteger(0, populations.length - 1)].schedule,
-            populations[GetRndInteger(0, populations.length - 1)].schedule,
-            classes,
-            population_child
-          );
+          arr_promisses.push(dynamicPool.exec({
+            task: './Crossing.js',
+            param: {
+              schedule1: populations[GetRndInteger(0, populations.length - 1)].schedule,
+              schedule2: populations[GetRndInteger(0, populations.length - 1)].schedule,
+              classes,
+            }
+          })
+          )
         }
       }
+
+      await Promise.all(arr_promisses).then((res) => {
+        res.map(r => {
+          populations.push(r.population_child1);
+          populations.push(r.population_child2);
+        })
+      })
 
       populations.push(...population_child);
       // Мутации
@@ -177,7 +161,7 @@ export const RUN_EA = {
             p_genes,
             max_day,
             max_pair,
-            audiences
+            audiences,
           );
         }
       });
@@ -205,10 +189,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
 
@@ -229,7 +213,7 @@ export const RUN_EA = {
     //     successful: true,
     //     message: `Total Fitness: ${bestPopulation.fitnessValue}`,
     //   };
-    // else
+    // else 
     return { successful: false, message: `Some error` };
   },
 };

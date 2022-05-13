@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Card, Row, Col } from "react-bootstrap";
+import { Form, Card } from "react-bootstrap";
 import { CreateNotification } from "../Alert";
 import { Workbook } from "exceljs";
 import ButtonRunEA from "./ButtonRunEA";
@@ -16,7 +16,7 @@ class Admin extends React.Component {
     sheets: [],
     sheetIndex: null,
     onDelete: false,
-    filters: {
+    info: {
       population_size: 0,
       max_generations: 0,
       p_crossover: 0,
@@ -30,15 +30,18 @@ class Admin extends React.Component {
     },
   };
 
-  handleChangeFilters = (name, value) => {
-    console.log(value);
+  handleChangeInfo = (name, value) => {
     this.setState((PrevState) => ({
-      filters: update(PrevState.filters, { $merge: { [name]: value } }),
+      info: update(PrevState.info, { $merge: { [name]: value } }),
     }));
   };
+
+  handleSetInfo = (info) => {
+    this.setState({ info })
+  }
+
   setFile(file) {
     this.setState({ file });
-
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = () => {
@@ -123,10 +126,10 @@ class Admin extends React.Component {
               Складання розкладу за допомогою ГА
             </Card.Header>
             <Card.Body>
-              <FormEA handleChangeFilters={this.handleChangeFilters}></FormEA>
+              <FormEA handleChangeInfo={this.handleChangeInfo} handleSetInfo={this.handleSetInfo} info={this.state.info}></FormEA>
             </Card.Body>
             <Card.Footer>
-              <ButtonRunEA filters={this.state.filters}></ButtonRunEA>
+              <ButtonRunEA></ButtonRunEA>
             </Card.Footer>
           </Card>
         </div>
