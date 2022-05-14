@@ -17,16 +17,16 @@ class Admin extends React.Component {
     sheetIndex: null,
     onDelete: false,
     info: {
-      population_size: 0,
-      max_generations: 0,
-      p_crossover: 0,
-      p_mutation: 0,
-      p_genes: 0,
-      penaltyGrWin: 0,
-      penaltyTeachWin: 0,
-      penaltyLateSc: 0,
-      penaltyEqSc: 0,
-      penaltySameTimesSc: 0,
+      population_size: null,
+      max_generations: null,
+      p_crossover: null,
+      p_mutation: null,
+      p_genes: null,
+      penaltyGrWin: null,
+      penaltyTeachWin: null,
+      penaltyLateSc: null,
+      penaltyEqSc: null,
+      penaltySameTimesSc: null,
     },
   };
 
@@ -37,8 +37,8 @@ class Admin extends React.Component {
   };
 
   handleSetInfo = (info) => {
-    this.setState({ info })
-  }
+    this.setState({ info });
+  };
 
   setFile(file) {
     this.setState({ file });
@@ -126,7 +126,11 @@ class Admin extends React.Component {
               Складання розкладу за допомогою ГА
             </Card.Header>
             <Card.Body>
-              <FormEA handleChangeInfo={this.handleChangeInfo} handleSetInfo={this.handleSetInfo} info={this.state.info}></FormEA>
+              <FormEA
+                handleChangeInfo={this.handleChangeInfo}
+                handleSetInfo={this.handleSetInfo}
+                info={this.state.info}
+              ></FormEA>
             </Card.Body>
             <Card.Footer>
               <ButtonRunEA></ButtonRunEA>
