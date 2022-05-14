@@ -141,7 +141,7 @@ export const RUN_EA = {
     );
 
     let bestPopulation = { schedule: null, fitnessValue: Number.MAX_VALUE };
-
+    let p_elit = 0.3;
     for (const generationCount of Array(max_generations)
       .fill()
       .map((v, i) => i + 1)) {
@@ -197,9 +197,18 @@ export const RUN_EA = {
       });
       console.timeEnd("Fitness");
       console.time("Select");
+      // Элитизм
+      populations.sort((p1, p2) => {
+        if (p1.fitnessValue > p2.fitnessValue)
+          return 1;
+        if (p1.fitnessValue < p2.fitnessValue)
+          return -1;
+        return 0;
+      })
+      let elit = populations.splice(0, population_size * p_elit);
       // Отбор
       arr_promisses = [];
-      for (let i = 0; i < population_size; i++) {
+      for (let i = 0; i < population_size * (1 - p_elit); i++) {
         let i1 = 0;
         let i2 = i1;
         let i3 = i1;
@@ -231,6 +240,7 @@ export const RUN_EA = {
         });
       });
       populations = new_populations;
+      populations.push(...elit)
       console.timeEnd("Select");
       // Лучшая популяция
       bestPopulation = MinFitnessValue(populations, bestPopulation);
