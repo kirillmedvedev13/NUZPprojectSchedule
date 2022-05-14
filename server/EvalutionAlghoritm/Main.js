@@ -99,10 +99,19 @@ export const RUN_EA = {
     const staticPoolCrossing = new StaticPool({
       size: numCPUs,
       task: "./EvalutionAlghoritm/Crossing.js",
+      workerData: JSON.stringify({
+        classes
+      })
     });
     const staticPoolMutation = new StaticPool({
       size: numCPUs,
       task: "./EvalutionAlghoritm/Mutation.js",
+      workerData: JSON.stringify({
+        p_genes,
+        max_day,
+        max_pair,
+        audiences
+      })
     });
     const staticPoolSelect = new StaticPool({
       size: numCPUs,
@@ -131,9 +140,6 @@ export const RUN_EA = {
       audiences
     );
 
-    let arr_promisses = [];
-    // Установка целевого значения
-
     let bestPopulation = { schedule: null, fitnessValue: Number.MAX_VALUE };
 
     for (const generationCount of Array(max_generations)
@@ -141,15 +147,14 @@ export const RUN_EA = {
       .map((v, i) => i + 1)) {
       console.time("Cross");
       // Скрещивание
-      arr_promisses = [];
+      let arr_promisses = [];
       for (let i = 0; i < population_size / 2; i++) {
         if (Math.random() < p_crossover) {
           const param = JSON.stringify({
             schedule1:
               populations[GetRndInteger(0, populations.length - 1)].schedule,
             schedule2:
-              populations[GetRndInteger(0, populations.length - 1)].schedule,
-            classes,
+              populations[GetRndInteger(0, populations.length - 1)].schedule
           });
           arr_promisses.push(staticPoolCrossing.exec(param));
         }
@@ -167,11 +172,7 @@ export const RUN_EA = {
       populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
           const param = JSON.stringify({
-            schedule: mutant.schedule,
-            p_genes,
-            max_day,
-            max_pair,
-            audiences,
+            schedule: mutant.schedule
           });
           arr_promisses.push(staticPoolMutation.exec(param));
         }
@@ -226,7 +227,7 @@ export const RUN_EA = {
       let new_populations = [];
       await Promise.all(arr_promisses).then((res) => {
         res.map((index) => {
-          new_populations.push(cloneDeep(populations[index]));
+          new_populations.push(Object.assign({}, populations[index]));
         });
       });
       populations = new_populations;
@@ -238,10 +239,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
 
