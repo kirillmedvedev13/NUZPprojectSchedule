@@ -1,8 +1,4 @@
-import {
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLFloat
-} from "graphql";
+import { GraphQLInt, GraphQLObjectType, GraphQLFloat } from "graphql";
 
 const InfoType = new GraphQLObjectType({
   name: "Info",
@@ -37,6 +33,9 @@ const InfoType = new GraphQLObjectType({
       type: GraphQLFloat,
     },
     penaltySameTimesSc: {
+      type: GraphQLFloat,
+    },
+    p_elitism: {
       type: GraphQLFloat,
     },
   }),

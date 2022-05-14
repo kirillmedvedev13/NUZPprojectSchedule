@@ -9,34 +9,37 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
     population_size: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     max_generations: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     p_crossover: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     p_mutation: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     p_genes: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     penaltyGrWin: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     penaltyTeachWin: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     penaltyLateSc: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     penaltyEqSc: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
     },
     penaltySameTimesSc: {
-      type: DataTypes.DOUBLE
+      type: DataTypes.DOUBLE,
+    },
+    p_elitism: {
+      type: DataTypes.DOUBLE,
     },
   });
 

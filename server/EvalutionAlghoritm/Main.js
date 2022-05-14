@@ -7,6 +7,8 @@ import GetRndInteger from "./GetRndInteger.js";
 import { cpus } from "node:os";
 import { StaticPool } from "node-worker-threads-pool";
 import cloneDeep from "lodash/clonedeep.js";
+import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
+import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -68,31 +70,9 @@ export const RUN_EA = {
     await db.schedule.destroy({ truncate: true });
 
     // Структура для каждой группы массив закрепленных для неё занятий
-    let mapGroupAndAG = new Map();
-    for (const group of groups) {
-      let temp = [];
-      for (const cl of classes) {
-        cl.assigned_groups.map((ag) => {
-          if (ag.id_group === group.id) temp.push(ag.id);
-        });
-      }
-      mapGroupAndAG.set(group.id, temp);
-    }
+    let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
     // Структура для каждого учителя массив закрепленных для него занятий
-    let mapTeacherAndAG = new Map();
-    for (const teacher of teachers) {
-      let temp = [];
-      teacher.assigned_teachers.map((at) => {
-        let detected_classes = [];
-        detected_classes = classes.filter((cl) => cl.id === at.id_class);
-        detected_classes.map((dt) => {
-          dt.assigned_groups.map((ag) => {
-            temp.push(ag.id);
-          });
-        });
-      });
-      mapTeacherAndAG.set(teacher.id, temp);
-    }
+    let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
 
     // Создание пула потоков
     const numCPUs = cpus().length;
@@ -100,8 +80,8 @@ export const RUN_EA = {
       size: numCPUs,
       task: "./EvalutionAlghoritm/Crossing.js",
       workerData: JSON.stringify({
-        classes
-      })
+        classes,
+      }),
     });
     const staticPoolMutation = new StaticPool({
       size: numCPUs,
@@ -110,8 +90,8 @@ export const RUN_EA = {
         p_genes,
         max_day,
         max_pair,
-        audiences
-      })
+        audiences,
+      }),
     });
     const staticPoolSelect = new StaticPool({
       size: numCPUs,
@@ -154,7 +134,7 @@ export const RUN_EA = {
             schedule1:
               populations[GetRndInteger(0, populations.length - 1)].schedule,
             schedule2:
-              populations[GetRndInteger(0, populations.length - 1)].schedule
+              populations[GetRndInteger(0, populations.length - 1)].schedule,
           });
           arr_promisses.push(staticPoolCrossing.exec(param));
         }
@@ -172,7 +152,7 @@ export const RUN_EA = {
       populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
           const param = JSON.stringify({
-            schedule: mutant.schedule
+            schedule: mutant.schedule,
           });
           arr_promisses.push(staticPoolMutation.exec(param));
         }
@@ -199,12 +179,10 @@ export const RUN_EA = {
       console.time("Select");
       // Элитизм
       populations.sort((p1, p2) => {
-        if (p1.fitnessValue > p2.fitnessValue)
-          return 1;
-        if (p1.fitnessValue < p2.fitnessValue)
-          return -1;
+        if (p1.fitnessValue > p2.fitnessValue) return 1;
+        if (p1.fitnessValue < p2.fitnessValue) return -1;
         return 0;
-      })
+      });
       let elit = populations.splice(0, population_size * p_elit);
       // Отбор
       arr_promisses = [];
@@ -240,7 +218,7 @@ export const RUN_EA = {
         });
       });
       populations = new_populations;
-      populations.push(...elit)
+      populations.push(...elit);
       console.timeEnd("Select");
       // Лучшая популяция
       bestPopulation = MinFitnessValue(populations, bestPopulation);
@@ -249,10 +227,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
 

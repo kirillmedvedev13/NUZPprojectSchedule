@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Card } from "react-bootstrap";
+import { Form, Card, Carousel } from "react-bootstrap";
 import { CreateNotification } from "../Alert";
 import { Workbook } from "exceljs";
 import ButtonRunEA from "./ButtonRunEA";
@@ -27,6 +27,7 @@ class Admin extends React.Component {
       penaltyLateSc: null,
       penaltyEqSc: null,
       penaltySameTimesSc: null,
+      p_elitism: null,
     },
   };
 
@@ -72,71 +73,83 @@ class Admin extends React.Component {
   render() {
     return (
       <>
-        <div className="d-flex justify-content-center  ">
-          <Card className="my-2">
-            <Card.Header className="text-center">
-              Відомість заручень
-            </Card.Header>
-            <Card.Body>
-              <Form.Group controlId="formFileLg" className=" bg-light mb-3">
-                <Form.Control
-                  type="file"
-                  size="md"
-                  onChange={(e) => {
-                    this.setFile(e.target.files[0]);
-                  }}
-                />
-                <SelectCathedra setCathedra={this.setCathedra}></SelectCathedra>
-                <Form.Select
-                  onChange={(e) => {
-                    this.setState({ sheetIndex: e.target.value });
-                  }}
-                >
-                  {this.state.sheets.map((sh, index) => {
-                    return (
-                      <option key={index} value={index}>
-                        {sh}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
-              </Form.Group>
-              <Card.Footer>
-                <ButtonSubmitData
-                  id_cathedra={this.state.id_cathedra}
-                  file={this.state.file}
-                  sheetIndex={this.state.sheetIndex}
-                ></ButtonSubmitData>
-              </Card.Footer>
-            </Card.Body>
-          </Card>
-        </div>
-        <div className="d-flex justify-content-center  ">
-          <Card className="my-2">
-            <Card.Header className="text-center">Видалення даних</Card.Header>
-            <Card.Body></Card.Body>
-            <Card.Footer>
-              <ButtonDeleteAllData></ButtonDeleteAllData>
-            </Card.Footer>
-          </Card>
-        </div>
-        <div className="d-flex justify-content-center  ">
-          <Card className="my-2">
-            <Card.Header className="text-center">
-              Складання розкладу за допомогою ГА
-            </Card.Header>
-            <Card.Body>
-              <FormEA
-                handleChangeInfo={this.handleChangeInfo}
-                handleSetInfo={this.handleSetInfo}
-                info={this.state.info}
-              ></FormEA>
-            </Card.Body>
-            <Card.Footer>
-              <ButtonRunEA></ButtonRunEA>
-            </Card.Footer>
-          </Card>
-        </div>
+        <Carousel variant="dark" interval={null}>
+          <Carousel.Item>
+            <div className="d-flex justify-content-center  ">
+              <Card className="my-2">
+                <Card.Header className="text-center">
+                  Складання розкладу за допомогою ГА
+                </Card.Header>
+                <Card.Body>
+                  <FormEA
+                    handleChangeInfo={this.handleChangeInfo}
+                    handleSetInfo={this.handleSetInfo}
+                    info={this.state.info}
+                  ></FormEA>
+                </Card.Body>
+                <Card.Footer>
+                  <ButtonRunEA></ButtonRunEA>
+                </Card.Footer>
+              </Card>
+            </div>
+          </Carousel.Item>
+          <Carousel.Item>
+            <div className="d-flex justify-content-center  ">
+              <Card className="my-2">
+                <Card.Header className="text-center">
+                  Відомість заручень
+                </Card.Header>
+                <Card.Body>
+                  <Form.Group controlId="formFileLg" className=" bg-light mb-3">
+                    <Form.Control
+                      type="file"
+                      size="md"
+                      onChange={(e) => {
+                        this.setFile(e.target.files[0]);
+                      }}
+                    />
+                    <SelectCathedra
+                      setCathedra={this.setCathedra}
+                    ></SelectCathedra>
+                    <Form.Select
+                      onChange={(e) => {
+                        this.setState({ sheetIndex: e.target.value });
+                      }}
+                    >
+                      {this.state.sheets.map((sh, index) => {
+                        return (
+                          <option key={index} value={index}>
+                            {sh}
+                          </option>
+                        );
+                      })}
+                    </Form.Select>
+                  </Form.Group>
+                  <Card.Footer>
+                    <ButtonSubmitData
+                      id_cathedra={this.state.id_cathedra}
+                      file={this.state.file}
+                      sheetIndex={this.state.sheetIndex}
+                    ></ButtonSubmitData>
+                  </Card.Footer>
+                </Card.Body>
+              </Card>
+            </div>
+          </Carousel.Item>
+          <Carousel.Item>
+            <div className="d-flex justify-content-center  ">
+              <Card className="my-2">
+                <Card.Header className="text-center">
+                  Видалення даних
+                </Card.Header>
+                <Card.Body></Card.Body>
+                <Card.Footer>
+                  <ButtonDeleteAllData></ButtonDeleteAllData>
+                </Card.Footer>
+              </Card>
+            </div>
+          </Carousel.Item>
+        </Carousel>
       </>
     );
   }

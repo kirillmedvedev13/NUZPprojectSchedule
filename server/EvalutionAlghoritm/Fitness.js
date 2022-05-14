@@ -10,7 +10,7 @@ parentPort.on("message", (param) => {
   parentPort.postMessage(res);
 });
 
-function fitness(schedule, workerData) {
+export default function fitness(schedule, workerData) {
   const {
     mapTeacherAndAG,
     mapGroupAndAG,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_INFO } from "./queries.js";
+import { GET_FITNESS, GET_INFO } from "./queries.js";
 import { UPDATE_INFO } from "./mutations.js";
 import { CreateNotification } from "../Alert.js";
 
@@ -18,6 +18,7 @@ function ButtonUpdateInfo({ info }) {
   return (
     <div className="my-2 mx-2 d-flex justify-content-center">
       <Button
+        className="col-12"
         onClick={(e) => {
           if (data.length === 0) return;
           else
@@ -32,6 +33,22 @@ function ButtonUpdateInfo({ info }) {
       </Button>
     </div>
   );
+}
+function ButtonGetFitness() {
+  const { loading, error, data } = useQuery(GET_FITNESS, {});
+  if (loading) return null;
+  if (error) return `Error! ${error}`;
+  return;
+  <div className="my-2 mx-2 d-flex justify-content-center">
+    <Button
+      className="col-12"
+      onClick={() => {
+        CreateNotification(data.GetFitness);
+      }}
+    >
+      Отримати значення фітнес
+    </Button>
+  </div>;
 }
 
 function DataForm({ handleChangeInfo, handleSetInfo }) {
@@ -117,6 +134,21 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
             step={0.001}
             onChange={(e) => {
               handleChangeInfo("p_genes", e ? Number(e.target.value) : null);
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Елітизм</Form.Label>
+        <Col>
+          <Form.Control
+            defaultValue={data.GetInfo.p_elitism}
+            type="number"
+            min={0}
+            max={0.5}
+            step={0.01}
+            onChange={(e) => {
+              handleChangeInfo("p_elitism", e ? Number(e.target.value) : null);
             }}
           />
         </Col>
@@ -216,6 +248,7 @@ export default class FormEA extends React.Component {
           handleSetInfo={handleSetInfo}
         ></DataForm>
         <ButtonUpdateInfo info={info}></ButtonUpdateInfo>
+        <ButtonGetFitness></ButtonGetFitness>
       </Form>
     );
   }
