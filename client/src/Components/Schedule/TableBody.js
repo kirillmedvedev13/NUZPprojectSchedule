@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 export default function TableBody(MapSomething, info, getDescription) {
+  debugger;
   return (
     <tbody>
       {[...MapSomething].map((map) => {
@@ -17,27 +18,27 @@ export default function TableBody(MapSomething, info, getDescription) {
               // По числителю запоминать расписание
               while (
                 +map[1][currentIndexSchedule]?.pair_type === 1 &&
-                +map[1][currentIndexSchedule]?.number_pair === number_pair + 1
+                +map[1][currentIndexSchedule]?.number_pair === number_pair
               ) {
-                arrScheduleTop[+map[1][currentIndexSchedule].day_week - 1] =
+                arrScheduleTop[+map[1][currentIndexSchedule].day_week] =
                   map[1][currentIndexSchedule];
                 currentIndexSchedule++;
               }
               // По знамен запоминать расписание
               while (
                 +map[1][currentIndexSchedule]?.pair_type === 2 &&
-                +map[1][currentIndexSchedule]?.number_pair === number_pair + 1
+                +map[1][currentIndexSchedule]?.number_pair === number_pair
               ) {
-                arrScheduleBot[+map[1][currentIndexSchedule].day_week - 1] =
+                arrScheduleBot[+map[1][currentIndexSchedule].day_week] =
                   map[1][currentIndexSchedule];
                 currentIndexSchedule++;
               }
               // По общему запоминать расписание
               while (
                 +map[1][currentIndexSchedule]?.pair_type === 3 &&
-                +map[1][currentIndexSchedule]?.number_pair === number_pair + 1
+                +map[1][currentIndexSchedule]?.number_pair === number_pair
               ) {
-                arrScheduleTop[+map[1][currentIndexSchedule].day_week - 1] =
+                arrScheduleTop[+map[1][currentIndexSchedule].day_week] =
                   map[1][currentIndexSchedule];
                 currentIndexSchedule++;
               }

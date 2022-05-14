@@ -65,7 +65,7 @@ export const RUN_EA = {
     });
 
     // Очистка расписания
-    // await db.schedule.destroy({ truncate: true });
+    await db.schedule.destroy({ truncate: true });
 
     // Структура для каждой группы массив закрепленных для неё занятий
     let mapGroupAndAG = new Map();
@@ -245,24 +245,23 @@ export const RUN_EA = {
       );
     }
 
-    // Вставка в бд
-    // let isBulk = await db.schedule.bulkCreate(
-    //   bestPopulation.schedule.map((schedule) => {
-    //     return {
-    //       number_pair: schedule.number_pair,
-    //       day_week: schedule.day_week,
-    //       pair_type: schedule.pair_type,
-    //       id_assigned_group: schedule.id_assigned_group,
-    //       id_audience: schedule.id_audience,
-    //     };
-    //   })
-    // );
-    // if (isBulk)
-    //   return {
-    //     successful: true,
-    //     message: `Total Fitness: ${bestPopulation.fitnessValue}`,
-    //   };
-    // else
-    return { successful: false, message: `Some error` };
+    //Вставка в бд
+    let isBulk = await db.schedule.bulkCreate(
+      bestPopulation.schedule.map((schedule) => {
+        return {
+          number_pair: schedule.number_pair,
+          day_week: schedule.day_week,
+          pair_type: schedule.pair_type,
+          id_assigned_group: schedule.id_assigned_group,
+          id_audience: schedule.id_audience,
+        };
+      })
+    );
+    if (isBulk)
+      return {
+        successful: true,
+        message: `Total Fitness: ${bestPopulation.fitnessValue}`,
+      };
+    else return { successful: false, message: `Some error` };
   },
 };

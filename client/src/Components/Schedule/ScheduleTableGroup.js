@@ -28,6 +28,7 @@ function DataTable({ filters, info }) {
       semester,
     },
   });
+
   if (loading) return null;
   if (error) return `Error! ${error}`;
   let curGroup = null;
