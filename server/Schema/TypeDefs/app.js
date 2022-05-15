@@ -80,7 +80,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllScheduleAudiences: GET_ALL_SCHEDULE_AUDIENCES,
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
     GetInfo: GET_INFO,
-    GetFintess: GET_FITNESS,
+    GetFitness: GET_FITNESS,
   },
 });
 

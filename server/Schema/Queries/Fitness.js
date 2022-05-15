@@ -1,9 +1,10 @@
 import db from "../../database.js";
-import fitness from "../../EvalutionAlghoritm/Fitness.js";
+import fitness from "../../EvalutionAlghoritm/FitnessFunction.js";
 import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
 import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
 import { GET_INFO } from "./Info.js";
+import { GET_ALL_SCHEDULE_GROUPS } from "./Schedule.js";
 
 export const GET_FITNESS = {
   type: MessageType,
@@ -56,7 +57,65 @@ export const GET_FITNESS = {
     let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
     // Структура для каждого учителя массив закрепленных для него занятий
     let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
-    let fitnessValue=fitness(,{
+    let schedule = await db.schedule.findAll({
+      include: [
+        {
+          model: db.assigned_group,
+          include: [
+            {
+              model: db.class,
+              include: [
+                {
+                  model: db.type_class,
+                },
+                {
+                  model: db.assigned_discipline,
+
+                  include: [
+                    {
+                      model: db.discipline,
+                    },
+                    {
+                      model: db.specialty,
+                      include: {
+                        model: db.cathedra,
+                      },
+                    },
+                  ],
+                },
+                {
+                  model: db.assigned_teacher,
+                  include: {
+                    model: db.teacher,
+                    include: {
+                      model: db.cathedra,
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              model: db.group,
+              include: {
+                model: db.specialty,
+                include: {
+                  model: db.cathedra,
+                },
+              },
+            },
+          ],
+        },
+        {
+          model: db.audience,
+        },
+      ],
+    });
+    schedule = schedule.map((s) => {
+      let new_object = s.toJSON();
+      new_object.clas = new_object.assigned_group.class;
+      return new_object;
+    });
+    let fitnessValue = fitness(schedule, {
       mapTeacherAndAG,
       mapGroupAndAG,
       penaltyGrWin,
@@ -64,9 +123,13 @@ export const GET_FITNESS = {
       penaltyEqSc,
       penaltySameTimesSc,
       penaltyTeachWin,
-    })
+    });
+    console.log(fitnessValue);
     return true
-      ? { successful: true, message: "Запис кафедри успішно створено" }
-      : { successful: false, message: "Помилка при створенні запису кафедри" };
+      ? {
+          successful: true,
+          message: "Фітнес значення розкладу - " + fitnessValue,
+        }
+      : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

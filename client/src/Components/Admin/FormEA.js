@@ -38,17 +38,18 @@ function ButtonGetFitness() {
   const { loading, error, data } = useQuery(GET_FITNESS, {});
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  return;
-  <div className="my-2 mx-2 d-flex justify-content-center">
-    <Button
-      className="col-12"
-      onClick={() => {
-        CreateNotification(data.GetFitness);
-      }}
-    >
-      Отримати значення фітнес
-    </Button>
-  </div>;
+  return (
+    <div className="my-2 mx-2 d-flex justify-content-center">
+      <Button
+        className="col-12"
+        onClick={() => {
+          CreateNotification(data.GetFitness);
+        }}
+      >
+        Отримати значення фітнес
+      </Button>
+    </div>
+  );
 }
 
 function DataForm({ handleChangeInfo, handleSetInfo }) {
