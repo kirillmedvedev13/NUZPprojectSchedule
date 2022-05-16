@@ -8,6 +8,9 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    fitness_value: {
+      type: DataTypes.STRING,
+    },
     population_size: {
       type: DataTypes.INTEGER,
     },

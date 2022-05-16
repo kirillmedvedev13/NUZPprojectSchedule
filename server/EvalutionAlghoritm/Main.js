@@ -26,7 +26,7 @@ export const RUN_EA = {
     const penaltyLateSc = info[0].dataValues.penaltyLateSc;
     const penaltyEqSc = info[0].dataValues.penaltyEqSc;
     const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
-    const classes = await db.class.findAll({
+    let classes = await db.class.findAll({
       include: [
         {
           model: db.assigned_group,
@@ -54,13 +54,13 @@ export const RUN_EA = {
         },
       ],
     });
-    const audiences = await db.audience.findAll({
+    let audiences = await db.audience.findAll({
       include: {
         model: db.assigned_audience,
       },
     });
-    const groups = await db.group.findAll();
-    const teachers = await db.teacher.findAll({
+    let groups = await db.group.findAll();
+    let teachers = await db.teacher.findAll({
       include: {
         model: db.assigned_teacher,
       },
@@ -68,6 +68,12 @@ export const RUN_EA = {
 
     // Очистка расписания
     await db.schedule.destroy({ truncate: true });
+
+    teachers = teachers.map(t => t.toJSON());
+    groups = groups.map(g => g.toJSON());
+    audiences = audiences.map(a => a.toJSON());
+    classes = classes.map(c => c.toJSON());
+
 
     // Структура для каждой группы массив закрепленных для неё занятий
     let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
@@ -79,19 +85,19 @@ export const RUN_EA = {
     const staticPoolCrossing = new StaticPool({
       size: numCPUs,
       task: "./EvalutionAlghoritm/Crossing.js",
-      workerData: JSON.stringify({
+      workerData: {
         classes,
-      }),
+      }
     });
     const staticPoolMutation = new StaticPool({
       size: numCPUs,
       task: "./EvalutionAlghoritm/Mutation.js",
-      workerData: JSON.stringify({
+      workerData: {
         p_genes,
         max_day,
         max_pair,
         audiences,
-      }),
+      },
     });
     const staticPoolSelect = new StaticPool({
       size: numCPUs,
@@ -166,13 +172,13 @@ export const RUN_EA = {
       console.time("Fitness");
       // Установка фитнесс значения
       arr_promisses = [];
-      populations.map((individ, index) => {
-        const param = JSON.stringify({ schedule: individ.schedule, index });
+      populations.map((individ) => {
+        const param = JSON.stringify({ schedule: individ.schedule });
         arr_promisses.push(staticPoolFitness.exec(param));
       });
-      await Promise.all(arr_promisses).then((res) => {
-        res.map((r) => {
-          populations[r.index].fitnessValue = r.value;
+      await Promise.all(arr_promisses).then((res, index) => {
+        res.map((value) => {
+          populations[index].fitnessValue = value;
         });
       });
       console.timeEnd("Fitness");
@@ -227,10 +233,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
 

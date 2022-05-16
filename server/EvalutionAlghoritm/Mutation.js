@@ -5,15 +5,15 @@ import GetRndInteger from "./GetRndInteger.js";
 import { parentPort, workerData } from "worker_threads";
 
 parentPort.on("message", (param) => {
-  const res = Mutation(param, workerData);
+  const res = Mutation(param);
   parentPort.postMessage(res);
 })
 
-function Mutation(param, workerData) {
+function Mutation(param) {
   const { p_genes,
     max_day,
     max_pair,
-    audiences } = JSON.parse(workerData);
+    audiences } = workerData;
   let { schedule } = JSON.parse(param);
   schedule.map((sch) => {
     if (Math.random() < p_genes) {
@@ -43,8 +43,8 @@ function Mutation(param, workerData) {
       let group = ag.group;
       for (let i = 0; i < pair_types.length; i++) {
         let pair_type = pair_types[i];
-        let day_week = GetRndInteger(0, max_day);
-        let number_pair = GetRndInteger(0, max_pair);
+        let day_week = GetRndInteger(1, max_day);
+        let number_pair = GetRndInteger(1, max_pair);
         let id_audience = clas.id_type_class === 1
           ? GetIdAudienceForClassLecture(clas, audiences)
           : GetIdAudienceForClassPractice(group.capacity, clas, audiences);

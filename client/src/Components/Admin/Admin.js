@@ -17,6 +17,9 @@ class Admin extends React.Component {
     sheetIndex: null,
     onDelete: false,
     info: {
+      max_pair: null,
+      max_day: null,
+      fintess_value: null,
       population_size: null,
       max_generations: null,
       p_crossover: null,
@@ -37,9 +40,6 @@ class Admin extends React.Component {
     }));
   };
 
-  handleSetInfo = (info) => {
-    this.setState({ info });
-  };
 
   setFile(file) {
     this.setState({ file });
@@ -74,16 +74,15 @@ class Admin extends React.Component {
     return (
       <>
         <Carousel variant="dark" interval={null}>
-          <Carousel.Item>
+          <Carousel.Item className="mb-5">
             <div className="d-flex justify-content-center  ">
               <Card className="my-2">
                 <Card.Header className="text-center">
-                  Складання розкладу за допомогою ГА
+                  Складання розкладу за допомогою Генетичного Алгоритму
                 </Card.Header>
                 <Card.Body>
                   <FormEA
                     handleChangeInfo={this.handleChangeInfo}
-                    handleSetInfo={this.handleSetInfo}
                     info={this.state.info}
                   ></FormEA>
                 </Card.Body>
@@ -93,7 +92,7 @@ class Admin extends React.Component {
               </Card>
             </div>
           </Carousel.Item>
-          <Carousel.Item>
+          <Carousel.Item className="mb-5">
             <div className="d-flex justify-content-center  ">
               <Card className="my-2">
                 <Card.Header className="text-center">
@@ -136,7 +135,7 @@ class Admin extends React.Component {
               </Card>
             </div>
           </Carousel.Item>
-          <Carousel.Item>
+          <Carousel.Item className="mb-5">
             <div className="d-flex justify-content-center  ">
               <Card className="my-2">
                 <Card.Header className="text-center">

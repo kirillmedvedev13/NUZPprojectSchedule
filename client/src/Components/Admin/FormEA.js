@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_FITNESS, GET_INFO } from "./queries.js";
-import { UPDATE_INFO } from "./mutations.js";
+import { GET_INFO } from "./queries.js";
+import { UPDATE_INFO, CALC_FITNESS } from "./mutations.js";
 import { CreateNotification } from "../Alert.js";
 
 function ButtonUpdateInfo({ info }) {
@@ -13,7 +13,7 @@ function ButtonUpdateInfo({ info }) {
   if (error) return `Error! ${error}`;
   let data = [];
   for (const [key, value] of Object.entries(info)) {
-    if (value !== null) data.push({ key, value });
+    if (value != null) data.push({ key, value });
   }
   return (
     <div className="my-2 mx-2 d-flex justify-content-center">
@@ -22,11 +22,9 @@ function ButtonUpdateInfo({ info }) {
         onClick={(e) => {
           if (data.length === 0) return;
           else
-            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(
-              (res) => {
-                CreateNotification(res.data.UpdateInfo);
-              }
-            );
+            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(res =>
+              CreateNotification(res.data.UpdateInfo)
+            )
         }}
       >
         Оновити данi
@@ -35,7 +33,7 @@ function ButtonUpdateInfo({ info }) {
   );
 }
 function ButtonGetFitness() {
-  const { loading, error, data } = useQuery(GET_FITNESS, {});
+  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS, { refetchQueries: GET_INFO });
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
@@ -43,22 +41,23 @@ function ButtonGetFitness() {
       <Button
         className="col-12"
         onClick={() => {
-          CreateNotification(data.GetFitness);
+          CalcFitness().then(res =>
+            CreateNotification(res.data.CalcFitness)
+          )
         }}
       >
-        Отримати значення фітнес
+        Порахувати значення фiтнес
       </Button>
-    </div>
+    </div >
   );
 }
 
-function DataForm({ handleChangeInfo, handleSetInfo }) {
+function DataForm({ handleChangeInfo }) {
   const { loading, error, data } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-
   return (
-    <div onLoad={(e) => handleSetInfo(data.GetInfo)}>
+    <>
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Розмір популяції</Form.Label>
         <Col>
@@ -76,7 +75,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість популяцій</Form.Label>
+        <Form.Label className="col-5">Максимальна кiлькiсть iтерацiй</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.max_generations}
@@ -125,7 +124,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Ймовірність мутації генів</Form.Label>
+        <Form.Label className="col-5">Ймовірність мутації гена</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.p_genes}
@@ -155,7 +154,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вікно в групи</Form.Label>
+        <Form.Label className="col-5">Вага: вікна групи</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.penaltyGrWin}
@@ -171,7 +170,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вікно в викладача</Form.Label>
+        <Form.Label className="col-5">Вага: вікна викладачiв</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.penaltyTeachWin}
@@ -187,7 +186,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Пізні заняття</Form.Label>
+        <Form.Label className="col-5">Вага: пізні заняття</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.penaltyLateSc}
@@ -203,7 +202,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Рівномірний розклад</Form.Label>
+        <Form.Label className="col-5">Вага: рівномірний розклад</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.penaltyEqSc}
@@ -219,7 +218,7 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Накладання занять</Form.Label>
+        <Form.Label className="col-5">Вага: накладання занять</Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.penaltySameTimesSc}
@@ -234,19 +233,57 @@ function DataForm({ handleChangeInfo, handleSetInfo }) {
           />
         </Col>
       </Form.Group>
-    </div>
+      <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Кількість днів</Form.Label>
+        <Col>
+          <Form.Control
+            defaultValue={data.GetInfo.max_day}
+            type="number"
+            min={1}
+            max={7}
+            onChange={(e) => {
+              handleChangeInfo(
+                "penaltySameTimesSc",
+                e ? Number(e.target.value) : null
+              );
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Кількість занять</Form.Label>
+        <Col>
+          <Form.Control
+            defaultValue={data.GetInfo.max_pair}
+            type="number"
+            min={1}
+            max={8}
+            onChange={(e) => {
+              handleChangeInfo(
+                "penaltySameTimesSc",
+                e ? Number(e.target.value) : null
+              );
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Фітнес значення</Form.Label>
+        <Col>
+          <p>{data.GetInfo.fitnessValue}</p>
+        </Col>
+      </Form.Group>
+    </>
   );
 }
 
 export default class FormEA extends React.Component {
   render() {
-    const { handleChangeInfo, handleSetInfo, info } = this.props;
-    console.log(info);
+    const { handleChangeInfo, info } = this.props;
     return (
       <Form>
         <DataForm
           handleChangeInfo={handleChangeInfo}
-          handleSetInfo={handleSetInfo}
         ></DataForm>
         <ButtonUpdateInfo info={info}></ButtonUpdateInfo>
         <ButtonGetFitness></ButtonGetFitness>

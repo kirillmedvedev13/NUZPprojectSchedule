@@ -3,17 +3,11 @@ import fitness from "../../EvalutionAlghoritm/FitnessFunction.js";
 import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
 import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
-import { GET_INFO } from "./Info.js";
-import { GET_ALL_SCHEDULE_GROUPS } from "./Schedule.js";
 
-export const GET_FITNESS = {
+export const CALC_FITNESS = {
   type: MessageType,
-
   async resolve(parent) {
     const info = await db.info.findAll();
-    const p_crossover = info[0].dataValues.p_crossover;
-    const p_mutation = info[0].dataValues.p_mutation;
-    const p_genes = info[0].dataValues.p_genes;
     const penaltyGrWin = info[0].dataValues.penaltyGrWin;
     const penaltyTeachWin = info[0].dataValues.penaltyTeachWin;
     const penaltyLateSc = info[0].dataValues.penaltyLateSc;
@@ -111,9 +105,7 @@ export const GET_FITNESS = {
       ],
     });
     schedule = schedule.map((s) => {
-      let new_object = s.toJSON();
-      new_object.clas = new_object.assigned_group.class;
-      return new_object;
+      return Object.assign(s.toJSON(), s.assigned_group.class);
     });
     let fitnessValue = fitness(schedule, {
       mapTeacherAndAG,
@@ -124,12 +116,12 @@ export const GET_FITNESS = {
       penaltySameTimesSc,
       penaltyTeachWin,
     });
-    console.log(fitnessValue);
-    return true
+    const res = await db.info.update({ fitness_value: fitnessValue }, { where: { id: 1 } })
+    return res[0]
       ? {
-          successful: true,
-          message: "Фітнес значення розкладу - " + fitnessValue,
-        }
+        successful: true,
+        message: "Фітнес значення розкладу - " + fitnessValue,
+      }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

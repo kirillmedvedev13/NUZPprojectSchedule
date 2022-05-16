@@ -2,12 +2,12 @@ import GetRndInteger from "./GetRndInteger.js";
 import { parentPort, workerData } from "worker_threads";
 
 parentPort.on("message", (param) => {
-  const res = Crossing(param, workerData);
+  const res = Crossing(param);
   parentPort.postMessage(res);
 });
 
-function Crossing(param, workerData) {
-  const { classes } = JSON.parse(workerData);
+function Crossing(param) {
+  const { classes } = workerData;
   const { schedule1, schedule2 } = JSON.parse(param);
   let s = GetRndInteger(0, classes.length / 2);
   let current_schedule1 = JSON.parse(JSON.stringify(schedule1));

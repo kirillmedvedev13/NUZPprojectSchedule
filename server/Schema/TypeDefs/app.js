@@ -63,10 +63,10 @@ import { DELETE_ALL_DATA } from "../Mutations/Admin.js";
 import { RUN_EA } from "../../EvalutionAlghoritm/Main.js";
 import { GET_INFO } from "../Queries/Info.js";
 import { UPDATE_INFO } from "../Mutations/Info.js";
-import { GET_FITNESS } from "../Queries/Fitness.js";
+import { CALC_FITNESS } from "../Mutations/Fitness.js";
 
 const RootQuery = new GraphQLObjectType({
-  name: "RootQuery",
+  name: "Queries",
   fields: {
     GetAllTeachers: GET_ALL_TEACHERS,
     GetAllAudiences: GET_ALL_AUDIENCES,
@@ -80,12 +80,11 @@ const RootQuery = new GraphQLObjectType({
     GetAllScheduleAudiences: GET_ALL_SCHEDULE_AUDIENCES,
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
     GetInfo: GET_INFO,
-    GetFitness: GET_FITNESS,
   },
 });
 
 const Mutation = new GraphQLObjectType({
-  name: "Mutation",
+  name: "Mutations",
   fields: {
     CreateTeacher: CREATE_TEACHER,
     DeleteTeacher: DELETE_TEACHER,
@@ -125,6 +124,7 @@ const Mutation = new GraphQLObjectType({
     DeleteAllData: DELETE_ALL_DATA,
     UpdateInfo: UPDATE_INFO,
     RunEA: RUN_EA,
+    CalcFitness: CALC_FITNESS
   },
 });
 

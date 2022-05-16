@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLFloat } from "graphql";
+import { GraphQLInt, GraphQLObjectType, GraphQLFloat, GraphQLString } from "graphql";
 
 const InfoType = new GraphQLObjectType({
   name: "Info",
@@ -10,6 +10,9 @@ const InfoType = new GraphQLObjectType({
     },
     max_generations: {
       type: GraphQLInt,
+    },
+    fitness_value: {
+      type: GraphQLString
     },
     p_crossover: {
       type: GraphQLFloat,

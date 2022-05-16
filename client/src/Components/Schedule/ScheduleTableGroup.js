@@ -7,13 +7,11 @@ import TableBody from "./TableBody";
 
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.assigned_group.class.type_class.name} ауд.${
-    schedule.audience.name
-  } ${
-    schedule.assigned_group.class.assigned_discipline.discipline.name
-  } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
-    return ` ${teacher.surname}`;
-  })}
+  ${schedule.assigned_group.class.type_class.name} ауд.${schedule.audience.name
+    } ${schedule.assigned_group.class.assigned_discipline.discipline.name
+    } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
+      return ` ${teacher.surname}`;
+    })}
 `;
   return desciption;
 }
@@ -72,7 +70,7 @@ function TableHead({ filters }) {
 
 class ScheduleTableGroup extends React.Component {
   render() {
-    const { filters, info } = this.props;
+    const { filters } = this.props;
     return (
       <Table bordered>
         <TableHead filters={filters}></TableHead>

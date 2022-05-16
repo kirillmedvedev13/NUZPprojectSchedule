@@ -1,4 +1,7 @@
 export default function fitness(schedule, workerData) {
+  if (!schedule.length) {
+    return 0;
+  }
   const {
     mapTeacherAndAG,
     mapGroupAndAG,
@@ -79,13 +82,13 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
   while (index < detectedSchedules.length) {
     if (
       detectedSchedules[index - 1].day_week ==
-        detectedSchedules[index].day_week &&
+      detectedSchedules[index].day_week &&
       detectedSchedules[index - 1].number_pair !=
-        detectedSchedules[index].number_pair
+      detectedSchedules[index].number_pair
     ) {
       if (
         detectedSchedules[index - 1].pair_type ==
-          detectedSchedules[index].pair_type ||
+        detectedSchedules[index].pair_type ||
         detectedSchedules[index].pair_type == 3 ||
         detectedSchedules[index - 1].pair_type == 3
       ) {
@@ -93,9 +96,9 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
           if (
             detectedSchedules[index].pair_type == 3 &&
             detectedSchedules[index - 2].number_pair ==
-              detectedSchedules[index - 1].number_pair &&
+            detectedSchedules[index - 1].number_pair &&
             detectedSchedules[index - 2].day_week ==
-              detectedSchedules[index].day_week
+            detectedSchedules[index].day_week
           ) {
             fitnessValue +=
               (detectedSchedules[index].number_pair -
@@ -108,11 +111,11 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
           if (
             detectedSchedules[index].pair_type == 3 &&
             detectedSchedules[index + 2].number_pair ==
-              detectedSchedules[index + 1].number_pair &&
+            detectedSchedules[index + 1].number_pair &&
             detectedSchedules[index + 2].day_week ==
-              detectedSchedules[index].day_week &&
+            detectedSchedules[index].day_week &&
             detectedSchedules[index].pair_type !=
-              detectedSchedules[index + 2].pair_type
+            detectedSchedules[index + 2].pair_type
           ) {
             fitnessValue +=
               (detectedSchedules[index + 2].number_pair -
@@ -132,9 +135,9 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
     if (index < detectedSchedules.length)
       if (
         detectedSchedules[index].day_week ==
-          detectedSchedules[index - 1].day_week &&
+        detectedSchedules[index - 1].day_week &&
         detectedSchedules[index].number_pair ==
-          detectedSchedules[index - 1].number_pair
+        detectedSchedules[index - 1].number_pair
       )
         index++;
   }
@@ -237,7 +240,7 @@ function fitnessSameTimesGroup(detectedSchedules, penaltySameTimesSc) {
       ) {
         if (
           detectedSchedules[index - 1].pair_type ==
-            detectedSchedules[index].pair_type ||
+          detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type == 3 ||
           detectedSchedules[index].pair_type == 3
         )
@@ -261,7 +264,7 @@ function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
       ) {
         if (
           detectedSchedules[index - 1].pair_type ===
-            detectedSchedules[index].pair_type ||
+          detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type === 3 ||
           detectedSchedules[index].pair_type === 3
         )

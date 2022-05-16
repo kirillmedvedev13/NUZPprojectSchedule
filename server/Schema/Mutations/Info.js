@@ -20,12 +20,12 @@ export const UPDATE_INFO = {
     });
     return res[0]
       ? {
-          successful: true,
-          message: "Запис заняття успішно оновлено",
-        }
+        successful: true,
+        message: "Запис успішно оновлено",
+      }
       : {
-          successful: false,
-          message: "Помилка при оновленні запису заняття",
-        };
+        successful: false,
+        message: "Помилка при оновленні запису",
+      };
   },
 };

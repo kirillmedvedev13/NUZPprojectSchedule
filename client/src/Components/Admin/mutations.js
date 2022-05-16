@@ -33,3 +33,11 @@ export const RUN_EA = gql`
     }
   }
 `;
+export const CALC_FITNESS = gql`
+  mutation {
+    CalcFitness {
+      message
+      successful
+    }
+  }
+`;

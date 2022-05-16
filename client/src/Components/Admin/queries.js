@@ -2,6 +2,9 @@ import { gql } from "@apollo/client";
 export const GET_INFO = gql`
   query {
     GetInfo {
+      max_day
+      max_pair
+      fitness_value
       population_size
       max_generations
       p_crossover
@@ -13,14 +16,6 @@ export const GET_INFO = gql`
       penaltyEqSc
       penaltySameTimesSc
       p_elitism
-    }
-  }
-`;
-export const GET_FITNESS = gql`
-  query {
-    GetFitness {
-      message
-      successful
     }
   }
 `;
