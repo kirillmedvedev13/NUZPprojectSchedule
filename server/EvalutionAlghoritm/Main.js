@@ -9,6 +9,7 @@ import { StaticPool } from "node-worker-threads-pool";
 import cloneDeep from "lodash/clonedeep.js";
 import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
 import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
+import SelectRanging from "./SelectRanging.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -26,6 +27,7 @@ export const RUN_EA = {
     const penaltyLateSc = info[0].dataValues.penaltyLateSc;
     const penaltyEqSc = info[0].dataValues.penaltyEqSc;
     const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
+    const p_elitism = info[0].dataValues.p_elitism;
     let classes = await db.class.findAll({
       include: [
         {
@@ -125,9 +127,9 @@ export const RUN_EA = {
       max_pair,
       audiences
     );
-
     let bestPopulation = { schedule: null, fitnessValue: Number.MAX_VALUE };
-    let p_elit = 0.3;
+    const type_select = "tournament";
+    const num_elit = Math.floor(population_size * p_elitism);
     for (const generationCount of Array(max_generations)
       .fill()
       .map((v, i) => i + 1)) {
@@ -176,8 +178,8 @@ export const RUN_EA = {
         const param = JSON.stringify({ schedule: individ.schedule });
         arr_promisses.push(staticPoolFitness.exec(param));
       });
-      await Promise.all(arr_promisses).then((res, index) => {
-        res.map((value) => {
+      await Promise.all(arr_promisses).then((res) => {
+        res.map((value, index) => {
           populations[index].fitnessValue = value;
         });
       });
@@ -185,45 +187,53 @@ export const RUN_EA = {
       console.time("Select");
       // Элитизм
       populations.sort((p1, p2) => {
-        if (p1.fitnessValue > p2.fitnessValue) return 1;
-        if (p1.fitnessValue < p2.fitnessValue) return -1;
+        if (p1.fitnessValue < p2.fitnessValue) return 1;
+        if (p1.fitnessValue > p2.fitnessValue) return -1;
         return 0;
       });
-      let elit = populations.splice(0, population_size * p_elit);
+      let elit = populations.slice(populations.length - num_elit, populations.length);
+      elit = elit.map(p => JSON.parse(JSON.stringify(p)))
       // Отбор
-      arr_promisses = [];
-      for (let i = 0; i < population_size * (1 - p_elit); i++) {
-        let i1 = 0;
-        let i2 = i1;
-        let i3 = i1;
-        while (i1 == i2 || i2 == i3 || i1 == i3) {
-          i1 = GetRndInteger(0, populations.length - 1);
-          i2 = GetRndInteger(0, populations.length - 1);
-          i3 = GetRndInteger(0, populations.length - 1);
-        }
-        const param = JSON.stringify({
-          population1: {
-            fitnessValue: populations[i1].fitnessValue,
-            index: i1,
-          },
-          population2: {
-            fitnessValue: populations[i1].fitnessValue,
-            index: i2,
-          },
-          population3: {
-            fitnessValue: populations[i1].fitnessValue,
-            index: i3,
-          },
-        });
-        arr_promisses.push(staticPoolSelect.exec(param));
+      switch (type_select) {
+        case "ranging":
+          populations = SelectRanging(populations, population_size - num_elit);
+          break;
+        case "tournament":
+          arr_promisses = [];
+          for (let i = 0; i < population_size - num_elit; i++) {
+            let i1 = 0;
+            let i2 = i1;
+            let i3 = i1;
+            while (i1 == i2 || i2 == i3 || i1 == i3) {
+              i1 = GetRndInteger(0, populations.length - 1);
+              i2 = GetRndInteger(0, populations.length - 1);
+              i3 = GetRndInteger(0, populations.length - 1);
+            }
+            const param = JSON.stringify({
+              population1: {
+                fitnessValue: populations[i1].fitnessValue,
+                index: i1,
+              },
+              population2: {
+                fitnessValue: populations[i1].fitnessValue,
+                index: i2,
+              },
+              population3: {
+                fitnessValue: populations[i1].fitnessValue,
+                index: i3,
+              },
+            });
+            arr_promisses.push(staticPoolSelect.exec(param));
+          }
+          let new_populations = [];
+          await Promise.all(arr_promisses).then((res) => {
+            res.map((index) => {
+              new_populations.push(Object.assign({}, populations[index]));
+            });
+          });
+          populations = new_populations;
+          break;
       }
-      let new_populations = [];
-      await Promise.all(arr_promisses).then((res) => {
-        res.map((index) => {
-          new_populations.push(Object.assign({}, populations[index]));
-        });
-      });
-      populations = new_populations;
       populations.push(...elit);
       console.timeEnd("Select");
       // Лучшая популяция
