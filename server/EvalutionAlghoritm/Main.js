@@ -66,8 +66,6 @@ export const RUN_EA = {
       },
     });
 
-    // Очистка расписания
-    await db.schedule.destroy({ truncate: true });
 
     teachers = teachers.map((t) => t.toJSON());
     groups = groups.map((g) => g.toJSON());
@@ -127,7 +125,7 @@ export const RUN_EA = {
       arr_promisses = [];
       populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
-          arr_promisses.push(pool.exec('workMutation', [mutant.schedule, p_genes, max_day, max_pair, audiences, mapGroupAndAG, mapTeacherAndAG]));
+          arr_promisses.push(pool.exec('workMutation', [mutant.schedule, 1 / populations.length, max_day, max_pair, audiences, mapGroupAndAG, mapTeacherAndAG]));
         }
       });
       await Promise.all(arr_promisses).then((res) => {
@@ -251,7 +249,8 @@ export const RUN_EA = {
         MeanFitnessValue(populations)
       );
     }
-
+    // Очистка расписания
+    await db.schedule.destroy({ truncate: true });
     //Вставка в бд
     let isBulk = await db.schedule.bulkCreate(
       bestPopulation.schedule.map((schedule) => {
