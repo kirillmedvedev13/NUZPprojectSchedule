@@ -27,16 +27,24 @@ function workFitness(schedule,
         penaltyTeachWin);
 }
 
-function workMutation(schedule,
+function workMutation(
+    schedule,
     p_genes,
     max_day,
     max_pair,
-    audiences) {
-    return Mutation(schedule,
+    audiences,
+    mapGroupAndAG,
+    mapTeacherAndAG
+) {
+    return Mutation(
+        schedule,
         p_genes,
         max_day,
         max_pair,
-        audiences);
+        audiences,
+        mapGroupAndAG,
+        mapTeacherAndAG
+    );
 }
 
 function workSelectRanging(p_populations) {
