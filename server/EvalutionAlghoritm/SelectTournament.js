@@ -6,7 +6,7 @@ parentPort.on("message", (param) => {
 })
 
 function SelectTournament(param) {
-  const { population1, population2, population3 } = JSON.parse(param);
+  const { population1, population2, population3 } = param;
   if (
     population1.fitnessValue < population2.fitnessValue &&
     population1.fitnessValue < population3.fitnessValue

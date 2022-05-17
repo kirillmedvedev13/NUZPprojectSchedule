@@ -8,10 +8,10 @@ parentPort.on("message", (param) => {
 
 function Crossing(param) {
   const { classes } = workerData;
-  const { schedule1, schedule2 } = JSON.parse(param);
+  const { schedule1, schedule2 } = param;
   let s = GetRndInteger(0, classes.length / 2);
-  let current_schedule1 = JSON.parse(JSON.stringify(schedule1));
-  let current_schedule2 = JSON.parse(JSON.stringify(schedule2));
+  let current_schedule1 = schedule1.slice(0);
+  let current_schedule2 = schedule2.slice(0);
   for (let i = s; i < 2 * s; i++) {
     let type_class = classes[i].id_type_class;
     // Если лекция, то меняется для всех групп

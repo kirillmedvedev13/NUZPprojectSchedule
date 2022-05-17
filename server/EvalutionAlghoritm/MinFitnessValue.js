@@ -12,7 +12,7 @@ export default function MinFitnessValue(populations, bestPopulation) {
   }
 
   if (bestPopulation.fitnessValue > min) {
-    return JSON.parse(JSON.stringify(populations[min_index]));
+    return { schedule: populations[min_index].schedule.slice(0), fitnessValue: populations[min_index].fitnessValue };
   }
   return bestPopulation;
 }

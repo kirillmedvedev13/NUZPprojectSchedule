@@ -14,7 +14,8 @@ function Mutation(param) {
     max_day,
     max_pair,
     audiences } = workerData;
-  let { schedule } = JSON.parse(param);
+  let { schedule } = param;
+  schedule = schedule.slice(0);
   schedule.map((sch) => {
     if (Math.random() < p_genes) {
       // Получить занятия для расписания
