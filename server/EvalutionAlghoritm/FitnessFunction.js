@@ -127,73 +127,86 @@ function sortDS(detectedSchedules) {
   });
   return detectedSchedules;
 }
+
 function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
   let fitnessValue = 0;
-  let index = 1;
-  //перебор по каждому занятию
-  while (index < detectedSchedules.length) {
-    //проверяю только занятие в разрезе дня
-    if (
-      detectedSchedules[index - 1].day_week ==
-        detectedSchedules[index].day_week &&
-      detectedSchedules[index - 1].number_pair !=
-        detectedSchedules[index].number_pair
-    ) {
+  let i = 0;
+  let len = detectedSchedules.length;
+  while (i < len - 2) {
+    if (detectedSchedules[i].day_week == detectedSchedules[i + 1].day_week) {
       if (
-        detectedSchedules[index - 1].pair_type ==
-          detectedSchedules[index].pair_type ||
-        detectedSchedules[index].pair_type == 3 ||
-        detectedSchedules[index - 1].pair_type == 3
+        detectedSchedules[i].number_pair != detectedSchedules[i + 1].number_pair
       ) {
-        if (index > 1) {
+        if (detectedSchedules[i].pair_type == 3) {
           if (
-            detectedSchedules[index].pair_type == 3 &&
-            detectedSchedules[index - 2].number_pair ==
-              detectedSchedules[index - 1].number_pair &&
-            detectedSchedules[index - 2].day_week ==
-              detectedSchedules[index].day_week
+            detectedSchedules[i + 1].pair_type != detectedSchedules[i].pair_type
           ) {
             fitnessValue +=
-              (detectedSchedules[index].number_pair -
-                detectedSchedules[index - 2].number_pair -
+              (detectedSchedules[i + 1].number_pair -
+                detectedSchedules[i].number_pair -
+                1) *
+              penaltyGrWin;
+            if (
+              detectedSchedules[i].day_week ==
+                detectedSchedules[i + 2].day_week &&
+              detectedSchedules[i + 1].pair_type !=
+                detectedSchedules[i + 2].pair_type
+            ) {
+              fitnessValue +=
+                (detectedSchedules[i + 2].number_pair -
+                  detectedSchedules[i].number_pair -
+                  1) *
+                penaltyGrWin;
+            }
+          } else {
+            fitnessValue +=
+              (detectedSchedules[i + 1].number_pair -
+                detectedSchedules[i].number_pair -
+                1) *
+              penaltyGrWin;
+          }
+        } else {
+          if (
+            detectedSchedules[i + 1].pair_type !=
+              detectedSchedules[i].pair_type &&
+            detectedSchedules[i + 1].pair_type != 3
+          ) {
+            if (
+              detectedSchedules[i].day_week ==
+                detectedSchedules[i + 2].day_week &&
+              detectedSchedules[i + 1].pair_type !=
+                detectedSchedules[i + 2].pair_type
+            ) {
+              fitnessValue +=
+                (detectedSchedules[i + 2].number_pair -
+                  detectedSchedules[i].number_pair -
+                  1) *
+                penaltyGrWin;
+            }
+          } else {
+            fitnessValue +=
+              (detectedSchedules[i + 1].number_pair -
+                detectedSchedules[i].number_pair -
                 1) *
               penaltyGrWin;
           }
         }
-        if (index < detectedSchedules.length - 2) {
-          if (
-            detectedSchedules[index].pair_type == 3 &&
-            detectedSchedules[index + 2].number_pair ==
-              detectedSchedules[index + 1].number_pair &&
-            detectedSchedules[index + 2].day_week ==
-              detectedSchedules[index].day_week &&
-            detectedSchedules[index].pair_type !=
-              detectedSchedules[index + 2].pair_type
-          ) {
-            fitnessValue +=
-              (detectedSchedules[index + 2].number_pair -
-                detectedSchedules[index].number_pair -
-                1) *
-              penaltyGrWin;
-          }
-        }
-        fitnessValue +=
-          (detectedSchedules[index].number_pair -
-            detectedSchedules[index - 1].number_pair -
-            1) *
-          penaltyGrWin;
       }
     }
-    index++;
-    if (index < detectedSchedules.length)
-      if (
-        detectedSchedules[index].day_week ==
-          detectedSchedules[index - 1].day_week &&
-        detectedSchedules[index].number_pair ==
-          detectedSchedules[index - 1].number_pair
-      )
-        index++;
+    i++;
   }
+  if (len > 2)
+    if (
+      detectedSchedules[len - 3].day_week !=
+        detectedSchedules[len - 2].day_week &&
+      detectedSchedules[len - 2].day_week == detectedSchedules[len - 1].day_week
+    ) {
+      fitnessValue +=
+        (detectedSchedules[len - 1].number_pair -
+          detectedSchedules[len - 2].number_pair -
+          1) *
+        penaltyGrWin;
+    }
   return fitnessValue;
 }
 
@@ -298,8 +311,8 @@ function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
           detectedSchedules[index].pair_type === 3
         )
           if (
-            detectedSchedules[index - 1].clas.id !==
-            detectedSchedules[index].clas.id
+            detectedSchedules[index - 1].assigned_group.class.id !==
+            detectedSchedules[index].assigned_group.class.id
           )
             //у учителя может стоят лекция у нескольких групп
             fitnessValue += penaltySameTimesSc;
