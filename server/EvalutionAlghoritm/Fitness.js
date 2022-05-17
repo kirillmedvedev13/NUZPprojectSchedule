@@ -161,59 +161,32 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
       if (
         detectedSchedules[i].number_pair != detectedSchedules[i + 1].number_pair
       ) {
-        if (detectedSchedules[i].pair_type == 3) {
+        if (
+          detectedSchedules[i + 1].pair_type != detectedSchedules[i].pair_type
+        ) {
+          fitnessValue +=
+            (detectedSchedules[i + 1].number_pair -
+              detectedSchedules[i].number_pair -
+              1) *
+            penaltyGrWin;
           if (
-            detectedSchedules[i + 1].pair_type != detectedSchedules[i].pair_type
+            detectedSchedules[i].day_week ==
+              detectedSchedules[i + 2].day_week &&
+            detectedSchedules[i + 1].pair_type !=
+              detectedSchedules[i + 2].pair_type
           ) {
             fitnessValue +=
-              (detectedSchedules[i + 1].number_pair -
-                detectedSchedules[i].number_pair -
-                1) *
-              penaltyGrWin;
-            if (
-              detectedSchedules[i].day_week ==
-                detectedSchedules[i + 2].day_week &&
-              detectedSchedules[i + 1].pair_type !=
-                detectedSchedules[i + 2].pair_type
-            ) {
-              fitnessValue +=
-                (detectedSchedules[i + 2].number_pair -
-                  detectedSchedules[i].number_pair -
-                  1) *
-                penaltyGrWin;
-            }
-          } else {
-            fitnessValue +=
-              (detectedSchedules[i + 1].number_pair -
+              (detectedSchedules[i + 2].number_pair -
                 detectedSchedules[i].number_pair -
                 1) *
               penaltyGrWin;
           }
         } else {
-          if (
-            detectedSchedules[i + 1].pair_type !=
-              detectedSchedules[i].pair_type &&
-            detectedSchedules[i + 1].pair_type != 3
-          ) {
-            if (
-              detectedSchedules[i].day_week ==
-                detectedSchedules[i + 2].day_week &&
-              detectedSchedules[i + 1].pair_type !=
-                detectedSchedules[i + 2].pair_type
-            ) {
-              fitnessValue +=
-                (detectedSchedules[i + 2].number_pair -
-                  detectedSchedules[i].number_pair -
-                  1) *
-                penaltyGrWin;
-            }
-          } else {
-            fitnessValue +=
-              (detectedSchedules[i + 1].number_pair -
-                detectedSchedules[i].number_pair -
-                1) *
-              penaltyGrWin;
-          }
+          fitnessValue +=
+            (detectedSchedules[i + 1].number_pair -
+              detectedSchedules[i].number_pair -
+              1) *
+            penaltyGrWin;
         }
       }
     }
