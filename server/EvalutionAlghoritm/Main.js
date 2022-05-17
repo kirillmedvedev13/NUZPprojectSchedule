@@ -127,19 +127,7 @@ export const RUN_EA = {
       arr_promisses = [];
       populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
-<<<<<<< HEAD
           arr_promisses.push(pool.exec('workMutation', [mutant.schedule, p_genes, max_day, max_pair, audiences, mapGroupAndAG, mapTeacherAndAG]));
-=======
-          arr_promisses.push(
-            pool.exec("workMutation", [
-              mutant.schedule,
-              p_genes,
-              max_day,
-              max_pair,
-              audiences,
-            ])
-          );
->>>>>>> 3bde04db7ce80304ce34252a30b4012472819620
         }
       });
       await Promise.all(arr_promisses).then((res) => {
@@ -257,10 +245,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
 
