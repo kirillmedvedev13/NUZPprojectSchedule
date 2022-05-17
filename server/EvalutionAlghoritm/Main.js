@@ -7,7 +7,7 @@ import GetRndInteger from "./GetRndInteger.js";
 import { cpus } from "node:os";
 import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
 import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
-import workerpool from "workerpool"
+import workerpool from "workerpool";
 
 export const RUN_EA = {
   type: MessageType,
@@ -69,10 +69,10 @@ export const RUN_EA = {
     // Очистка расписания
     await db.schedule.destroy({ truncate: true });
 
-    teachers = teachers.map(t => t.toJSON());
-    groups = groups.map(g => g.toJSON());
-    audiences = audiences.map(a => a.toJSON());
-    classes = classes.map(c => c.toJSON());
+    teachers = teachers.map((t) => t.toJSON());
+    groups = groups.map((g) => g.toJSON());
+    audiences = audiences.map((a) => a.toJSON());
+    classes = classes.map((c) => c.toJSON());
     let type_select = "ranging";
 
     // Структура для каждой группы массив закрепленных для неё занятий
@@ -82,7 +82,10 @@ export const RUN_EA = {
 
     // Создание пула потоков
     const numCPUs = cpus().length;
-    const pool = workerpool.pool("./EvalutionAlghoritm/Worker.js", { workerType: 'thread', maxWorkers: numCPUs })
+    const pool = workerpool.pool("./EvalutionAlghoritm/Worker.js", {
+      workerType: "thread",
+      maxWorkers: numCPUs,
+    });
 
     // Инициализация
     let populations = Init(
@@ -103,11 +106,13 @@ export const RUN_EA = {
       let arr_promisses = [];
       for (let i = 0; i < population_size / 2; i++) {
         if (Math.random() < p_crossover) {
-          arr_promisses.push(pool.exec('workCrossing', [
-            populations[GetRndInteger(0, populations.length - 1)].schedule,
-            populations[GetRndInteger(0, populations.length - 1)].schedule,
-            classes
-          ]));
+          arr_promisses.push(
+            pool.exec("workCrossing", [
+              populations[GetRndInteger(0, populations.length - 1)].schedule,
+              populations[GetRndInteger(0, populations.length - 1)].schedule,
+              classes,
+            ])
+          );
         }
       }
       await Promise.all(arr_promisses).then((res) => {
@@ -122,7 +127,19 @@ export const RUN_EA = {
       arr_promisses = [];
       populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
+<<<<<<< HEAD
           arr_promisses.push(pool.exec('workMutation', [mutant.schedule, p_genes, max_day, max_pair, audiences, mapGroupAndAG, mapTeacherAndAG]));
+=======
+          arr_promisses.push(
+            pool.exec("workMutation", [
+              mutant.schedule,
+              p_genes,
+              max_day,
+              max_pair,
+              audiences,
+            ])
+          );
+>>>>>>> 3bde04db7ce80304ce34252a30b4012472819620
         }
       });
       await Promise.all(arr_promisses).then((res) => {
@@ -135,20 +152,22 @@ export const RUN_EA = {
       // Установка фитнесс значения
       arr_promisses = [];
       populations.map((individ) => {
-        arr_promisses.push(pool.exec('workFitness', [
-          individ.schedule,
-          mapTeacherAndAG,
-          mapGroupAndAG,
-          penaltyGrWin,
-          penaltyLateSc,
-          penaltyEqSc,
-          penaltySameTimesSc,
-          penaltyTeachWin
-        ]));
+        arr_promisses.push(
+          pool.exec("workFitness", [
+            individ.schedule,
+            mapTeacherAndAG,
+            mapGroupAndAG,
+            penaltyGrWin,
+            penaltyLateSc,
+            penaltyEqSc,
+            penaltySameTimesSc,
+            penaltyTeachWin,
+          ])
+        );
       });
       await Promise.all(arr_promisses).then((res) => {
         res.map((value, index) => {
-          populations[index].fitnessValue = value;
+          populations[index].fitnessValue = value.fitnessValue;
         });
       });
       console.timeEnd("Fitness");
@@ -160,7 +179,7 @@ export const RUN_EA = {
         return 0;
       });
       let elit = populations.slice(0, num_elit);
-      elit = elit.map(p => JSON.parse(JSON.stringify(p)))
+      elit = elit.map((p) => JSON.parse(JSON.stringify(p)));
       // Отбор
       let new_populations = [];
       arr_promisses = [];
@@ -177,13 +196,16 @@ export const RUN_EA = {
           }
           p_populations.push(1.001);
           for (let i = 0; i < population_size - num_elit; i++) {
-            arr_promisses.push(pool.exec('workSelectRanging', [p_populations]));
+            arr_promisses.push(pool.exec("workSelectRanging", [p_populations]));
           }
-          await Promise.all(arr_promisses).then(res => {
-            res.map(index => {
-              new_populations.push({ schedule: populations[index].schedule.slice(0), fitnessValue: populations[index].fitnessValue });
-            })
-          })
+          await Promise.all(arr_promisses).then((res) => {
+            res.map((index) => {
+              new_populations.push({
+                schedule: populations[index].schedule.slice(0),
+                fitnessValue: populations[index].fitnessValue,
+              });
+            });
+          });
           break;
         case "tournament":
           for (let i = 0; i < population_size - num_elit; i++) {
@@ -207,11 +229,20 @@ export const RUN_EA = {
               fitnessValue: populations[i1].fitnessValue,
               index: i3,
             };
-            arr_promisses.push(pool.exec('workSelectTournament', [population1, population2, population3]));
+            arr_promisses.push(
+              pool.exec("workSelectTournament", [
+                population1,
+                population2,
+                population3,
+              ])
+            );
           }
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
-              new_populations.push({ schedule: populations[index].schedule.slice(0), fitnessValue: populations[index].fitnessValue });
+              new_populations.push({
+                schedule: populations[index].schedule.slice(0),
+                fitnessValue: populations[index].fitnessValue,
+              });
             });
           });
           break;
@@ -226,10 +257,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
 
