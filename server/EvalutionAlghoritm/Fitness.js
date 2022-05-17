@@ -310,8 +310,8 @@ function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
           detectedSchedules[index].pair_type === 3
         )
           if (
-            detectedSchedules[index - 1].assigned_group.class.id !==
-            detectedSchedules[index].assigned_group.class.id
+            detectedSchedules[index - 1].clas.id !==
+            detectedSchedules[index].clas.id
           )
             //у учителя может стоят лекция у нескольких групп
             fitnessValue += penaltySameTimesSc;

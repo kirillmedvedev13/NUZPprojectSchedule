@@ -105,7 +105,7 @@ export const CALC_FITNESS = {
       ],
     });
     schedule = schedule.map((s) => {
-      return Object.assign(s.toJSON(), s.assigned_group.class);
+      return Object.assign(s.toJSON(), { clas: s.assigned_group.class });
     });
     let fitnessValue = Fitness(
       schedule,
