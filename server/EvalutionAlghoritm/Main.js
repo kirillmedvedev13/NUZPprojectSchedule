@@ -67,7 +67,7 @@ export const RUN_EA = {
     });
 
     // Очистка расписания
-    await db.schedule.destroy({ truncate: true });
+    //await db.schedule.destroy({ truncate: true });
 
     teachers = teachers.map(t => t.toJSON());
     groups = groups.map(g => g.toJSON());
