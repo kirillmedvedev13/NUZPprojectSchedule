@@ -5,9 +5,9 @@ import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
 import GetRndInteger from "./GetRndInteger.js";
 import { cpus } from "node:os";
-import { StaticPool } from "node-worker-threads-pool";
 import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
 import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
+import workerpool from "workerpool"
 
 export const RUN_EA = {
   type: MessageType,
@@ -67,7 +67,7 @@ export const RUN_EA = {
     });
 
     // Очистка расписания
-    //await db.schedule.destroy({ truncate: true });
+    await db.schedule.destroy({ truncate: true });
 
     teachers = teachers.map(t => t.toJSON());
     groups = groups.map(g => g.toJSON());
@@ -82,51 +82,7 @@ export const RUN_EA = {
 
     // Создание пула потоков
     const numCPUs = cpus().length;
-    const staticPoolCrossing = new StaticPool({
-      size: numCPUs,
-      task: "./EvalutionAlghoritm/Crossing.js",
-      workerData: {
-        classes,
-      }
-    });
-    const staticPoolMutation = new StaticPool({
-      size: numCPUs,
-      task: "./EvalutionAlghoritm/Mutation.js",
-      workerData: {
-        p_genes,
-        max_day,
-        max_pair,
-        audiences,
-      },
-    });
-    let staticPoolSelect;
-    switch (type_select) {
-      case "ranging":
-        staticPoolSelect = new StaticPool({
-          size: numCPUs,
-          task: "./EvalutionAlghoritm/SelectRanging.js",
-        });
-        break;
-      case "tournament":
-        staticPoolSelect = new StaticPool({
-          size: numCPUs,
-          task: "./EvalutionAlghoritm/SelectTournament.js",
-        });
-        break;
-    }
-    const staticPoolFitness = new StaticPool({
-      size: numCPUs,
-      task: "./EvalutionAlghoritm/Fitness.js",
-      workerData: {
-        mapGroupAndAG,
-        mapTeacherAndAG,
-        penaltyGrWin,
-        penaltyTeachWin,
-        penaltyLateSc,
-        penaltyEqSc,
-        penaltySameTimesSc,
-      },
-    });
+    const pool = workerpool.pool("./EvalutionAlghoritm/Worker.js", { workerType: 'thread', maxWorkers: numCPUs })
 
     // Инициализация
     let populations = Init(
@@ -147,13 +103,11 @@ export const RUN_EA = {
       let arr_promisses = [];
       for (let i = 0; i < population_size / 2; i++) {
         if (Math.random() < p_crossover) {
-          const param = {
-            schedule1:
-              populations[GetRndInteger(0, populations.length - 1)].schedule,
-            schedule2:
-              populations[GetRndInteger(0, populations.length - 1)].schedule,
-          };
-          arr_promisses.push(staticPoolCrossing.exec(param));
+          arr_promisses.push(pool.exec('workCrossing', [
+            populations[GetRndInteger(0, populations.length - 1)].schedule,
+            populations[GetRndInteger(0, populations.length - 1)].schedule,
+            classes
+          ]));
         }
       }
       await Promise.all(arr_promisses).then((res) => {
@@ -168,15 +122,12 @@ export const RUN_EA = {
       arr_promisses = [];
       populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
-          const param = {
-            schedule: mutant.schedule,
-          };
-          arr_promisses.push(staticPoolMutation.exec(param));
+          arr_promisses.push(pool.exec('workMutation', [mutant.schedule, p_genes, max_day, max_pair, audiences]));
         }
       });
       await Promise.all(arr_promisses).then((res) => {
-        res.map((r) => {
-          populations.push({ schedule: r, fitnessValue: null });
+        res.map((sch) => {
+          populations.push({ schedule: sch, fitnessValue: null });
         });
       });
       console.timeEnd("Muta");
@@ -184,8 +135,16 @@ export const RUN_EA = {
       // Установка фитнесс значения
       arr_promisses = [];
       populations.map((individ) => {
-        const param = { schedule: individ.schedule };
-        arr_promisses.push(staticPoolFitness.exec(param));
+        arr_promisses.push(pool.exec('workFitness', [
+          individ.schedule,
+          mapTeacherAndAG,
+          mapGroupAndAG,
+          penaltyGrWin,
+          penaltyLateSc,
+          penaltyEqSc,
+          penaltySameTimesSc,
+          penaltyTeachWin
+        ]));
       });
       await Promise.all(arr_promisses).then((res) => {
         res.map((value, index) => {
@@ -218,7 +177,7 @@ export const RUN_EA = {
           }
           p_populations.push(1.001);
           for (let i = 0; i < population_size - num_elit; i++) {
-            arr_promisses.push(staticPoolSelect.exec({ p_populations }));
+            arr_promisses.push(pool.exec('workSelectRanging', [p_populations]));
           }
           await Promise.all(arr_promisses).then(res => {
             res.map(index => {
@@ -236,21 +195,19 @@ export const RUN_EA = {
               i2 = GetRndInteger(0, populations.length - 1);
               i3 = GetRndInteger(0, populations.length - 1);
             }
-            const param = {
-              population1: {
-                fitnessValue: populations[i1].fitnessValue,
-                index: i1,
-              },
-              population2: {
-                fitnessValue: populations[i1].fitnessValue,
-                index: i2,
-              },
-              population3: {
-                fitnessValue: populations[i1].fitnessValue,
-                index: i3,
-              },
+            const population1 = {
+              fitnessValue: populations[i1].fitnessValue,
+              index: i1,
             };
-            arr_promisses.push(staticPoolSelect.exec(param));
+            const population2 = {
+              fitnessValue: populations[i1].fitnessValue,
+              index: i2,
+            };
+            const population3 = {
+              fitnessValue: populations[i1].fitnessValue,
+              index: i3,
+            };
+            arr_promisses.push(pool.exec('workSelectTournament', [population1, population2, population3]));
           }
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {

@@ -2,20 +2,14 @@ import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
 import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
 import GetRndInteger from "./GetRndInteger.js";
-import { parentPort, workerData } from "worker_threads";
 
-parentPort.on("message", (param) => {
-  const res = Mutation(param);
-  parentPort.postMessage(res);
-})
 
-function Mutation(param) {
-  const { p_genes,
-    max_day,
-    max_pair,
-    audiences } = workerData;
-  let { schedule } = param;
-  schedule = schedule.slice(0);
+export default function Mutation(schedule,
+  p_genes,
+  max_day,
+  max_pair,
+  audiences) {
+  schedule = schedule.slice(0)
   schedule.map((sch) => {
     if (Math.random() < p_genes) {
       // Получить занятия для расписания

@@ -1,12 +1,4 @@
-import { parentPort } from "worker_threads";
-
-parentPort.on("message", (param) => {
-  const res = SelectTournament(param);
-  parentPort.postMessage(res);
-})
-
-function SelectTournament(param) {
-  const { population1, population2, population3 } = param;
+export default function SelectTournament(population1, population2, population3) {
   if (
     population1.fitnessValue < population2.fitnessValue &&
     population1.fitnessValue < population3.fitnessValue

@@ -270,7 +270,7 @@ function DataForm({ handleChangeInfo }) {
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Фітнес значення</Form.Label>
         <Col>
-          <p>{data.GetInfo.fitnessValue}</p>
+          <p>{data.GetInfo.fitness_value}</p>
         </Col>
       </Form.Group>
     </>

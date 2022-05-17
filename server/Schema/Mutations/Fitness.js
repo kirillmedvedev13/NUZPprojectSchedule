@@ -1,5 +1,5 @@
 import db from "../../database.js";
-import fitness from "../../EvalutionAlghoritm/FitnessFunction.js";
+import Fitness from "../../EvalutionAlghoritm/Fitness.js";
 import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
 import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
@@ -107,7 +107,8 @@ export const CALC_FITNESS = {
     schedule = schedule.map((s) => {
       return Object.assign(s.toJSON(), s.assigned_group.class);
     });
-    let fitnessValue = fitness(schedule, {
+    let fitnessValue = Fitness(
+      schedule,
       mapTeacherAndAG,
       mapGroupAndAG,
       penaltyGrWin,
@@ -115,7 +116,7 @@ export const CALC_FITNESS = {
       penaltyEqSc,
       penaltySameTimesSc,
       penaltyTeachWin,
-    });
+    );
     const res = await db.info.update({ fitness_value: fitnessValue }, { where: { id: 1 } })
     return res[0]
       ? {

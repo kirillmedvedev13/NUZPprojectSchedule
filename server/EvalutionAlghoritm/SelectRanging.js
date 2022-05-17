@@ -1,11 +1,4 @@
-import { parentPort } from "worker_threads"
-
-parentPort.on("message", (param) => {
-  const res = SelectRanging(param);
-  parentPort.postMessage(res);
-})
-
-function SelectRanging({ p_populations }) {
+export default function SelectRanging(p_populations) {
   let left = 0;
   let right = p_populations.length;
   let middle;

@@ -1,14 +1,6 @@
 import GetRndInteger from "./GetRndInteger.js";
-import { parentPort, workerData } from "worker_threads";
 
-parentPort.on("message", (param) => {
-  const res = Crossing(param);
-  parentPort.postMessage(res);
-});
-
-function Crossing(param) {
-  const { classes } = workerData;
-  const { schedule1, schedule2 } = param;
+export default function Crossing(schedule1, schedule2, classes) {
   let s = GetRndInteger(0, classes.length / 2);
   let current_schedule1 = schedule1.slice(0);
   let current_schedule2 = schedule2.slice(0);
