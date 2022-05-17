@@ -9,7 +9,6 @@ import TableBody from "./TableBody";
 
 function getDescription(schedule) {
   let teachers = " ";
-  debugger;
   schedule.assigned_group.class.assigned_teachers.map((teacher) => {
     teachers +=
       teacher.teacher.surname +
@@ -45,6 +44,7 @@ function DataTable({ filters, info }) {
       SplitPairs(audience.schedules)
     );
   }
+  debugger;
 
   return TableBody(MapAudience, info, getDescription);
 }
