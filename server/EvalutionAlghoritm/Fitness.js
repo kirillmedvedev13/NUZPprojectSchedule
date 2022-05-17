@@ -6,12 +6,13 @@ export default function Fitness(
   penaltyLateSc,
   penaltyEqSc,
   penaltySameTimesSc,
-  penaltyTeachWin) {
+  penaltyTeachWin
+) {
   if (!schedule.length) {
     return 0;
   }
-  let fitnessValue = 0;
-  fitnessValue += fitnessByGroups(
+
+  let fitnessGr = fitnessByGroups(
     schedule,
     mapGroupAndAG,
     penaltyGrWin,
@@ -19,7 +20,7 @@ export default function Fitness(
     penaltyEqSc,
     penaltySameTimesSc
   );
-  fitnessValue += fitnessByTeachers(
+  let fitnessTeach = fitnessByTeachers(
     schedule,
     mapTeacherAndAG,
     penaltyTeachWin,
@@ -27,7 +28,9 @@ export default function Fitness(
     penaltyEqSc,
     penaltySameTimesSc
   );
-  return fitnessValue;
+  let fitnessValue = fitnessGr.fitnessValue + fitnessTeach.fitnessValue;
+
+  return { fitnessValue, fitnessGr, fitnessTeach };
 }
 
 function fitnessByGroups(
@@ -38,7 +41,11 @@ function fitnessByGroups(
   penaltyEqSc,
   penaltySameTimesSc
 ) {
-  let fitnessValue = 0;
+  let fitnessGrWin = 0;
+  let fitnessLateSc = 0;
+  let fitnessEqSc = 0;
+  let fitnessSameTimesSc = 0;
+
   //отбираю для каждой группы их расписание
   mapGroupAndAG.forEach((detectedAG) => {
     let detectedSchedules = schedule.filter((schedule) => {
@@ -48,27 +55,34 @@ function fitnessByGroups(
     });
     //сортирую по дням
     detectedSchedules = sortDS(detectedSchedules);
-    fitnessValue +=
+    fitnessGrWin +=
       penaltyGrWin === 0
         ? 0
         : fitnessDSWindows(detectedSchedules, penaltyGrWin);
-    fitnessValue +=
+    fitnessLateSc +=
       penaltyLateSc === 0
         ? 0
         : detectedSchedules.length == 1
-          ? detectedSchedules[0].number_pair * penaltyLateSc
-          : fitnessDSLateSchedule(detectedSchedules, penaltyLateSc);
-    fitnessValue +=
+        ? detectedSchedules[0].number_pair * penaltyLateSc
+        : fitnessDSLateSchedule(detectedSchedules, penaltyLateSc);
+    fitnessEqSc +=
       penaltyEqSc === 0
         ? 0
         : fitnessEquelSchedule(detectedSchedules, penaltyEqSc);
-    fitnessValue +=
+    fitnessSameTimesSc +=
       penaltySameTimesSc === 0
         ? 0
         : fitnessSameTimesGroup(detectedSchedules, penaltySameTimesSc);
   });
-
-  return fitnessValue;
+  let fitnessValue =
+    fitnessGrWin + fitnessLateSc + fitnessEqSc + fitnessSameTimesSc;
+  return {
+    fitnessGrWin,
+    fitnessLateSc,
+    fitnessEqSc,
+    fitnessSameTimesSc,
+    fitnessValue,
+  };
 }
 
 function fitnessByTeachers(
@@ -79,7 +93,10 @@ function fitnessByTeachers(
   penaltyEqSc,
   penaltySameTimesSc
 ) {
-  let fitnessValue = 0;
+  let fitnessTeachWin = 0;
+  let fitnessLateSc = 0;
+  let fitnessEqSc = 0;
+  let fitnessSameTimesSc = 0;
   mapTeacherAndAG.forEach((detectedAG) => {
     let detectedSchedules = schedule.filter((schedule) => {
       if (detectedAG.indexOf(schedule.id_assigned_group) != -1) {
@@ -87,27 +104,35 @@ function fitnessByTeachers(
       }
     });
     detectedSchedules = sortDS(detectedSchedules);
-    fitnessValue +=
+    fitnessTeachWin +=
       penaltyTeachWin === 0
         ? 0
         : fitnessDSWindows(detectedSchedules, penaltyTeachWin);
-    fitnessValue +=
+    fitnessLateSc +=
       penaltyLateSc === 0
         ? 0
         : detectedSchedules.length == 1
-          ? detectedSchedules[0].number_pair * penaltyLateSc
-          : fitnessDSLateSchedule(detectedSchedules, penaltyLateSc);
-    fitnessValue +=
+        ? detectedSchedules[0].number_pair * penaltyLateSc
+        : fitnessDSLateSchedule(detectedSchedules, penaltyLateSc);
+    fitnessEqSc +=
       penaltyEqSc === 0
         ? 0
         : fitnessEquelSchedule(detectedSchedules, penaltyEqSc);
-    fitnessValue +=
+    fitnessSameTimesSc +=
       penaltySameTimesSc === 0
         ? 0
         : fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc);
   });
 
-  return fitnessValue;
+  let fitnessValue =
+    fitnessTeachWin + fitnessLateSc + fitnessEqSc + fitnessSameTimesSc;
+  return {
+    fitnessTeachWin,
+    fitnessLateSc,
+    fitnessEqSc,
+    fitnessSameTimesSc,
+    fitnessValue,
+  };
 }
 
 //сортировка по дням
@@ -147,9 +172,9 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
               penaltyGrWin;
             if (
               detectedSchedules[i].day_week ==
-              detectedSchedules[i + 2].day_week &&
+                detectedSchedules[i + 2].day_week &&
               detectedSchedules[i + 1].pair_type !=
-              detectedSchedules[i + 2].pair_type
+                detectedSchedules[i + 2].pair_type
             ) {
               fitnessValue +=
                 (detectedSchedules[i + 2].number_pair -
@@ -167,14 +192,14 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
         } else {
           if (
             detectedSchedules[i + 1].pair_type !=
-            detectedSchedules[i].pair_type &&
+              detectedSchedules[i].pair_type &&
             detectedSchedules[i + 1].pair_type != 3
           ) {
             if (
               detectedSchedules[i].day_week ==
-              detectedSchedules[i + 2].day_week &&
+                detectedSchedules[i + 2].day_week &&
               detectedSchedules[i + 1].pair_type !=
-              detectedSchedules[i + 2].pair_type
+                detectedSchedules[i + 2].pair_type
             ) {
               fitnessValue +=
                 (detectedSchedules[i + 2].number_pair -
@@ -197,7 +222,7 @@ function fitnessDSWindows(detectedSchedules, penaltyGrWin) {
   if (len > 2)
     if (
       detectedSchedules[len - 3].day_week !=
-      detectedSchedules[len - 2].day_week &&
+        detectedSchedules[len - 2].day_week &&
       detectedSchedules[len - 2].day_week == detectedSchedules[len - 1].day_week
     ) {
       fitnessValue +=
@@ -281,7 +306,7 @@ function fitnessSameTimesGroup(detectedSchedules, penaltySameTimesSc) {
         //все случае кроме если стоит числитель и знаменатель
         if (
           detectedSchedules[index - 1].pair_type ==
-          detectedSchedules[index].pair_type ||
+            detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type == 3 ||
           detectedSchedules[index].pair_type == 3
         )
@@ -305,7 +330,7 @@ function fitnessSameTimesTeacher(detectedSchedules, penaltySameTimesSc) {
       ) {
         if (
           detectedSchedules[index - 1].pair_type ===
-          detectedSchedules[index].pair_type ||
+            detectedSchedules[index].pair_type ||
           detectedSchedules[index - 1].pair_type === 3 ||
           detectedSchedules[index].pair_type === 3
         )

@@ -115,14 +115,17 @@ export const CALC_FITNESS = {
       penaltyLateSc,
       penaltyEqSc,
       penaltySameTimesSc,
-      penaltyTeachWin,
+      penaltyTeachWin
     );
-    const res = await db.info.update({ fitness_value: fitnessValue }, { where: { id: 1 } })
+    const res = await db.info.update(
+      { fitness_value: JSON.stringify(fitnessValue) },
+      { where: { id: 1 } }
+    );
     return res[0]
       ? {
-        successful: true,
-        message: "Фітнес значення розкладу - " + fitnessValue,
-      }
+          successful: true,
+          message: "Фітнес значення розкладу - " + fitnessValue,
+        }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };
