@@ -7,14 +7,11 @@ import {
     ADD_RECOMMENDED_AUDIENCE_TO_CLASS,
     DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS,
 } from "./mutations";
-import { GET_ALL_CLASSES } from "./queries";
 import { GET_ALL_AUDIENCES } from "../Audience/queries"
+import ValidatedMessage from "../ValidatedMessage";
 
-export function SelectsRecAudience({ item, handleUpdateItem, handleChangeItem }) {
-    const [DelRecAudienceFromClass, { loading, error }] = useMutation(DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS, {
-        refetchQueries: [GET_ALL_CLASSES],
-    });
-
+export function TableRecAudience({ item, handleChangeItem }) {
+    const [DelRecAudienceFromClass, { loading, error }] = useMutation(DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS);
     if (loading) return "Loading...";
     if (error) return `Error! ${error}`;
 
@@ -38,7 +35,10 @@ export function SelectsRecAudience({ item, handleUpdateItem, handleChangeItem })
                                     onClick={(e) => {
                                         if (item.id) { // При редактировании
                                             DelRecAudienceFromClass({ variables: { id: Number(itemRA.id) } }).then((res) => {
-                                                handleUpdateItem(item);
+                                                if (res.data.DeleteRecAudienceFromClass.successful) {
+                                                    const arr_ra = item.recommended_audiences.filter(ra => +ra.id !== +itemRA.id);
+                                                    handleChangeItem("recommended_audiences", arr_ra);
+                                                }
                                                 CreateNotification(res.data.DeleteRecAudienceFromClass)
                                             })
                                         }
@@ -61,21 +61,16 @@ export function SelectsRecAudience({ item, handleUpdateItem, handleChangeItem })
 
 export function AddRecAudienceToClass({
     item,
-    handleUpdateItem,
     handleChangeItem,
     statusAddRecAudienceToClass,
     counterRecAudiences,
     validatedSelectedRecAudience,
     selectedRecAudience,
-    handleChangeViewSelect,
-    handleChangeSelectedItem,
-    handleValidationSelectedItem,
+    handleChangeState,
     handleIncCounter,
 }) {
     const query = useQuery(GET_ALL_AUDIENCES);
-    const [AddRecAudienceToClass, { loading, error }] = useMutation(ADD_RECOMMENDED_AUDIENCE_TO_CLASS, {
-        refetchQueries: [GET_ALL_CLASSES],
-    });
+    const [AddRecAudienceToClass, { loading, error }] = useMutation(ADD_RECOMMENDED_AUDIENCE_TO_CLASS);
     if (query.loading) return "Loading...";
     if (query.error) return `Error! ${error}`;
     let options = [];
@@ -91,24 +86,28 @@ export function AddRecAudienceToClass({
                 <Form.Label className="col-auto px-1">Виберiть аудиторію</Form.Label>
                 <Col className="px-1">
                     <Select options={options} placeholder="Аудиторія" onChange={(e) => {
-                        handleChangeSelectedItem("selectedRecAudience", { id: e.value, name: e.label });
-                        handleValidationSelectedItem("validatedSelectedRecAudience", { status: true });
+                        handleChangeState("selectedRecAudience", query.data.GetAllAudiences.find(aud => +aud.id === +e.value));
+                        handleChangeState("validatedSelectedRecAudience", { status: true });
                     }}></Select>
                     {!validatedSelectedRecAudience.status && (
-                        <div className="text-danger">{validatedSelectedRecAudience.message}</div>
+                        <ValidatedMessage message={validatedSelectedRecAudience.message}></ValidatedMessage>
                     )}
                 </Col>
                 <Col className="col-auto px-1">
                     <Button onClick={(e) => {
                         if (selectedRecAudience) { //Если полe в селекте не пустое
-                            const checkSelectedRecAudience = item.recommended_audiences.filter(ra => Number(ra.audience.id) === Number(selectedRecAudience.id))
-                            if (!checkSelectedRecAudience.length) { // Проверка не добавлена ли эта кафедра уже в массив
+                            const checkSelectedRecAudience = item.recommended_audiences.find(ra => +ra.audience.id === +selectedRecAudience.id)
+                            if (!checkSelectedRecAudience) { // Проверка не добавлена ли эта аудитория уже в массив
                                 if (item.id) { // Если редактирование элемента
                                     AddRecAudienceToClass({ variables: { id_audience: Number(selectedRecAudience.id), id_class: Number(item.id) } }).then((res) => {
-                                        handleUpdateItem(item);
+                                        const ra = JSON.parse(res.data.AddRecAudienceToClass.data);
+                                        if (res.data.AddRecAudienceToClass.successful) {
+                                            handleChangeItem("recommended_audiences", [...item.recommended_audiences, {
+                                                id: ra.id,
+                                                audience: selectedRecAudience
+                                            }])
+                                        }
                                         CreateNotification(res.data.AddRecAudienceToClass);
-                                        handleChangeViewSelect("statusAddRecAudienceToClass", false);
-                                        handleChangeSelectedItem("selectedRecAudience", null);
                                     }
                                     )
                                 }
@@ -120,16 +119,15 @@ export function AddRecAudienceToClass({
                                     })
                                     handleChangeItem("recommended_audiences", arrRA);
                                     handleIncCounter("counterRecAudience");
-                                    handleChangeViewSelect("statusAddRecAudienceToClass", false);
-                                    handleChangeSelectedItem("selectedRecAudience", null);
                                 }
+                                handleChangeState("selectedRecAudience", null);
                             }
                             else {
-                                handleValidationSelectedItem("validatedSelectedRecAudience", { status: false, message: "Аудиторію вже додано!" });
+                                handleChangeState("validatedSelectedRecAudience", { status: false, message: "Аудиторію вже додано!" });
                             }
                         }
                         else {
-                            handleValidationSelectedItem("validatedSelectedRecAudience", { status: false, message: "Аудиторія не вибрана!" });
+                            handleChangeState("validatedSelectedRecAudience", { status: false, message: "Аудиторія не вибрана!" });
                         }
                     }}>Зберегти</Button>
                 </Col>
@@ -137,7 +135,7 @@ export function AddRecAudienceToClass({
         )
     }
     else {
-        return <Button onClick={(e) => handleChangeViewSelect("statusAddRecAudienceToClass", true)}>Додати аудиторію</Button>
+        return <Button onClick={(e) => handleChangeState("statusAddRecAudienceToClass", true)}>Додати аудиторію</Button>
     }
 
 }

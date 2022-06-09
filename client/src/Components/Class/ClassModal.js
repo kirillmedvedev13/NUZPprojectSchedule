@@ -10,8 +10,8 @@ import { GET_ALL_DISCIPLINES } from "../Discipline/queries"
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
 import { AddTeacherToClass, TableTeachers } from "./ClassModalTeachers"
-import { SelectsGroups, AddGroupToClass } from "./ClassModalGroups"
-import { SelectsRecAudience, AddRecAudienceToClass } from "./ClassModalRecAudience"
+import { TableGroups, AddGroupToClass } from "./ClassModalGroups"
+import { TableRecAudience, AddRecAudienceToClass } from "./ClassModalRecAudience"
 import ValidatedMessage from "../ValidatedMessage"
 
 function Save({
@@ -258,11 +258,11 @@ class ClassModal extends React.Component {
                     handleIncCounter={this.handleIncCounter}
                   >
                   </AddGroupToClass>
-                  <SelectsGroups
+                  <TableGroups
                     item={item}
                     handleChangeItem={handleChangeItem}
                   >
-                  </SelectsGroups>
+                  </TableGroups>
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
@@ -279,11 +279,11 @@ class ClassModal extends React.Component {
                     handleIncCounter={this.handleIncCounter}
                   >
                   </AddRecAudienceToClass>
-                  <SelectsRecAudience
+                  <TableRecAudience
                     item={item}
                     handleChangeItem={handleChangeItem}
                   >
-                  </SelectsRecAudience>
+                  </TableRecAudience>
                 </Col>
               </Form.Group>
             </Form>

@@ -14,11 +14,9 @@ function DataTable({
   openModal,
   openDialog,
   item,
-  needUpdateItem,
   handleChangeItem,
   handleCloseModal,
   handleCloseDialog,
-  handleUpdateItem
 }) {
   const { loading, error, data, refetch } = useQuery(GET_ALL_CLASSES, {
     variables: filters,

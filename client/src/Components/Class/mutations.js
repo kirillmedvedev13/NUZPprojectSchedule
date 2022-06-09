@@ -66,6 +66,7 @@ mutation($id_audience: ID!, $id_class: ID!)
     AddRecAudienceToClass(id_audience: $id_audience, id_class: $id_class){
       message
       successful
+      data
     }
   }
 `;
@@ -76,6 +77,7 @@ mutation($id_group: ID!, $id_class: ID!)
     AddGroupToClass(id_group: $id_group, id_class: $id_class){
       message
       successful
+      data
     }
   }
 `;

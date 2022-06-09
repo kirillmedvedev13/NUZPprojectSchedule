@@ -36,8 +36,10 @@ export function TableTeachers({ item, handleChangeItem }) {
                                     onClick={(e) => {
                                         if (item.id) { // При редактировании
                                             DelTeachFromClass({ variables: { id: +itemAT.id } }).then((res) => {
-                                                let arrAT = item.assigned_teachers.filter(at => +at.id !== +itemAT.id);
-                                                handleChangeItem("assigned_teachers", arrAT);
+                                                if (res.data.DeleteTeacherFromClass.successful) {
+                                                    let arrAT = item.assigned_teachers.filter(at => +at.id !== +itemAT.id);
+                                                    handleChangeItem("assigned_teachers", arrAT);
+                                                }
                                                 CreateNotification(res.data.DeleteTeacherFromClass);
                                             })
                                         }
@@ -100,13 +102,14 @@ export function AddTeacherToClass({
                                 if (item.id) { // Если редактирование элемента
                                     AddTeachToClass({ variables: { id_teacher: +selectedTeacher.id, id_class: +item.id } }).then((res) => {
                                         const at = JSON.parse(res.data.AddTeacherToClass.data);
-                                        console.log(at)
-                                        handleChangeItem("assigned_teachers", [...item.assigned_teachers,
-                                        {
-                                            id: at[0].id,
-                                            teacher: selectedTeacher
+                                        if (res.data.AddTeacherToClass.successful) {
+                                            handleChangeItem("assigned_teachers", [...item.assigned_teachers,
+                                            {
+                                                id: at.id,
+                                                teacher: selectedTeacher
+                                            }
+                                            ])
                                         }
-                                        ])
                                         CreateNotification(res.data.AddTeacherToClass);
                                     })
                                 }
@@ -119,6 +122,7 @@ export function AddTeacherToClass({
                                     handleChangeItem("assigned_teachers", arrAT);
                                     handleIncCounter("counterTeachers");
                                 }
+                                handleChangeState("selectedTeacher", null);
                             }
                             else {
                                 handleChangeState("validatedSelectedTeacher", { status: false, message: "Викладач вже додан!" });

@@ -94,6 +94,12 @@ export const GET_ALL_CLASSES = {
           model: db.assigned_group,
           include: {
             model: db.group,
+            include: {
+              model: db.specialty,
+              include: {
+                model: db.cathedra,
+              }
+            }
           },
         },
         {

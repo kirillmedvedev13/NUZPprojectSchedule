@@ -7,17 +7,13 @@ import {
     ADD_GROUP_TO_CLASS,
     DELETE_GROUP_FROM_CLASS
 } from "./mutations";
-import { GET_ALL_CLASSES } from "./queries";
 import { GET_ALL_GROUPS } from "../Group/queries"
+import ValidatedMessage from "../ValidatedMessage";
 
-export function SelectsGroups({ item, handleUpdateItem, handleChangeItem }) {
-    const [DelGroupFromClass, { loading, error }] = useMutation(DELETE_GROUP_FROM_CLASS, {
-        refetchQueries: [GET_ALL_CLASSES],
-    });
-
+export function TableGroups({ item, handleChangeItem }) {
+    const [DelGroupFromClass, { loading, error }] = useMutation(DELETE_GROUP_FROM_CLASS,);
     if (loading) return "Loading...";
     if (error) return `Error! ${error}`;
-
     return (
         <Table striped bordered hover className="my-2">
             <thead>
@@ -30,7 +26,7 @@ export function SelectsGroups({ item, handleUpdateItem, handleChangeItem }) {
                 {
                     item.assigned_groups.map((itemAG) => (
                         <tr key={Number(itemAG.id)}>
-                            <td>{itemAG.group.name}</td>
+                            <td>{`${itemAG.group.specialty.cathedra.short_name}-${itemAG.group.name}`}</td>
                             <td className="p-0">
                                 <XCircle
                                     className="m-1"
@@ -38,7 +34,10 @@ export function SelectsGroups({ item, handleUpdateItem, handleChangeItem }) {
                                     onClick={(e) => {
                                         if (item.id) { // При редактировании
                                             DelGroupFromClass({ variables: { id: Number(itemAG.id) } }).then((res) => {
-                                                handleUpdateItem(item);
+                                                if (res.data.DeleteGroupFromClass.successful) {
+                                                    const arrAG = item.assigned_groups.filter(ag => +ag.id !== +itemAG.id);
+                                                    handleChangeItem("assigned_groups", arrAG);
+                                                }
                                                 CreateNotification(res.data.DeleteGroupFromClass)
                                             })
                                         }
@@ -61,26 +60,21 @@ export function SelectsGroups({ item, handleUpdateItem, handleChangeItem }) {
 
 export function AddGroupToClass({
     item,
-    handleUpdateItem,
     handleChangeItem,
     statusAddGroupToClass,
     counterGroups,
     validatedSelectedGroup,
     selectedGroup,
-    handleChangeViewSelect,
-    handleChangeSelectedItem,
-    handleValidationSelectedItem,
+    handleChangeState,
     handleIncCounter,
 }) {
     const query = useQuery(GET_ALL_GROUPS);
-    const [AddGroupToClass, { loading, error }] = useMutation(ADD_GROUP_TO_CLASS, {
-        refetchQueries: [GET_ALL_CLASSES],
-    });
+    const [AddGroupToClass, { loading, error }] = useMutation(ADD_GROUP_TO_CLASS);
     if (query.loading) return "Loading...";
     if (query.error) return `Error! ${error}`;
     let options = [];
     query.data.GetAllGroups.forEach(element => {
-        options.push({ label: element.name , value: Number(element.id) })
+        options.push({ label: `${element.specialty.cathedra.short_name}-${element.name}`, value: Number(element.id) })
     })
     if (loading) return "Loading...";
     if (error) return `Error! ${error}`;
@@ -91,24 +85,30 @@ export function AddGroupToClass({
                 <Form.Label className="col-auto px-1">Виберiть групу</Form.Label>
                 <Col className="px-1">
                     <Select options={options} placeholder="Група" onChange={(e) => {
-                        handleChangeSelectedItem("selectedGroup", { id: e.value, name: e.label });
-                        handleValidationSelectedItem("validatedSelectedGroup", { status: true });
+                        handleChangeState("selectedGroup", query.data.GetAllGroups.find(gr => +gr.id === +e.value));
+                        handleChangeState("validatedSelectedGroup", { status: true });
                     }}></Select>
                     {!validatedSelectedGroup.status && (
-                        <div className="text-danger">{validatedSelectedGroup.message}</div>
+                        <ValidatedMessage message={validatedSelectedGroup.message}></ValidatedMessage>
                     )}
                 </Col>
                 <Col className="col-auto px-1">
                     <Button onClick={(e) => {
                         if (selectedGroup) { //Если полe в селекте не пустое
-                            const checkSelectedGroups = item.assigned_groups.filter(ag => Number(ag.group.id) === Number(selectedGroup.id))
-                            if (!checkSelectedGroups.length) { // Проверка не добавлена ли эта кафедра уже в массив
+                            const checkSelectedGroups = item.assigned_groups.find(ag => +ag.group.id === +selectedGroup.id);
+                            if (!checkSelectedGroups) { // Проверка не добавлена ли эта группа уже в массив
                                 if (item.id) { // Если редактирование элемента
                                     AddGroupToClass({ variables: { id_group: Number(selectedGroup.id), id_class: Number(item.id) } }).then((res) => {
-                                        handleUpdateItem(item);
+                                        const ag = JSON.parse(res.data.AddGroupToClass.data)
+                                        if (res.data.AddGroupToClass.successful) {
+                                            handleChangeItem("assigned_groups", [...item.assigned_groups,
+                                            {
+                                                id: ag.id,
+                                                group: selectedGroup
+                                            }
+                                            ])
+                                        }
                                         CreateNotification(res.data.AddGroupToClass);
-                                        handleChangeViewSelect("statusAddGroupToClass", false);
-                                        handleChangeSelectedItem("selectedGroup", null);
                                     }
                                     )
                                 }
@@ -120,16 +120,15 @@ export function AddGroupToClass({
                                     })
                                     handleChangeItem("assigned_groups", arrAG);
                                     handleIncCounter("counterGroups");
-                                    handleChangeViewSelect("statusAddGroupToClass", false);
-                                    handleChangeSelectedItem("selectedGroup", null);
                                 }
+                                handleChangeState("selectedGroup", null);
                             }
                             else {
-                                handleValidationSelectedItem("validatedSelectedGroup", { status: false, message: "Група вже додана!" });
+                                handleChangeState("validatedSelectedGroup", { status: false, message: "Група вже додана!" });
                             }
                         }
                         else {
-                            handleValidationSelectedItem("validatedSelectedGroup", { status: false, message: "Група не вибрана!" });
+                            handleChangeState("validatedSelectedGroup", { status: false, message: "Група не вибрана!" });
                         }
                     }}>Зберегти</Button>
                 </Col>
@@ -137,7 +136,7 @@ export function AddGroupToClass({
         )
     }
     else {
-        return <Button onClick={(e) => handleChangeViewSelect("statusAddGroupToClass", true)}>Додати групу</Button>
+        return <Button onClick={(e) => handleChangeState("statusAddGroupToClass", true)}>Додати групу</Button>
     }
 
 }

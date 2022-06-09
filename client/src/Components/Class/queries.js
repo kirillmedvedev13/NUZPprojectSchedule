@@ -42,6 +42,11 @@ export const GET_ALL_CLASSES = gql`
         group {
           id
           name
+          specialty {
+            cathedra {
+              short_name
+            }
+          }
         }
       }
       assigned_teachers {

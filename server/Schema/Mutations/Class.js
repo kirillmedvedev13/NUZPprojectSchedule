@@ -101,7 +101,7 @@ export const ADD_TEACHER_TO_CLASS = {
     });
     if (!classes) return { successful: false, message: "Не знайдено заняття" };
     const res = await classes.addTeacher(teach);
-    const at = res.map(r => r.dataValues);
+    const at = res[0].dataValues;
     return res
       ? { successful: true, message: "Викладач успішно додан до заняття", data: JSON.stringify(at) }
       : { successful: false, message: "Помилка при додаванні викладача до заняття" };
@@ -127,9 +127,10 @@ export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
       },
     });
     if (!classes) return { successful: false, message: "Не знайдено заняття" };
-    let res = await classes.addAudience(audience);
+    const res = await classes.addAudience(audience);
+    const ra = res[0].dataValues;
     return res
-      ? { successful: true, message: "Рекомендована аудиторія успішно додана до заняття" }
+      ? { successful: true, message: "Рекомендована аудиторія успішно додана до заняття", data: JSON.stringify(ra) }
       : { successful: false, message: "Помилка при додаванні рекомендованної аудиторії до заняття" };
   },
 };
@@ -155,8 +156,9 @@ export const ADD_GROUP_TO_CLASS = {
     });
     if (!classes) return { successful: false, message: "Не знайдено заняття" };
     let res = await classes.addGroup(group);
+    let ag = res[0].dataValues;
     return res
-      ? { successful: true, message: "Група успішно додана до заняття" }
+      ? { successful: true, message: "Група успішно додана до заняття", data: JSON.stringify(ag) }
       : { successful: false, message: "Помилка при додаванні групи до заняття" };
   },
 };
