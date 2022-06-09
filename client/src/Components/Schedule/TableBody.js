@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 export default function TableBody(MapSomething, info, getDescription) {
-  debugger;
   return (
     <tbody>
       {[...MapSomething].map((map) => {

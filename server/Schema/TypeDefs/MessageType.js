@@ -5,6 +5,7 @@ const MessageType = new GraphQLObjectType({
   fields: () => ({
     successful: { type: GraphQLBoolean },
     message: { type: GraphQLString },
+    data: { type: GraphQLString }
   }),
 });
 

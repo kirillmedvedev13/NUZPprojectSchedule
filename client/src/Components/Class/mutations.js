@@ -12,7 +12,7 @@ export const UPDATE_CLASS = gql`
   mutation (
     $id: ID!
     $id_type_class: Int!
-    $times_per_week: Int!
+    $times_per_week: Double!
     $id_assigned_discipline: Int!
   ) {
     UpdateClass(
@@ -29,7 +29,7 @@ export const UPDATE_CLASS = gql`
 export const CREATE_CLASS = gql`
     mutation (
     $id_type_class: Int!
-    $times_per_week: Int!
+    $times_per_week: Double!
     $id_assigned_discipline: Int!
     $assigned_teachers: String
     $assigned_groups: String
@@ -55,6 +55,7 @@ mutation($id_teacher: ID!, $id_class: ID!)
     AddTeacherToClass(id_teacher: $id_teacher, id_class: $id_class){
       message
       successful
+      data
     }
   }
 `;

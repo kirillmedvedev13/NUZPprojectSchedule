@@ -7,17 +7,13 @@ import {
     ADD_TEACHER_TO_CLASS,
     DELETE_TEACHER_FROM_CLASS
 } from "./mutations";
-import { GET_ALL_CLASSES } from "./queries";
 import { GET_ALL_TEACHERS } from "../Teacher/queries"
+import ValidatedMessage from "../ValidatedMessage";
 
-export function SelectsTeachers({ item, handleUpdateItem, handleChangeItem }) {
-    const [DelTeachFromClass, { loading, error }] = useMutation(DELETE_TEACHER_FROM_CLASS, {
-        refetchQueries: [GET_ALL_CLASSES],
-    });
-
+export function TableTeachers({ item, handleChangeItem }) {
+    const [DelTeachFromClass, { loading, error }] = useMutation(DELETE_TEACHER_FROM_CLASS);
     if (loading) return "Loading...";
     if (error) return `Error! ${error}`;
-
     return (
         <Table striped bordered hover className="my-2">
             <thead>
@@ -39,14 +35,15 @@ export function SelectsTeachers({ item, handleUpdateItem, handleChangeItem }) {
                                     type="button"
                                     onClick={(e) => {
                                         if (item.id) { // При редактировании
-                                            DelTeachFromClass({ variables: { id: Number(itemAT.id) } }).then((res) => {
-                                                handleUpdateItem(item);
-                                                CreateNotification(res.data.DeleteTeacherFromClass)
+                                            DelTeachFromClass({ variables: { id: +itemAT.id } }).then((res) => {
+                                                let arrAT = item.assigned_teachers.filter(at => +at.id !== +itemAT.id);
+                                                handleChangeItem("assigned_teachers", arrAT);
+                                                CreateNotification(res.data.DeleteTeacherFromClass);
                                             })
                                         }
                                         else { // При добавлении
-                                            let arrAT = item.assigned_teachers.filter(at => Number(at.id) !== Number(itemAT.id))
-                                            handleChangeItem("assigned_teachers", arrAT)
+                                            let arrAT = item.assigned_teachers.filter(at => +at.id !== +itemAT.id);
+                                            handleChangeItem("assigned_teachers", arrAT);
                                         }
                                     }
                                     }>
@@ -63,60 +60,57 @@ export function SelectsTeachers({ item, handleUpdateItem, handleChangeItem }) {
 
 export function AddTeacherToClass({
     item,
-    handleUpdateItem,
     handleChangeItem,
     statusAddTeacherToClass,
     counterTeachers,
     validatedSelectedTeacher,
     selectedTeacher,
-    handleChangeViewSelect,
-    handleChangeSelectedItem,
-    handleValidationSelectedItem,
-    handleIncCounter,
+    handleChangeState,
+    handleIncCounter
 }) {
     const query = useQuery(GET_ALL_TEACHERS);
-    const [AddTeachToClass, { loading, error }] = useMutation(ADD_TEACHER_TO_CLASS, {
-        refetchQueries: [GET_ALL_CLASSES],
-    });
+    const [AddTeachToClass, { loading, error }] = useMutation(ADD_TEACHER_TO_CLASS);
     if (query.loading) return "Loading...";
     if (query.error) return `Error! ${error}`;
     let options = [];
     query.data.GetAllTeachers.forEach(element => {
-        options.push({ label: `${element.surname} ${element.name} ${element.cathedra.name}`, value: Number(element.id) })
+        options.push({ label: `${element.surname} ${element.name} - ${element.cathedra.short_name}`, value: +element.id })
     })
     if (loading) return "Loading...";
     if (error) return `Error! ${error}`;
-
     if (statusAddTeacherToClass) { // Если открыт селект
         return (
             <Form.Group as={Row} className="my-2 mx-2 px-0">
                 <Form.Label className="col-auto px-1">Виберiть викладача</Form.Label>
                 <Col className="px-1">
                     <Select options={options} placeholder="Викладач" onChange={(e) => {
-                        const [surname, name] = e.label.split(" ", 2);
-                        const cathedraname = e.label.slice(surname.length + name.length + 2);
-                        handleChangeSelectedItem("selectedTeacher", { id: e.value, name, surname, cathedra: {name: cathedraname} });
-                        handleValidationSelectedItem("validatedSelectedTeacher", { status: true });
+                        handleChangeState("selectedTeacher", query.data.GetAllTeachers.find(t => +t.id === +e.value));
+                        handleChangeState("validatedSelectedTeacher", { status: true, message: "" });
                     }}></Select>
                     {!validatedSelectedTeacher.status && (
-                        <div className="text-danger">{validatedSelectedTeacher.message}</div>
+                        <ValidatedMessage message={validatedSelectedTeacher.message}></ValidatedMessage>
                     )}
                 </Col>
                 <Col className="col-auto px-1">
                     <Button onClick={(e) => {
                         if (selectedTeacher) { //Если полe в селекте не пустое
-                            const checkSelectedTeachers = item.assigned_teachers.filter(at => Number(at.teacher.id) === Number(selectedTeacher.id))
-                            if (!checkSelectedTeachers.length) { // Проверка не добавлена ли эта кафедра уже в массив
+                            // Проверка не добавлена ли этот учитель уже в массив
+                            const checkSelectedTeachers = item.assigned_teachers.find(at => +at.teacher.id === +selectedTeacher.id)
+                            if (!checkSelectedTeachers) {
                                 if (item.id) { // Если редактирование элемента
-                                    AddTeachToClass({ variables: { id_teacher: Number(selectedTeacher.id), id_class: Number(item.id) } }).then((res) => {
-                                        handleUpdateItem(item);
+                                    AddTeachToClass({ variables: { id_teacher: +selectedTeacher.id, id_class: +item.id } }).then((res) => {
+                                        const at = JSON.parse(res.data.AddTeacherToClass.data);
+                                        console.log(at)
+                                        handleChangeItem("assigned_teachers", [...item.assigned_teachers,
+                                        {
+                                            id: at[0].id,
+                                            teacher: selectedTeacher
+                                        }
+                                        ])
                                         CreateNotification(res.data.AddTeacherToClass);
-                                        handleChangeViewSelect("statusAddTeacherToClass", false);
-                                        handleChangeSelectedItem("selectedTeacher", null);
-                                    }
-                                    )
+                                    })
                                 }
-                                else { // Создание элемента
+                                else {
                                     let arrAT = item.assigned_teachers;
                                     arrAT.push({
                                         id: counterTeachers,
@@ -124,16 +118,14 @@ export function AddTeacherToClass({
                                     })
                                     handleChangeItem("assigned_teachers", arrAT);
                                     handleIncCounter("counterTeachers");
-                                    handleChangeViewSelect("statusAddTeacherToClass", false);
-                                    handleChangeSelectedItem("selectedTeacher", null);
                                 }
                             }
                             else {
-                                handleValidationSelectedItem("validatedSelectedTeacher", { status: false, message: "Викладач вже додан!" });
+                                handleChangeState("validatedSelectedTeacher", { status: false, message: "Викладач вже додан!" });
                             }
                         }
                         else {
-                            handleValidationSelectedItem("validatedSelectedTeacher", { status: false, message: "Викладач не вибран!" });
+                            handleChangeState("validatedSelectedTeacher", { status: false, message: "Викладач не вибран!" });
                         }
                     }}>Зберегти</Button>
                 </Col>
@@ -141,7 +133,7 @@ export function AddTeacherToClass({
         )
     }
     else {
-        return <Button onClick={(e) => handleChangeViewSelect("statusAddTeacherToClass", true)}>Додати викладача</Button>
+        return <Button onClick={(e) => handleChangeState("statusAddTeacherToClass", true)}>Додати викладача</Button>
     }
 
 }

@@ -6,7 +6,7 @@ export const CREATE_CLASS = {
   type: MessageType,
   args: {
     id_type_class: { type: GraphQLInt },
-    times_per_week: { type: GraphQLInt },
+    times_per_week: { type: GraphQLFloat },
     id_assigned_discipline: { type: GraphQLInt },
     assigned_teachers: { type: GraphQLString },
     assigned_groups: { type: GraphQLString },
@@ -50,6 +50,7 @@ export const UPDATE_CLASS = {
     id_assigned_discipline: { type: GraphQLInt },
   },
   async resolve(parent, { id, id_type_class, times_per_week, id_assigned_discipline }) {
+    console.log(id, id_type_class, times_per_week, id_assigned_discipline)
     let res = await db.class.update(
       { id_type_class, times_per_week, id_assigned_discipline },
       {
@@ -99,9 +100,10 @@ export const ADD_TEACHER_TO_CLASS = {
       },
     });
     if (!classes) return { successful: false, message: "Не знайдено заняття" };
-    let res = await classes.addTeacher(teach);
+    const res = await classes.addTeacher(teach);
+    const at = res.map(r => r.dataValues);
     return res
-      ? { successful: true, message: "Викладач успішно додан до заняття" }
+      ? { successful: true, message: "Викладач успішно додан до заняття", data: JSON.stringify(at) }
       : { successful: false, message: "Помилка при додаванні викладача до заняття" };
   },
 };
