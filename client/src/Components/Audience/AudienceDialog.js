@@ -6,9 +6,7 @@ import { DELETE_AUDIENCE } from "./mutations";
 import { CreateNotification } from "../Alert";
 
 function Confirm({ item, handleClose }) {
-  const [DeleteAudience, { loading, error }] = useMutation(DELETE_AUDIENCE, {
-    refetchQueries: [GET_ALL_AUDIENCES],
-  });
+  const [DeleteAudience, { loading, error }] = useMutation(DELETE_AUDIENCE);
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
 
@@ -30,6 +28,7 @@ function Confirm({ item, handleClose }) {
 class AudienceDialog extends React.Component {
   handleClose = () => {
     this.props.handleCloseDialog();
+    this.props.refetch();
   };
 
   render() {
