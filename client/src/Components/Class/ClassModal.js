@@ -1,53 +1,63 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  CREATE_CLASS,
-  UPDATE_CLASS,
-} from "./mutations";
+import { CREATE_CLASS, UPDATE_CLASS } from "./mutations";
 import { GET_ALL_TYPE_CLASSES } from "./queries";
-import { GET_ALL_DISCIPLINES } from "../Discipline/queries"
+import { GET_ALL_DISCIPLINES } from "../Discipline/queries";
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
-import { AddTeacherToClass, TableTeachers } from "./ClassModalTeachers"
-import { TableGroups, AddGroupToClass } from "./ClassModalGroups"
-import { TableRecAudience, AddRecAudienceToClass } from "./ClassModalRecAudience"
-import ValidatedMessage from "../ValidatedMessage"
+import { AddTeacherToClass, TableTeachers } from "./ClassModalTeachers";
+import { TableGroups, AddGroupToClass } from "./ClassModalGroups";
+import {
+  TableRecAudience,
+  AddRecAudienceToClass,
+} from "./ClassModalRecAudience";
+import ValidatedMessage from "../ValidatedMessage";
 
-function Save({
-  item,
-  handleCloseModal,
-  handleChangeState,
-}) {
+function Save({ item, handleCloseModal, handleChangeState }) {
   const mutation = item.id ? UPDATE_CLASS : CREATE_CLASS;
   const [mutateFunction, { loading, error }] = useMutation(mutation);
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: Number(item.id),
-        id_assigned_discipline: Number(item.assigned_discipline.id),
-        times_per_week: Number(item.times_per_week),
-        id_type_class: Number(item.type_class.id)
-      },
-    }
+        variables: {
+          id: Number(item.id),
+          id_assigned_discipline: Number(item.assigned_discipline.id),
+          times_per_week: Number(item.times_per_week),
+          id_type_class: Number(item.type_class.id),
+        },
+      }
     : {
-      variables: {
-        id_assigned_discipline: Number(item.assigned_discipline.id),
-        times_per_week: Number(item.times_per_week),
-        id_type_class: Number(item.type_class.id),
-        assigned_teachers: JSON.stringify(item.assigned_teachers.map(item => { return Number(item.teacher.id) })),
-        assigned_groups: JSON.stringify(item.assigned_groups.map(item => { return Number(item.group.id) })),
-        recommended_audiences: JSON.stringify(item.recommended_audiences.map(item => { return Number(item.audience.id) })),
-      },
-    };
+        variables: {
+          id_assigned_discipline: Number(item.assigned_discipline.id),
+          times_per_week: Number(item.times_per_week),
+          id_type_class: Number(item.type_class.id),
+          assigned_teachers: JSON.stringify(
+            item.assigned_teachers.map((item) => {
+              return Number(item.teacher.id);
+            })
+          ),
+          assigned_groups: JSON.stringify(
+            item.assigned_groups.map((item) => {
+              return Number(item.group.id);
+            })
+          ),
+          recommended_audiences: JSON.stringify(
+            item.recommended_audiences.map((item) => {
+              return Number(item.audience.id);
+            })
+          ),
+        },
+      };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
         if (
-          item.times_per_week && item.type_class.id && item.assigned_discipline.id
+          item.times_per_week &&
+          item.type_class.id &&
+          item.assigned_discipline.id
         ) {
           mutateFunction(variables).then((res) => {
             CreateNotification(
@@ -73,19 +83,18 @@ function Save({
   );
 }
 
-function SelectDiscipline({
-  item,
-  handleChangeItem,
-  handleChangeState,
-}) {
+function SelectDiscipline({ item, handleChangeItem, handleChangeState }) {
   const { error, loading, data } = useQuery(GET_ALL_DISCIPLINES);
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
   let options = [];
   data.GetAllDisciplines.forEach((discipline) => {
     discipline.assigned_disciplines.forEach((assigned_discipline) => {
-      options.push({ label: `${discipline.name} - ${assigned_discipline.specialty.name} - ${assigned_discipline.semester} семестр`, value: +assigned_discipline.id });
-    })
+      options.push({
+        label: `${discipline.name} - ${assigned_discipline.specialty.name} - ${assigned_discipline.semester} семестр`,
+        value: +assigned_discipline.id,
+      });
+    });
   });
   return (
     <Select
@@ -94,7 +103,10 @@ function SelectDiscipline({
       placeholder="Дисциплiна"
       defaultValue={
         item.id
-          ? { label: `${item.assigned_discipline.discipline.name} - ${item.assigned_discipline.specialty.name} - ${item.assigned_discipline.semester} семестр`, value: +item.assigned_discipline.id }
+          ? {
+              label: `${item.assigned_discipline.discipline.name} - ${item.assigned_discipline.specialty.name} - ${item.assigned_discipline.semester} семестр`,
+              value: +item.assigned_discipline.id,
+            }
           : null
       }
       onChange={(e) => {
@@ -105,11 +117,7 @@ function SelectDiscipline({
   );
 }
 
-function SelectTypeClass({
-  item,
-  handleChangeItem,
-  handleChangeState,
-}) {
+function SelectTypeClass({ item, handleChangeItem, handleChangeState }) {
   const { error, loading, data } = useQuery(GET_ALL_TYPE_CLASSES);
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
@@ -143,18 +151,18 @@ class ClassModal extends React.Component {
     validatedDiscipline: true,
 
     statusAddGroupToClass: false, // Если тру то форма с добавлением группы
-    selectedGroup: null, // выбранная группа для добавление к занятию 
-    validatedSelectedGroup: { status: true, message: "" },  // Проверка выбранной группы
+    selectedGroup: null, // выбранная группа для добавление к занятию
+    validatedSelectedGroup: { status: true, message: "" }, // Проверка выбранной группы
     counterGroups: 0, // счётчик для ключей в массиве закрепленных групп
 
     statusAddTeacherToClass: false, // Если тру то форма с добавлением учитилей
-    selectedTeacher: null, // выбранный учитель для добавление к занятию 
-    validatedSelectedTeacher: { status: true, message: "" },  // Проверка выбранного учителя
+    selectedTeacher: null, // выбранный учитель для добавление к занятию
+    validatedSelectedTeacher: { status: true, message: "" }, // Проверка выбранного учителя
     counterTeachers: 0, // счётчик для ключей в массиве закрепленных учитилей
 
     statusAddRecAudeinceToClass: false, // Если тру то форма с добавлением аудиторий
-    selectedRecAudience: null, // выбранная аудитория для добавление к занятию 
-    validatedSelectedRecAudience: { status: true, message: "" },  // Проверка выбранной аудитории
+    selectedRecAudience: null, // выбранная аудитория для добавление к занятию
+    validatedSelectedRecAudience: { status: true, message: "" }, // Проверка выбранной аудитории
     counterRecAudeinces: 0, // счётчик для ключей в массиве рекомендуемых аудиторий
   };
 
@@ -163,12 +171,12 @@ class ClassModal extends React.Component {
   //При выборке элемента в селекте
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
-  }
+  };
 
   //Увелечиние счётчика элементов
   handleIncCounter = (name) => {
-    this.setState(prevState => ({ [name]: prevState[name] + 1 }));
-  }
+    this.setState((prevState) => ({ [name]: prevState[name] + 1 }));
+  };
 
   handleClose = () => {
     this.setState(this.defSate);
@@ -183,9 +191,7 @@ class ClassModal extends React.Component {
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {item.id
-                ? `Редагувати запис заняття`
-                : "Створити запис заняття"}
+              {item.id ? `Редагувати запис заняття` : "Створити запис заняття"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -193,14 +199,20 @@ class ClassModal extends React.Component {
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Дисципліна</Form.Label>
                 <Col>
-                  <SelectDiscipline item={item} handleChangeState={this.handleChangeState} handleChangeItem={handleChangeItem}></SelectDiscipline>
+                  <SelectDiscipline
+                    item={item}
+                    handleChangeState={this.handleChangeState}
+                    handleChangeItem={handleChangeItem}
+                  ></SelectDiscipline>
                   {!this.state.validatedDiscipline && (
                     <ValidatedMessage message="Дисциплiна не вибрана"></ValidatedMessage>
                   )}
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Кількість занять на тиждень</Form.Label>
+                <Form.Label className="col-2">
+                  Кількість занять на тиждень
+                </Form.Label>
                 <Col>
                   <Form.Control
                     required
@@ -211,13 +223,19 @@ class ClassModal extends React.Component {
                       this.handleChangeState("validatedTimesPerWeek", true);
                     }}
                   ></Form.Control>
-                  {!this.state.validatedTimesPerWeek && (<ValidatedMessage message="Пусте поле кiлькостi занять"></ValidatedMessage>)}
+                  {!this.state.validatedTimesPerWeek && (
+                    <ValidatedMessage message="Пусте поле кiлькостi занять"></ValidatedMessage>
+                  )}
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Тип аудиторії</Form.Label>
                 <Col>
-                  <SelectTypeClass item={item} handleChangeState={this.handleChangeState} handleChangeItem={handleChangeItem}></SelectTypeClass>
+                  <SelectTypeClass
+                    item={item}
+                    handleChangeState={this.handleChangeState}
+                    handleChangeItem={handleChangeItem}
+                  ></SelectTypeClass>
                   {!this.state.validatedTypeClass && (
                     <ValidatedMessage message="Тип не вибран"></ValidatedMessage>
                   )}
@@ -231,17 +249,17 @@ class ClassModal extends React.Component {
                     handleChangeItem={handleChangeItem}
                     statusAddTeacherToClass={this.state.statusAddTeacherToClass}
                     counterTeachers={this.state.counterTeachers}
-                    validatedSelectedTeacher={this.state.validatedSelectedTeacher}
+                    validatedSelectedTeacher={
+                      this.state.validatedSelectedTeacher
+                    }
                     selectedTeacher={this.state.selectedTeacher}
                     handleChangeState={this.handleChangeState}
                     handleIncCounter={this.handleIncCounter}
-                  >
-                  </AddTeacherToClass>
+                  ></AddTeacherToClass>
                   <TableTeachers
                     item={item}
                     handleChangeItem={handleChangeItem}
-                  >
-                  </TableTeachers>
+                  ></TableTeachers>
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
@@ -256,34 +274,36 @@ class ClassModal extends React.Component {
                     selectedGroup={this.state.selectedGroup}
                     handleChangeState={this.handleChangeState}
                     handleIncCounter={this.handleIncCounter}
-                  >
-                  </AddGroupToClass>
+                  ></AddGroupToClass>
                   <TableGroups
                     item={item}
                     handleChangeItem={handleChangeItem}
-                  >
-                  </TableGroups>
+                  ></TableGroups>
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Рекомендовані аудиторії</Form.Label>
+                <Form.Label className="col-2">
+                  Рекомендовані аудиторії
+                </Form.Label>
                 <Col>
                   <AddRecAudienceToClass
                     item={item}
                     handleChangeItem={handleChangeItem}
-                    statusAddRecAudienceToClass={this.state.statusAddRecAudienceToClass}
+                    statusAddRecAudienceToClass={
+                      this.state.statusAddRecAudienceToClass
+                    }
                     counterRecAudiences={this.state.counterRecAudiences}
-                    validatedSelectedRecAudience={this.state.validatedSelectedRecAudience}
+                    validatedSelectedRecAudience={
+                      this.state.validatedSelectedRecAudience
+                    }
                     selectedRecAudience={this.state.selectedRecAudience}
                     handleChangeState={this.handleChangeState}
                     handleIncCounter={this.handleIncCounter}
-                  >
-                  </AddRecAudienceToClass>
+                  ></AddRecAudienceToClass>
                   <TableRecAudience
                     item={item}
                     handleChangeItem={handleChangeItem}
-                  >
-                  </TableRecAudience>
+                  ></TableRecAudience>
                 </Col>
               </Form.Group>
             </Form>

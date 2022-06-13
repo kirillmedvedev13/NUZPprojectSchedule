@@ -48,6 +48,7 @@ export const ADD_AUDIENCE_TO_CATHEDRA = gql`
     ) {
       message
       successful
+      data
     }
   }
 `;

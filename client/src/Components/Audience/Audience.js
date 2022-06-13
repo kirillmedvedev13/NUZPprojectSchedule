@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import AudienceTable from "./AudienceTable";
 import AudienceSearch from "./AudienceSearch";
 
@@ -24,15 +23,6 @@ class Audience extends React.Component {
         <AudienceSearch
           handleChangeFilters={this.handleChangeFilters}
         ></AudienceSearch>
-        <div className="d-flex justify-content-end mx-2 my-2">
-          <Button
-            variant="primary"
-            className="col-auto"
-            onClick={this.handleOpenModal}
-          >
-            Додати аудиторiю
-          </Button>
-        </div>
         <AudienceTable filters={filters}></AudienceTable>
       </>
     );

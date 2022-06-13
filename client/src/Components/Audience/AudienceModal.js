@@ -80,7 +80,7 @@ function SelectTypeClass({ item, handleChangeItem, handleChangeState }) {
       }
       onChange={(e) => {
         handleChangeState("validatedTypeClass", true);
-        handleChangeItem("assigned_discipline", { id: +e.value });
+        handleChangeItem("type_class", { id: +e.value });
       }}
     />
   );
@@ -116,9 +116,14 @@ function SelectsCathedras({ item, handleChangeItem }) {
                     DelAudFromCathedra({
                       variables: { id: +itemAU.id },
                     }).then((res) => {
-                      let arrAU = item.assigned_audiences.filter(
-                        (au) => +au.id !== +itemAU.id
-                      );
+                      console.log(res);
+                      if (res.data.DeleteAudienceFromCathedra.successful) {
+                        let arrAU = item.assigned_audiences.filter(
+                          (au) => +au.id !== +itemAU.id
+                        );
+                        handleChangeItem("assigned_audiences", arrAU);
+                      }
+
                       CreateNotification(res.data.DeleteAudienceFromCathedra);
                     });
                   } else {
@@ -207,8 +212,10 @@ function AddAudienceToCathedra({
                       const au = JSON.parse(
                         res.data.AddAudienceToCathedra.data
                       );
-                      handleChangeItem("assigned_cathedras", [
-                        ...item.assigned_cathedras,
+                      console.log(item);
+
+                      handleChangeItem("assigned_audiences", [
+                        ...item.assigned_audiences,
                         {
                           id: au[0].id,
                           cathedra: selectedCathedraToAdd,

@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ALL_AUDIENCES } from "./queries";
 import AudienceModal from "./AudienceModal";
 import AudienceDialog from "./AudienceDialog";
+import { Button } from "react-bootstrap";
 
 function DataTable({
   filters,
@@ -122,6 +123,7 @@ class AudienceTable extends React.Component {
 
   handleCloseModal = () => {
     this.setState({
+      item: this.def_state.item,
       openModal: false,
     });
   };
@@ -136,31 +138,43 @@ class AudienceTable extends React.Component {
     const { filters } = this.props;
     const { item, openModal, openDialog } = this.state;
     return (
-      <div className="container-fluid w-100">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Назва аудиторії</th>
-              <th>Тип</th>
-              <th>Вмісткість</th>
-              <th>Закріплені кафедри</th>
-              <th></th>
-            </tr>
-          </thead>
-          <DataTable
-            filters={filters}
-            handleSetItem={this.handleSetItem}
-            handleOpenDialog={this.handleOpenDialog}
-            handleOpenModal={this.handleOpenModal}
-            openModal={openModal}
-            openDialog={openDialog}
-            item={item}
-            handleChangeItem={this.handleChangeItem}
-            handleCloseModal={this.handleCloseModal}
-            handleCloseDialog={this.handleCloseDialog}
-          ></DataTable>
-        </Table>
-      </div>
+      <>
+        <div className="d-flex justify-content-end mx-2 my-2">
+          <Button
+            variant="primary"
+            className="col-auto"
+            onClick={this.handleOpenModal}
+          >
+            Додати аудиторiю
+          </Button>
+        </div>
+
+        <div className="container-fluid w-100">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Назва аудиторії</th>
+                <th>Тип</th>
+                <th>Вмісткість</th>
+                <th>Закріплені кафедри</th>
+                <th></th>
+              </tr>
+            </thead>
+            <DataTable
+              filters={filters}
+              handleSetItem={this.handleSetItem}
+              handleOpenDialog={this.handleOpenDialog}
+              handleOpenModal={this.handleOpenModal}
+              openModal={openModal}
+              openDialog={openDialog}
+              item={item}
+              handleChangeItem={this.handleChangeItem}
+              handleCloseModal={this.handleCloseModal}
+              handleCloseDialog={this.handleCloseDialog}
+            ></DataTable>
+          </Table>
+        </div>
+      </>
     );
   }
 }

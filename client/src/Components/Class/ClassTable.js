@@ -4,6 +4,7 @@ import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { GET_ALL_CLASSES } from "./queries";
 import ClassDialog from "./ClassDialog";
+import { Button } from "react-bootstrap";
 import ClassModal from "./ClassModal";
 
 function DataTable({
@@ -41,7 +42,9 @@ function DataTable({
                     {clas.assigned_teachers.map((obj) => {
                       return (
                         <tr key={obj.teacher.id}>
-                          <td>{obj.teacher.surname + " " + obj.teacher.name}</td>
+                          <td>
+                            {obj.teacher.surname + " " + obj.teacher.name}
+                          </td>
                           <td>{obj.teacher.cathedra.short_name}</td>
                         </tr>
                       );
@@ -129,13 +132,13 @@ class ClassTable extends React.Component {
     },
     openModal: false,
     openDialog: false,
-  }
+  };
 
   state = this.def_state;
 
   handleSetItem = (item) => {
     this.setState({
-      item
+      item,
     });
   };
 
@@ -159,13 +162,13 @@ class ClassTable extends React.Component {
 
   handleCloseModal = () => {
     this.setState({
-      openModal: false
-    })
+      openModal: false,
+    });
   };
 
   handleChangeItem = (name, value) => {
     this.setState((PrevState) => ({
-      item: Object.assign({ ...PrevState.item }, { [name]: value })
+      item: Object.assign({ ...PrevState.item }, { [name]: value }),
     }));
   };
 
@@ -173,35 +176,47 @@ class ClassTable extends React.Component {
     const { filters } = this.props;
     const { item, openModal, openDialog } = this.state;
     return (
-      <div className="container-fluid w-100">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Дисципліна</th>
-              <th>Спеціальність</th>
-              <th>Семестр</th>
-              <th>Тип заняття</th>
-              <th>Кількість занять на тиждень</th>
-              <th>Викладачі</th>
-              <th>Групи</th>
-              <th>Рекомендовані аудиторії</th>
-              <th></th>
-            </tr>
-          </thead>
-          <DataTable
-            filters={filters}
-            handleSetItem={this.handleSetItem}
-            handleOpenDialog={this.handleOpenDialog}
-            handleOpenModal={this.handleOpenModal}
-            openModal={openModal}
-            openDialog={openDialog}
-            item={item}
-            handleChangeItem={this.handleChangeItem}
-            handleCloseModal={this.handleCloseModal}
-            handleCloseDialog={this.handleCloseDialog}
-          ></DataTable>
-        </Table>
-      </div>
+      <>
+        <div className="d-flex justify-content-end mx-2 my-2">
+          <Button
+            variant="primary"
+            className="col-auto"
+            onClick={this.handleOpenModal}
+          >
+            Додати Занняття
+          </Button>
+        </div>
+
+        <div className="container-fluid w-100">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Дисципліна</th>
+                <th>Спеціальність</th>
+                <th>Семестр</th>
+                <th>Тип заняття</th>
+                <th>Кількість занять на тиждень</th>
+                <th>Викладачі</th>
+                <th>Групи</th>
+                <th>Рекомендовані аудиторії</th>
+                <th></th>
+              </tr>
+            </thead>
+            <DataTable
+              filters={filters}
+              handleSetItem={this.handleSetItem}
+              handleOpenDialog={this.handleOpenDialog}
+              handleOpenModal={this.handleOpenModal}
+              openModal={openModal}
+              openDialog={openDialog}
+              item={item}
+              handleChangeItem={this.handleChangeItem}
+              handleCloseModal={this.handleCloseModal}
+              handleCloseDialog={this.handleCloseDialog}
+            ></DataTable>
+          </Table>
+        </div>
+      </>
     );
   }
 }

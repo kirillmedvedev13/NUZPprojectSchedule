@@ -14,7 +14,7 @@ export const CREATE_AUDIENCE = {
     let res = await db.audience.create({
       name,
       capacity,
-      id_type_class
+      id_type_class,
     });
     if (res && assigned_cathedras) {
       assigned_cathedras = JSON.parse(assigned_cathedras);
@@ -24,11 +24,14 @@ export const CREATE_AUDIENCE = {
           id_cathedra: object.cathedra.id,
         };
       });
-      await db.assigned_audience.bulkCreate(arrAssigned_cathedras)
+      await db.assigned_audience.bulkCreate(arrAssigned_cathedras);
     }
     return res
       ? { successful: true, message: "Запис аудиторії успішно створено" }
-      : { successful: false, message: "Помилка при створенні запису аудиторії" };
+      : {
+          successful: false,
+          message: "Помилка при створенні запису аудиторії",
+        };
   },
 };
 
@@ -38,7 +41,7 @@ export const UPDATE_AUDIENCE = {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     capacity: { type: GraphQLInt },
-    id_type_class: { type: GraphQLInt }
+    id_type_class: { type: GraphQLInt },
   },
   async resolve(parent, { id, name, capacity, id_type_class }) {
     let res = await db.audience.update(
@@ -51,7 +54,10 @@ export const UPDATE_AUDIENCE = {
     );
     return res[0]
       ? { successful: true, message: "Запис аудиторії успішно оновлено" }
-      : { successful: false, message: "Помилка при оновленні запису аудиторії" };
+      : {
+          successful: false,
+          message: "Помилка при оновленні запису аудиторії",
+        };
   },
 };
 
@@ -68,7 +74,10 @@ export const DELETE_AUDIENCE = {
     });
     return res
       ? { successful: true, message: "Запис аудиторії успішно видалено" }
-      : { successful: false, message: "Помилка при видаленні запису аудиторії" };
+      : {
+          successful: false,
+          message: "Помилка при видаленні запису аудиторії",
+        };
   },
 };
 
@@ -92,9 +101,17 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
     });
     if (!cath) return { successful: false, message: "Не знайдено кафедри" };
     let res = await aud.addCathedra(cath);
+    const au = res.map((r) => r.dataValues);
     return res
-      ? { successful: true, message: "Аудиторія успішно додана до кафедри" }
-      : { successful: false, message: "Помилка при додаванні аудиторії до кафедри" };
+      ? {
+          successful: true,
+          message: "Аудиторія успішно додана до кафедри",
+          data: JSON.stringify(au),
+        }
+      : {
+          successful: false,
+          message: "Помилка при додаванні аудиторії до кафедри",
+        };
   },
 };
 
@@ -111,7 +128,9 @@ export const DELETE_AUDIENCE_FROM_CATHEDRA = {
     });
     return res
       ? { successful: true, message: "Аудиторія успішно видалена від кафедри" }
-      : { successful: false, message: "Помилка при видаленні аудиторії від кафедри" };
+      : {
+          successful: false,
+          message: "Помилка при видаленні аудиторії від кафедри",
+        };
   },
 };
-

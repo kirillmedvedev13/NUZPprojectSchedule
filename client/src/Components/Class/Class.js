@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+
 import ClassTable from "./ClassTable";
 import ClassSearch from "./ClassSearch";
 
@@ -15,7 +15,7 @@ class Class extends React.Component {
   };
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({
-      filters: Object.assign({ ...PrevState.filters }, { [name]: value })
+      filters: Object.assign({ ...PrevState.filters }, { [name]: value }),
     }));
   };
 
@@ -26,18 +26,8 @@ class Class extends React.Component {
         <ClassSearch
           handleChangeFilters={this.handleChangeFilters}
         ></ClassSearch>
-        <div className="d-flex justify-content-end mx-2 my-2">
-          <Button
-            variant="primary"
-            className="col-auto"
-            onClick={this.handleOpenModal}
-          >
-            Додати Занняття
-          </Button>
-        </div>
-        <ClassTable
-          filters={filters}
-        ></ClassTable>
+
+        <ClassTable filters={filters}></ClassTable>
       </>
     );
   }
