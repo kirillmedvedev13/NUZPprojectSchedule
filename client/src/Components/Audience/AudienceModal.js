@@ -1,270 +1,10 @@
 import React from "react";
-import { Button, Modal, Form, Row, Col, Table } from "react-bootstrap";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  UPDATE_AUDIENCE,
-  CREATE_AUDIENCE,
-  DELETE_AUDIENCE_FROM_CATHEDRA,
-  ADD_AUDIENCE_TO_CATHEDRA,
-} from "./mutations";
-import { GET_ALL_AUDIENCES, GET_ALL_TYPE_CLASSES } from "./queries";
-import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
-import Select from "react-select";
-import { CreateNotification } from "../Alert";
-import { XCircle } from "react-bootstrap-icons";
+import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import ValidatedMessage from "../ValidatedMessage";
-
-function Save({ item, handleCloseModal, handleChangeState }) {
-  const mutation = item.id ? UPDATE_AUDIENCE : CREATE_AUDIENCE;
-  const [mutateFunction, { loading, error }] = useMutation(mutation);
-  if (loading) return "Submitting...";
-  if (error) return `Submission error! ${error.message}`;
-  const variables = item.id
-    ? {
-        variables: {
-          id: +item.id,
-          name: item.name,
-          capacity: +item.capacity,
-          id_type_class: +item.type_class.id,
-        },
-      }
-    : {
-        variables: {
-          name: item.name,
-          capacity: +item.capacity,
-          id_type_class: +item.type_class.id,
-          assigned_cathedras: JSON.stringify(item.assigned_audiences),
-        },
-      };
-  return (
-    <Button
-      variant="primary"
-      onClick={(e) => {
-        if (item.name && item.capacity) {
-          mutateFunction(variables).then((res) => {
-            CreateNotification(
-              item.id ? res.data.UpdateAudience : res.data.CreateAudience
-            );
-            handleCloseModal();
-          });
-        } else {
-          if (!item.type_class.id)
-            handleChangeState("validatedTypeClass", false);
-          if (!item.name) handleChangeState("validatedName", false);
-          if (!item.capacity) handleChangeState("validatedCapacity", false);
-        }
-      }}
-    >
-      {item.id ? "Оновити" : "Додати"}
-    </Button>
-  );
-}
-
-function SelectTypeClass({ item, handleChangeItem, handleChangeState }) {
-  const { error, loading, data } = useQuery(GET_ALL_TYPE_CLASSES);
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error}`;
-  let options = [];
-  data.GetAllTypeClasses.forEach((selectitem) => {
-    options.push({ label: selectitem.name, value: +selectitem.id });
-  });
-  return (
-    <Select
-      required
-      options={options}
-      placeholder="Тип аудиторії"
-      defaultValue={
-        item.id
-          ? { label: item.type_class.name, value: +item.type_class.id }
-          : null
-      }
-      onChange={(e) => {
-        handleChangeState("validatedTypeClass", true);
-        handleChangeItem("type_class", { id: +e.value });
-      }}
-    />
-  );
-}
-
-function SelectsCathedras({ item, handleChangeItem }) {
-  const [DelAudFromCathedra, { loading, error }] = useMutation(
-    DELETE_AUDIENCE_FROM_CATHEDRA
-  );
-
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error}`;
-
-  return (
-    <Table striped bordered hover className="my-2">
-      <thead>
-        <tr>
-          <th>Назва кафедри</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {item.assigned_audiences.map((itemAU) => (
-          <tr key={Number(itemAU.id)}>
-            <td>{itemAU.cathedra.name}</td>
-            <td className="p-0">
-              <XCircle
-                className="m-1"
-                type="button"
-                onClick={(e) => {
-                  if (item.id) {
-                    // При редактировании
-                    DelAudFromCathedra({
-                      variables: { id: +itemAU.id },
-                    }).then((res) => {
-                      console.log(res);
-                      if (res.data.DeleteAudienceFromCathedra.successful) {
-                        let arrAU = item.assigned_audiences.filter(
-                          (au) => +au.id !== +itemAU.id
-                        );
-                        handleChangeItem("assigned_audiences", arrAU);
-                      }
-
-                      CreateNotification(res.data.DeleteAudienceFromCathedra);
-                    });
-                  } else {
-                    // При добавлении
-                    let arrAU = item.assigned_audiences.filter(
-                      (au) => +au.id !== +itemAU.id
-                    );
-                    handleChangeItem("assigned_audiences", arrAU);
-                  }
-                }}
-              ></XCircle>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-  );
-}
-
-function AddAudienceToCathedra({
-  item,
-  handleChangeItem,
-  statusAddAudeinceToCathedra,
-  selectedCathedraToAdd,
-  validatedSelectedCathedraToAdd,
-  handleChangeState,
-  handleIncCounter,
-  counterCathedras,
-}) {
-  const query = useQuery(GET_ALL_CATHEDRAS);
-  const [AddAudToCathedra, { loading, error }] = useMutation(
-    ADD_AUDIENCE_TO_CATHEDRA
-  );
-  if (query.loading) return "Loading...";
-  if (query.error) return `Error! ${error}`;
-  let options = [];
-  query.data.GetAllCathedras.forEach((element) => {
-    options.push({ label: element.name, value: +element.id });
-  });
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error}`;
-
-  if (statusAddAudeinceToCathedra) {
-    // Если открыт селект
-    return (
-      <Form.Group as={Row} className="my-2 mx-2 px-0">
-        <Form.Label className="col-auto px-1">Виберiть кафедру</Form.Label>
-        <Col className="px-1">
-          <Select
-            options={options}
-            placeholder="Кафедра"
-            onChange={(e) => {
-              handleChangeState(
-                "selectedCathedraToAdd",
-                query.data.GetAllCathedras.find((c) => +c.id === +e.value)
-              );
-              handleChangeState("validatedSelectedCathedra", {
-                status: true,
-                message: "",
-              });
-            }}
-          ></Select>
-          {!validatedSelectedCathedraToAdd.status && (
-            <ValidatedMessage
-              message={validatedSelectedCathedraToAdd.message}
-            ></ValidatedMessage>
-          )}
-        </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              if (selectedCathedraToAdd) {
-                const checkSelectedCathedras = item.assigned_audiences.filter(
-                  (au) => +au.cathedra.id === +selectedCathedraToAdd.id
-                );
-                if (!checkSelectedCathedras.length) {
-                  // Проверка не добавлена ли эта кафедра уже в массив
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddAudToCathedra({
-                      variables: {
-                        id_cathedra: +selectedCathedraToAdd.id,
-                        id_audience: +item.id,
-                      },
-                    }).then((res) => {
-                      const au = JSON.parse(
-                        res.data.AddAudienceToCathedra.data
-                      );
-                      console.log(item);
-
-                      handleChangeItem("assigned_audiences", [
-                        ...item.assigned_audiences,
-                        {
-                          id: au[0].id,
-                          cathedra: selectedCathedraToAdd,
-                        },
-                      ]);
-                      CreateNotification(res.data.AddAudienceToCathedra);
-                    });
-                  } else {
-                    // Создание элемента
-                    let arrAU = item.assigned_audiences;
-                    arrAU.push({
-                      id: counterCathedras,
-                      cathedra: {
-                        id: selectedCathedraToAdd.id,
-                        name: selectedCathedraToAdd.name,
-                      },
-                    });
-                    handleChangeItem("assigned_audiences", arrAU);
-                    handleIncCounter("counterCathedras");
-                  }
-                } else {
-                  handleChangeState("validatedSelectedCathedraToAdd", {
-                    status: false,
-                    message: "Кафедра вже додана",
-                  });
-                }
-              } else {
-                handleChangeState("validatedSelectedCathedraToAdd", {
-                  status: false,
-                  message: "Кафедра не вибрана!",
-                });
-              }
-            }}
-          >
-            Зберегти
-          </Button>
-        </Col>
-      </Form.Group>
-    );
-  } else {
-    return (
-      <Button
-        onClick={(e) => handleChangeState("statusAddAudeinceToCathedra", true)}
-      >
-        Додати кафедру
-      </Button>
-    );
-  }
-}
+import AddAudienceToCathedra from "./AddAudienceToCathedra";
+import SaveButton from "./SaveButton";
+import SelectCathedras from "./SelectCathedras";
+import SelectTypeClass from "./SelectTypeClass";
 
 class AudienceModal extends React.Component {
   defState = {
@@ -377,10 +117,10 @@ class AudienceModal extends React.Component {
                     handleChangeState={this.handleChangeState}
                     counterCathedras={this.state.counterCathedras}
                   ></AddAudienceToCathedra>
-                  <SelectsCathedras
+                  <SelectCathedras
                     item={item}
                     handleChangeItem={handleChangeItem}
-                  ></SelectsCathedras>
+                  ></SelectCathedras>
                 </Col>
               </Form.Group>
             </Form>
@@ -389,11 +129,11 @@ class AudienceModal extends React.Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Закрити
             </Button>
-            <Save
+            <SaveButton
               item={item}
               handleCloseModal={this.handleClose}
               handleChangeState={this.handleChangeState}
-            ></Save>
+            ></SaveButton>
           </Modal.Footer>
         </Modal>
       </>

@@ -1,11 +1,10 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
-import { GET_ALL_AUDIENCES } from "./queries";
 import { DELETE_AUDIENCE } from "./mutations";
 import { CreateNotification } from "../Alert";
 
-function Confirm({ item, handleClose }) {
+function ConfirmButton({ item, handleClose }) {
   const [DeleteAudience, { loading, error }] = useMutation(DELETE_AUDIENCE);
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
@@ -44,7 +43,10 @@ class AudienceDialog extends React.Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Відмінити
             </Button>
-            <Confirm item={item} handleClose={this.handleClose}></Confirm>
+            <ConfirmButton
+              item={item}
+              handleClose={this.handleClose}
+            ></ConfirmButton>
           </Modal.Footer>
         </Modal>
       </>
