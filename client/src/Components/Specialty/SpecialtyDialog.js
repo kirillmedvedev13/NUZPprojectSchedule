@@ -6,9 +6,7 @@ import { DELETE_SPECIALTY } from "./mutations";
 import { CreateNotification } from "../Alert";
 
 function Confirm({ item, handleClose }) {
-  const [DeleteSpecialty, { loading, error }] = useMutation(DELETE_SPECIALTY, {
-    refetchQueries: [GET_ALL_SPECIALTIES],
-  });
+  const [DeleteSpecialty, { loading, error }] = useMutation(DELETE_SPECIALTY);
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
 
@@ -30,6 +28,7 @@ function Confirm({ item, handleClose }) {
 class SpecialtyDialog extends React.Component {
   handleClose = () => {
     this.props.handleCloseDialog();
+    this.props.refetch();
   };
 
   render() {

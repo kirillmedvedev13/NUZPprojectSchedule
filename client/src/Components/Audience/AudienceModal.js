@@ -76,7 +76,10 @@ class AudienceModal extends React.Component {
                     }}
                   ></Form.Control>
                   {!this.state.validatedCapacity && (
-                    <ValidatedMessage message="Пусте поле вмісткості"></ValidatedMessage>
+                    <ValidatedMessage
+                      message="Пусте поле вмісткості"
+                      isopen={isopen}
+                    ></ValidatedMessage>
                   )}
                 </Col>
               </Form.Group>
