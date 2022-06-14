@@ -5,11 +5,7 @@ import { DELETE_DISCIPLINE_FROM_SPECIALTY } from "./mutations";
 import { CreateNotification } from "../Alert";
 import { XCircle } from "react-bootstrap-icons";
 
-export default function SelectSpecialties({
-  item,
-  handleUpdateItem,
-  handleChangeItem,
-}) {
+export default function SelectSpecialties({ item, handleChangeItem }) {
   const [DelDiscFromSpecialty, { loading, error }] = useMutation(
     DELETE_DISCIPLINE_FROM_SPECIALTY
   );

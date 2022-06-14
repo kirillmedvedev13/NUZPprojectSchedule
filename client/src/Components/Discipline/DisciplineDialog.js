@@ -13,7 +13,7 @@ function Confirm({ item, handleClose }) {
     <Button
       variant="primary"
       onClick={(e) => {
-        DeleteSpecialty({ variables: { id: Number(item.id) } }).then((res) => {
+        DeleteSpecialty({ variables: { id: +item.id } }).then((res) => {
           CreateNotification(res.data.DeleteDiscipline);
           handleClose();
         });

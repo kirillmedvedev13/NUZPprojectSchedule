@@ -1,8 +1,4 @@
 import React from "react";
-import update from "react-addons-update";
-import { Button } from "react-bootstrap";
-import DisciplineDialog from "./DisciplineDialog";
-import DisciplineModal from "./DisciplineModal";
 import DisciplineTable from "./DisciplineTable";
 import DisciplineSearch from "./DisciplineSearch";
 

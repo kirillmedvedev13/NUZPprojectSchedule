@@ -13,7 +13,7 @@ function SelectSpecialty({ handleChangeFilters }) {
   data.GetAllSpecialties.forEach((item) => {
     options.push({
       label: item.name,
-      value: Number(item.id),
+      value: +item.id,
     });
   });
   return (
@@ -23,7 +23,7 @@ function SelectSpecialty({ handleChangeFilters }) {
       options={options}
       placeholder="Спеціальність"
       onChange={(e) => {
-        handleChangeFilters("id_specialty", e ? Number(e.value) : null);
+        handleChangeFilters("id_specialty", e ? +e.value : null);
       }}
     />
   );
