@@ -8,7 +8,7 @@ import { CreateNotification } from "../Alert";
 export default function SaveButton({
   item,
   handleCloseModal,
-  handleValidation,
+  handleChangeState,
 }) {
   const mutation = item.id ? UPDATE_CATHEDRA : CREATE_CATHEDRA;
   const [mutateFunction, { loading, error }] = useMutation(mutation, {
@@ -19,7 +19,7 @@ export default function SaveButton({
   const variables = item.id
     ? {
         variables: {
-          id: Number(item.id),
+          id: +item.id,
           name: item.name,
           short_name: item.short_name,
         },
@@ -37,7 +37,8 @@ export default function SaveButton({
             handleCloseModal();
           });
         } else {
-          handleValidation(true);
+          if (!item.short_name) handleChangeState("validatedShortName", false);
+          if (!item.name) handleChangeState("validatedName", false);
         }
       }}
     >

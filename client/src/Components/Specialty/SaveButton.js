@@ -44,6 +44,9 @@ export default function SaveButton({
         if (!item.cathedra.id) {
           handleChangeState("validatedCathedra", false);
         }
+        if (!item.code) {
+          handleChangeState("validatedCode", false);
+        }
       }}
     >
       {item.id ? "Оновити" : "Додати"}
