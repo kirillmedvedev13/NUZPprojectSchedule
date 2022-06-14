@@ -3,93 +3,166 @@ import React from "react";
 import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { GET_ALL_DISCIPLINES } from "./queries";
+import { Button } from "react-bootstrap";
+import DisciplineDialog from "./DisciplineDialog";
+import DisciplineModal from "./DisciplineModal";
+
 function DataTable({
   filters,
   handleSetItem,
   handleOpenDialog,
   handleOpenModal,
-  updateItem,
-  handleUpdateItem,
+  openModal,
+  openDialog,
+  item,
+  handleChangeItem,
+  handleCloseModal,
+  handleCloseDialog,
 }) {
-  const { loading, error, data } = useQuery(GET_ALL_DISCIPLINES, {
+  const { loading, error, data, refetch } = useQuery(GET_ALL_DISCIPLINES, {
     variables: filters,
   });
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
   return (
-    <tbody>
-      {data.GetAllDisciplines.map((item) => {
-        if (updateItem) {
-          if (Number(updateItem.id) === Number(item.id)) {
-            if (JSON.stringify(item) !== JSON.stringify(updateItem)) {
-              handleSetItem(item);
-              handleUpdateItem(null);
-            }
-          }
-        }
-        return (
-          <tr key={item.id}>
-            <td>{item.name}</td>
-            <td>
-              <ul className="px-0">
-                {item.assigned_disciplines.map((item1) => {
-                  return (
-                    <li key={item1.id}>
-                      {item1.specialty.name} - {item1.semester}
-                    </li>
-                  );
-                })}
-              </ul>
-            </td>
-            <td className="col-2" onClick={(e) => handleSetItem(item)}>
-              <PencilSquare
-                className="mx-1"
-                type="button"
-                onClick={(e) => handleOpenModal()}
-              />
-              <XCircle
-                className="mx-1"
-                type="button"
-                onClick={(e) => handleOpenDialog()}
-              />
-            </td>
-          </tr>
-        );
-      })}
-    </tbody>
+    <>
+      <tbody>
+        {data.GetAllDisciplines.map((item) => {
+          return (
+            <tr key={item.id}>
+              <td>{item.name}</td>
+              <td>
+                <ul className="px-0">
+                  {item.assigned_disciplines.map((item1) => {
+                    return (
+                      <li key={item1.id}>
+                        {item1.specialty.name} - {item1.semester}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </td>
+              <td className="col-2" onClick={(e) => handleSetItem(item)}>
+                <PencilSquare
+                  className="mx-1"
+                  type="button"
+                  onClick={(e) => handleOpenModal()}
+                />
+                <XCircle
+                  className="mx-1"
+                  type="button"
+                  onClick={(e) => handleOpenDialog()}
+                />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+      <DisciplineModal
+        isopen={openModal}
+        item={item}
+        handleChangeItem={handleChangeItem}
+        handleCloseModal={handleCloseModal}
+        refetch={refetch}
+      ></DisciplineModal>
+      <DisciplineDialog
+        isopen={openDialog}
+        item={item}
+        handleCloseDialog={handleCloseDialog}
+        refetch={refetch}
+      ></DisciplineDialog>
+    </>
   );
 }
 class DisciplineTable extends React.Component {
+  defState = {
+    item: {
+      id: null,
+      name: "",
+      assigned_disciplines: [],
+    },
+    openModal: false,
+    openDialog: false,
+  };
+  state = this.defState;
+
+  handleSetItem = (item) => {
+    this.setState({
+      item,
+    });
+  };
+
+  handleOpenDialog = () => {
+    this.setState({
+      openDialog: true,
+    });
+  };
+
+  handleCloseDialog = () => {
+    this.setState({
+      openDialog: false,
+    });
+  };
+
+  handleOpenModal = () => {
+    this.setState({
+      openModal: true,
+    });
+  };
+
+  handleCloseModal = () => {
+    this.defState.item.assigned_disciplines = [];
+    this.setState({
+      item: this.defState.item,
+      openModal: false,
+    });
+  };
+
+  handleChangeItem = (name, value) => {
+    this.setState((PrevState) => ({
+      item: Object.assign({ ...PrevState.item }, { [name]: value }),
+    }));
+  };
+
   render() {
-    const {
-      filters,
-      handleOpenModal,
-      handleOpenDialog,
-      handleSetItem,
-      handleUpdateItem,
-      updateItem,
-    } = this.props;
+    const { filters } = this.props;
+    const { item, openModal, openDialog } = this.state;
     return (
-      <div className="container-fluid w-100">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Дисципліна</th>
-              <th>Спеціальність - Семестер</th>
-              <th></th>
-            </tr>
-          </thead>
-          <DataTable
-            filters={filters}
-            handleSetItem={handleSetItem}
-            handleOpenDialog={handleOpenDialog}
-            handleOpenModal={handleOpenModal}
-            handleUpdateItem={handleUpdateItem}
-            updateItem={updateItem}
-          ></DataTable>
-        </Table>
-      </div>
+      <>
+        <div className="d-flex justify-content-end mx-2 my-2">
+          <Button
+            variant="primary"
+            className="col-auto"
+            onClick={this.handleOpenModal}
+          >
+            Додати Дисципліну
+          </Button>
+        </div>
+        <div className="container-fluid w-100">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Дисципліна</th>
+                <th>Спеціальність - Семестер</th>
+                <th></th>
+              </tr>
+            </thead>
+            <DataTable
+              filters={filters}
+              handleSetItem={this.handleSetItem}
+              handleOpenDialog={this.handleOpenDialog}
+              handleOpenModal={this.handleOpenModal}
+              openModal={openModal}
+              openDialog={openDialog}
+              item={item}
+              handleChangeItem={this.handleChangeItem}
+              handleCloseModal={this.handleCloseModal}
+              handleCloseDialog={this.handleCloseDialog}
+            ></DataTable>
+          </Table>
+        </div>
+      </>
     );
   }
 }

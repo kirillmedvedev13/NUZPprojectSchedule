@@ -44,7 +44,7 @@ export default function AddAudienceToCathedra({
                 "selectedCathedraToAdd",
                 query.data.GetAllCathedras.find((c) => +c.id === +e.value)
               );
-              handleChangeState("validatedSelectedCathedra", {
+              handleChangeState("validatedSelectedCathedraToAdd", {
                 status: true,
                 message: "",
               });
@@ -76,7 +76,6 @@ export default function AddAudienceToCathedra({
                       const au = JSON.parse(
                         res.data.AddAudienceToCathedra.data
                       );
-                      console.log(item);
 
                       handleChangeItem("assigned_audiences", [
                         ...item.assigned_audiences,

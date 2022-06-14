@@ -2,13 +2,10 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import { CreateNotification } from "../Alert";
-import { GET_ALL_DISCIPLINES } from "./queries";
 import { DELETE_DISCIPLINE } from "./mutations";
 
 function Confirm({ item, handleClose }) {
-  const [DeleteSpecialty, { loading, error }] = useMutation(DELETE_DISCIPLINE, {
-    refetchQueries: [GET_ALL_DISCIPLINES],
-  });
+  const [DeleteSpecialty, { loading, error }] = useMutation(DELETE_DISCIPLINE);
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
 
@@ -30,6 +27,7 @@ function Confirm({ item, handleClose }) {
 class DisciplineDialog extends React.Component {
   handleClose = () => {
     this.props.handleCloseDialog();
+    this.props.refetch();
   };
 
   render() {

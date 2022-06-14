@@ -8,6 +8,7 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = gql`
     ) {
       message
       successful
+      data
     }
   }
 `;

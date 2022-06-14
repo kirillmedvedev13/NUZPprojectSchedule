@@ -81,7 +81,7 @@ function DataTable({
 }
 
 class AudienceTable extends React.Component {
-  def_state = {
+  defState = {
     item: {
       id: null,
       name: "",
@@ -95,7 +95,7 @@ class AudienceTable extends React.Component {
     openModal: false,
     openDialog: false,
   };
-  state = this.def_state;
+  state = this.defState;
 
   handleSetItem = (item) => {
     this.setState({
@@ -122,8 +122,9 @@ class AudienceTable extends React.Component {
   };
 
   handleCloseModal = () => {
+    this.defState.item.assigned_disciplines = [];
     this.setState({
-      item: this.def_state.item,
+      item: this.defState.item,
       openModal: false,
     });
   };

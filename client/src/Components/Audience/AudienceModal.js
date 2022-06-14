@@ -105,15 +105,8 @@ class AudienceModal extends React.Component {
                     statusAddAudeinceToCathedra={
                       this.state.statusAddAudeinceToCathedra
                     }
-                    handleAddAudToCath={this.handleAddAudToCath}
-                    handleChangeSelectedCathedraToAdd={
-                      this.handleChangeSelectedCathedraToAdd
-                    }
                     validatedSelectedCathedraToAdd={
                       this.state.validatedSelectedCathedraToAdd
-                    }
-                    handleValidationSelectedCathedraToAdd={
-                      this.handleValidationSelectedCathedraToAdd
                     }
                     selectedCathedraToAdd={this.state.selectedCathedraToAdd}
                     handleIncCounter={this.handleIncCounter}
