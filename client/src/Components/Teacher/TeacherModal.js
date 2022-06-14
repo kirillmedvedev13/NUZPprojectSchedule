@@ -1,116 +1,30 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-import { useMutation, useQuery } from "@apollo/client";
-import { UPDATE_TEACHER, CREATE_TEACHER } from "./mutations";
-import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
-import { GET_ALL_TEACHERS } from "./queries";
-import { CreateNotification } from "../Alert";
-import Select from "react-select";
-
-function Save({
-  item,
-  handleCloseModal,
-  handleValidation,
-  handleValidationCathedra,
-}) {
-  const mutation = item.id ? UPDATE_TEACHER : CREATE_TEACHER;
-  const [mutateFunction, { loading, error }] = useMutation(mutation, {
-    refetchQueries: [GET_ALL_TEACHERS],
-  });
-  if (loading) return "Submitting...";
-  if (error) return `Submission error! ${error.message}`;
-  const variables = item.id
-    ? {
-      variables: {
-        id: Number(item.id),
-        name: item.name,
-        surname: item.surname,
-        patronymic: item.patronymic,
-        id_cathedra: Number(item.cathedra.id),
-      },
-    }
-    : {
-      variables: {
-        name: item.name,
-        surname: item.surname,
-        patronymic: item.patronymic,
-        id_cathedra: Number(item.cathedra.id),
-      },
-    };
-  return (
-    <Button
-      variant="primary"
-      onClick={(e) => {
-        if (!item.cathedra.id) {
-          handleValidationCathedra(false);
-        }
-        if (!item.name || !item.surname || !item.patronymic) {
-          handleValidation(true);
-        } 
-        if(item.name && item.surname && item.patronymic && item.cathedra.id) {
-          mutateFunction(variables).then((res) => {
-            if (item.id) {
-              CreateNotification(res.data.UpdateTeacher);
-            } else {
-              CreateNotification(res.data.CreateTeacher);
-            }
-            handleCloseModal();
-          });
-        }
-      }}
-    >
-      {item.id ? "Оновити" : "Додати"}
-    </Button>
-  );
-}
-function SelectCathedras({ item, handleChangeItem, handleValidationCathedra }) {
-  const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error}`;
-  let options = [];
-  data.GetAllCathedras.forEach((selectitem) => {
-    options.push({ label: selectitem.name, value: Number(selectitem.id) });
-  });
-  return (
-    <Select
-      required
-      options={options}
-      placeholder="Кафедра"
-      defaultValue={
-        item.id
-          ? { label: item.cathedra.name, value: Number(item.cathedra.id) }
-          : null
-      }
-      onChange={(e) => {
-        handleValidationCathedra(true);
-        handleChangeItem("cathedra", { id: Number(e.value) });
-        e.value = item.cathedra.id;
-      }}
-    />
-  );
-}
+import SaveButton from "./SaveButton";
+import SelectCathedras from "./SelectCathedras";
+import ValidatedMessage from "../ValidatedMessage";
 
 class TeacherModal extends React.Component {
-  state = {
-    validated: false,
-    isValidCathedra: true,
+  defState = {
+    validatedName: true,
+    validatedSurname: true,
+    validatedPatronymic: true,
+    validatedCathedra: true,
+  };
+  state = this.defState;
+
+  handleChangeState = (name, item) => {
+    this.setState({ [name]: item });
+  };
+  handleIncCounter = (name) => {
+    this.setState((prevState) => ({ [name]: prevState[name] + 1 }));
   };
 
   handleClose = () => {
+    this.setState(this.defState);
     this.props.handleCloseModal();
-    this.setState({
-      validated: false,
-      isValidCathedra: true,
-    })
+    this.props.refetch();
   };
-
-  handleValidation = (status) => {
-    this.setState({ validated: status });
-  };
-  handleValidationCathedra = (status) => {
-    this.setState({ isValidCathedra: status });
-  };
-
   render() {
     const { isopen, handleChangeItem, item } = this.props;
     return (
@@ -118,11 +32,13 @@ class TeacherModal extends React.Component {
         <Modal size="lg" show={isopen} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {item.id ? "Редагувати запис викладача" : "Створити запис викладача"}
+              {item.id
+                ? "Редагувати запис викладача"
+                : "Створити запис викладача"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form noValidate validated={this.state.validated}>
+            <Form>
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Ім'я</Form.Label>
                 <Col>
@@ -132,11 +48,12 @@ class TeacherModal extends React.Component {
                     value={item.name}
                     onChange={(e) => {
                       handleChangeItem("name", e.target.value);
+                      this.handleChangeState("validatedName", true);
                     }}
                   ></Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    Ім'я не повинно бути пустим
-                  </Form.Control.Feedback>
+                  {!this.state.validatedName && (
+                    <ValidatedMessage message="Пусте поле імені викладача"></ValidatedMessage>
+                  )}
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
@@ -148,11 +65,12 @@ class TeacherModal extends React.Component {
                     value={item.surname}
                     onChange={(e) => {
                       handleChangeItem("surname", e.target.value);
+                      this.handleChangeState("validatedSurname", true);
                     }}
                   ></Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    Прізвище не повинно пустим
-                  </Form.Control.Feedback>
+                  {!this.state.validatedSurname && (
+                    <ValidatedMessage message="Пусте поле прізвища викладачи"></ValidatedMessage>
+                  )}
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
@@ -164,23 +82,24 @@ class TeacherModal extends React.Component {
                     value={item.patronymic}
                     onChange={(e) => {
                       handleChangeItem("patronymic", e.target.value);
+                      this.handleChangeState("validatedPatronymic", true);
                     }}
                   ></Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    По-батькові не повинно бути пустим
-                  </Form.Control.Feedback>
+                  {!this.state.validatedPatronymic && (
+                    <ValidatedMessage message="Пусте поле по-батькові викладача"></ValidatedMessage>
+                  )}
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Назва кафедри</Form.Label>
                 <Col>
                   <SelectCathedras
-                    handleValidationCathedra={this.handleValidationCathedra}
                     handleChangeItem={handleChangeItem}
+                    handleChangeState={this.handleChangeState}
                     item={item}
                   ></SelectCathedras>
-                  {!this.state.isValidCathedra && (
-                    <div className="text-danger">Кафедра не вибрана</div>
+                  {!this.state.validatedCathedra && (
+                    <ValidatedMessage message="Кафедра не вибрана"></ValidatedMessage>
                   )}
                 </Col>
               </Form.Group>
@@ -190,12 +109,11 @@ class TeacherModal extends React.Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Закрити
             </Button>
-            <Save
+            <SaveButton
               item={item}
               handleCloseModal={this.handleClose}
-              handleValidationCathedra={this.handleValidationCathedra}
-              handleValidation={this.handleValidation}
-            ></Save>
+              handleChangeState={this.handleChangeState}
+            ></SaveButton>
           </Modal.Footer>
         </Modal>
       </>

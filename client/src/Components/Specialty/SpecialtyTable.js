@@ -3,7 +3,6 @@ import { Table } from "react-bootstrap";
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_SPECIALTIES } from "./queries";
-import update from "react-addons-update";
 import SpecialtyDialog from "./SpecialtyDialog";
 import SpecialtyModal from "./SpecialtyModal";
 import { Button } from "react-bootstrap";
@@ -81,6 +80,12 @@ class SpecialtyTable extends React.Component {
     openDialog: false,
   };
   state = this.defState;
+  handleSetItem = (item) => {
+    this.setState({
+      item,
+    });
+  };
+
   handleOpenDialog = () => {
     this.setState({
       openDialog: true,
@@ -100,33 +105,17 @@ class SpecialtyTable extends React.Component {
   };
 
   handleCloseModal = () => {
+    this.defState.item.assigned_disciplines = [];
     this.setState({
+      item: this.defState.item,
       openModal: false,
-      item: {
-        id: null,
-        name: "",
-        code: "",
-        cathedra: {
-          id: null,
-        },
-      },
     });
   };
 
   handleChangeItem = (name, value) => {
     this.setState((PrevState) => ({
-      item: update(PrevState.item, { $merge: { [name]: value } }),
+      item: Object.assign({ ...PrevState.item }, { [name]: value }),
     }));
-  };
-
-  handleChangeFilters = (name, value) => {
-    this.setState((PrevState) => ({
-      filters: update(PrevState.filters, { $merge: { [name]: value } }),
-    }));
-  };
-
-  handleSetItem = (item) => {
-    this.setState({ item });
   };
 
   render() {

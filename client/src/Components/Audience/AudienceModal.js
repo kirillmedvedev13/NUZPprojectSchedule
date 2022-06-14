@@ -27,7 +27,7 @@ class AudienceModal extends React.Component {
   };
 
   handleClose = () => {
-    this.setState(this.defSate);
+    this.setState(this.defState);
     this.props.handleCloseModal();
     this.props.refetch();
   };

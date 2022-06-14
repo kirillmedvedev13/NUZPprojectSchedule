@@ -13,7 +13,7 @@ function SelectCathedra({ handleChangeFilters }) {
   data.GetAllCathedras.forEach((item) => {
     options.push({
       label: item.name + " (" + item.short_name + ")",
-      value: Number(item.id),
+      value: +item.id,
     });
   });
   return (
@@ -23,7 +23,7 @@ function SelectCathedra({ handleChangeFilters }) {
       options={options}
       placeholder="Кафедра"
       onChange={(e) => {
-        handleChangeFilters("id_cathedra", e ? Number(e.value) : null);
+        handleChangeFilters("id_cathedra", e ? +e.value : null);
       }}
     />
   );
