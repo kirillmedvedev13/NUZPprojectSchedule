@@ -15,7 +15,7 @@ function SelectSpecialty({ handleChangeFilters }) {
   data.GetAllSpecialties.forEach((item) => {
     options.push({
       label: item.name,
-      value: Number(item.id),
+      value: +item.id,
     });
   });
   return (
@@ -25,7 +25,7 @@ function SelectSpecialty({ handleChangeFilters }) {
       options={options}
       placeholder="Спеціальність"
       onChange={(e) => {
-        handleChangeFilters("id_specialty", e ? Number(e.value) : null);
+        handleChangeFilters("id_specialty", e ? +e.value : null);
       }}
     />
   );
@@ -39,7 +39,7 @@ function SelectDiscipine({ handleChangeFilters }) {
   data.GetAllDisciplines.forEach((item) => {
     options.push({
       label: item.name,
-      value: Number(item.id),
+      value: +item.id,
     });
   });
   return (
@@ -49,7 +49,7 @@ function SelectDiscipine({ handleChangeFilters }) {
       options={options}
       placeholder="Дисципліна"
       onChange={(e) => {
-        handleChangeFilters("id_discipline", e ? Number(e.value) : null);
+        handleChangeFilters("id_discipline", e ? +e.value : null);
       }}
     />
   );
@@ -63,7 +63,7 @@ function SelectTeacher({ handleChangeFilters }) {
   data.GetAllTeachers.forEach((item) => {
     options.push({
       label: item.surname + " " + item.name,
-      value: Number(item.id),
+      value: +item.id,
     });
   });
   return (
@@ -73,7 +73,7 @@ function SelectTeacher({ handleChangeFilters }) {
       options={options}
       placeholder="Викладач"
       onChange={(e) => {
-        handleChangeFilters("id_teacher", e ? Number(e.value) : null);
+        handleChangeFilters("id_teacher", e ? +e.value : null);
       }}
     />
   );
@@ -87,7 +87,7 @@ function SelectGroup({ handleChangeFilters }) {
   data.GetAllGroups.forEach((item) => {
     options.push({
       label: item.specialty.cathedra.short_name + "-" + item.name,
-      value: Number(item.id),
+      value: +item.id,
     });
   });
   return (
@@ -97,7 +97,7 @@ function SelectGroup({ handleChangeFilters }) {
       options={options}
       placeholder="Група"
       onChange={(e) => {
-        handleChangeFilters("id_group", e ? Number(e.value) : null);
+        handleChangeFilters("id_group", e ? +e.value : null);
       }}
     />
   );
@@ -149,10 +149,7 @@ class ClassSearch extends React.Component {
                 min={1}
                 max={14}
                 onChange={(e) => {
-                  handleChangeFilters(
-                    "semester",
-                    e ? Number(e.target.value) : null
-                  );
+                  handleChangeFilters("semester", e ? +e.target.value : null);
                 }}
               ></Form.Control>
             </Col>

@@ -1,14 +1,11 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
-import { GET_ALL_CLASSES } from "./queries";
 import { DELETE_CLASS } from "./mutations";
 import { CreateNotification } from "../Alert";
 
 function Confirm({ item, handleClose }) {
-  const [DeleteClass, { loading, error }] = useMutation(DELETE_CLASS, {
-    refetchQueries: [GET_ALL_CLASSES],
-  });
+  const [DeleteClass, { loading, error }] = useMutation(DELETE_CLASS);
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
 
@@ -16,7 +13,7 @@ function Confirm({ item, handleClose }) {
     <Button
       variant="primary"
       onClick={(e) => {
-        DeleteClass({ variables: { id: Number(item.id) } }).then((res) => {
+        DeleteClass({ variables: { id: +item.id } }).then((res) => {
           CreateNotification(res.data.DeleteClass);
           handleClose();
         });
@@ -30,6 +27,7 @@ function Confirm({ item, handleClose }) {
 class ClassDialog extends React.Component {
   handleClose = () => {
     this.props.handleCloseDialog();
+    this.props.refetch();
   };
 
   render() {

@@ -24,7 +24,7 @@ export function TableTeachers({ item, handleChangeItem }) {
       </thead>
       <tbody>
         {item.assigned_teachers.map((itemAT) => (
-          <tr key={Number(itemAT.id)}>
+          <tr key={+itemAT.id}>
             <td>{`${itemAT.teacher.surname} ${itemAT.teacher.name}`}</td>
             <td>{itemAT.teacher.cathedra.name}</td>
             <td className="p-0">

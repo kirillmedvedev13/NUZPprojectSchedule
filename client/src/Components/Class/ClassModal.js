@@ -1,11 +1,5 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_CLASS, UPDATE_CLASS } from "./mutations";
-import { GET_ALL_TYPE_CLASSES } from "./queries";
-import { GET_ALL_DISCIPLINES } from "../Discipline/queries";
-import Select from "react-select";
-import { CreateNotification } from "../Alert";
 import { AddTeacherToClass, TableTeachers } from "./ClassModalTeachers";
 import { TableGroups, AddGroupToClass } from "./ClassModalGroups";
 import {
@@ -13,139 +7,12 @@ import {
   AddRecAudienceToClass,
 } from "./ClassModalRecAudience";
 import ValidatedMessage from "../ValidatedMessage";
-
-function Save({ item, handleCloseModal, handleChangeState }) {
-  const mutation = item.id ? UPDATE_CLASS : CREATE_CLASS;
-  const [mutateFunction, { loading, error }] = useMutation(mutation);
-  if (loading) return "Submitting...";
-  if (error) return `Submission error! ${error.message}`;
-  const variables = item.id
-    ? {
-        variables: {
-          id: Number(item.id),
-          id_assigned_discipline: Number(item.assigned_discipline.id),
-          times_per_week: Number(item.times_per_week),
-          id_type_class: Number(item.type_class.id),
-        },
-      }
-    : {
-        variables: {
-          id_assigned_discipline: Number(item.assigned_discipline.id),
-          times_per_week: Number(item.times_per_week),
-          id_type_class: Number(item.type_class.id),
-          assigned_teachers: JSON.stringify(
-            item.assigned_teachers.map((item) => {
-              return Number(item.teacher.id);
-            })
-          ),
-          assigned_groups: JSON.stringify(
-            item.assigned_groups.map((item) => {
-              return Number(item.group.id);
-            })
-          ),
-          recommended_audiences: JSON.stringify(
-            item.recommended_audiences.map((item) => {
-              return Number(item.audience.id);
-            })
-          ),
-        },
-      };
-  return (
-    <Button
-      variant="primary"
-      onClick={(e) => {
-        if (
-          item.times_per_week &&
-          item.type_class.id &&
-          item.assigned_discipline.id
-        ) {
-          mutateFunction(variables).then((res) => {
-            CreateNotification(
-              item.id ? res.data.UpdateClass : res.data.CreateClass
-            );
-            handleCloseModal();
-          });
-        } else {
-          if (!item.times_per_week) {
-            handleChangeState("validatedTimesPerWeek", false);
-          }
-          if (!item.type_class.id) {
-            handleChangeState("validatedTypeClass", false);
-          }
-          if (!item.assigned_discipline.id) {
-            handleChangeState("validatedDiscipline", false);
-          }
-        }
-      }}
-    >
-      {item.id ? "Оновити" : "Додати"}
-    </Button>
-  );
-}
-
-function SelectDiscipline({ item, handleChangeItem, handleChangeState }) {
-  const { error, loading, data } = useQuery(GET_ALL_DISCIPLINES);
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error}`;
-  let options = [];
-  data.GetAllDisciplines.forEach((discipline) => {
-    discipline.assigned_disciplines.forEach((assigned_discipline) => {
-      options.push({
-        label: `${discipline.name} - ${assigned_discipline.specialty.name} - ${assigned_discipline.semester} семестр`,
-        value: +assigned_discipline.id,
-      });
-    });
-  });
-  return (
-    <Select
-      required
-      options={options}
-      placeholder="Дисциплiна"
-      defaultValue={
-        item.id
-          ? {
-              label: `${item.assigned_discipline.discipline.name} - ${item.assigned_discipline.specialty.name} - ${item.assigned_discipline.semester} семестр`,
-              value: +item.assigned_discipline.id,
-            }
-          : null
-      }
-      onChange={(e) => {
-        handleChangeState("validatedSelectedGroup", true);
-        handleChangeItem("assigned_discipline", { id: +e.value });
-      }}
-    />
-  );
-}
-
-function SelectTypeClass({ item, handleChangeItem, handleChangeState }) {
-  const { error, loading, data } = useQuery(GET_ALL_TYPE_CLASSES);
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error}`;
-  let options = [];
-  data.GetAllTypeClasses.forEach((selectitem) => {
-    options.push({ label: selectitem.name, value: +selectitem.id });
-  });
-  return (
-    <Select
-      required
-      options={options}
-      placeholder="Тип аудиторії"
-      defaultValue={
-        item.id
-          ? { label: item.type_class.name, value: +item.type_class.id }
-          : null
-      }
-      onChange={(e) => {
-        handleChangeState("validatedTypeClass", true);
-        handleChangeItem("type_class", { id: Number(e.value) });
-        e.value = item.type_class.id;
-      }}
-    />
-  );
-}
+import SaveButton from "./SaveButton";
+import SelectTypeClass from "./SelectTypeClass";
+import SelectDiscipline from "./SelectDiscipline";
 
 class ClassModal extends React.Component {
-  defSate = {
+  defState = {
     validatedTimesPerWeek: true,
     validatedTypeClass: true,
     validatedDiscipline: true,
@@ -166,7 +33,7 @@ class ClassModal extends React.Component {
     counterRecAudeinces: 0, // счётчик для ключей в массиве рекомендуемых аудиторий
   };
 
-  state = this.defSate;
+  state = this.defState;
 
   //При выборке элемента в селекте
   handleChangeState = (name, item) => {
@@ -179,7 +46,7 @@ class ClassModal extends React.Component {
   };
 
   handleClose = () => {
-    this.setState(this.defSate);
+    this.setState(this.defState);
     this.props.handleCloseModal();
     this.props.refetch();
   };
@@ -312,11 +179,11 @@ class ClassModal extends React.Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Закрити
             </Button>
-            <Save
+            <SaveButton
               item={item}
               handleCloseModal={this.handleClose}
               handleChangeState={this.handleChangeState}
-            ></Save>
+            ></SaveButton>
           </Modal.Footer>
         </Modal>
       </>

@@ -116,7 +116,7 @@ function DataTable({
   );
 }
 class ClassTable extends React.Component {
-  def_state = {
+  defState = {
     item: {
       id: null,
       times_per_week: "",
@@ -134,7 +134,7 @@ class ClassTable extends React.Component {
     openDialog: false,
   };
 
-  state = this.def_state;
+  state = this.defState;
 
   handleSetItem = (item) => {
     this.setState({
@@ -162,6 +162,7 @@ class ClassTable extends React.Component {
 
   handleCloseModal = () => {
     this.setState({
+      item: this.defState.item,
       openModal: false,
     });
   };
