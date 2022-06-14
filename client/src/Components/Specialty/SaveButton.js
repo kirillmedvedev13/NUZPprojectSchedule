@@ -32,7 +32,7 @@ export default function SaveButton({
     <Button
       variant="primary"
       onClick={(e) => {
-        if (item.name && item.cathedra.id && item.code) {
+        if (item.name && item.cathedra.id && item.code !== null) {
           mutateFunction(variables).then((res) => {
             CreateNotification(
               item.id ? res.data.UpdateSpecialty : res.data.CreateSpecialty

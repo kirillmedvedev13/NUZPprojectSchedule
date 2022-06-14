@@ -15,20 +15,16 @@ class Specialty extends React.Component {
       filters: Object.assign({ ...PrevState.filters }, { [name]: value }),
     }));
   };
- 
+
   render() {
-    const { filters, item, openModal, openDialog } = this.state;
+    const { filters } = this.state;
     return (
       <>
-        
         <SpecialtySearch
           handleChangeFilters={this.handleChangeFilters}
         ></SpecialtySearch>
-      
-        <SpecialtyTable
-          
-          filters={filters}
-        ></SpecialtyTable>
+
+        <SpecialtyTable filters={filters}></SpecialtyTable>
       </>
     );
   }
