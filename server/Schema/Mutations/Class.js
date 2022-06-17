@@ -14,7 +14,14 @@ export const CREATE_CLASS = {
   },
   async resolve(
     parent,
-    { id_type_class, times_per_week, id_assigned_discipline, assigned_teachers, assigned_groups, recommended_audiences }
+    {
+      id_type_class,
+      times_per_week,
+      id_assigned_discipline,
+      assigned_teachers,
+      assigned_groups,
+      recommended_audiences,
+    }
   ) {
     let res = await db.class.create({
       id_type_class,
@@ -24,15 +31,27 @@ export const CREATE_CLASS = {
     if (res) {
       if (assigned_teachers) {
         const atIDs = JSON.parse(assigned_teachers);
-        await db.assigned_teacher.bulkCreate(atIDs.map(item => { return { id_class: res.dataValues.id, id_teacher: item } }))
+        await db.assigned_teacher.bulkCreate(
+          atIDs.map((item) => {
+            return { id_class: res.dataValues.id, id_teacher: item };
+          })
+        );
       }
       if (assigned_groups) {
         const agIDs = JSON.parse(assigned_groups);
-        await db.assigned_group.bulkCreate(agIDs.map(item => { return { id_class: res.dataValues.id, id_group: item } }))
+        await db.assigned_group.bulkCreate(
+          agIDs.map((item) => {
+            return { id_class: res.dataValues.id, id_group: item };
+          })
+        );
       }
       if (recommended_audiences) {
         const raIDs = JSON.parse(recommended_audiences);
-        await db.recommended_audience.bulkCreate(raIDs.map(item => { return { id_class: res.dataValues.id, id_audience: item } }))
+        await db.recommended_audience.bulkCreate(
+          raIDs.map((item) => {
+            return { id_class: res.dataValues.id, id_audience: item };
+          })
+        );
       }
     }
     return res
@@ -49,8 +68,11 @@ export const UPDATE_CLASS = {
     times_per_week: { type: GraphQLFloat },
     id_assigned_discipline: { type: GraphQLInt },
   },
-  async resolve(parent, { id, id_type_class, times_per_week, id_assigned_discipline }) {
-    console.log(id, id_type_class, times_per_week, id_assigned_discipline)
+  async resolve(
+    parent,
+    { id, id_type_class, times_per_week, id_assigned_discipline }
+  ) {
+    console.log(id, id_type_class, times_per_week, id_assigned_discipline);
     let res = await db.class.update(
       { id_type_class, times_per_week, id_assigned_discipline },
       {
@@ -103,8 +125,15 @@ export const ADD_TEACHER_TO_CLASS = {
     const res = await classes.addTeacher(teach);
     const at = res[0].dataValues;
     return res
-      ? { successful: true, message: "Викладач успішно додан до заняття", data: JSON.stringify(at) }
-      : { successful: false, message: "Помилка при додаванні викладача до заняття" };
+      ? {
+          successful: true,
+          message: "Викладач успішно додан до заняття",
+          data: JSON.stringify(at),
+        }
+      : {
+          successful: false,
+          message: "Помилка при додаванні викладача до заняття",
+        };
   },
 };
 export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
@@ -130,36 +159,53 @@ export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
     const res = await classes.addAudience(audience);
     const ra = res[0].dataValues;
     return res
-      ? { successful: true, message: "Рекомендована аудиторія успішно додана до заняття", data: JSON.stringify(ra) }
-      : { successful: false, message: "Помилка при додаванні рекомендованної аудиторії до заняття" };
+      ? {
+          successful: true,
+          message: "Рекомендована аудиторія успішно додана до заняття",
+          data: JSON.stringify(ra),
+        }
+      : {
+          successful: false,
+          message: "Помилка при додаванні рекомендованної аудиторії до заняття",
+        };
   },
 };
 
 export const ADD_GROUP_TO_CLASS = {
   type: MessageType,
   args: {
-    id_group: { type: GraphQLID },
+    id_group: { type: GraphQLString },
     id_class: { type: GraphQLID },
   },
   async resolve(parent, { id_group, id_class }) {
-    let group = await db.group.findOne({
-      where: {
-        id: id_group,
-      },
-    });
-    if (!group)
-      return { successful: false, message: "Не знайдено групи" };
+    let group = JSON.parse(id_group);
+
     let classes = await db.class.findOne({
       where: {
         id: id_class,
       },
     });
+
     if (!classes) return { successful: false, message: "Не знайдено заняття" };
-    let res = await classes.addGroup(group);
-    let ag = res[0].dataValues;
+    let res = await db.assigned_group.bulkCreate(
+      group.map((gr) => {
+        return { id_class: classes.dataValues.id, id_group: +gr.id };
+      })
+    );
+    let ag = res.map((r) => {
+      return r.dataValues;
+    });
+    console.log(res);
     return res
-      ? { successful: true, message: "Група успішно додана до заняття", data: JSON.stringify(ag) }
-      : { successful: false, message: "Помилка при додаванні групи до заняття" };
+      ? {
+          successful: true,
+          message: "Група успішно додана до заняття",
+          data: JSON.stringify(ag),
+        }
+      : {
+          successful: false,
+          message: "Помилка при додаванні групи до заняття",
+        };
   },
 };
 
@@ -176,7 +222,10 @@ export const DELETE_TEACHER_FROM_CLASS = {
     });
     return res
       ? { successful: true, message: "Викладач успішно видален від заняття" }
-      : { successful: false, message: "Помилка при видаленні викладача від заняття" };
+      : {
+          successful: false,
+          message: "Помилка при видаленні викладача від заняття",
+        };
   },
 };
 export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
@@ -191,8 +240,15 @@ export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
       },
     });
     return res
-      ? { successful: true, message: "Рекомендована аудиторія успішно видалена від заняття" }
-      : { successful: false, message: "Помилка при видаленні рекомендованної аудиторії від заняття" };
+      ? {
+          successful: true,
+          message: "Рекомендована аудиторія успішно видалена від заняття",
+        }
+      : {
+          successful: false,
+          message:
+            "Помилка при видаленні рекомендованної аудиторії від заняття",
+        };
   },
 };
 export const DELETE_GROUP_FROM_CLASS = {
@@ -208,6 +264,9 @@ export const DELETE_GROUP_FROM_CLASS = {
     });
     return res
       ? { successful: true, message: "Група успішно видалена від заняття" }
-      : { successful: false, message: "Помилка при видаленні групи від заняття" };
+      : {
+          successful: false,
+          message: "Помилка при видаленні групи від заняття",
+        };
   },
 };

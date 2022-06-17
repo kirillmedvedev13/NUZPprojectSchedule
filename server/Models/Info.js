@@ -8,6 +8,10 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    max_semester: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     fitness_value: {
       type: DataTypes.STRING,
     },

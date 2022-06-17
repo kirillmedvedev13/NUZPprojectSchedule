@@ -8,7 +8,7 @@ function AuthProvider(props) {
   const [userId, setUserId] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [token, setAccessToken] = useState("");
-  const [reLogin, { data, error }] = useMutation(ReloginUser);
+  const [reLogin, {}] = useMutation(ReloginUser);
   const [cookies, setCookie, removeCookie] = useCookies(["token", ""]);
 
   const setUser = (id, email) => {

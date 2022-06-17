@@ -81,18 +81,25 @@ export const GET_ALL_TYPE_CLASSES = gql`
   }
 `;
 export const GET_ALL_ASSIGNED_DISCIPLINES = gql`
-  query{
-    GetAllAssignedDisciplines{
+  query {
+    GetAllAssignedDisciplines {
       id
       semester
-      discipline{
+      discipline {
         id
         name
       }
-      specialty{
+      specialty {
         id
         name
       }
     }
   }
-`
+`;
+export const GET_INFO = gql`
+  query {
+    GetInfo {
+      max_semester
+    }
+  }
+`;

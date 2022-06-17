@@ -1,10 +1,16 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLFloat, GraphQLString } from "graphql";
+import {
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLFloat,
+  GraphQLString,
+} from "graphql";
 
 const InfoType = new GraphQLObjectType({
   name: "Info",
   fields: () => ({
     max_day: { type: GraphQLInt },
     max_pair: { type: GraphQLInt },
+    max_semester: { type: GraphQLInt },
     population_size: {
       type: GraphQLInt,
     },
@@ -12,7 +18,7 @@ const InfoType = new GraphQLObjectType({
       type: GraphQLInt,
     },
     fitness_value: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     p_crossover: {
       type: GraphQLFloat,

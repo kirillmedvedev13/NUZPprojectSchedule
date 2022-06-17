@@ -27,7 +27,7 @@ export const UPDATE_CLASS = gql`
   }
 `;
 export const CREATE_CLASS = gql`
-    mutation (
+  mutation (
     $id_type_class: Int!
     $times_per_week: Float!
     $id_assigned_discipline: Int!
@@ -36,12 +36,12 @@ export const CREATE_CLASS = gql`
     $recommended_audiences: String
   ) {
     CreateClass(
-        id_type_class: $id_type_class
-        times_per_week: $times_per_week
-        id_assigned_discipline: $id_assigned_discipline
-        assigned_teachers: $assigned_teachers
-        assigned_groups: $assigned_groups
-        recommended_audiences: $recommended_audiences
+      id_type_class: $id_type_class
+      times_per_week: $times_per_week
+      id_assigned_discipline: $id_assigned_discipline
+      assigned_teachers: $assigned_teachers
+      assigned_groups: $assigned_groups
+      recommended_audiences: $recommended_audiences
     ) {
       message
       successful
@@ -50,9 +50,8 @@ export const CREATE_CLASS = gql`
 `;
 
 export const ADD_TEACHER_TO_CLASS = gql`
-mutation($id_teacher: ID!, $id_class: ID!)
-  {
-    AddTeacherToClass(id_teacher: $id_teacher, id_class: $id_class){
+  mutation ($id_teacher: ID!, $id_class: ID!) {
+    AddTeacherToClass(id_teacher: $id_teacher, id_class: $id_class) {
       message
       successful
       data
@@ -61,9 +60,8 @@ mutation($id_teacher: ID!, $id_class: ID!)
 `;
 
 export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = gql`
-mutation($id_audience: ID!, $id_class: ID!)
-  {
-    AddRecAudienceToClass(id_audience: $id_audience, id_class: $id_class){
+  mutation ($id_audience: ID!, $id_class: ID!) {
+    AddRecAudienceToClass(id_audience: $id_audience, id_class: $id_class) {
       message
       successful
       data
@@ -72,9 +70,8 @@ mutation($id_audience: ID!, $id_class: ID!)
 `;
 
 export const ADD_GROUP_TO_CLASS = gql`
-mutation($id_group: ID!, $id_class: ID!)
-  {
-    AddGroupToClass(id_group: $id_group, id_class: $id_class){
+  mutation ($id_group: String!, $id_class: ID!) {
+    AddGroupToClass(id_group: $id_group, id_class: $id_class) {
       message
       successful
       data
@@ -82,18 +79,16 @@ mutation($id_group: ID!, $id_class: ID!)
   }
 `;
 export const DELETE_TEACHER_FROM_CLASS = gql`
-mutation($id: ID!)
-  {
-    DeleteTeacherFromClass(id: $id){
+  mutation ($id: ID!) {
+    DeleteTeacherFromClass(id: $id) {
       message
       successful
     }
   }
 `;
 export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = gql`
-mutation($id: ID!)
-  {
-    DeleteRecAudienceFromClass(id: $id){
+  mutation ($id: ID!) {
+    DeleteRecAudienceFromClass(id: $id) {
       message
       successful
     }
@@ -101,9 +96,8 @@ mutation($id: ID!)
 `;
 
 export const DELETE_GROUP_FROM_CLASS = gql`
-mutation($id: ID!)
-  {
-    DeleteGroupFromClass(id: $id){
+  mutation ($id: ID!) {
+    DeleteGroupFromClass(id: $id) {
       message
       successful
     }
