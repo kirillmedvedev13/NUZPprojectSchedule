@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ADD_GROUP_TO_CLASS, DELETE_GROUP_FROM_CLASS } from "./mutations";
 import { GET_ALL_GROUPS } from "../Group/queries";
 import ValidatedMessage from "../ValidatedMessage";
+import { GET_INFO } from "./queries";
 
 export function TableGroups({ item, handleChangeItem }) {
   const [DelGroupFromClass, { loading, error }] = useMutation(
@@ -13,6 +14,7 @@ export function TableGroups({ item, handleChangeItem }) {
   );
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
+  console.log(item);
   return (
     <Table striped bordered hover className="my-2">
       <thead>
@@ -71,19 +73,47 @@ export function AddGroupToClass({
   handleIncCounter,
 }) {
   const query = useQuery(GET_ALL_GROUPS);
+  const queryGetSemester = useQuery(GET_INFO);
   const [AddGroupToClass, { loading, error }] = useMutation(ADD_GROUP_TO_CLASS);
-  if (query.loading) return "Loading...";
-  if (query.error) return `Error! ${error}`;
+  if (query.loading || queryGetSemester.loading) return "Loading...";
+  if (query.error || queryGetSemester.error) return `Error! ${error}`;
   let options = [];
+  let setCathSemester = new Set();
   query.data.GetAllGroups.forEach((element) => {
     options.push({
       label: `${element.specialty.cathedra.short_name}-${element.name}`,
       value: +element.id,
     });
+    setCathSemester.add(
+      JSON.stringify({
+        name: "All",
+
+        specialty: {
+          cathedra: {
+            short_name: element.specialty.cathedra.short_name,
+          },
+        },
+        semester: element.semester,
+      })
+    );
   });
+  setCathSemester.forEach((element) => {
+    let elem = JSON.parse(element);
+    options.push({
+      label: `${elem.specialty.cathedra.short_name}-${elem.semester} семестр`,
+      value: element,
+    });
+  });
+
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
-
+  let findGroupSemester = (e) => {
+    let group = query.data.GetAllGroups.find((gr) => +gr.id === +e.value);
+    if (group) return group;
+    else {
+      if (setCathSemester.has(e.value)) return JSON.parse(e.value);
+    }
+  };
   if (statusAddGroupToClass) {
     // Если открыт селект
     return (
@@ -94,10 +124,7 @@ export function AddGroupToClass({
             options={options}
             placeholder="Група"
             onChange={(e) => {
-              handleChangeState(
-                "selectedGroup",
-                query.data.GetAllGroups.find((gr) => +gr.id === +e.value)
-              );
+              handleChangeState("selectedGroup", findGroupSemester(e));
               handleChangeState("validatedSelectedGroup", { status: true });
             }}
           ></Select>
@@ -110,18 +137,35 @@ export function AddGroupToClass({
         <Col className="col-auto px-1">
           <Button
             onClick={(e) => {
+              let groups;
               if (selectedGroup) {
+                if (selectedGroup.name === "All")
+                  groups = query.data.GetAllGroups.filter(
+                    (gr) =>
+                      +gr.semester === +selectedGroup.semester &&
+                      gr.specialty.cathedra.short_name ===
+                        selectedGroup.specialty.cathedra.short_name
+                  );
+                else {
+                  groups = [selectedGroup];
+                }
+
                 //Если полe в селекте не пустое
-                const checkSelectedGroups = item.assigned_groups.find(
-                  (ag) => +ag.group.id === +selectedGroup.id
-                );
+                let checkSelectedGroups;
+                for (let gr of groups) {
+                  checkSelectedGroups = item.assigned_groups.find(
+                    (ag) => +ag.group.id === +gr.id
+                  );
+                  if (checkSelectedGroups) break;
+                }
+
                 if (!checkSelectedGroups) {
                   // Проверка не добавлена ли эта группа уже в массив
                   if (item.id) {
                     // Если редактирование элемента
                     AddGroupToClass({
                       variables: {
-                        id_group: +selectedGroup.id,
+                        id_group: JSON.stringify(groups),
                         id_class: +item.id,
                       },
                     }).then((res) => {
@@ -129,10 +173,14 @@ export function AddGroupToClass({
                       if (res.data.AddGroupToClass.successful) {
                         handleChangeItem("assigned_groups", [
                           ...item.assigned_groups,
-                          {
-                            id: ag.id,
-                            group: selectedGroup,
-                          },
+                          ...ag.map((assigned_group) => {
+                            return {
+                              id: assigned_group.id,
+                              group: query.data.GetAllGroups.find(
+                                (gr) => +gr.id === +assigned_group.id_group
+                              ),
+                            };
+                          }),
                         ]);
                       }
                       CreateNotification(res.data.AddGroupToClass);
@@ -140,12 +188,15 @@ export function AddGroupToClass({
                   } else {
                     // Создание элемента
                     let arrAG = item.assigned_groups;
-                    arrAG.push({
-                      id: counterGroups,
-                      group: selectedGroup,
+                    groups.forEach((gr) => {
+                      arrAG.push({
+                        id: counterGroups,
+                        group: gr,
+                      });
+
+                      handleIncCounter("counterGroups");
                     });
                     handleChangeItem("assigned_groups", arrAG);
-                    handleIncCounter("counterGroups");
                   }
                   handleChangeState("selectedGroup", null);
                 } else {
