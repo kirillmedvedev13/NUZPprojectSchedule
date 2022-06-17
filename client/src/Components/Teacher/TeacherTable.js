@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ALL_TEACHERS } from "./queries";
 import TeacherDialog from "./TeacherDialog";
 import TeacherModal from "./TeacherModal";
+import cloneDeep from "clone-deep";
 
 function DataTable({
   filters,
@@ -81,7 +82,8 @@ class TeacherTable extends React.Component {
     openModal: false,
     openDialog: false,
   };
-  state = this.defState;
+  state = cloneDeep(this.defState);
+
   handleSetItem = (item) => {
     this.setState({
       item,
@@ -95,9 +97,7 @@ class TeacherTable extends React.Component {
   };
 
   handleCloseDialog = () => {
-    this.setState({
-      openDialog: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleOpenModal = () => {
@@ -107,11 +107,7 @@ class TeacherTable extends React.Component {
   };
 
   handleCloseModal = () => {
-    this.defState.item.assigned_disciplines = [];
-    this.setState({
-      item: this.defState.item,
-      openModal: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleChangeItem = (name, value) => {

@@ -23,7 +23,6 @@ class Specialty extends React.Component {
         <SpecialtySearch
           handleChangeFilters={this.handleChangeFilters}
         ></SpecialtySearch>
-
         <SpecialtyTable filters={filters}></SpecialtyTable>
       </>
     );

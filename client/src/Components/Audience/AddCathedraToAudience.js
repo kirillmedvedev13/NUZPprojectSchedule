@@ -1,16 +1,16 @@
 import React from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import { ADD_AUDIENCE_TO_CATHEDRA } from "./mutations";
+import { ADD_CATHEDRA_TO_AUDIENCE } from "./mutations";
 import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 import Select from "react-select";
 import { CreateNotification } from "../Alert";
 import ValidatedMessage from "../ValidatedMessage";
 
-export default function AddAudienceToCathedra({
+export default function AddCathedraToAudience({
   item,
   handleChangeItem,
-  statusAddAudeinceToCathedra,
+  statusAddCathedraToAudience,
   selectedCathedraToAdd,
   validatedSelectedCathedraToAdd,
   handleChangeState,
@@ -18,8 +18,8 @@ export default function AddAudienceToCathedra({
   counterCathedras,
 }) {
   const query = useQuery(GET_ALL_CATHEDRAS);
-  const [AddAudToCathedra, { loading, error }] = useMutation(
-    ADD_AUDIENCE_TO_CATHEDRA
+  const [AddCathedraToAudience, { loading, error }] = useMutation(
+    ADD_CATHEDRA_TO_AUDIENCE
   );
   if (query.loading) return "Loading...";
   if (query.error) return `Error! ${error}`;
@@ -30,7 +30,7 @@ export default function AddAudienceToCathedra({
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
 
-  if (statusAddAudeinceToCathedra) {
+  if (statusAddCathedraToAudience) {
     // Если открыт селект
     return (
       <Form.Group as={Row} className="my-2 mx-2 px-0">
@@ -60,41 +60,37 @@ export default function AddAudienceToCathedra({
           <Button
             onClick={(e) => {
               if (selectedCathedraToAdd) {
-                const checkSelectedCathedras = item.assigned_audiences.filter(
+                const checkSelectedCathedras = item.assigned_audiences.find(
                   (au) => +au.cathedra.id === +selectedCathedraToAdd.id
                 );
-                if (!checkSelectedCathedras.length) {
+                if (!checkSelectedCathedras) {
                   // Проверка не добавлена ли эта кафедра уже в массив
                   if (item.id) {
                     // Если редактирование элемента
-                    AddAudToCathedra({
+                    AddCathedraToAudience({
                       variables: {
                         id_cathedra: +selectedCathedraToAdd.id,
                         id_audience: +item.id,
                       },
                     }).then((res) => {
                       const au = JSON.parse(
-                        res.data.AddAudienceToCathedra.data
+                        res.data.AddCathedraToAudience.data
                       );
-
                       handleChangeItem("assigned_audiences", [
                         ...item.assigned_audiences,
                         {
-                          id: au[0].id,
+                          id: au.id,
                           cathedra: selectedCathedraToAdd,
                         },
                       ]);
-                      CreateNotification(res.data.AddAudienceToCathedra);
+                      CreateNotification(res.data.AddCathedraToAudience);
                     });
                   } else {
                     // Создание элемента
                     let arrAU = item.assigned_audiences;
                     arrAU.push({
                       id: counterCathedras,
-                      cathedra: {
-                        id: selectedCathedraToAdd.id,
-                        name: selectedCathedraToAdd.name,
-                      },
+                      cathedra: selectedCathedraToAdd,
                     });
                     handleChangeItem("assigned_audiences", arrAU);
                     handleIncCounter("counterCathedras");
@@ -121,7 +117,7 @@ export default function AddAudienceToCathedra({
   } else {
     return (
       <Button
-        onClick={(e) => handleChangeState("statusAddAudeinceToCathedra", true)}
+        onClick={(e) => handleChangeState("statusAddCathedraToAudience", true)}
       >
         Додати кафедру
       </Button>

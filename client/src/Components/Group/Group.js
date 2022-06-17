@@ -23,9 +23,6 @@ class Group extends React.Component {
           handleChangeFilters={this.handleChangeFilters}
         ></GroupSearch>
         <GroupTable
-          handleOpenModal={this.handleOpenModal}
-          handleOpenDialog={this.handleOpenDialog}
-          handleSetItem={this.handleSetItem}
           filters={filters}
         ></GroupTable>
       </>

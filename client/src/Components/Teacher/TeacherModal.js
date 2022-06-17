@@ -3,6 +3,7 @@ import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import SaveButton from "./SaveButton";
 import SelectCathedras from "./SelectCathedras";
 import ValidatedMessage from "../ValidatedMessage";
+import cloneDeep from "clone-deep";
 
 class TeacherModal extends React.Component {
   defState = {
@@ -11,7 +12,7 @@ class TeacherModal extends React.Component {
     validatedPatronymic: true,
     validatedCathedra: true,
   };
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
@@ -21,10 +22,11 @@ class TeacherModal extends React.Component {
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };
+
   render() {
     const { isopen, handleChangeItem, item } = this.props;
     return (

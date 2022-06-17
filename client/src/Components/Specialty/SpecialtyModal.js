@@ -3,6 +3,7 @@ import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import SelectCathedras from "./SelectCathedras";
 import SaveButton from "./SaveButton";
 import ValidatedMessage from "../ValidatedMessage";
+import cloneDeep from "clone-deep";
 
 class SpecialtyModal extends React.Component {
   defState = {
@@ -10,17 +11,18 @@ class SpecialtyModal extends React.Component {
     validatedCathedra: true,
     validatedCode: true,
   };
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
   };
+
   handleIncCounter = (name) => {
     this.setState((prevState) => ({ [name]: prevState[name] + 1 }));
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };

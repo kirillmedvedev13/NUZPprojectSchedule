@@ -10,8 +10,8 @@ import {
   CREATE_AUDIENCE,
   DELETE_AUDIENCE,
   UPDATE_AUDIENCE,
-  ADD_AUDIENCE_TO_CATHEDRA,
-  DELETE_AUDIENCE_FROM_CATHEDRA,
+  ADD_CATHEDRA_TO_AUDIENCE,
+  DELETE_CATHEDRA_FROM_AUDIENCE,
 } from "../Mutations/Audience.js";
 import { GET_ALL_CATHEDRAS } from "../Queries/Cathedra.js";
 import {
@@ -64,6 +64,7 @@ import { RUN_EA } from "../../EvalutionAlghoritm/Main.js";
 import { GET_INFO } from "../Queries/Info.js";
 import { UPDATE_INFO } from "../Mutations/Info.js";
 import { CALC_FITNESS } from "../Mutations/Fitness.js";
+import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js"
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -79,6 +80,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllScheduleGroups: GET_ALL_SCHEDULE_GROUPS,
     GetAllScheduleAudiences: GET_ALL_SCHEDULE_AUDIENCES,
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
+    GetAllAssignedDisciplines: GET_ALL_ASSIGNED_DISCIPLINES,
     GetInfo: GET_INFO,
   },
 });
@@ -89,25 +91,31 @@ const Mutation = new GraphQLObjectType({
     CreateTeacher: CREATE_TEACHER,
     DeleteTeacher: DELETE_TEACHER,
     UpdateTeacher: UPDATE_TEACHER,
+
     CreateAudience: CREATE_AUDIENCE,
     DeleteAudience: DELETE_AUDIENCE,
     UpdateAudience: UPDATE_AUDIENCE,
+    AddCathedraToAudience: ADD_CATHEDRA_TO_AUDIENCE,
+    DeleteCathedraFromAudience: DELETE_CATHEDRA_FROM_AUDIENCE,
+
     CreateCathedra: CREATE_CATHEDRA,
     DeleteCathedra: DELETE_CATHEDRA,
     UpdateCathedra: UPDATE_CATHEDRA,
-    CreateSpecialty: CREATE_SPECIALTY,
+
     CreateGroup: CREATE_GROUP,
     UpdateGroup: UPDATE_GROUP,
     DeleteGroup: DELETE_GROUP,
+
+    CreateSpecialty: CREATE_SPECIALTY,
     DeleteSpecialty: DELETE_SPECIALTY,
     UpdateSpecialty: UPDATE_SPECIALTY,
+    AddDisciplineToSpecialty: ADD_DISCIPLINE_TO_SPECIALTY,
+    DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
+
     CreateDiscipline: CREATE_DISCIPLINE,
     UpdateDiscipline: UPDATE_DISCIPLINE,
     DeleteDiscipline: DELETE_DISCIPLINE,
-    AddDisciplineToSpecialty: ADD_DISCIPLINE_TO_SPECIALTY,
-    AddAudienceToCathedra: ADD_AUDIENCE_TO_CATHEDRA,
-    DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
-    DeleteAudienceFromCathedra: DELETE_AUDIENCE_FROM_CATHEDRA,
+
     CreateClass: CREATE_CLASS,
     UpdateClass: UPDATE_CLASS,
     DeleteClass: DELETE_CLASS,
@@ -117,6 +125,7 @@ const Mutation = new GraphQLObjectType({
     DeleteTeacherFromClass: DELETE_TEACHER_FROM_CLASS,
     DeleteRecAudienceFromClass: DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS,
     DeleteGroupFromClass: DELETE_GROUP_FROM_CLASS,
+
     LoginUser: LOGIN_USER,
     LogoutUser: LOGOUT_USER,
     ReloginUser: RELOGIN_USER,

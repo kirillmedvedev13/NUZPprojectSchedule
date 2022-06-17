@@ -1,30 +1,34 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-
 import SaveButton from "./SaveButton";
-import SelectSpecialties from "./SelectSpecialties";
+import TableSpecialties from "./TableSpecialties";
 import AddSpecialtyToDiscipline from "./AddSpecialtyToDiscipline";
 import ValidatedMessage from "../ValidatedMessage";
+import cloneDeep from "clone-deep";
 
 class DisciplineModal extends React.Component {
   defState = {
     validatedName: true,
-    validatedSelectedSpecialtyToAdd: { status: true }, // Проверка выбранной кафдеры
-
-    statusAddDisciplineToSpecialty: false, // Если тру то форма с добавлением кафедры
-    selectedSpecialtyToAdd: null, // выбранная кафедра для добавление к аудитории
-    counterSpecialties: 0, // счётчик для ключей в массиве закрепленных кафедр
+    validatedSelectedSpecialtyToAdd: { status: true }, // Проверка выбранной специальности
+    statusAddDisciplineToSpecialty: false, // Если тру то форма с добавлением специальности
+    selectedSpecialtyToAdd: null, // выбранная специльность для добавление к дисциплине
+    validatedSemesterToAdd: { status: true }, // проверка семестра
+    selectedSemesterToAdd: null, // семестр для добавления специальности
+    counterSpecialties: 0, // счётчик для ключей в массиве специальностей
   };
-  state = this.defState;
+
+  state = cloneDeep(this.defState);
+
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
   };
+
   handleIncCounter = (name) => {
     this.setState((prevState) => ({ [name]: prevState[name] + 1 }));
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };
@@ -56,7 +60,7 @@ class DisciplineModal extends React.Component {
                     }}
                   ></Form.Control>
                   {!this.state.validatedName && (
-                    <ValidatedMessage message="Пусте поле назви дісципліни"></ValidatedMessage>
+                    <ValidatedMessage message="Пусте поле назви дисципліни"></ValidatedMessage>
                   )}
                 </Col>
               </Form.Group>
@@ -78,11 +82,13 @@ class DisciplineModal extends React.Component {
                     handleIncCounter={this.handleIncCounter}
                     handleChangeState={this.handleChangeState}
                     counterSpecialties={this.state.counterSpecialties}
+                    selectedSemesterToAdd={this.state.selectedSemesterToAdd}
+                    validatedSemesterToAdd={this.state.validatedSemesterToAdd}
                   ></AddSpecialtyToDiscipline>
-                  <SelectSpecialties
+                  <TableSpecialties
                     item={item}
                     handleChangeItem={handleChangeItem}
-                  ></SelectSpecialties>
+                  ></TableSpecialties>
                 </Col>
               </Form.Group>
             </Form>

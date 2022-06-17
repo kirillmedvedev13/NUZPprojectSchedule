@@ -13,7 +13,7 @@ function Confirm({ item, handleClose }) {
     <Button
       variant="primary"
       onClick={(e) => {
-        DeleteGroup({ variables: { id: Number(item.id) } }).then((res) => {
+        DeleteGroup({ variables: { id: +item.id } }).then((res) => {
           CreateNotification(res.data.DeleteGroup);
           handleClose();
         });

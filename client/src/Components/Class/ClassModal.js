@@ -9,7 +9,8 @@ import {
 import ValidatedMessage from "../ValidatedMessage";
 import SaveButton from "./SaveButton";
 import SelectTypeClass from "./SelectTypeClass";
-import SelectDiscipline from "./SelectDiscipline";
+import SelectAssignedDiscipline from "./SelectAssignedDiscipline";
+import cloneDeep from "clone-deep";
 
 class ClassModal extends React.Component {
   defState = {
@@ -33,7 +34,7 @@ class ClassModal extends React.Component {
     counterRecAudeinces: 0, // счётчик для ключей в массиве рекомендуемых аудиторий
   };
 
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   //При выборке элемента в селекте
   handleChangeState = (name, item) => {
@@ -46,7 +47,7 @@ class ClassModal extends React.Component {
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };
@@ -66,11 +67,11 @@ class ClassModal extends React.Component {
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Дисципліна</Form.Label>
                 <Col>
-                  <SelectDiscipline
+                  <SelectAssignedDiscipline
                     item={item}
                     handleChangeState={this.handleChangeState}
                     handleChangeItem={handleChangeItem}
-                  ></SelectDiscipline>
+                  ></SelectAssignedDiscipline>
                   {!this.state.validatedDiscipline && (
                     <ValidatedMessage message="Дисциплiна не вибрана"></ValidatedMessage>
                   )}

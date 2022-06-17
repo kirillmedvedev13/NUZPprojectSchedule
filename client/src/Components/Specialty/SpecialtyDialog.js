@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
-import { GET_ALL_SPECIALTIES } from "./queries";
 import { DELETE_SPECIALTY } from "./mutations";
 import { CreateNotification } from "../Alert";
 

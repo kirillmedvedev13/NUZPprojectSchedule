@@ -25,7 +25,7 @@ export default function SelectSpecialties({
           : null
       }
       onChange={(e) => {
-        handleChangeItem("specialty", { id: +e.value });
+        handleChangeItem("specialty", data.GetAllSpecialties.find(s => +s.id === +e.value));
         handleChangeState("validatedSpecialty", true);
       }}
     />

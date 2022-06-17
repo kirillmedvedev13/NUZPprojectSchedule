@@ -27,7 +27,7 @@ export default function SelectTypeClass({
       }
       onChange={(e) => {
         handleChangeState("validatedTypeClass", true);
-        handleChangeItem("type_class", { id: +e.value });
+        handleChangeItem("type_class", data.GetAllTypeClasses.find(tc => +tc.id === +e.value));
       }}
     />
   );

@@ -15,27 +15,34 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: +item.id,
-          name: item.name,
-        },
-      }
+      variables: {
+        id: +item.id,
+        name: item.name,
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          assigned_disciplines: JSON.stringify(item.assigned_disciplines),
-        },
-      };
+      variables: {
+        name: item.name,
+        assigned_disciplines: JSON.stringify(item.assigned_disciplines),
+      },
+    };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
         if (item.name) {
           mutateFunction(variables).then((res) => {
-            CreateNotification(
-              item.id ? res.data.UpdateDiscipline : res.data.CreateDiscipline
-            );
-            handleCloseModal();
+            if (item.id) {
+              CreateNotification(res.data.UpdateDiscipline);
+              if (res.data.UpdateDiscipline.successful)
+                handleCloseModal();
+            }
+            else {
+              CreateNotification(res.data.CreateDiscipline);
+              if (res.data.CreateDiscipline.successful) {
+                handleCloseModal();
+              }
+            }
           });
         } else {
           if (!item.name) handleChangeState("validatedName", false);
@@ -43,6 +50,6 @@ export default function SaveButton({
       }}
     >
       {item.id ? "Оновити" : "Додати"}
-    </Button>
+    </Button >
   );
 }

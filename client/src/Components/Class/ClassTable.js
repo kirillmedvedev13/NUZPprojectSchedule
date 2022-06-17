@@ -6,6 +6,7 @@ import { GET_ALL_CLASSES } from "./queries";
 import ClassDialog from "./ClassDialog";
 import { Button } from "react-bootstrap";
 import ClassModal from "./ClassModal";
+import cloneDeep from "clone-deep"
 
 function DataTable({
   filters,
@@ -24,7 +25,6 @@ function DataTable({
   });
   if (loading) return null;
   if (error) return `Error! ${error}`;
-
   return (
     <>
       <tbody>
@@ -120,7 +120,7 @@ class ClassTable extends React.Component {
     item: {
       id: null,
       times_per_week: "",
-      id_type_class: {
+      type_class: {
         id: null,
       },
       assigned_discipline: {
@@ -134,7 +134,7 @@ class ClassTable extends React.Component {
     openDialog: false,
   };
 
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleSetItem = (item) => {
     this.setState({
@@ -149,9 +149,7 @@ class ClassTable extends React.Component {
   };
 
   handleCloseDialog = () => {
-    this.setState({
-      openDialog: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleOpenModal = () => {
@@ -161,10 +159,7 @@ class ClassTable extends React.Component {
   };
 
   handleCloseModal = () => {
-    this.setState({
-      item: this.defState.item,
-      openModal: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleChangeItem = (name, value) => {

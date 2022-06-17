@@ -6,6 +6,7 @@ import { GET_ALL_SPECIALTIES } from "./queries";
 import SpecialtyDialog from "./SpecialtyDialog";
 import SpecialtyModal from "./SpecialtyModal";
 import { Button } from "react-bootstrap";
+import cloneDeep from "clone-deep";
 
 function DataTable({
   filters,
@@ -79,7 +80,9 @@ class SpecialtyTable extends React.Component {
     openModal: false,
     openDialog: false,
   };
-  state = this.defState;
+
+  state = cloneDeep(this.defState);
+
   handleSetItem = (item) => {
     this.setState({
       item,
@@ -93,9 +96,7 @@ class SpecialtyTable extends React.Component {
   };
 
   handleCloseDialog = () => {
-    this.setState({
-      openDialog: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleOpenModal = () => {
@@ -105,11 +106,7 @@ class SpecialtyTable extends React.Component {
   };
 
   handleCloseModal = () => {
-    this.defState.item.assigned_disciplines = [];
-    this.setState({
-      item: this.defState.item,
-      openModal: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleChangeItem = (name, value) => {

@@ -3,6 +3,7 @@ import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import SaveButton from "./SaveButton";
 import SelectSpecialties from "./SelectSpecialties";
 import ValidatedMessage from "../ValidatedMessage";
+import cloneDeep from "clone-deep";
 
 class GroupModal extends React.Component {
   defState = {
@@ -11,14 +12,14 @@ class GroupModal extends React.Component {
     validatedSemester: true,
     validatedSpecialty: true,
   };
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };
@@ -37,6 +38,19 @@ class GroupModal extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <Form.Label className="col-2">Назва спеціальності</Form.Label>
+                <Col>
+                  <SelectSpecialties
+                    handleChangeState={this.handleChangeState}
+                    handleChangeItem={handleChangeItem}
+                    item={item}
+                  ></SelectSpecialties>
+                  {!this.state.validatedSpecialty && (
+                    <ValidatedMessage message="Спеціальність не вибранa"></ValidatedMessage>
+                  )}
+                </Col>
+              </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Назва групи</Form.Label>
                 <Col>
@@ -85,19 +99,6 @@ class GroupModal extends React.Component {
                   ></Form.Control>
                   {!this.state.validatedSemester && (
                     <ValidatedMessage message="Пусте поле семестру"></ValidatedMessage>
-                  )}
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва спеціальності</Form.Label>
-                <Col>
-                  <SelectSpecialties
-                    handleChangeState={this.handleChangeState}
-                    handleChangeItem={handleChangeItem}
-                    item={item}
-                  ></SelectSpecialties>
-                  {!this.state.validatedSpecialty && (
-                    <ValidatedMessage message="Спеціальність не вибранa"></ValidatedMessage>
                   )}
                 </Col>
               </Form.Group>

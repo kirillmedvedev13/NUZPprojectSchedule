@@ -16,31 +16,39 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: +item.id,
-          name: item.name,
-          capacity: +item.capacity,
-          id_type_class: +item.type_class.id,
-        },
-      }
+      variables: {
+        id: +item.id,
+        name: item.name,
+        capacity: +item.capacity,
+        id_type_class: +item.type_class.id,
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          capacity: +item.capacity,
-          id_type_class: +item.type_class.id,
-          assigned_cathedras: JSON.stringify(item.assigned_audiences),
-        },
-      };
+      variables: {
+        name: item.name,
+        capacity: +item.capacity,
+        id_type_class: +item.type_class.id,
+        assigned_cathedras: JSON.stringify(item.assigned_audiences),
+      },
+    };
   return (
     <Button
       variant="primary"
       onClick={(e) => {
         if (item.name && item.capacity) {
           mutateFunction(variables).then((res) => {
-            CreateNotification(
-              item.id ? res.data.UpdateAudience : res.data.CreateAudience
-            );
-            handleCloseModal();
+            if (item.id) {
+              CreateNotification(res.data.UpdateAudience);
+              if (res.data.UpdateAudience.successful) {
+                handleCloseModal();
+              }
+            }
+            else {
+              CreateNotification(res.data.CreateAudience);
+              if (res.data.CreateAudience.successful) {
+                handleCloseModal();
+              }
+            }
           });
         } else {
           if (!item.type_class.id)

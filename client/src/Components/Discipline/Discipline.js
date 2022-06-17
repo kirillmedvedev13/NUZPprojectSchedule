@@ -21,7 +21,6 @@ class Discipline extends React.Component {
         <DisciplineSearch
           handleChangeFilters={this.handleChangeFilters}
         ></DisciplineSearch>
-
         <DisciplineTable filters={filters}></DisciplineTable>
       </>
     );

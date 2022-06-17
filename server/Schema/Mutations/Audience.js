@@ -29,9 +29,9 @@ export const CREATE_AUDIENCE = {
     return res
       ? { successful: true, message: "Запис аудиторії успішно створено" }
       : {
-          successful: false,
-          message: "Помилка при створенні запису аудиторії",
-        };
+        successful: false,
+        message: "Помилка при створенні запису аудиторії",
+      };
   },
 };
 
@@ -55,9 +55,9 @@ export const UPDATE_AUDIENCE = {
     return res[0]
       ? { successful: true, message: "Запис аудиторії успішно оновлено" }
       : {
-          successful: false,
-          message: "Помилка при оновленні запису аудиторії",
-        };
+        successful: false,
+        message: "Помилка при оновленні запису аудиторії",
+      };
   },
 };
 
@@ -75,13 +75,13 @@ export const DELETE_AUDIENCE = {
     return res
       ? { successful: true, message: "Запис аудиторії успішно видалено" }
       : {
-          successful: false,
-          message: "Помилка при видаленні запису аудиторії",
-        };
+        successful: false,
+        message: "Помилка при видаленні запису аудиторії",
+      };
   },
 };
 
-export const ADD_AUDIENCE_TO_CATHEDRA = {
+export const ADD_CATHEDRA_TO_AUDIENCE = {
   type: MessageType,
   args: {
     id_audience: { type: GraphQLID },
@@ -104,18 +104,18 @@ export const ADD_AUDIENCE_TO_CATHEDRA = {
     const au = res.map((r) => r.dataValues);
     return res
       ? {
-          successful: true,
-          message: "Аудиторія успішно додана до кафедри",
-          data: JSON.stringify(au),
-        }
+        successful: true,
+        message: "Кафедра успішно додана до аудиторії",
+        data: JSON.stringify(au[0]),
+      }
       : {
-          successful: false,
-          message: "Помилка при додаванні аудиторії до кафедри",
-        };
+        successful: false,
+        message: "Помилка при додаванні кафедри до аудиторії",
+      };
   },
 };
 
-export const DELETE_AUDIENCE_FROM_CATHEDRA = {
+export const DELETE_CATHEDRA_FROM_AUDIENCE = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -127,10 +127,10 @@ export const DELETE_AUDIENCE_FROM_CATHEDRA = {
       },
     });
     return res
-      ? { successful: true, message: "Аудиторія успішно видалена від кафедри" }
+      ? { successful: true, message: "Кафедра успішно видалена від аудиторії" }
       : {
-          successful: false,
-          message: "Помилка при видаленні аудиторії від кафедри",
-        };
+        successful: false,
+        message: "Помилка при видаленні кафедри від аудиторії",
+      };
   },
 };

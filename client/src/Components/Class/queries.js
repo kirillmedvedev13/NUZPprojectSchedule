@@ -80,3 +80,19 @@ export const GET_ALL_TYPE_CLASSES = gql`
     }
   }
 `;
+export const GET_ALL_ASSIGNED_DISCIPLINES = gql`
+  query{
+    GetAllAssignedDisciplines{
+      id
+      semester
+      discipline{
+        id
+        name
+      }
+      specialty{
+        id
+        name
+      }
+    }
+  }
+`

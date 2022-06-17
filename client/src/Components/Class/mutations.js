@@ -12,7 +12,7 @@ export const UPDATE_CLASS = gql`
   mutation (
     $id: ID!
     $id_type_class: Int!
-    $times_per_week: Double!
+    $times_per_week: Float!
     $id_assigned_discipline: Int!
   ) {
     UpdateClass(
@@ -29,7 +29,7 @@ export const UPDATE_CLASS = gql`
 export const CREATE_CLASS = gql`
     mutation (
     $id_type_class: Int!
-    $times_per_week: Double!
+    $times_per_week: Float!
     $id_assigned_discipline: Int!
     $assigned_teachers: String
     $assigned_groups: String

@@ -46,7 +46,7 @@ export const UPDATE_CLASS = {
   args: {
     id: { type: GraphQLID },
     id_type_class: { type: GraphQLInt },
-    times_per_week: { type: GraphQLInt },
+    times_per_week: { type: GraphQLFloat },
     id_assigned_discipline: { type: GraphQLInt },
   },
   async resolve(parent, { id, id_type_class, times_per_week, id_assigned_discipline }) {

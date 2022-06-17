@@ -6,6 +6,7 @@ import { GET_ALL_DISCIPLINES } from "./queries";
 import { Button } from "react-bootstrap";
 import DisciplineDialog from "./DisciplineDialog";
 import DisciplineModal from "./DisciplineModal";
+import cloneDeep from "clone-deep"
 
 function DataTable({
   filters,
@@ -85,7 +86,7 @@ class DisciplineTable extends React.Component {
     openModal: false,
     openDialog: false,
   };
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleSetItem = (item) => {
     this.setState({
@@ -100,9 +101,7 @@ class DisciplineTable extends React.Component {
   };
 
   handleCloseDialog = () => {
-    this.setState({
-      openDialog: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleOpenModal = () => {
@@ -112,11 +111,7 @@ class DisciplineTable extends React.Component {
   };
 
   handleCloseModal = () => {
-    this.defState.item.assigned_disciplines = [];
-    this.setState({
-      item: this.defState.item,
-      openModal: false,
-    });
+    this.setState(cloneDeep(this.defState));
   };
 
   handleChangeItem = (name, value) => {

@@ -15,22 +15,22 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: +item.id,
-          name: item.name,
-          number_students: +item.number_students,
-          semester: +item.semester,
-          id_specialty: +item.specialty.id,
-        },
-      }
+      variables: {
+        id: +item.id,
+        name: item.name,
+        number_students: +item.number_students,
+        semester: +item.semester,
+        id_specialty: +item.specialty.id,
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          number_students: +item.number_students,
-          semester: +item.semester,
-          id_specialty: +item.specialty.id,
-        },
-      };
+      variables: {
+        name: item.name,
+        number_students: +item.number_students,
+        semester: +item.semester,
+        id_specialty: +item.specialty.id,
+      },
+    };
   return (
     <Button
       variant="primary"
@@ -42,10 +42,18 @@ export default function SaveButton({
           item.specialty.id
         ) {
           mutateFunction(variables).then((res) => {
-            CreateNotification(
-              item.id ? res.data.UpdateGroup : res.data.CreateGroup
-            );
-            handleCloseModal();
+            if (item.id) {
+              CreateNotification(res.data.UpdateGroup);
+              if (res.data.UpdateGroup.successful) {
+                handleCloseModal();
+              }
+            }
+            else {
+              CreateNotification(res.data.CreateGroup);
+              if (res.data.CreateGroup.successful) {
+                handleCloseModal();
+              }
+            }
           });
         } else {
           if (!item.name) handleChangeState("validatedName", false);
@@ -58,6 +66,6 @@ export default function SaveButton({
       }}
     >
       {item.id ? "Оновити" : "Додати"}
-    </Button>
+    </Button >
   );
 }

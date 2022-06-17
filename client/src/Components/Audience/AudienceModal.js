@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import ValidatedMessage from "../ValidatedMessage";
-import AddAudienceToCathedra from "./AddAudienceToCathedra";
+import AddCathedraToAudience from "./AddCathedraToAudience";
 import SaveButton from "./SaveButton";
-import SelectCathedras from "./SelectCathedras";
+import TableCathedras from "./TableCathedras";
 import SelectTypeClass from "./SelectTypeClass";
+import cloneDeep from "clone-deep";
 
 class AudienceModal extends React.Component {
   defState = {
@@ -12,12 +13,11 @@ class AudienceModal extends React.Component {
     validatedName: true,
     validatedCapacity: true,
     validatedSelectedCathedraToAdd: { status: true }, // Проверка выбранной кафдеры
-
     selectedCathedraToAdd: null, // выбранная кафедра для добавление к аудитории
-    statusAddAudeinceToCathedra: false, // Если тру то форма с добавлением кафедры
+    statusAddCathedraToAudience: false, // Если тру то форма с добавлением кафедры
     counterCathedras: 0, // счётчик для ключей в массиве закрепленных кафедр
   };
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
@@ -27,7 +27,7 @@ class AudienceModal extends React.Component {
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };
@@ -99,11 +99,11 @@ class AudienceModal extends React.Component {
               <Form.Group as={Row} className="my-2 mx-2">
                 <Form.Label className="col-2">Закріплені кафедри</Form.Label>
                 <Col>
-                  <AddAudienceToCathedra
+                  <AddCathedraToAudience
                     item={item}
                     handleChangeItem={handleChangeItem}
-                    statusAddAudeinceToCathedra={
-                      this.state.statusAddAudeinceToCathedra
+                    statusAddCathedraToAudience={
+                      this.state.statusAddCathedraToAudience
                     }
                     validatedSelectedCathedraToAdd={
                       this.state.validatedSelectedCathedraToAdd
@@ -112,11 +112,11 @@ class AudienceModal extends React.Component {
                     handleIncCounter={this.handleIncCounter}
                     handleChangeState={this.handleChangeState}
                     counterCathedras={this.state.counterCathedras}
-                  ></AddAudienceToCathedra>
-                  <SelectCathedras
+                  ></AddCathedraToAudience>
+                  <TableCathedras
                     item={item}
                     handleChangeItem={handleChangeItem}
-                  ></SelectCathedras>
+                  ></TableCathedras>
                 </Col>
               </Form.Group>
             </Form>

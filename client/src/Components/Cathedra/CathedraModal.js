@@ -2,28 +2,28 @@ import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import SaveButton from "./SaveButton";
 import ValidatedMessage from "../ValidatedMessage";
+import cloneDeep from "clone-deep"
 
 class CathedraModal extends React.Component {
   defState = {
-    validatedName: true,
-    validatedShortName: true,
+    validatedName: true, // Перевірка назви кафедри
+    validatedShortName: true, // Перевірка скороченої назви
   };
 
-  state = this.defState;
+  state = cloneDeep(this.defState);
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
   };
 
   handleClose = () => {
-    this.setState(this.defState);
+    this.setState(cloneDeep(this.defState));
     this.props.handleCloseModal();
     this.props.refetch();
   };
 
   render() {
     const { isopen, handleChangeItem, item } = this.props;
-    console.log(item);
     return (
       <>
         <Modal size="lg" show={isopen} onHide={this.handleClose}>

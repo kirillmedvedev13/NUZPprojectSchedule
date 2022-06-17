@@ -1,5 +1,4 @@
 import React from "react";
-
 import ClassTable from "./ClassTable";
 import ClassSearch from "./ClassSearch";
 
@@ -13,6 +12,7 @@ class Class extends React.Component {
       semester: null,
     },
   };
+
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({
       filters: Object.assign({ ...PrevState.filters }, { [name]: value }),
@@ -26,7 +26,6 @@ class Class extends React.Component {
         <ClassSearch
           handleChangeFilters={this.handleChangeFilters}
         ></ClassSearch>
-
         <ClassTable filters={filters}></ClassTable>
       </>
     );

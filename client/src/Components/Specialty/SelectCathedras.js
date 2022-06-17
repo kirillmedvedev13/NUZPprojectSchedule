@@ -24,8 +24,7 @@ export default function SelectCathedras({
       }
       onChange={(e) => {
         handleChangeState("validationCathedra", true);
-        handleChangeItem("cathedra", { id: +e.value });
-        e.value = item.cathedra.id;
+        handleChangeItem("cathedra", data.GetAllCathedras.find(c => +c.id === +e.value));
       }}
     />
   );

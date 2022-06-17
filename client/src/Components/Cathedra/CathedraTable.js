@@ -1,11 +1,11 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
-
 import { XCircle, PencilSquare } from "react-bootstrap-icons";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_CATHEDRAS } from "./queries";
 import CathedraDialog from "./CathedraDialog";
 import CathedraModal from "./CathedraModal";
+import cloneDeep from "clone-deep";
 
 function DataTable({
   filters,
@@ -73,7 +73,7 @@ class CathedraTable extends React.Component {
     openModal: false,
     openDialog: false,
   };
-  state = this.def_state;
+  state = cloneDeep(this.def_state);
 
   handleSetItem = (item) => {
     this.setState({
@@ -88,9 +88,7 @@ class CathedraTable extends React.Component {
   };
 
   handleCloseDialog = () => {
-    this.setState({
-      openDialog: false,
-    });
+    this.setState(cloneDeep(this.def_state));
   };
 
   handleOpenModal = () => {
@@ -100,10 +98,7 @@ class CathedraTable extends React.Component {
   };
 
   handleCloseModal = () => {
-    this.setState({
-      item: this.def_state.item,
-      openModal: false,
-    });
+    this.setState(cloneDeep(this.def_state));
   };
 
   handleChangeItem = (name, value) => {
@@ -111,6 +106,7 @@ class CathedraTable extends React.Component {
       item: Object.assign({ ...PrevState.item }, { [name]: value }),
     }));
   };
+
   render() {
     const { filters } = this.props;
     const { item, openModal, openDialog } = this.state;

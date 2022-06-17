@@ -40,9 +40,9 @@ export const CREATE_AUDIENCE = gql`
   }
 `;
 
-export const ADD_AUDIENCE_TO_CATHEDRA = gql`
+export const ADD_CATHEDRA_TO_AUDIENCE = gql`
   mutation ($id_audience: ID!, $id_cathedra: ID!) {
-    AddAudienceToCathedra(
+    AddCathedraToAudience(
       id_audience: $id_audience
       id_cathedra: $id_cathedra
     ) {
@@ -53,9 +53,9 @@ export const ADD_AUDIENCE_TO_CATHEDRA = gql`
   }
 `;
 
-export const DELETE_AUDIENCE_FROM_CATHEDRA = gql`
+export const DELETE_CATHEDRA_FROM_AUDIENCE = gql`
   mutation ($id: ID!) {
-    DeleteAudienceFromCathedra(id: $id) {
+    DeleteCathedraFromAudience(id: $id) {
       message
       successful
     }

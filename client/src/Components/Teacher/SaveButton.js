@@ -14,22 +14,22 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-        variables: {
-          id: +item.id,
-          name: item.name,
-          surname: item.surname,
-          patronymic: item.patronymic,
-          id_cathedra: +item.cathedra.id,
-        },
-      }
+      variables: {
+        id: +item.id,
+        name: item.name,
+        surname: item.surname,
+        patronymic: item.patronymic,
+        id_cathedra: +item.cathedra.id,
+      },
+    }
     : {
-        variables: {
-          name: item.name,
-          surname: item.surname,
-          patronymic: item.patronymic,
-          id_cathedra: +item.cathedra.id,
-        },
-      };
+      variables: {
+        name: item.name,
+        surname: item.surname,
+        patronymic: item.patronymic,
+        id_cathedra: +item.cathedra.id,
+      },
+    };
   return (
     <Button
       variant="primary"
@@ -38,10 +38,15 @@ export default function SaveButton({
           mutateFunction(variables).then((res) => {
             if (item.id) {
               CreateNotification(res.data.UpdateTeacher);
+              if (res.data.UpdateTeacher.successful) {
+                handleCloseModal();
+              }
             } else {
               CreateNotification(res.data.CreateTeacher);
             }
-            handleCloseModal();
+            if (res.data.CreateTeacher.successful) {
+              handleCloseModal();
+            }
           });
         } else {
           if (!item.name) handleChangeState("validatedName", false);
