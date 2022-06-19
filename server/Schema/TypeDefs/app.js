@@ -53,7 +53,9 @@ import {
   ADD_GROUP_TO_CLASS,
   DELETE_GROUP_FROM_CLASS,
   ADD_RECOMMENDED_AUDIENCE_TO_CLASS,
+  ADD_RECOMMENDED_SCHEDULE_TO_CLASS,
   DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS,
+  DELETE_RECOMMENDED_SCHEDULE_FROM_CLASS,
   ADD_TEACHER_TO_CLASS,
   DELETE_TEACHER_FROM_CLASS,
 } from "../Mutations/Class.js";
@@ -64,7 +66,7 @@ import { RUN_EA } from "../../EvalutionAlghoritm/Main.js";
 import { GET_INFO } from "../Queries/Info.js";
 import { UPDATE_INFO } from "../Mutations/Info.js";
 import { CALC_FITNESS } from "../Mutations/Fitness.js";
-import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js"
+import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -121,9 +123,11 @@ const Mutation = new GraphQLObjectType({
     DeleteClass: DELETE_CLASS,
     AddTeacherToClass: ADD_TEACHER_TO_CLASS,
     AddRecAudienceToClass: ADD_RECOMMENDED_AUDIENCE_TO_CLASS,
+    AddRecScheduleToClass: ADD_RECOMMENDED_SCHEDULE_TO_CLASS,
     AddGroupToClass: ADD_GROUP_TO_CLASS,
     DeleteTeacherFromClass: DELETE_TEACHER_FROM_CLASS,
     DeleteRecAudienceFromClass: DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS,
+    DeleteRecScheduleFromClass: DELETE_RECOMMENDED_SCHEDULE_FROM_CLASS,
     DeleteGroupFromClass: DELETE_GROUP_FROM_CLASS,
 
     LoginUser: LOGIN_USER,
@@ -133,7 +137,7 @@ const Mutation = new GraphQLObjectType({
     DeleteAllData: DELETE_ALL_DATA,
     UpdateInfo: UPDATE_INFO,
     RunEA: RUN_EA,
-    CalcFitness: CALC_FITNESS
+    CalcFitness: CALC_FITNESS,
   },
 });
 

@@ -59,9 +59,7 @@ export const GET_ALL_CLASSES = {
     }
 
     const res = await db.class.findAll({
-      order: [
-        ["assigned_discipline", "discipline", "name", "ASC"]
-      ],
+      order: [["assigned_discipline", "discipline", "name", "ASC"]],
       where: FilterIDsClasses,
       include: [
         {
@@ -98,8 +96,8 @@ export const GET_ALL_CLASSES = {
               model: db.specialty,
               include: {
                 model: db.cathedra,
-              }
-            }
+              },
+            },
           },
         },
         {
@@ -107,6 +105,9 @@ export const GET_ALL_CLASSES = {
           include: {
             model: db.audience,
           },
+        },
+        {
+          model: db.recommended_schedule,
         },
       ],
     });

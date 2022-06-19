@@ -11,6 +11,7 @@ export const CREATE_CLASS = {
     assigned_teachers: { type: GraphQLString },
     assigned_groups: { type: GraphQLString },
     recommended_audiences: { type: GraphQLString },
+    recommended_schedules: { type: GraphQLString },
   },
   async resolve(
     parent,
@@ -21,6 +22,7 @@ export const CREATE_CLASS = {
       assigned_teachers,
       assigned_groups,
       recommended_audiences,
+      recommended_schedules,
     }
   ) {
     let res = await db.class.create({
@@ -50,6 +52,18 @@ export const CREATE_CLASS = {
         await db.recommended_audience.bulkCreate(
           raIDs.map((item) => {
             return { id_class: res.dataValues.id, id_audience: item };
+          })
+        );
+      }
+      if (recommended_schedules) {
+        const raIDs = JSON.parse(recommended_schedules);
+        await db.recommended_schedule.bulkCreate(
+          raIDs.map((item) => {
+            return {
+              id_class: res.dataValues.id,
+              day_week: item.day_week,
+              number_pair: item.number_pair,
+            };
           })
         );
       }
@@ -170,6 +184,39 @@ export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
         };
   },
 };
+export const ADD_RECOMMENDED_SCHEDULE_TO_CLASS = {
+  type: MessageType,
+  args: {
+    number_pair: { type: GraphQLInt },
+    day_week: { type: GraphQLInt },
+    id_class: { type: GraphQLID },
+  },
+  async resolve(parent, { number_pair, day_week, id_class }) {
+    let classes = await db.class.findOne({
+      where: {
+        id: id_class,
+      },
+    });
+    if (!classes) return { successful: false, message: "Не знайдено заняття" };
+    const res = await db.recommended_schedule.create({
+      number_pair,
+      day_week,
+      id_class,
+    });
+    const rs = res[0].dataValues;
+    return res
+      ? {
+          successful: true,
+          message: "Рекомендований час розкладу успішно доданий до заняття",
+          data: JSON.stringify(rs),
+        }
+      : {
+          successful: false,
+          message:
+            "Помилка при додаванні рекомендованного часу розкладу до заняття",
+        };
+  },
+};
 
 export const ADD_GROUP_TO_CLASS = {
   type: MessageType,
@@ -248,6 +295,29 @@ export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
           successful: false,
           message:
             "Помилка при видаленні рекомендованної аудиторії від заняття",
+        };
+  },
+};
+export const DELETE_RECOMMENDED_SCHEDULE_FROM_CLASS = {
+  type: MessageType,
+  args: {
+    id: { type: GraphQLID },
+  },
+  async resolve(parent, { id }) {
+    let res = await db.recommended_schedule.destroy({
+      where: {
+        id,
+      },
+    });
+    return res
+      ? {
+          successful: true,
+          message: "Рекомендований час розкладу успішно видалений від заняття",
+        }
+      : {
+          successful: false,
+          message:
+            "Помилка при видаленні рекомендованного часу розкладу від заняття",
         };
   },
 };
