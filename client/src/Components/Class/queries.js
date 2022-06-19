@@ -96,10 +96,3 @@ export const GET_ALL_ASSIGNED_DISCIPLINES = gql`
     }
   }
 `;
-export const GET_INFO = gql`
-  query {
-    GetInfo {
-      max_semester
-    }
-  }
-`;
