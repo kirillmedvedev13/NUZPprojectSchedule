@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ADD_GROUP_TO_CLASS, DELETE_GROUP_FROM_CLASS } from "./mutations";
 import { GET_ALL_GROUPS } from "../Group/queries";
 import ValidatedMessage from "../ValidatedMessage";
-import { GET_INFO } from "./queries";
 
 export function TableGroups({ item, handleChangeItem }) {
   const [DelGroupFromClass, { loading, error }] = useMutation(
@@ -73,10 +72,9 @@ export function AddGroupToClass({
   handleIncCounter,
 }) {
   const query = useQuery(GET_ALL_GROUPS);
-  const queryGetSemester = useQuery(GET_INFO);
   const [AddGroupToClass, { loading, error }] = useMutation(ADD_GROUP_TO_CLASS);
-  if (query.loading || queryGetSemester.loading) return "Loading...";
-  if (query.error || queryGetSemester.error) return `Error! ${error}`;
+  if (query.loading) return "Loading...";
+  if (query.error) return `Error! ${error}`;
   let options = [];
   let setCathSemester = new Set();
   query.data.GetAllGroups.forEach((element) => {

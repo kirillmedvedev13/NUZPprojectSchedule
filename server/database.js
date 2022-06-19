@@ -12,9 +12,11 @@ import Discipline from "./Models/Discipline.js";
 import Assigned_discipline from "./Models/Assigned_discipline.js";
 import Class from "./Models/Class.js";
 import Recommended_audience from "./Models/Recommended_audience.js";
+import Recommended_schedule from "./Models/Recommended_schedule.js";
 import Assigned_teacher from "./Models/Assigned_teacher.js";
 import Schedule from "./Models/Schedule.js";
 import User from "./Models/User.js";
+
 import Assigned_group from "./Models/Assigned_group.js";
 import Info from "./Models/Info.js";
 
@@ -36,7 +38,8 @@ const models = [
   Schedule,
   Assigned_group,
   User,
-  Info
+  Info,
+  Recommended_schedule,
 ];
 
 const Connection = new Sequelize(

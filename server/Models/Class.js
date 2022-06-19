@@ -29,6 +29,9 @@ export default (Sequelize, DataTypes) => {
     Class.hasMany(models.recommended_audience, {
       foreignKey: "id_class",
     });
+    Class.hasMany(models.recommended_schedule, {
+      foreignKey: "id_class",
+    });
     Class.hasMany(models.assigned_teacher, {
       foreignKey: "id_class",
     });
