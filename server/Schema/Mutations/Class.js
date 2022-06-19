@@ -203,7 +203,7 @@ export const ADD_RECOMMENDED_SCHEDULE_TO_CLASS = {
       day_week,
       id_class,
     });
-    const rs = res[0].dataValues;
+    const rs = res.dataValues;
     return res
       ? {
           successful: true,

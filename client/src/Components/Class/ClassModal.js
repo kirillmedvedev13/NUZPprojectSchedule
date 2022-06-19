@@ -6,6 +6,10 @@ import {
   TableRecAudience,
   AddRecAudienceToClass,
 } from "./ClassModalRecAudience";
+import {
+  TableRecSchedule,
+  AddRecScheduleToClass,
+} from "./ClassModalRecSchedule";
 import ValidatedMessage from "../ValidatedMessage";
 import SaveButton from "./SaveButton";
 import SelectTypeClass from "./SelectTypeClass";
@@ -32,6 +36,13 @@ class ClassModal extends React.Component {
     selectedRecAudience: null, // выбранная аудитория для добавление к занятию
     validatedSelectedRecAudience: { status: true, message: "" }, // Проверка выбранной аудитории
     counterRecAudeinces: 0, // счётчик для ключей в массиве рекомендуемых аудиторий
+
+    statusAddRecScheduleToClass: false, // Если тру то форма с добавлением аудиторий
+    selectedRecDayWeek: null, // выбранная аудитория для добавление к занятию
+    selectedRecNumberPair: null,
+    validatedRecDayWeek: { status: true, message: "" }, // Проверка выбранной аудитории
+    validatedRecNumberPair: { status: true, message: "" },
+    counterRecSchedules: 0, // счётчик для ключей в массиве рекомендуемых аудиторий
   };
 
   state = cloneDeep(this.defState);
@@ -172,6 +183,29 @@ class ClassModal extends React.Component {
                     item={item}
                     handleChangeItem={handleChangeItem}
                   ></TableRecAudience>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <Form.Label className="col-2">Рекомендований час</Form.Label>
+                <Col>
+                  <AddRecScheduleToClass
+                    item={item}
+                    handleChangeItem={handleChangeItem}
+                    statusAddRecScheduleToClass={
+                      this.state.statusAddRecScheduleToClass
+                    }
+                    counterRecSchedules={this.state.counterReSchedules}
+                    validatedRecDayWeek={this.state.validatedRecDayWeek}
+                    validatedRecNumberPair={this.state.validatedRecNumberPair}
+                    selectedRecNumberPair={this.state.selectedRecNumberPair}
+                    selectedRecDayWeek={this.state.selectedRecDayWeek}
+                    handleChangeState={this.handleChangeState}
+                    handleIncCounter={this.handleIncCounter}
+                  ></AddRecScheduleToClass>
+                  <TableRecSchedule
+                    item={item}
+                    handleChangeItem={handleChangeItem}
+                  ></TableRecSchedule>
                 </Col>
               </Form.Group>
             </Form>

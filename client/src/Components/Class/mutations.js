@@ -68,7 +68,19 @@ export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = gql`
     }
   }
 `;
-
+export const ADD_RECOMMENDED_SCHEDULE_TO_CLASS = gql`
+  mutation ($id_class: ID!, $number_pair: Int!, $day_week: Int!) {
+    AddRecScheduleToClass(
+      id_class: $id_class
+      number_pair: $number_pair
+      day_week: $day_week
+    ) {
+      message
+      successful
+      data
+    }
+  }
+`;
 export const ADD_GROUP_TO_CLASS = gql`
   mutation ($id_group: String!, $id_class: ID!) {
     AddGroupToClass(id_group: $id_group, id_class: $id_class) {
@@ -89,6 +101,14 @@ export const DELETE_TEACHER_FROM_CLASS = gql`
 export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = gql`
   mutation ($id: ID!) {
     DeleteRecAudienceFromClass(id: $id) {
+      message
+      successful
+    }
+  }
+`;
+export const DELETE_RECOMMENDED_SCHEDULE_FROM_CLASS = gql`
+  mutation ($id: ID!) {
+    DeleteRecScheduleFromClass(id: $id) {
       message
       successful
     }

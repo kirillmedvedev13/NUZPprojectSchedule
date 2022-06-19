@@ -69,6 +69,11 @@ export const GET_ALL_CLASSES = gql`
           name
         }
       }
+      recommended_schedules {
+        id
+        number_pair
+        day_week
+      }
     }
   }
 `;

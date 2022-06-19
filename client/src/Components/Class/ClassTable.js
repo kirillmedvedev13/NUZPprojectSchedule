@@ -6,7 +6,8 @@ import { GET_ALL_CLASSES } from "./queries";
 import ClassDialog from "./ClassDialog";
 import { Button } from "react-bootstrap";
 import ClassModal from "./ClassModal";
-import cloneDeep from "clone-deep"
+import cloneDeep from "clone-deep";
+import GetDayWeek from "./GetDayWeek";
 
 function DataTable({
   filters,
@@ -83,6 +84,24 @@ function DataTable({
                   </tbody>
                 </Table>
               </td>
+              <td>
+                <Table>
+                  <tbody>
+                    {clas.recommended_schedules.map((obj) => {
+                      return (
+                        <tr key={obj.id}>
+                          <td>
+                            {GetDayWeek(obj.day_week) +
+                              ", " +
+                              obj.number_pair +
+                              " пара"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </td>
               <td className="col-2" onClick={(e) => handleSetItem(clas)}>
                 <PencilSquare
                   className="mx-1"
@@ -129,6 +148,7 @@ class ClassTable extends React.Component {
       assigned_groups: [],
       assigned_teachers: [],
       recommended_audiences: [],
+      recommended_schedules: [],
     },
     openModal: false,
     openDialog: false,
@@ -195,6 +215,7 @@ class ClassTable extends React.Component {
                 <th>Викладачі</th>
                 <th>Групи</th>
                 <th>Рекомендовані аудиторії</th>
+                <th>Рекомендований час</th>
                 <th></th>
               </tr>
             </thead>
