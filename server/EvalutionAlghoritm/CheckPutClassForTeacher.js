@@ -1,12 +1,12 @@
-export default function (clas, schedule, day_week, number_pair, pair_type, mapTeacherAndAG) {
-    // Поиск всех закрепленных груп в которых есть какая либо группа для переданого занятия
+export default function CheckPutClassForTeacher(clas, schedule, day_week, number_pair, pair_type, mapTeacherAndAG) {
+    // Поиск всех закрепленных груп для учителя в которых есть какая либо группа для переданого занятия
     let ids_assigned_groups = [];
     for (const at of clas.assigned_teachers) {
         ids_assigned_groups.push(...mapTeacherAndAG.get(at.id_teacher));
     }
     // Поиск нету ли занятий в случаную пару для учителей переданого занятия
-    let wrongSchedules = schedule.filter((sch) => {
-        // Сначало проверяется подходит ли расписание по номеру пары и дню недели
+    let isSuitableTime = schedule.filter((sch) => {
+        // Сначалa проверяется подходит ли расписание по номеру пары и дню недели
         if (
             sch.number_pair === number_pair &&
             sch.day_week === day_week
@@ -19,15 +19,14 @@ export default function (clas, schedule, day_week, number_pair, pair_type, mapTe
                 if (pair_type === 1 && sch.pair_type === 2)
                     return false;
                 // Если нужно вставить по знамен, то проверяется на числитель
-                else if (pair_type === 2 && sch.pair_type === 1)
+                if (pair_type === 2 && sch.pair_type === 1)
                     return false;
-                else
-                    return true;
+                return true;
             }
         }
         return false;
     });
     // Если в это время нету пар для всех учителей, то возвращается тру
-    if (!wrongSchedules.length) return true
+    if (!isSuitableTime) return true
     else return false
 }

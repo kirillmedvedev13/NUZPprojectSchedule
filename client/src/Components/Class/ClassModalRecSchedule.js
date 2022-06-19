@@ -118,14 +118,16 @@ export function AddRecScheduleToClass({
         <Col className="px-1">
           <Form.Control
             type="number"
-            min={0}
-            max={+query.data.GetInfo.max_pair}
-            step={1}
-            required
             placeholder="Номер пари"
             onChange={(e) => {
-              handleChangeState("selectedRecNumberPair", +e.target.value);
-              handleChangeState("validatedRecNumberPair", true);
+              if (+e.target.value >= 1 && +e.target.value <= +query.data.GetInfo.max_pair && Number.isInteger(+e.target.value)) {
+                handleChangeState("selectedRecNumberPair", +e.target.value);
+                handleChangeState("validatedRecNumberPair", { status: true });
+              }
+              else {
+                e.target.value = selectedRecNumberPair;
+                handleChangeState("validatedRecNumberPair", { status: false, message: `Номер пари повинен бути у проміжку [1-${query.data.GetInfo.max_pair}] та цілочисельний` });
+              }
             }}
           ></Form.Control>
           {!validatedRecNumberPair.status && (

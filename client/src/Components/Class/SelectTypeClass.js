@@ -19,7 +19,7 @@ export default function SelectTypeClass({
     <Select
       required
       options={options}
-      placeholder="Тип аудиторії"
+      placeholder="Тип заняття"
       defaultValue={
         item.id
           ? { label: item.type_class.name, value: +item.type_class.id }

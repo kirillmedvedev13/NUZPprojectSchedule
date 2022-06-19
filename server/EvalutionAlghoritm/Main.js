@@ -30,19 +30,18 @@ export const RUN_EA = {
       include: [
         {
           model: db.assigned_group,
-          required: true,
           include: {
             model: db.group,
-            required: true,
           },
         },
         {
           model: db.assigned_teacher,
-          required: true,
         },
         {
           model: db.recommended_audience,
-          required: true,
+        },
+        {
+          model: db.recommended_schedule,
         },
         {
           model: db.assigned_discipline,
@@ -108,7 +107,7 @@ export const RUN_EA = {
             pool.exec("workCrossing", [
               populations[GetRndInteger(0, populations.length - 1)].schedule,
               populations[GetRndInteger(0, populations.length - 1)].schedule,
-              classes,
+              classes
             ])
           );
         }
@@ -123,7 +122,7 @@ export const RUN_EA = {
       console.time("Muta");
       // Мутации
       arr_promisses = [];
-      populations.map((mutant, index) => {
+      populations.map((mutant) => {
         if (Math.random() < p_mutation) {
           arr_promisses.push(pool.exec('workMutation', [mutant.schedule, (populations.length * p_genes) / populations.length, max_day, max_pair, audiences, mapGroupAndAG, mapTeacherAndAG]));
         }

@@ -1,5 +1,4 @@
-import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
-import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
+import GetIdAudienceForClass from "./GetIdAudienceForClass.js";
 import GetRndInteger from "./GetRndInteger.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
 export default function (
@@ -17,44 +16,27 @@ export default function (
       const info = GetPairTypeForClass(clas);
       // Сколько раз вставлять данное занятие в разное время
       for (let j = 0; j < info.length; j++) {
-        // Если лекция то для всех групп в одно и тоже время
-        if (clas.id_type_class === 1) {
-          const day_week = GetRndInteger(1, max_day);
-          const number_pair = GetRndInteger(1, max_pair);
-          const id_audience = GetIdAudienceForClassLecture(clas, audiences);
-          //Если в это время нету пары для всех групп
-          clas.assigned_groups.map((ag) => {
-            schedule.push({
-              number_pair,
-              day_week: day_week,
-              pair_type: info[j],
-              id_audience,
-              id_assigned_group: ag.id,
-              clas,
-            });
-          });
+        // Вставка для всех групп в одно и тоже время
+        let day_week, number_pair;
+        if (clas.recommended_schedules[j]) {
+          day_week = clas.recommended_schedules[j].day_week;
+          number_pair = clas.recommended_schedules[j].number_pair;
         }
-        // Если практика то для каждой группы своё время
-        else if (clas.id_type_class === 2) {
-          clas.assigned_groups.map((ag) => {
-            const day_week = GetRndInteger(1, max_day);
-            const number_pair = GetRndInteger(1, max_pair);
-            const id_audience = GetIdAudienceForClassPractice(
-              ag.group.capacity,
-              clas,
-              audiences
-            );
-            // Если в это время нету пары для конкретной группы
-            schedule.push({
-              number_pair,
-              day_week: day_week,
-              pair_type: info[j],
-              id_audience,
-              id_assigned_group: ag.id,
-              clas,
-            });
-          });
+        else {
+          day_week = GetRndInteger(1, max_day);
+          number_pair = GetRndInteger(1, max_pair);
         }
+        const id_audience = GetIdAudienceForClass(clas, audiences);
+        clas.assigned_groups.map((ag) => {
+          schedule.push({
+            number_pair,
+            day_week,
+            pair_type: info[j],
+            id_audience,
+            id_assigned_group: ag.id,
+            clas,
+          });
+        });
       }
     })
     populations[i] = { schedule, fitnessValue: null };

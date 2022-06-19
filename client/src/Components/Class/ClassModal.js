@@ -108,7 +108,7 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Тип аудиторії</Form.Label>
+                <Form.Label className="col-2">Тип заняття</Form.Label>
                 <Col>
                   <SelectTypeClass
                     item={item}
