@@ -68,17 +68,11 @@ export const RUN_EA = {
       },
     });
 
-
     teachers = teachers.map((t) => t.toJSON());
     groups = groups.map((g) => g.toJSON());
     audiences = audiences.map((a) => a.toJSON());
     classes = classes.map((c) => c.toJSON());
     let type_select = "ranging";
-
-    // Структура для каждой группы массив закрепленных для неё занятий
-    let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
-    // Структура для каждого учителя массив закрепленных для него занятий
-    let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
 
     // Создание пула потоков
     const numCPUs = cpus().length;
@@ -95,7 +89,10 @@ export const RUN_EA = {
       max_pair,
       audiences
     );
-    let bestPopulation = { scheduleForGroups: null, fitnessValue: Number.MAX_VALUE };
+    let bestPopulation = {
+      scheduleForGroups: null,
+      fitnessValue: Number.MAX_VALUE,
+    };
     const num_elit = Math.floor(population_size * p_elitism);
 
     for (const generationCount of Array(max_generations)
@@ -116,7 +113,7 @@ export const RUN_EA = {
             pool.exec("workCrossing", [
               JSON.stringify(populations[r1], replacer),
               JSON.stringify(populations[r2], replacer),
-              classes
+              classes,
             ])
           );
         }
@@ -133,8 +130,16 @@ export const RUN_EA = {
       arr_promisses = [];
       populations.map((mutant) => {
         if (Math.random() < p_mutation) {
-          arr_promisses.push(pool.exec('workMutation', [JSON.stringify(mutant, replacer),
-          (populations.length * p_genes) / populations.length, max_day, max_pair, audiences, classes]));
+          arr_promisses.push(
+            pool.exec("workMutation", [
+              JSON.stringify(mutant, replacer),
+              (populations.length * p_genes) / populations.length,
+              max_day,
+              max_pair,
+              audiences,
+              classes,
+            ])
+          );
         }
       });
       await Promise.all(arr_promisses).then((res) => {
@@ -171,7 +176,7 @@ export const RUN_EA = {
       });
       let elit = new Array(num_elit);
       for (let j = 0; j < num_elit; j++) {
-        elit[j] = { schedule: populations[j].schedule.map(sc => Object.assign({}, sc)), fitnessValue: cloneDeep(populations[j].fitnessValue) };
+        elit[j] = cloneDeep(populations[j]);
       }
       // Отбор
       let new_populations = [];
@@ -194,7 +199,9 @@ export const RUN_EA = {
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
               new_populations.push({
-                schedule: populations[index].schedule.map(sc => Object.assign({}, sc)),
+                schedule: populations[index].schedule.map((sc) =>
+                  Object.assign({}, sc)
+                ),
                 fitnessValue: cloneDeep(populations[index].fitnessValue),
               });
             });
@@ -233,7 +240,9 @@ export const RUN_EA = {
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
               new_populations.push({
-                schedule: populations[index].schedule.map(sc => Object.assign({}, sc)),
+                schedule: populations[index].schedule.map((sc) =>
+                  Object.assign({}, sc)
+                ),
                 fitnessValue: cloneDeep(populations[index].fitnessValue),
               });
             });
@@ -250,10 +259,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
@@ -276,5 +285,5 @@ export const RUN_EA = {
         message: `Total Fitness: ${bestPopulation.fitnessValue}`,
       };
     else return { successful: false, message: `Some error` };
-  }
-}
+  },
+};
