@@ -1,4 +1,4 @@
-import cloneDeep from "clone-deep"
+import cloneDeep from "clone-deep";
 export default function MinFitnessValue(populations, bestPopulation) {
   let min = Number.MAX_VALUE;
   let min_index;
@@ -10,7 +10,10 @@ export default function MinFitnessValue(populations, bestPopulation) {
   }
 
   if (bestPopulation.fitnessValue > min) {
-    return { schedule: Object.assign({}, populations[min_index].schedule), fitnessValue: cloneDeep(populations[min_index].fitnessValue) };
+    return {
+      schedule: cloneDeep(populations[min_index].scheduleForGroups),
+      fitnessValue: cloneDeep(populations[min_index].fitnessValue),
+    };
   }
   return bestPopulation;
 }

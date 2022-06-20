@@ -198,12 +198,7 @@ export const RUN_EA = {
           }
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
-              new_populations.push({
-                schedule: populations[index].schedule.map((sc) =>
-                  Object.assign({}, sc)
-                ),
-                fitnessValue: cloneDeep(populations[index].fitnessValue),
-              });
+              new_populations.push(cloneDeep(populations[index]));
             });
           });
           break;
@@ -222,11 +217,11 @@ export const RUN_EA = {
               index: i1,
             };
             const population2 = {
-              fitnessValue: populations[i1].fitnessValue,
+              fitnessValue: populations[i2].fitnessValue,
               index: i2,
             };
             const population3 = {
-              fitnessValue: populations[i1].fitnessValue,
+              fitnessValue: populations[i3].fitnessValue,
               index: i3,
             };
             arr_promisses.push(
@@ -239,12 +234,7 @@ export const RUN_EA = {
           }
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
-              new_populations.push({
-                schedule: populations[index].schedule.map((sc) =>
-                  Object.assign({}, sc)
-                ),
-                fitnessValue: cloneDeep(populations[index].fitnessValue),
-              });
+              new_populations.push(populations[index]);
             });
           });
           break;
