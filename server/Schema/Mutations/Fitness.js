@@ -1,5 +1,5 @@
 import db from "../../database.js";
-import Fitness from "../../EvalutionAlghoritm/Fitness.js";
+import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
 import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
 import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
@@ -51,7 +51,7 @@ export const CALC_FITNESS = {
     let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
     // Структура для каждого учителя массив закрепленных для него занятий
     let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
-    let schedule = await db.schedule.findAll({
+    let scheduleData = await db.schedule.findAll({
       include: [
         {
           model: db.assigned_group,
@@ -104,7 +104,16 @@ export const CALC_FITNESS = {
         },
       ],
     });
-    schedule = schedule.map((s) => {
+    let scheduleForGroups = new Map();
+    let scheduleForTeachers = new Map();
+    let scheduleForAudiences = new Map();
+    let schedule = {
+      scheduleForGroups,
+      scheduleForTeachers,
+      scheduleForAudiences,
+      fitnessValue: null,
+    };
+    scheduleData = scheduleData.map((s) => {
       return Object.assign(s.toJSON(), { clas: s.assigned_group.class });
     });
     let fitnessValue = Fitness(

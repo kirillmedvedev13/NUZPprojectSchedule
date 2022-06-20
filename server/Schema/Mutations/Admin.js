@@ -5,15 +5,14 @@ import MessageType from "../TypeDefs/MessageType.js";
 function GetSemester(group, isAutumn) {
   const date = new Date();
   let semester;
-  if (group.length >= 3) { // все группы
+  if (group.length >= 3) {
+    // все группы
     semester =
-      Number(date.getFullYear().toString().charAt(3)) -
-      Number(group.charAt(2)); // Год вступления, что бы узнать семестр для дисциплины
-  }
-  else if (group.charAt(0) === "А") { // аспиранты
+      Number(date.getFullYear().toString().charAt(3)) - Number(group.charAt(2)); // Год вступления, что бы узнать семестр для дисциплины
+  } else if (group.charAt(0) === "А") {
+    // аспиранты
     semester =
-      Number(date.getFullYear().toString().charAt(3)) -
-      Number(group.charAt(1)); // Год вступления, что бы узнать семестр для дисциплины
+      Number(date.getFullYear().toString().charAt(3)) - Number(group.charAt(1)); // Год вступления, что бы узнать семестр для дисциплины
   }
   if (semester < 0) {
     semester = 10 + semester;
@@ -28,7 +27,8 @@ function GetSemester(group, isAutumn) {
   }
   //текущий курс перевести в семестр
   semester *= 2;
-  if (isAutumn) { // если осенний семестр
+  if (isAutumn) {
+    // если осенний семестр
     semester--;
   }
   return semester;
@@ -62,7 +62,7 @@ export const SET_CLASSES = {
         include: {
           model: db.cathedra,
           required: true,
-        }
+        },
       });
       let teachers = await db.teacher.findAll();
       let cathedras = await db.cathedra.findAll();
@@ -86,12 +86,12 @@ export const SET_CLASSES = {
           },
         },
       });
-      audiences = audiences.map(a => a.toJSON());
-      groups = groups.map(g => g.toJSON());
-      cathedras = cathedras.map(c => c.toJSON());
-      teachers = teachers.map(t => t.toJSON());
-      specialties = specialties.map(s => s.toJSON());
-      disciplines = disciplines.map(d => d.toJSON());
+      audiences = audiences.map((a) => a.toJSON());
+      groups = groups.map((g) => g.toJSON());
+      cathedras = cathedras.map((c) => c.toJSON());
+      teachers = teachers.map((t) => t.toJSON());
+      specialties = specialties.map((s) => s.toJSON());
+      disciplines = disciplines.map((d) => d.toJSON());
 
       for (const clas of classes) {
         const semester = GetSemester(clas.groups[0]);
@@ -99,14 +99,15 @@ export const SET_CLASSES = {
         // поиск кафедры
         let cathedra = null;
         cathedra = cathedras.find((cath) => {
-          return cath.id === id_cathedra
+          return cath.id === id_cathedra;
         });
         // Поиск специальности
         let specialty = null;
-        specialty = specialties.find((spec) =>
-          spec.code === code_spec && spec.id_cathedra === id_cathedra
+        specialty = specialties.find(
+          (spec) => spec.code === code_spec && spec.id_cathedra === id_cathedra
         );
-        if (!specialty) { // Специальность не найдена, её нужно создать
+        if (!specialty) {
+          // Специальность не найдена, её нужно создать
           specialty = await db.specialty.create({
             name: cathedra.short_name + " - " + String(code_spec),
             id_cathedra,
@@ -125,22 +126,21 @@ export const SET_CLASSES = {
         if (!discipline) {
           discipline = await db.discipline.create({
             name: clas.discipline,
-          })
+          });
           discipline = discipline.toJSON();
           discipline.assigned_disciplines = [];
           disciplines.push(discipline);
         }
         // Поиск закрепленной дисциплины в бд
         let ad = discipline.assigned_disciplines.find((ad) => {
-          return ad.semester === semester &&
-            ad.id_specialty === specialty.id
+          return ad.semester === semester && ad.id_specialty === specialty.id;
         });
         // Если закрепленной дисциплины нету, её нужно добавить
         if (!ad) {
           ad = await db.assigned_discipline.create({
             id_specialty: specialty.id,
             id_discipline: discipline.id,
-            semester
+            semester,
           });
           ad = ad.toJSON();
           discipline.assigned_disciplines.push(ad);
@@ -156,11 +156,13 @@ export const SET_CLASSES = {
           let teacher = null;
           // Поиск учителя в бд
           teacher = teachers.find((teach) => {
-            return teach.surname === surname &&
+            return (
+              teach.surname === surname &&
               teach.name.charAt(0) === name.charAt(0) &&
               teach.patronymic.charAt(0) === patronymic.charAt(0) &&
               teach.id_cathedra === id_cathedra
-          })
+            );
+          });
           // Если учитель не найден в бд
           if (!teacher) {
             teacher = await db.teacher.create({
@@ -180,7 +182,7 @@ export const SET_CLASSES = {
           let audience = null;
           audience = audiences.find((aud) => {
             return aud.name === name_audience;
-          })
+          });
           // Если не найденна аудитория в бд
           if (!audience) {
             audience = await db.audience.create({
@@ -200,17 +202,19 @@ export const SET_CLASSES = {
           let specialty = null;
           const code_spec = GetCodeSpec(group_name);
           group = groups.find((grp) => {
-            return grp.name === group_name
-              && grp.specialty.cathedra.short_name === clas.short_name_cathedra
-              && grp.specialty.code === code_spec
-          })
+            return (
+              grp.name === group_name &&
+              grp.specialty.cathedra.short_name === clas.short_name_cathedra &&
+              grp.specialty.code === code_spec
+            );
+          });
           // Если не найдена группа
           if (!group) {
             // Поиск кафедры
             let cathedra = null;
             cathedra = cathedras.find((cath) => {
               return cath.short_name === clas.short_name_cathedra;
-            })
+            });
             // если кафедра не найденa
             if (!cathedra) {
               cathedra = await db.cathedra.create({
@@ -223,10 +227,13 @@ export const SET_CLASSES = {
             // Поиск специальности
             specialty = null;
             specialty = specialties.find((spec) => {
-              return spec.code === code_spec
-                && spec.id_cathedra === cathedra.id
-            })
+              return (
+                spec.code === code_spec && spec.id_cathedra === cathedra.id
+              );
+            });
             // если специальность не найденна в бд
+            if (!code_spec) {
+            }
             if (!specialty) {
               specialty = await db.specialty.create({
                 name: cathedra.name + " - " + String(code_spec),
@@ -251,10 +258,11 @@ export const SET_CLASSES = {
           }
           arr_groups_ids.push(group.id);
         }
+
         // Создание занятий
         const new_class = await db.class.create({
           id_type_class: clas.type_class,
-          times_per_week: clas.numberClasses,
+          times_per_week: clas.times_per_week,
           id_assigned_discipline,
         });
         const id_class = new_class.dataValues.id;

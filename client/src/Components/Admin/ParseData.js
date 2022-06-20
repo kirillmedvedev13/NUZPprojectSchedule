@@ -6,7 +6,7 @@ export default async function ParseData(sheet) {
   let firstRow = false; //Что бы пропускать первую строку с счётчиком
   for (let i = 0; i < sheet.length; i++) {
     // Проход по строкам
-    let lesson = {};
+    let clas = {};
 
     if (sheet[i][1] === "№\nз/п") {
       columnKey = GetColumKey(sheet[i]);
@@ -24,49 +24,47 @@ export default async function ParseData(sheet) {
         firstRow = true;
         continue;
       }
-      const checkLesson = CompareClasses(sheet[i - 1], sheet[i]);
-      if (!checkLesson) {
+      const checkClass = CompareClasses(sheet[i - 1], sheet[i]);
+      if (!checkClass) {
         // если пред строка не равна текущей
         for (let j = 1; j <= 12; j++) {
           let key = columnKey[j] ? columnKey[j] : null;
           if (
             key === "audiences" &&
             !sheet[i][j] &&
-            !lesson.hasOwnProperty("audiences")
+            !clas.hasOwnProperty("audiences")
           ) {
-            lesson[key] = [];
+            clas[key] = [];
           }
           if (key && sheet[i][j]) {
             switch (key) {
               case "groups":
-                let groups = sheet[i][j].split("-");
-                lesson[key] = groups[1].split(/[,|+|;]/);
-                lesson["short_name_cathedra"] = groups[0];
+                let groups = sheet[i][j].split("-").filter((gr) => gr !== "");
+                clas[key] = groups[1].split(/[,|+|;]/);
+                clas["short_name_cathedra"] = groups[0];
                 break;
               case "audiences":
                 let aud = String(sheet[i][j]);
-                lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
+                clas[key] = aud.indexOf(".") ? aud.split(".") : aud;
                 break;
               case "type_class":
                 if (sheet[i][j] === "лекції" || sheet[i][j] === "лк")
-                  lesson[key] = 1;
-                else lesson[key] = 2;
+                  clas[key] = 1;
+                else clas[key] = 2;
                 break;
               case "teachers":
                 let temp = [];
                 let teach = String(sheet[i][j]);
                 teach = teach.indexOf("\n") ? teach.replace("\n", "") : teach;
                 temp.push(teach);
-                lesson[key] = temp;
+                clas[key] = temp;
                 break;
               case "discipline":
                 let disc = String(sheet[i][j]);
-                lesson[key] = disc.indexOf("\n")
-                  ? disc.replace("\n", "")
-                  : disc;
+                clas[key] = disc.indexOf("\n") ? disc.replace("\n", "") : disc;
                 break;
               default:
-                lesson[key] = sheet[i][j];
+                clas[key] = sheet[i][j];
                 break;
             }
           }
@@ -77,7 +75,7 @@ export default async function ParseData(sheet) {
             lesson.short_name_cathedra
           );
           console.log(lesson.short_name_cathedra == "КНТ");*/
-        classes.push(lesson);
+        classes.push(clas);
       } else {
         // если пред строка равна текущей
         let prev = classes[classes.length - 1];
@@ -120,7 +118,7 @@ function GetColumKey(row) {
           columnKey[j] = "type_class";
 
           break;
-      
+
         case 6:
           if (row[j] === "Кількість годин на тиждень за видом занять")
             columnKey[j] = "times_per_week";
@@ -133,7 +131,7 @@ function GetColumKey(row) {
           if (row[j] === "Пропозиції до складання розкладу занять")
             columnKey[j] = "audiences";
           break;
-        
+
         default:
           break;
       }
