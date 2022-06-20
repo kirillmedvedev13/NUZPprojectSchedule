@@ -2,11 +2,9 @@ import reviver from "./JSONReviver.js";
 
 export default function Fitness(
   schedule,
-  clas,
-  penaltySameTimesSc,
   penaltyGrWin,
-  penaltyTeachWin,
-  penaltySameRecSchedules
+  penaltySameTimesSc,
+  penaltyTeachWin
 ) {
   schedule = JSON.parse(schedule, reviver);
   for (let value of schedule.scheduleForGroups.values()) sortSchedule(value);

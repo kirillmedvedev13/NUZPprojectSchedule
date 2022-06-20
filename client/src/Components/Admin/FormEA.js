@@ -22,9 +22,9 @@ function ButtonUpdateInfo({ info }) {
         onClick={(e) => {
           if (data.length === 0) return;
           else
-            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(res =>
-              CreateNotification(res.data.UpdateInfo)
-            )
+            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(
+              (res) => CreateNotification(res.data.UpdateInfo)
+            );
         }}
       >
         Оновити данi
@@ -33,7 +33,9 @@ function ButtonUpdateInfo({ info }) {
   );
 }
 function ButtonGetFitness() {
-  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS, { refetchQueries: GET_INFO });
+  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS, {
+    refetchQueries: GET_INFO,
+  });
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
@@ -41,14 +43,12 @@ function ButtonGetFitness() {
       <Button
         className="col-12"
         onClick={() => {
-          CalcFitness().then(res =>
-            CreateNotification(res.data.CalcFitness)
-          )
+          CalcFitness().then((res) => CreateNotification(res.data.CalcFitness));
         }}
       >
         Порахувати значення фiтнес
       </Button>
-    </div >
+    </div>
   );
 }
 
@@ -75,7 +75,9 @@ function DataForm({ handleChangeInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Максимальна кiлькiсть iтерацiй</Form.Label>
+        <Form.Label className="col-5">
+          Максимальна кiлькiсть iтерацiй
+        </Form.Label>
         <Col>
           <Form.Control
             defaultValue={data.GetInfo.max_generations}
@@ -270,7 +272,11 @@ function DataForm({ handleChangeInfo }) {
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Фітнес значення</Form.Label>
         <Col>
-          <p>{data.GetInfo.fitness_value}</p>
+          <div>
+            {data.GetInfo.fitness_value.split("\\n").map((str) => {
+              return <p>{str}</p>;
+            })}
+          </div>
         </Col>
       </Form.Group>
     </>
@@ -282,9 +288,7 @@ export default class FormEA extends React.Component {
     const { handleChangeInfo, info } = this.props;
     return (
       <Form>
-        <DataForm
-          handleChangeInfo={handleChangeInfo}
-        ></DataForm>
+        <DataForm handleChangeInfo={handleChangeInfo}></DataForm>
         <ButtonUpdateInfo info={info}></ButtonUpdateInfo>
         <ButtonGetFitness></ButtonGetFitness>
       </Form>

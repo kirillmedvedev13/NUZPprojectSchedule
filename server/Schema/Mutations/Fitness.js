@@ -3,6 +3,8 @@ import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
 import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
 import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
+import AddClassToSchedule from "../../EvalutionAlghoritm2/AddClassToSchedule.js";
+import replacer from "../../EvalutionAlghoritm2/JSONReplacer.js";
 
 export const CALC_FITNESS = {
   type: MessageType,
@@ -17,19 +19,18 @@ export const CALC_FITNESS = {
       include: [
         {
           model: db.assigned_group,
-          required: true,
           include: {
             model: db.group,
-            required: true,
           },
         },
         {
           model: db.assigned_teacher,
-          required: true,
         },
         {
           model: db.recommended_audience,
-          required: true,
+        },
+        {
+          model: db.recommended_schedule,
         },
         {
           model: db.assigned_discipline,
@@ -47,10 +48,6 @@ export const CALC_FITNESS = {
         model: db.assigned_teacher,
       },
     });
-    // Структура для каждой группы массив закрепленных для неё занятий
-    let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
-    // Структура для каждого учителя массив закрепленных для него занятий
-    let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
     let scheduleData = await db.schedule.findAll({
       include: [
         {
@@ -114,26 +111,43 @@ export const CALC_FITNESS = {
       fitnessValue: null,
     };
     scheduleData = scheduleData.map((s) => {
-      return Object.assign(s.toJSON(), { clas: s.assigned_group.class });
+      return Object.assign(s.toJSON(), {
+        clas: classes.filter((cl) => cl.id === s.assigned_group.class.id)[0]
+          .dataValues,
+      });
     });
+    for (let sch of scheduleData) {
+      AddClassToSchedule(
+        schedule,
+        sch.clas,
+        sch.day_week,
+        sch.number_pair,
+        sch.pair_type,
+        sch.audience.id
+      );
+    }
     let fitnessValue = Fitness(
-      schedule,
-      mapTeacherAndAG,
-      mapGroupAndAG,
+      JSON.stringify(schedule, replacer),
       penaltyGrWin,
-      penaltyLateSc,
-      penaltyEqSc,
       penaltySameTimesSc,
       penaltyTeachWin
     );
+    let stringFitness = `Фітнес значення: 
+    Загальне - ${fitnessValue.fitnessValue}
+    Групи: вікна - ${fitnessValue.fitnessGr.fitnessGrWin},
+           накладки - ${fitnessValue.fitnessGr.fitnessSameTimesSc},
+           загальне - ${fitnessValue.fitnessGr.fitnessValue}
+    Викладачів: вікна - ${fitnessValue.fitnessTeach.fitnessTeachWin},
+           накладки - ${fitnessValue.fitnessTeach.fitnessSameTimesSc},
+           загальне - ${fitnessValue.fitnessTeach.fitnessValue}`;
     const res = await db.info.update(
-      { fitness_value: JSON.stringify(fitnessValue) },
+      { fitness_value: JSON.stringify(stringFitness) },
       { where: { id: 1 } }
     );
     return res[0]
       ? {
           successful: true,
-          message: "Фітнес значення розкладу - " + fitnessValue,
+          message: stringFitness,
         }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },

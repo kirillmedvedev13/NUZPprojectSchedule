@@ -247,27 +247,28 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
     await db.schedule.destroy({ truncate: true });
     //Вставка в бд
     let arr = [];
-    for (let value of schedule.scheduleForGroups) {
-      arr.push(...value.map((schedule) => {
-        return {
-          number_pair: schedule.number_pair,
-          day_week: schedule.day_week,
-          pair_type: schedule.pair_type,
-          id_assigned_group: schedule.id_assigned_group,
-          id_audience: schedule.id_audience,
-        };
-      })
-      )
+    for (let value of populations[0].scheduleForGroups.values()) {
+      arr.push(
+        ...value.map((schedule) => {
+          return {
+            number_pair: schedule.number_pair,
+            day_week: schedule.day_week,
+            pair_type: schedule.pair_type,
+            id_assigned_group: schedule.id_assigned_group,
+            id_audience: schedule.id_audience,
+          };
+        })
+      );
     }
     let isBulk = await db.schedule.bulkCreate(arr);
     if (isBulk)
