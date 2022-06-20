@@ -48,7 +48,8 @@ export default async function ParseData(sheet) {
                 lesson[key] = aud.indexOf(".") ? aud.split(".") : aud;
                 break;
               case "type_class":
-                if (sheet[i][j] === "лекції") lesson[key] = 1;
+                if (sheet[i][j] === "лекції" || sheet[i][j] === "лк")
+                  lesson[key] = 1;
                 else lesson[key] = 2;
                 break;
               case "teachers":
@@ -120,8 +121,8 @@ function GetColumKey(row) {
 
           break;
         case 5:
-          if (row[j] === "Загальна кількість годин за видом занять")
-            columnKey[j] = "numberClasses";
+          if (row[j] === "Кількість годин на тиждень за видом занять")
+            columnKey[j] = "times_per_week";
           else columnKey[j] = "audiences";
           break;
         case 6:
@@ -139,13 +140,13 @@ function GetColumKey(row) {
             columnKey[j] = "audiences";
           break;
         case 10:
-          if (row[j] === "Лекції") columnKey[j] = "numberClasses";
+          if (row[j] === "Лекції") columnKey[j] = "times_per_week";
           break;
         case 11:
-          if (row[j] === "Практичні") columnKey[j] = "numberClasses";
+          if (row[j] === "Практичні") columnKey[j] = "times_per_week";
           break;
         case 12:
-          if (row[j] === "Лабораторні") columnKey[j] = "numberClasses";
+          if (row[j] === "Лабораторні") columnKey[j] = "times_per_week";
           break;
         default:
           break;
