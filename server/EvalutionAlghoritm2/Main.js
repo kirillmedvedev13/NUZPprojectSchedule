@@ -5,8 +5,6 @@ import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
 import GetRndInteger from "./GetRndInteger.js";
 import { cpus } from "node:os";
-import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
-import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
 import workerpool from "workerpool";
 import cloneDeep from "clone-deep";
 import replacer from "./JSONReplacer.js";
@@ -249,17 +247,18 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
     await db.schedule.destroy({ truncate: true });
     //Вставка в бд
-    let isBulk = await db.schedule.bulkCreate(
-      bestPopulation.schedule.map((schedule) => {
+    let arr = [];
+    for (let value of schedule.scheduleForGroups) {
+      arr.push(...value.map((schedule) => {
         return {
           number_pair: schedule.number_pair,
           day_week: schedule.day_week,
@@ -268,7 +267,9 @@ export const RUN_EA = {
           id_audience: schedule.id_audience,
         };
       })
-    );
+      )
+    }
+    let isBulk = await db.schedule.bulkCreate(arr);
     if (isBulk)
       return {
         successful: true,

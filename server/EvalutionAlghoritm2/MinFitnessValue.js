@@ -11,7 +11,7 @@ export default function MinFitnessValue(populations, bestPopulation) {
 
   if (bestPopulation.fitnessValue > min) {
     return {
-      schedule: cloneDeep(populations[min_index].scheduleForGroups),
+      scheduleForGroups: cloneDeep(populations[min_index].scheduleForGroups),
       fitnessValue: cloneDeep(populations[min_index].fitnessValue),
     };
   }
