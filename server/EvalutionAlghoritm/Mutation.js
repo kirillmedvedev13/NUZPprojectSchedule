@@ -13,7 +13,7 @@ export default function Mutation(schedule,
   mapGroupAndAG,
   mapTeacherAndAG
 ) {
-  schedule = schedule.map(sc => Object.assign({}, sc));
+  let new_schedule = schedule.map(sc => Object.assign({}, sc));;
   schedule.map((sch) => {
     if (Math.random() < p_genes) {
       // Получить занятия для расписания
@@ -21,7 +21,7 @@ export default function Mutation(schedule,
       let pair_types = GetPairTypeForClass(clas);
       //  удалить занятие у всех групп
       let ids_ag = clas.assigned_groups.map(ag => { return ag.id });
-      schedule = schedule.filter(sc => {
+      new_schedule = new_schedule.filter(sc => {
         if (ids_ag.find(id => id === sc.id_assigned_group))
           return false;
         else
@@ -43,22 +43,22 @@ export default function Mutation(schedule,
           if (index > 1000)
             break;
           // Если есть рек время, то не выбирать случайно
-          if (clas.recommended_schedule[i]) {
-            day_week = clas.recommended_schedule[i].day_week;
-            number_pair = clas.recommended_schedule[i].number_pair;
+          if (clas.recommended_schedules[i]) {
+            day_week = clas.recommended_schedules[i].day_week;
+            number_pair = clas.recommended_schedules[i].number_pair;
           }
           else {
             day_week = GetRndInteger(1, max_day);
             number_pair = GetRndInteger(1, max_pair);
           }
           id_audience = GetIdAudienceForClass(clas, audiences);
-          checkAud = CheckPutClassForAudience(id_audience, schedule, day_week, number_pair, pair_type);
-          checkTeach = CheckPutClassForTeacher(clas, schedule, day_week, number_pair, pair_type, mapTeacherAndAG);
-          checkGroup = CheckPutClassForGroup(clas, schedule, day_week, number_pair, pair_type, mapGroupAndAG);
+          checkAud = CheckPutClassForAudience(id_audience, new_schedule, day_week, number_pair, pair_type);
+          checkTeach = CheckPutClassForTeacher(clas, new_schedule, day_week, number_pair, pair_type, mapTeacherAndAG);
+          checkGroup = CheckPutClassForGroup(clas, new_schedule, day_week, number_pair, pair_type, mapGroupAndAG);
         }
         // вставить в расписание для всех групп
         clas.assigned_groups.map(ag => {
-          schedule.push({
+          new_schedule.unshift({
             number_pair,
             day_week,
             pair_type,
@@ -71,5 +71,5 @@ export default function Mutation(schedule,
       }
     }
   });
-  return schedule;
+  return new_schedule;
 }

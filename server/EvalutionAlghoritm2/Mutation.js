@@ -1,47 +1,51 @@
-import CheckPutClassForAudience from "./CheckPutClassForAudience.js";
-import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js";
-import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js";
-import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
-import GetIdAudienceForClassLecture from "./GetIdAudienceForClassLecture.js";
-import GetIdAudienceForClassPractice from "./GetIdAudienceForClassPractice.js";
+import GetIdAudienceForClass from "./GetIdAudienceForClass.js";
 import GetPairTypeForClass from "./GetPairTypeForClass.js";
 import GetRndInteger from "./GetRndInteger.js";
+import CheckPutClassForAudience from "./CheckPutClassForAudience.js";
+import CheckPutClassForGroup from "./CheckPutClassForGroup.js";
+import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
+import reviver from "./JSONReviver.js";
+import replacer from "./JSONReplacer.js";
+import AddClassToSchedule from "./AddClassToSchedule.js";
 
-export default function Mutation(
-  individ_schedule,
+export default function Mutation(schedule,
   p_genes,
   max_day,
   max_pair,
   audiences,
-  mapGroupAndAG,
-  mapTeacherAndAG
+  classes
 ) {
-  individ_schedule.map((sch) => {
+  schedule = JSON.parse(schedule, reviver);
+  classes.forEach(clas => {
     if (Math.random() < p_genes) {
       // Получить занятия для расписания
-      let clas = sch.clas;
       let pair_types = GetPairTypeForClass(clas);
-      // Если лекция, то удалить эти лекции у всех групп
-      if (clas.id_type_class === 1) {
-        let ids_ag = clas.assigned_groups.map(ag => { return ag.id });
-        individ_schedule = individ_schedule.filter(sc => {
-          if (ids_ag.find(id => id === sc.id_assigned_group))
+      //  удалить занятие у всех расписаний
+      let isFirst = false;
+      let ids_audiences = new Set();
+      clas.assigned_groups.forEach(ag => {
+        let temp = schedule.scheduleForGroups.get(ag.id_group);
+        temp = temp.filter(sch => {
+          if (sch.id_class !== clas.id)
+            return true
+          if (!isFirst) {
+            ids_audiences.add(sch.id_audience)
             return false;
-          else
-            return true;
-        })
-      }
-      // Если практика, то удалить практики только у одной группы
-      else if (clas.id_type_class === 2) {
-        individ_schedule = individ_schedule.filter(sc => {
-          if (sc.id_assigned_group === sch.id_assigned_group)
-            return false;
-          else
-            return true;
-        })
-      }
-      let ag = sch.clas.assigned_groups.find(ag => ag.id === sch.id_assigned_group);
-      let group = ag.group;
+          }
+        });
+        isFirst = true;
+        schedule.scheduleForGroups.set(ag.id_group, temp);
+      })
+      clas.assigned_teachers.forEach(at => {
+        let temp = schedule.scheduleForTeachers.get(at.id_teacher);
+        temp = temp.filter(sch => sch.id_class !== clas.id);
+        schedule.scheduleForTeachers.set(at.id_teacher, temp);
+      })
+      ids_audiences.forEach(id_audience => {
+        let temp = schedule.scheduleForAudiences.get(id_audience);
+        temp = temp.filter(sch => sch.id_class !== clas.id);
+        schedule.scheduleForAudiences.set(id_audience, temp);
+      })
       for (let i = 0; i < pair_types.length; i++) {
         let pair_type = pair_types[i];
         let checkAud = false;
@@ -50,45 +54,31 @@ export default function Mutation(
         let day_week = null;
         let number_pair = null;
         let id_audience = null;
+        let index = 0;
         // Пока все условия не сойдутся, рандомно выбирать параметры
         while (!checkAud || !checkTeach || !checkGroup) {
-          day_week = GetRndInteger(0, max_day);
-          number_pair = GetRndInteger(0, max_pair);
-          id_audience = clas.id_type_class === 1
-            ? GetIdAudienceForClassLecture(clas, audiences)
-            : GetIdAudienceForClassPractice(group.capacity, clas, audiences);
-          checkAud = CheckPutClassForAudience(id_audience, individ_schedule, day_week, number_pair, pair_type);
-          checkTeach = CheckPutClassForTeacher(clas, individ_schedule, day_week, number_pair, pair_type, mapTeacherAndAG);
-          checkGroup = clas.id_type_class === 1
-            ? CheckPutClassForGroupLecture(clas, individ_schedule, day_week, number_pair, pair_type, mapGroupAndAG)
-            : CheckPutClassForGroupPractice(group.id, individ_schedule, day_week, number_pair, pair_type, mapGroupAndAG)
+          index++;
+          if (index > 1000)
+            break;
+          // Если есть рек время, то не выбирать случайно
+          if (clas.recommended_schedules[i]) {
+            day_week = clas.recommended_schedules[i].day_week;
+            number_pair = clas.recommended_schedules[i].number_pair;
+          }
+          else {
+            day_week = GetRndInteger(1, max_day);
+            number_pair = GetRndInteger(1, max_pair);
+          }
+          id_audience = GetIdAudienceForClass(clas, audiences);
+          checkAud = CheckPutClassForAudience(schedule.scheduleForAudiences.get(id_audience), day_week, number_pair, pair_type);
+          checkTeach = CheckPutClassForTeacher(schedule.scheduleForTeachers, clas, day_week, number_pair, pair_type);
+          checkGroup = CheckPutClassForGroup(schedule.scheduleForGroups, clas, day_week, number_pair, pair_type);
         }
-        // Если лекция то вставить в расписание для всех групп
-        if (clas.id_type_class === 1) {
-          clas.assigned_groups.map(ag => {
-            individ_schedule.unshift({
-              number_pair,
-              day_week,
-              pair_type,
-              id_assigned_group: ag.id,
-              id_audience,
-              clas,
-            });
-          })
-        }
-        // Если практика то вставить в расисание только для 1 группы
-        else if (clas.id_type_class === 2) {
-          individ_schedule.unshift({
-            number_pair,
-            day_week,
-            pair_type,
-            id_assigned_group: ag.id,
-            id_audience,
-            clas,
-          });
-        }
+        // вставить в расписание для всех групп
+        AddClassToSchedule(schedule, clas, day_week, number_pair, pair_types[i], id_audience);
       }
     }
-  });
-  return individ_schedule;
+  })
+
+  return JSON.stringify(schedule, replacer);
 }

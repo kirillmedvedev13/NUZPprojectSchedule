@@ -1,6 +1,4 @@
-import cloneDeep from "lodash/clonedeep.js";
-
-
+import cloneDeep from "clone-deep"
 export default function MinFitnessValue(populations, bestPopulation) {
   let min = Number.MAX_VALUE;
   let min_index;
@@ -12,7 +10,7 @@ export default function MinFitnessValue(populations, bestPopulation) {
   }
 
   if (bestPopulation.fitnessValue > min) {
-    return { schedule: populations[min_index].schedule.slice(0), fitnessValue: populations[min_index].fitnessValue };
+    return { schedule: Object.assign({}, populations[min_index].schedule), fitnessValue: cloneDeep(populations[min_index].fitnessValue) };
   }
   return bestPopulation;
 }

@@ -1,8 +1,8 @@
-export default function CheckPutClassForTeacher(schedules, clas, day_week, number_pair, pair_type) {
-    // Поиск нету ли занятий в случаную пару для учителей переданого занятия
+export default function CheckPutClassForGroup(schedules, clas, day_week, number_pair, pair_type) {
+    // Поиск нету ли занятий в случаную пару для групп переданого занятия
     let isSuitableTime = false;
-    for (const at of clas.assigned_teachers) {
-        isSuitableTime = schedules.get(at.id_teacher).find((sch) => {
+    for (const ag of clas.assigned_groups) {
+        isSuitableTime = schedules.get(ag.id_group).find((sch) => {
             if (sch.day_week === day_week && sch.number_pair === number_pair) {
                 // Если нужно вставить занятие по числ, то проверяется знам в расписании 
                 if (pair_type === 1 && sch.pair_type === 2)
@@ -18,7 +18,7 @@ export default function CheckPutClassForTeacher(schedules, clas, day_week, numbe
         if (isSuitableTime)
             break;
     }
-    // Если в это время нету пар для всех учителей, то возвращается тру
-    if (!isSuitableTime) return true
-    else return false
+    // Если в это время нету пар для всех групп, то возвращается тру
+    if (isSuitableTime) return false
+    else return true
 }

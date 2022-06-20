@@ -16,11 +16,11 @@ export default function Crossing(schedule1, schedule2, classes) {
     new_schedule1.push(...temp2);
     new_schedule2.push(...temp1);
     const population_child1 = {
-      schedule: current_schedule1,
+      schedule: new_schedule1,
       fitnessValue: null,
     };
     const population_child2 = {
-      schedule: current_schedule2,
+      schedule: new_schedule2,
       fitnessValue: null,
     };
     return { population_child1, population_child2 };

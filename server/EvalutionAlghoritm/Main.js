@@ -8,6 +8,7 @@ import { cpus } from "node:os";
 import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
 import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
 import workerpool from "workerpool";
+import cloneDeep from "clone-deep";
 
 export const RUN_EA = {
   type: MessageType,
@@ -163,8 +164,10 @@ export const RUN_EA = {
         if (p1.fitnessValue < p2.fitnessValue) return -1;
         return 0;
       });
-      let elit = populations.slice(0, num_elit);
-      elit = elit.map((p) => JSON.parse(JSON.stringify(p)));
+      let elit = new Array(num_elit);
+      for (let j = 0; j < num_elit; j++) {
+        elit[j] = { schedule: populations[j].schedule.map(sc => Object.assign({}, sc)), fitnessValue: cloneDeep(populations[j].fitnessValue) };
+      }
       // Отбор
       let new_populations = [];
       arr_promisses = [];
@@ -186,8 +189,8 @@ export const RUN_EA = {
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
               new_populations.push({
-                schedule: populations[index].schedule.slice(0),
-                fitnessValue: populations[index].fitnessValue,
+                schedule: populations[index].schedule.map(sc => Object.assign({}, sc)),
+                fitnessValue: cloneDeep(populations[index].fitnessValue),
               });
             });
           });
@@ -225,8 +228,8 @@ export const RUN_EA = {
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
               new_populations.push({
-                schedule: populations[index].schedule.slice(0),
-                fitnessValue: populations[index].fitnessValue,
+                schedule: populations[index].schedule.map(sc => Object.assign({}, sc)),
+                fitnessValue: cloneDeep(populations[index].fitnessValue),
               });
             });
           });

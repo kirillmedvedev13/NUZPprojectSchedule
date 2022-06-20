@@ -5,7 +5,7 @@ export default function CheckPutClassForTeacher(clas, schedule, day_week, number
         ids_assigned_groups.push(...mapTeacherAndAG.get(at.id_teacher));
     }
     // Поиск нету ли занятий в случаную пару для учителей переданого занятия
-    let isSuitableTime = schedule.filter((sch) => {
+    let isSuitableTime = schedule.find((sch) => {
         // Сначалa проверяется подходит ли расписание по номеру пары и дню недели
         if (
             sch.number_pair === number_pair &&

@@ -1,199 +1,130 @@
 import GetRndInteger from "./GetRndInteger.js";
-import CheckPutClassForAudience from "./CheckPutClassForAudience.js";
-import CheckPutClassForGroupLecture from "./CheckPutClassForGroupLecture.js";
-import CheckPutClassForGroupPractice from "./CheckPutClassForGroupPractice.js";
-import CheckPutClassForTeacher from "./CheckPutClassForTeacher.js";
-import cloneDeep from "lodash/clonedeep.js";
+import replacer from "./JSONReplacer.js";
+import reviver from "./JSONReviver.js";
 
-export default function Crossing(
-  schedule1,
-  schedule2,
-  classes,
-  mapGroupAndAG,
-  mapTeacherAndAG,
-  population_child
-) {
-  let s = GetRndInteger(classes.length / 4, classes.length - 1);
-
-  let current_schedule1 = cloneDeep(schedule1);
-  let current_schedule2 = cloneDeep(schedule2);
-  for (let i = s; i < classes.length; i++) {
-    let type_class = classes[i].id_type_class;
-    // Если лекция, то меняется для всех групп
-    if (type_class === 1) {
-      // Закре группы для текущего занятия
-      let ids_ag = classes[i].assigned_groups.map((ag) => {
-        return ag.id;
-      });
-      let { new_schedule1, new_schedule2, temp1, temp2 } = changeSchedule(
-        ids_ag,
-        current_schedule1,
-        current_schedule2
-      );
-      // Проверка на то можно ли вставить выбранные предметы из 1 во 2 расписание и наоборот
-      let canPut1 = checkPutLecture(
-        classes[i],
-        temp1,
-        new_schedule2,
-        mapGroupAndAG,
-        mapTeacherAndAG
-      );
-      let canPut2 = checkPutLecture(
-        classes[i],
-        temp2,
-        new_schedule1,
-        mapGroupAndAG,
-        mapTeacherAndAG
-      );
-      if (canPut1 && canPut2) {
-        new_schedule1.push(...temp2);
-        new_schedule2.push(...temp1);
-        current_schedule1 = cloneDeep(new_schedule1);
-        current_schedule2 = cloneDeep(new_schedule2);
-      }
-    }
-    //Если практика, то для каждой группы отдельно
-    else if (type_class === 2) {
-      classes[i].assigned_groups.forEach((ag) => {
-        let ids_ag = [ag.id];
-        let { new_schedule1, new_schedule2, temp1, temp2 } = changeSchedule(
-          ids_ag,
-          current_schedule1,
-          current_schedule2
-        );
-        // Проверка на то можно ли вставить выбранные предметы из 1 во 2 расписание и наоборот
-        let canPut1 = checkPutPractice(
-          classes[i],
-          ag.id_group,
-          temp1,
-          new_schedule2,
-          mapGroupAndAG,
-          mapTeacherAndAG
-        );
-        let canPut2 = checkPutPractice(
-          classes[i],
-          ag.id_group,
-          temp2,
-          new_schedule1,
-          mapGroupAndAG,
-          mapTeacherAndAG
-        );
-        if (canPut1 && canPut2) {
-          new_schedule1.push(...temp2);
-          new_schedule2.push(...temp1);
-          current_schedule1 = cloneDeep(new_schedule1);
-          current_schedule2 = cloneDeep(new_schedule2);
+export default function Crossing(schedule1, schedule2, classes) {
+  let s = GetRndInteger(0, (classes.length - 1) / 2);
+  let f = GetRndInteger(0, (classes.length - 1) / 2);
+  let population_child1 = JSON.parse(schedule1, reviver)
+  let population_child2 = JSON.parse(schedule2, reviver)
+  for (let i = s; i <= s + f; i++) {
+    let id_audiences1 = new Set();
+    let id_audiences2 = new Set();
+    let isFirst = false;
+    // Обмен занятий для групп
+    classes[i].assigned_groups.forEach(ag => {
+      let tempScheduleForGroup1 = population_child1.scheduleForGroups.get(ag.id_group);
+      let temp1 = [];
+      tempScheduleForGroup1 = tempScheduleForGroup1.filter(sch => {
+        if (sch.id_class !== classes[i].id)
+          return true;
+        else {
+          temp1.push(sch)
+          return false;
         }
       });
-    }
+      let tempScheduleForGroup2 = population_child2.scheduleForGroups.get(ag.id_group);
+      let temp2 = [];
+      tempScheduleForGroup2 = tempScheduleForGroup2.filter(sch => {
+        if (sch.id_class !== classes[i].id)
+          return true;
+        else {
+          temp2.push(sch)
+          return false;
+        }
+      });
+      tempScheduleForGroup1.push(...temp2);
+      tempScheduleForGroup2.push(...temp1);
+      population_child1.scheduleForGroups.set(ag.id_group, tempScheduleForGroup1);
+      population_child2.scheduleForGroups.set(ag.id_group, tempScheduleForGroup2);
+      // Пройтись по занятиям что бы взять аудитории
+      if (!isFirst) {
+        isFirst = true;
+        temp1.forEach(sc => {
+          id_audiences1.add(sc.id_audience);
+        })
+        temp2.forEach(sc => {
+          id_audiences2.add(sc.id_audience);
+        })
+      }
+    })
+    // Обмен занятий для учителей
+    classes[i].assigned_teachers.forEach(at => {
+      let tempScheduleForTeacher1 = population_child1.scheduleForTeachers.get(at.id_teacher);
+      let temp1 = [];
+      tempScheduleForTeacher1 = tempScheduleForTeacher1.filter(sch => {
+        if (sch.id_class !== classes[i].id)
+          return true;
+        else {
+          temp1.push(sch)
+          return false;
+        }
+      });
+      let tempScheduleForTeacher2 = population_child2.scheduleForTeachers.get(at.id_teacher);
+      let temp2 = [];
+      tempScheduleForTeacher2 = tempScheduleForTeacher2.filter(sch => {
+        if (sch.id_class !== classes[i].id)
+          return true;
+        else {
+          temp2.push(sch)
+          return false;
+        }
+      });
+      tempScheduleForTeacher1.push(...temp2);
+      tempScheduleForTeacher2.push(...temp1);
+      population_child1.scheduleForTeachers.set(at.id_teacher, tempScheduleForTeacher1);
+      population_child2.scheduleForTeachers.set(at.id_teacher, tempScheduleForTeacher2);
+    })
+    // Обмен занятий для аудитории
+    let temp1 = [];
+    id_audiences1.forEach(id_audience => {
+      let scheduleForAudience1 = population_child1.scheduleForAudiences.get(id_audience);
+      let temp = [];
+      scheduleForAudience1 = scheduleForAudience1.filter(sch => {
+        if (sch.id_class !== classes[i].id)
+          return true;
+        else {
+          temp.push(sch)
+          return false;
+        }
+      });
+      population_child1.scheduleForAudiences.set(id_audience, scheduleForAudience1);
+      temp1.push(...temp);
+    })
+    let temp2 = [];
+    id_audiences2.forEach(id_audience => {
+      let scheduleForAudience2 = population_child2.scheduleForAudiences.get(id_audience);
+      let temp = [];
+      scheduleForAudience2 = scheduleForAudience2.filter(sch => {
+        if (sch.id_class !== classes[i].id)
+          return true;
+        else {
+          temp.push(sch)
+          return false;
+        }
+      });
+      population_child2.scheduleForAudiences.set(id_audience, scheduleForAudience2);
+      temp2.push(...temp);
+    })
+    id_audiences1.forEach(id_audience => {
+      let temp = temp1.filter(sch => sch.id_audience === id_audience);
+      let temp_sch = population_child2.scheduleForAudiences.get(id_audience);
+      if (!temp_sch)
+        temp_sch = [];
+      temp_sch.push(...temp);
+      population_child2.scheduleForAudiences.set(id_audience, temp_sch);
+    })
+    id_audiences2.forEach(id_audience => {
+      let temp = temp2.filter(sch => sch.id_audience === id_audience);
+      let temp_sch = population_child1.scheduleForAudiences.get(id_audience);
+      if (!temp_sch)
+        temp_sch = [];
+      temp_sch.push(...temp);
+      population_child1.scheduleForAudiences.set(id_audience, temp_sch);
+    })
   }
-  population_child.push({
-    schedule: current_schedule1,
-    fitnessValue: Number.MAX_VALUE,
-  });
-  population_child.push({
-    schedule: current_schedule2,
-    fitnessValue: Number.MAX_VALUE,
-  });
-}
-
-function changeSchedule(ids_ag, schedule1, schedule2) {
-  let temp1 = [];
-  let temp2 = [];
-  // Копия расписания 1 без предметов из ids_ag
-  let new_schedule1 = schedule1.filter((sc1) => {
-    if (ids_ag.find((id) => sc1.id_assigned_group === id)) {
-      temp1.push(sc1);
-      return false;
-    } else return true;
-  });
-  // Копия расписания 2 без предметов из ids_ag
-  let new_schedule2 = schedule2.filter((sc2) => {
-    if (ids_ag.find((id) => sc2.id_assigned_group === id)) {
-      temp2.push(sc2);
-      return false;
-    } else return true;
-  });
-  return { new_schedule1, new_schedule2, temp1, temp2 };
-}
-
-function checkPutLecture(clas, temp, schedule, mapGroupAndAG, mapTeacherAndAG) {
-  let isPutTeacher = false;
-  let isPutAudience = false;
-  let isPutGroup = false;
-  let canPut = true;
-  for (const sch of temp) {
-    isPutTeacher = CheckPutClassForTeacher(
-      clas,
-      schedule,
-      sch.day_week,
-      sch.number_pair,
-      sch.pair_type,
-      mapTeacherAndAG
-    );
-    isPutAudience = CheckPutClassForAudience(
-      sch.id_audience,
-      schedule,
-      sch.day_week,
-      sch.number_pair,
-      sch.pair_type
-    );
-    isPutGroup = CheckPutClassForGroupLecture(
-      clas,
-      schedule,
-      sch.day_week,
-      sch.number_pair,
-      sch.pair_type,
-      mapGroupAndAG
-    );
-    if (!isPutTeacher || !isPutAudience || !isPutGroup) {
-      canPut = false;
-      break;
-    }
-  }
-  return canPut;
-}
-
-function checkPutPractice(
-  clas,
-  id_group,
-  temp,
-  schedule,
-  mapGroupAndAG,
-  mapTeacherAndAG
-) {
-  let isPutTeacher = false;
-  let isPutAudience = false;
-  let isPutGroup = false;
-  let canPut = true;
-  for (const sch of temp) {
-    isPutTeacher = CheckPutClassForTeacher(
-      clas,
-      schedule,
-      sch.day_week,
-      sch.number_pair,
-      sch.pair_type,
-      mapTeacherAndAG
-    );
-    isPutAudience = CheckPutClassForAudience(
-      sch.id_audience,
-      schedule,
-      sch.day_week,
-      sch.number_pair,
-      sch.pair_type
-    );
-    isPutGroup = CheckPutClassForGroupPractice(
-      id_group,
-      schedule,
-      sch.day_week,
-      sch.number_pair,
-      sch.pair_type,
-      mapGroupAndAG
-    );
-    if (!isPutTeacher || !isPutAudience || !isPutGroup) {
-      canPut = false;
-      break;
-    }
-  }
-  return canPut;
+  return {
+    population_child1: JSON.stringify(population_child1, replacer),
+    population_child2: JSON.stringify(population_child1, replacer),
+  };
 }
