@@ -120,17 +120,11 @@ function GetColumKey(row) {
           columnKey[j] = "type_class";
 
           break;
-        case 5:
+      
+        case 6:
           if (row[j] === "Кількість годин на тиждень за видом занять")
             columnKey[j] = "times_per_week";
           else columnKey[j] = "audiences";
-          break;
-        case 6:
-          if (
-            row[j] ===
-            "Пропозиції кафедри щодо № аудиторії для проведення  даного виду навчальних занять"
-          )
-            columnKey[j] = "audiences";
           break;
         case 8:
           columnKey[j] = "teachers";
@@ -139,15 +133,7 @@ function GetColumKey(row) {
           if (row[j] === "Пропозиції до складання розкладу занять")
             columnKey[j] = "audiences";
           break;
-        case 10:
-          if (row[j] === "Лекції") columnKey[j] = "times_per_week";
-          break;
-        case 11:
-          if (row[j] === "Практичні") columnKey[j] = "times_per_week";
-          break;
-        case 12:
-          if (row[j] === "Лабораторні") columnKey[j] = "times_per_week";
-          break;
+        
         default:
           break;
       }
