@@ -30,10 +30,10 @@ export default function Fitness(
     penaltySameRecSc === 0
       ? 0
       : fitnessSameSchedules(
-          schedule.scheduleForAudiences,
-          recommended_schedules,
-          penaltySameTimesSc
-        );
+        schedule.scheduleForAudiences,
+        recommended_schedules,
+        penaltySameTimesSc
+      );
   let fitnessValue =
     fitnessGr.fitnessValue +
     fitnessTeach.fitnessValue +

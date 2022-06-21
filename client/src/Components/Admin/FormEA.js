@@ -5,10 +5,8 @@ import { GET_INFO } from "./queries.js";
 import { UPDATE_INFO, CALC_FITNESS } from "./mutations.js";
 import { CreateNotification } from "../Alert.js";
 
-function ButtonUpdateInfo({ info }) {
-  const [UpdateInfo, { loading, error }] = useMutation(UPDATE_INFO, {
-    refetchQueries: GET_INFO,
-  });
+function ButtonUpdateInfo({ info, refetch }) {
+  const [UpdateInfo, { loading, error }] = useMutation(UPDATE_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   let data = [];
@@ -22,8 +20,10 @@ function ButtonUpdateInfo({ info }) {
         onClick={(e) => {
           if (data.length === 0) return;
           else
-            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(
-              (res) => CreateNotification(res.data.UpdateInfo)
+            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(res => {
+              CreateNotification(res.data.UpdateInfo);
+              refetch();
+            }
             );
         }}
       >
@@ -32,10 +32,8 @@ function ButtonUpdateInfo({ info }) {
     </div>
   );
 }
-function ButtonGetFitness() {
-  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS, {
-    refetchQueries: GET_INFO,
-  });
+function ButtonCalcFitness({ refetch }) {
+  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
@@ -43,17 +41,20 @@ function ButtonGetFitness() {
       <Button
         className="col-12"
         onClick={() => {
-          CalcFitness().then((res) => CreateNotification(res.data.CalcFitness));
+          CalcFitness().then((res) => {
+            CreateNotification(res.data.CalcFitness);
+            refetch();
+          })
         }}
       >
         Порахувати значення фiтнес
       </Button>
-    </div>
+    </div >
   );
 }
 
-function DataForm({ handleChangeInfo }) {
-  const { loading, error, data } = useQuery(GET_INFO);
+function DataForm({ handleChangeInfo, info }) {
+  const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
@@ -292,13 +293,13 @@ function DataForm({ handleChangeInfo }) {
             {data.GetInfo.fitness_value === null ? (
               <p></p>
             ) : (
-              data.GetInfo.fitness_value.split("\\n").map((str) => {
-                return <p>{str}</p>;
-              })
-            )}
+              <pre>{data.GetInfo.fitness_value} </pre>)
+            }
           </div>
         </Col>
       </Form.Group>
+      <ButtonUpdateInfo info={info} refetch={refetch}></ButtonUpdateInfo>
+      <ButtonCalcFitness refetch={refetch}></ButtonCalcFitness>
     </>
   );
 }
@@ -308,9 +309,7 @@ export default class FormEA extends React.Component {
     const { handleChangeInfo, info } = this.props;
     return (
       <Form>
-        <DataForm handleChangeInfo={handleChangeInfo}></DataForm>
-        <ButtonUpdateInfo info={info}></ButtonUpdateInfo>
-        <ButtonGetFitness></ButtonGetFitness>
+        <DataForm handleChangeInfo={handleChangeInfo} info={info}></DataForm>
       </Form>
     );
   }

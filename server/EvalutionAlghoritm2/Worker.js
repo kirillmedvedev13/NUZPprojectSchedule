@@ -11,15 +11,19 @@ function workCrossing(schedule1, schedule2, classes) {
 
 function workFitness(
     schedule,
-    penaltySameTimesSc,
+    recommended_schedules,
+    penaltySameRecSc,
     penaltyGrWin,
+    penaltySameTimesSc,
     penaltyTeachWin
 ) {
     return Fitness(
         schedule,
-        penaltySameTimesSc,
+        recommended_schedules,
+        penaltySameRecSc,
         penaltyGrWin,
-        penaltyTeachWin,
+        penaltySameTimesSc,
+        penaltyTeachWin
     );
 }
 
