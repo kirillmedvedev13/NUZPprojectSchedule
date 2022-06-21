@@ -1,8 +1,11 @@
 import db from "../../database.js";
-import Fitness from "../../EvalutionAlghoritm/Fitness.js";
+import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
 import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
 import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
+import AddClassToSchedule from "../../EvalutionAlghoritm2/AddClassToSchedule.js";
+import replacer from "../../EvalutionAlghoritm2/JSONReplacer.js";
+import cloneDeep from "clone-deep";
 
 export const CALC_FITNESS = {
   type: MessageType,
@@ -10,26 +13,24 @@ export const CALC_FITNESS = {
     const info = await db.info.findAll();
     const penaltyGrWin = info[0].dataValues.penaltyGrWin;
     const penaltyTeachWin = info[0].dataValues.penaltyTeachWin;
-    const penaltyLateSc = info[0].dataValues.penaltyLateSc;
-    const penaltyEqSc = info[0].dataValues.penaltyEqSc;
     const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
-    const classes = await db.class.findAll({
+    const penaltySameRecSc = 10;
+    let classes = await db.class.findAll({
       include: [
         {
           model: db.assigned_group,
-          required: true,
           include: {
             model: db.group,
-            required: true,
           },
         },
         {
           model: db.assigned_teacher,
-          required: true,
         },
         {
           model: db.recommended_audience,
-          required: true,
+        },
+        {
+          model: db.recommended_schedule,
         },
         {
           model: db.assigned_discipline,
@@ -41,17 +42,16 @@ export const CALC_FITNESS = {
         },
       ],
     });
+    let recommended_schedules = JSON.parse(
+      JSON.stringify(await db.recommended_schedule.findAll())
+    );
     const groups = await db.group.findAll();
     const teachers = await db.teacher.findAll({
       include: {
         model: db.assigned_teacher,
       },
     });
-    // Структура для каждой группы массив закрепленных для неё занятий
-    let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
-    // Структура для каждого учителя массив закрепленных для него занятий
-    let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
-    let schedule = await db.schedule.findAll({
+    let scheduleData = await db.schedule.findAll({
       include: [
         {
           model: db.assigned_group,
@@ -104,27 +104,56 @@ export const CALC_FITNESS = {
         },
       ],
     });
-    schedule = schedule.map((s) => {
-      return Object.assign(s.toJSON(), { clas: s.assigned_group.class });
+    let scheduleForGroups = new Map();
+    let scheduleForTeachers = new Map();
+    let scheduleForAudiences = new Map();
+    let schedule = {
+      scheduleForGroups,
+      scheduleForTeachers,
+      scheduleForAudiences,
+      fitnessValue: null,
+    };
+    classes = JSON.parse(JSON.stringify(classes));
+    scheduleData = scheduleData.map((s) => {
+      return Object.assign(s.toJSON(), {
+        clas: classes.filter((cl) => cl.id === s.assigned_group.class.id)[0],
+      });
     });
+    for (let sch of scheduleData) {
+      AddClassToSchedule(
+        schedule,
+        sch.clas,
+        sch.day_week,
+        sch.number_pair,
+        sch.pair_type,
+        sch.audience.id
+      );
+    }
     let fitnessValue = Fitness(
-      schedule,
-      mapTeacherAndAG,
-      mapGroupAndAG,
+      JSON.stringify(schedule, replacer),
+      recommended_schedules,
+      penaltySameRecSc,
       penaltyGrWin,
-      penaltyLateSc,
-      penaltyEqSc,
       penaltySameTimesSc,
       penaltyTeachWin
     );
+    let stringFitness = `Загальне - ${fitnessValue.fitnessValue},
+    Рек.роз - ${fitnessValue.fitnessSameRecSc};
+    Групи: вікна - ${fitnessValue.fitnessGr.fitnessGrWin},
+           накладки - ${fitnessValue.fitnessGr.fitnessSameTimesSc},
+           загальне - ${fitnessValue.fitnessGr.fitnessValue};
+    Викладачів: вікна - ${fitnessValue.fitnessTeach.fitnessTeachWin},
+           накладки - ${fitnessValue.fitnessTeach.fitnessSameTimesSc},
+           загальне - ${fitnessValue.fitnessTeach.fitnessValue};
+    Аудиторії: накладки - ${fitnessValue.fitnessAud.fitnessSameTimesSc};`;
     const res = await db.info.update(
-      { fitness_value: JSON.stringify(fitnessValue) },
+      { fitness_value: JSON.stringify(stringFitness) },
       { where: { id: 1 } }
     );
     return res[0]
       ? {
           successful: true,
-          message: "Фітнес значення розкладу - " + fitnessValue,
+          message: stringFitness,
         }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },

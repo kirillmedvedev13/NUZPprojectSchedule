@@ -2,11 +2,11 @@ import reviver from "./JSONReviver.js";
 
 export default function Fitness(
   schedule,
-  clas,
-  penaltySameTimesSc,
+  recommended_schedules,
+  penaltySameRecSc,
   penaltyGrWin,
-  penaltyTeachWin,
-  penaltySameRecSchedules
+  penaltySameTimesSc,
+  penaltyTeachWin
 ) {
   schedule = JSON.parse(schedule, reviver);
   for (let value of schedule.scheduleForGroups.values()) sortSchedule(value);
@@ -26,12 +26,27 @@ export default function Fitness(
     penaltySameTimesSc === 0
       ? 0
       : fitnessByAudiences(schedule.scheduleForAudiences, penaltySameTimesSc);
+  let fitnessSameRecSc =
+    penaltySameRecSc === 0
+      ? 0
+      : fitnessSameSchedules(
+          schedule.scheduleForAudiences,
+          recommended_schedules,
+          penaltySameTimesSc
+        );
   let fitnessValue =
     fitnessGr.fitnessValue +
     fitnessTeach.fitnessValue +
-    fitnessAud.fitnessValue;
+    fitnessAud.fitnessValue +
+    fitnessSameRecSc;
 
-  return { fitnessValue, fitnessGr, fitnessTeach, fitnessAud };
+  return {
+    fitnessValue,
+    fitnessGr,
+    fitnessTeach,
+    fitnessAud,
+    fitnessSameRecSc,
+  };
 }
 
 function sortSchedule(schedule) {
@@ -139,4 +154,24 @@ function fitnessSameTimes(schedule, penaltySameTimesSc) {
   return fitnessValue;
 }
 
-function fitnessSameSchedules(schedule, clas, penaltySameRecSchedules) {}
+function fitnessSameSchedules(
+  schedule,
+  recommended_schedules,
+  penaltySameRecSchedules
+) {
+  let fitnessSameRecSc = 0;
+  for (let value of schedule.values()) {
+    for (let clas of value) {
+      let recSc = recommended_schedules.filter(
+        (rs) =>
+          rs.id_class === clas.id_class &&
+          (rs.day_week !== clas.day_week || rs.number_pair !== clas.number_pair)
+      );
+
+      if (recSc.length) {
+        fitnessSameRecSc += penaltySameRecSchedules * recSc.length;
+      }
+    }
+  }
+  return fitnessSameRecSc;
+}
