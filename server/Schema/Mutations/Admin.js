@@ -254,7 +254,7 @@ export const SET_CLASSES = {
         // Создание занятий
         const new_class = await db.class.create({
           id_type_class: clas.type_class,
-          times_per_week: clas.numberClasses,
+          times_per_week: clas.times_per_week,
           id_assigned_discipline,
         });
         const id_class = new_class.dataValues.id;

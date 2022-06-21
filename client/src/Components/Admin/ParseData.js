@@ -120,7 +120,7 @@ function GetColumKey(row) {
           columnKey[j] = "type_class";
 
           break;
-      
+
         case 6:
           if (row[j] === "Кількість годин на тиждень за видом занять")
             columnKey[j] = "times_per_week";
@@ -133,7 +133,7 @@ function GetColumKey(row) {
           if (row[j] === "Пропозиції до складання розкладу занять")
             columnKey[j] = "audiences";
           break;
-        
+
         default:
           break;
       }
