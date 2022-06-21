@@ -18,7 +18,7 @@ export default function SelectCathedra({ setCathedra }) {
       options={options}
       placeholder="Кафедра"
       onChange={(e) => {
-        setCathedra(e ? Number(e.value) : null);
+        setCathedra(e ? +e.value : null);
       }}
     />
   );

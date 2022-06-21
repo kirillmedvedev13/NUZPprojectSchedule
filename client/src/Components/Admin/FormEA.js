@@ -20,10 +20,11 @@ function ButtonUpdateInfo({ info, refetch }) {
         onClick={(e) => {
           if (data.length === 0) return;
           else
-            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(res => {
-              CreateNotification(res.data.UpdateInfo);
-              refetch();
-            }
+            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(
+              (res) => {
+                CreateNotification(res.data.UpdateInfo);
+                refetch();
+              }
             );
         }}
       >
@@ -44,12 +45,12 @@ function ButtonCalcFitness({ refetch }) {
           CalcFitness().then((res) => {
             CreateNotification(res.data.CalcFitness);
             refetch();
-          })
+          });
         }}
       >
         Порахувати значення фiтнес
       </Button>
-    </div >
+    </div>
   );
 }
 
@@ -293,8 +294,8 @@ function DataForm({ handleChangeInfo, info }) {
             {data.GetInfo.fitness_value === null ? (
               <p></p>
             ) : (
-              <pre>{data.GetInfo.fitness_value} </pre>)
-            }
+              <pre>{data.GetInfo.fitness_value} </pre>
+            )}
           </div>
         </Col>
       </Form.Group>

@@ -26,8 +26,8 @@ export const DELETE_ALL_DATA = gql`
   }
 `;
 export const RUN_EA = gql`
-  mutation {
-    RunEA {
+  mutation ($id_cathedra: Int) {
+    RunEA(id_cathedra: $id_cathedra) {
       message
       successful
     }

@@ -9,10 +9,14 @@ import workerpool from "workerpool";
 import cloneDeep from "clone-deep";
 import replacer from "./JSONReplacer.js";
 import reviver from "./JSONReviver.js";
+import { GraphQLInt } from "graphql";
 
 export const RUN_EA = {
   type: MessageType,
-  async resolve(parent) {
+  args: {
+    id_cathedra: { type: GraphQLInt },
+  },
+  async resolve(parent, { id_cathedra }) {
     const info = await db.info.findOne();
     const max_day = info.dataValues.max_day;
     const max_pair = info.dataValues.max_pair;
@@ -28,6 +32,20 @@ export const RUN_EA = {
     const penaltySameTimesSc = info.dataValues.penaltySameTimesSc;
     const p_elitism = info.dataValues.p_elitism;
     const penaltySameRecSc = info.dataValues.penaltySameRecSc;
+    let FilterCathedra =
+      id_cathedra === null
+        ? {}
+        : {
+            include: {
+              model: db.specialty,
+              required: true,
+              where: {
+                id_cathedra: {
+                  [Op.eq]: id_cathedra,
+                },
+              },
+            },
+          };
     let classes = await db.class.findAll({
       include: [
         {
@@ -48,10 +66,7 @@ export const RUN_EA = {
         {
           model: db.assigned_discipline,
           required: true,
-          include: {
-            model: db.specialty,
-            required: true,
-          },
+          FilterCathedra,
         },
       ],
     });
@@ -251,10 +266,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
     // Очистка расписания

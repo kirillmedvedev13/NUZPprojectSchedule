@@ -82,12 +82,18 @@ class Admin extends React.Component {
                 </Card.Header>
                 <Card.Body>
                   <FormEA
+                    setCathedra={this.setCathedra}
                     handleChangeInfo={this.handleChangeInfo}
                     info={this.state.info}
                   ></FormEA>
                 </Card.Body>
                 <Card.Footer>
-                  <ButtonRunEA></ButtonRunEA>
+                  <SelectCathedra
+                    setCathedra={this.setCathedra}
+                  ></SelectCathedra>
+                  <ButtonRunEA
+                    id_cathedra={this.state.id_cathedra}
+                  ></ButtonRunEA>
                 </Card.Footer>
               </Card>
             </div>
