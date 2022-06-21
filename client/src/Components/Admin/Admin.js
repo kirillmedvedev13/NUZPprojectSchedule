@@ -30,6 +30,7 @@ class Admin extends React.Component {
       penaltyLateSc: null,
       penaltyEqSc: null,
       penaltySameTimesSc: null,
+      penaltySameRecSc: null,
       p_elitism: null,
     },
   };
@@ -39,7 +40,6 @@ class Admin extends React.Component {
       info: update(PrevState.info, { $merge: { [name]: value } }),
     }));
   };
-
 
   setFile(file) {
     this.setState({ file });

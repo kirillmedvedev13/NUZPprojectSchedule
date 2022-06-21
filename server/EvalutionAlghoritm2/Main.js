@@ -27,6 +27,7 @@ export const RUN_EA = {
     const penaltyEqSc = info[0].dataValues.penaltyEqSc;
     const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
     const p_elitism = info[0].dataValues.p_elitism;
+    const penaltySameRecSc = 10;
     let classes = await db.class.findAll({
       include: [
         {
@@ -54,6 +55,7 @@ export const RUN_EA = {
         },
       ],
     });
+    let recommended_schedules = await db.recommended_schedule.findAll();
     let audiences = await db.audience.findAll({
       include: {
         model: db.assigned_audience,
@@ -65,7 +67,7 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
-
+    recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
     teachers = teachers.map((t) => t.toJSON());
     groups = groups.map((g) => g.toJSON());
     audiences = audiences.map((a) => a.toJSON());
@@ -153,8 +155,10 @@ export const RUN_EA = {
         arr_promisses.push(
           pool.exec("workFitness", [
             JSON.stringify(individ, replacer),
-            penaltySameTimesSc,
+            recommended_schedules,
+            penaltySameRecSc,
             penaltyGrWin,
+            penaltySameTimesSc,
             penaltyTeachWin,
           ])
         );
