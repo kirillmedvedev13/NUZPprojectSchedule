@@ -10,6 +10,7 @@ import cloneDeep from "clone-deep";
 import replacer from "./JSONReplacer.js";
 import reviver from "./JSONReviver.js";
 import { GraphQLInt } from "graphql";
+import { Op } from "sequelize";
 
 export const RUN_EA = {
   type: MessageType,
@@ -82,6 +83,9 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
+    let oldSchedules = [];
+    if (id_cathedra) {
+    }
     recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
     teachers = teachers.map((t) => t.toJSON());
     groups = groups.map((g) => g.toJSON());
