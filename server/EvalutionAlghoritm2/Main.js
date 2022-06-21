@@ -13,21 +13,21 @@ import reviver from "./JSONReviver.js";
 export const RUN_EA = {
   type: MessageType,
   async resolve(parent) {
-    const info = await db.info.findAll();
-    const max_day = info[0].dataValues.max_day;
-    const max_pair = info[0].dataValues.max_pair;
-    const population_size = info[0].dataValues.population_size;
-    const max_generations = info[0].dataValues.max_generations;
-    const p_crossover = info[0].dataValues.p_crossover;
-    const p_mutation = info[0].dataValues.p_mutation;
-    const p_genes = info[0].dataValues.p_genes;
-    const penaltyGrWin = info[0].dataValues.penaltyGrWin;
-    const penaltyTeachWin = info[0].dataValues.penaltyTeachWin;
-    const penaltyLateSc = info[0].dataValues.penaltyLateSc;
-    const penaltyEqSc = info[0].dataValues.penaltyEqSc;
-    const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
-    const p_elitism = info[0].dataValues.p_elitism;
-    const penaltySameRecSc = 10;
+    const info = await db.info.findOne();
+    const max_day = info.dataValues.max_day;
+    const max_pair = info.dataValues.max_pair;
+    const population_size = info.dataValues.population_size;
+    const max_generations = info.dataValues.max_generations;
+    const p_crossover = info.dataValues.p_crossover;
+    const p_mutation = info.dataValues.p_mutation;
+    const p_genes = info.dataValues.p_genes;
+    const penaltyGrWin = info.dataValues.penaltyGrWin;
+    const penaltyTeachWin = info.dataValues.penaltyTeachWin;
+    const penaltyLateSc = info.dataValues.penaltyLateSc;
+    const penaltyEqSc = info.dataValues.penaltyEqSc;
+    const penaltySameTimesSc = info.dataValues.penaltySameTimesSc;
+    const p_elitism = info.dataValues.p_elitism;
+    const penaltySameRecSc = info.dataValues.penaltySameRecSc;
     let classes = await db.class.findAll({
       include: [
         {
@@ -251,17 +251,17 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
     await db.schedule.destroy({ truncate: true });
     //Вставка в бд
     let arr = [];
-    for (let value of populations[0].scheduleForGroups.values()) {
+    for (let value of bestPopulation.scheduleForGroups.values()) {
       arr.push(
         ...value.map((schedule) => {
           return {

@@ -1,27 +1,21 @@
 import db from "../../database.js";
 import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
-import GetMapGroupAndAG from "../../EvalutionAlghoritm/GetMapGroupAndAG.js";
-import GetMapTeacherAndAG from "../../EvalutionAlghoritm/GetMapTeacherAndAG.js";
 import MessageType from "../TypeDefs/MessageType.js";
 import AddClassToSchedule from "../../EvalutionAlghoritm2/AddClassToSchedule.js";
 import replacer from "../../EvalutionAlghoritm2/JSONReplacer.js";
-import cloneDeep from "clone-deep";
 
 export const CALC_FITNESS = {
   type: MessageType,
   async resolve(parent) {
-    const info = await db.info.findAll();
-    const penaltyGrWin = info[0].dataValues.penaltyGrWin;
-    const penaltyTeachWin = info[0].dataValues.penaltyTeachWin;
-    const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
-    const penaltySameRecSc = 10;
+    const info = await db.info.findOne();
+    const penaltyGrWin = info.dataValues.penaltyGrWin;
+    const penaltyTeachWin = info.dataValues.penaltyTeachWin;
+    const penaltySameTimesSc = info.dataValues.penaltySameTimesSc;
+    const penaltySameRecSc = info.dataValues.penaltySameRecSc;
     let classes = await db.class.findAll({
       include: [
         {
           model: db.assigned_group,
-          include: {
-            model: db.group,
-          },
         },
         {
           model: db.assigned_teacher,
@@ -32,78 +26,10 @@ export const CALC_FITNESS = {
         {
           model: db.recommended_schedule,
         },
-        {
-          model: db.assigned_discipline,
-          required: true,
-          include: {
-            model: db.specialty,
-            required: true,
-          },
-        },
       ],
     });
-    let recommended_schedules = JSON.parse(
-      JSON.stringify(await db.recommended_schedule.findAll())
-    );
-    const groups = await db.group.findAll();
-    const teachers = await db.teacher.findAll({
-      include: {
-        model: db.assigned_teacher,
-      },
-    });
-    let scheduleData = await db.schedule.findAll({
-      include: [
-        {
-          model: db.assigned_group,
-          include: [
-            {
-              model: db.class,
-              include: [
-                {
-                  model: db.type_class,
-                },
-                {
-                  model: db.assigned_discipline,
-
-                  include: [
-                    {
-                      model: db.discipline,
-                    },
-                    {
-                      model: db.specialty,
-                      include: {
-                        model: db.cathedra,
-                      },
-                    },
-                  ],
-                },
-                {
-                  model: db.assigned_teacher,
-                  include: {
-                    model: db.teacher,
-                    include: {
-                      model: db.cathedra,
-                    },
-                  },
-                },
-              ],
-            },
-            {
-              model: db.group,
-              include: {
-                model: db.specialty,
-                include: {
-                  model: db.cathedra,
-                },
-              },
-            },
-          ],
-        },
-        {
-          model: db.audience,
-        },
-      ],
-    });
+    let recommended_schedules = await db.recommended_schedule.findAll();
+    let scheduleData = await db.schedule.findAll();
     let scheduleForGroups = new Map();
     let scheduleForTeachers = new Map();
     let scheduleForAudiences = new Map();
@@ -113,21 +39,21 @@ export const CALC_FITNESS = {
       scheduleForAudiences,
       fitnessValue: null,
     };
-    classes = JSON.parse(JSON.stringify(classes));
-    scheduleData = scheduleData.map((s) => {
-      return Object.assign(s.toJSON(), {
-        clas: classes.filter((cl) => cl.id === s.assigned_group.class.id)[0],
+    scheduleData = scheduleData.map(sc => sc.toJSON());
+    classes = classes.map(cl => cl.toJSON());
+    recommended_schedules = recommended_schedules.map(rs => rs.toJSON());
+    for (let clas of classes) {
+      let scheduleForClass = [];
+      clas.assigned_groups.forEach(ag => {
+        scheduleForClass.push(...scheduleData.filter(sc => sc.id_assigned_group === ag.id));
+      })
+      let number_pair = null;
+      let day_week = null;
+      let pair_type = null;
+      scheduleForClass.forEach(sc => {
       });
-    });
-    for (let sch of scheduleData) {
-      AddClassToSchedule(
-        schedule,
-        sch.clas,
-        sch.day_week,
-        sch.number_pair,
-        sch.pair_type,
-        sch.audience.id
-      );
+
+
     }
     let fitnessValue = Fitness(
       JSON.stringify(schedule, replacer),
@@ -137,24 +63,28 @@ export const CALC_FITNESS = {
       penaltySameTimesSc,
       penaltyTeachWin
     );
-    let stringFitness = `Загальне - ${fitnessValue.fitnessValue},
-    Рек.роз - ${fitnessValue.fitnessSameRecSc};
-    Групи: вікна - ${fitnessValue.fitnessGr.fitnessGrWin},
-           накладки - ${fitnessValue.fitnessGr.fitnessSameTimesSc},
-           загальне - ${fitnessValue.fitnessGr.fitnessValue};
-    Викладачів: вікна - ${fitnessValue.fitnessTeach.fitnessTeachWin},
-           накладки - ${fitnessValue.fitnessTeach.fitnessSameTimesSc},
-           загальне - ${fitnessValue.fitnessTeach.fitnessValue};
-    Аудиторії: накладки - ${fitnessValue.fitnessAud.fitnessSameTimesSc};`;
+    let stringFitness = `Загальна сума - ${fitnessValue.fitnessValue}
+\nРек. час - ${fitnessValue.fitnessSameRecSc}
+\nГрупи: 
+\n\tВікна - ${fitnessValue.fitnessGr.fitnessGrWin}
+\n\tНакладки - ${fitnessValue.fitnessGr.fitnessSameTimesSc}
+\n\tСума - ${fitnessValue.fitnessGr.fitnessValue}
+\nВикладачi: 
+\n\tВікна - ${fitnessValue.fitnessTeach.fitnessTeachWin}
+\n\tНакладки - ${fitnessValue.fitnessTeach.fitnessSameTimesSc}
+\n\tСума - ${fitnessValue.fitnessTeach.fitnessValue}
+\nАудиторії: 
+\n\tНакладки - ${fitnessValue.fitnessAud.fitnessSameTimesSc}
+\n\tСума - ${fitnessValue.fitnessAud.fitnessValue}`;
     const res = await db.info.update(
-      { fitness_value: JSON.stringify(stringFitness) },
+      { fitness_value: stringFitness },
       { where: { id: 1 } }
     );
     return res[0]
       ? {
-          successful: true,
-          message: stringFitness,
-        }
+        successful: true,
+        message: "Значення пораховано успішно",
+      }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };
