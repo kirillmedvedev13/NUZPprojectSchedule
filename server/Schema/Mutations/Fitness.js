@@ -23,7 +23,7 @@ export const CALC_FITNESS = {
       scheduleForAudiences,
       fitnessValue: null,
     };
-    ParseScheduleFromDB(schedule);
+    await ParseScheduleFromDB(schedule);
     let fitnessValue = Fitness(
       JSON.stringify(schedule, replacer),
       recommended_schedules,
@@ -51,9 +51,9 @@ export const CALC_FITNESS = {
     );
     return res[0]
       ? {
-          successful: true,
-          message: "Значення пораховано успішно",
-        }
+        successful: true,
+        message: "Значення пораховано успішно",
+      }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

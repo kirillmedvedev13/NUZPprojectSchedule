@@ -7,7 +7,8 @@ export default function (
   population_size,
   max_day,
   max_pair,
-  audiences
+  audiences,
+  base_schedule
 ) {
   let populations = new Array(population_size);
   for (let i = 0; i < population_size; i++) {
@@ -34,6 +35,30 @@ export default function (
         AddClassToSchedule(schedule, clas, day_week, number_pair, info[j], id_audience)
       }
     })
+    // Если в базе есть созданное расписание
+    if (base_schedule) {
+      for (let [id_group, schedule_group] of base_schedule.scheduleForGroups.entries()) {
+        let temp = schedule.scheduleForGroups.get(id_group);
+        if (!temp)
+          temp = [];
+        temp.push(...schedule_group);
+        schedule.scheduleForGroups.set(id_group, temp);
+      }
+      for (let [id_teacher, schedule_teacher] of base_schedule.scheduleForTeachers.entries()) {
+        let temp = schedule.scheduleForTeachers.get(id_teacher);
+        if (!temp)
+          temp = [];
+        temp.push(...schedule_teacher);
+        schedule.scheduleForTeachers.set(id_teacher, temp);
+      }
+      for (let [id_audience, schedule_audience] of base_schedule.scheduleForAudiences.entries()) {
+        let temp = schedule.scheduleForAudiences.get(id_audience);
+        if (!temp)
+          temp = [];
+        temp.push(...schedule_audience);
+        schedule.scheduleForAudiences.set(id_audience, temp);
+      }
+    }
     populations[i] = schedule;
   }
   return populations;

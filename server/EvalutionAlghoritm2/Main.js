@@ -11,6 +11,7 @@ import replacer from "./JSONReplacer.js";
 import reviver from "./JSONReviver.js";
 import { GraphQLInt } from "graphql";
 import { Op } from "sequelize";
+import ParseScheduleFromDB from "./ParseScheduleFromDB.js"
 
 export const RUN_EA = {
   type: MessageType,
@@ -33,20 +34,14 @@ export const RUN_EA = {
     const penaltySameTimesSc = info.dataValues.penaltySameTimesSc;
     const p_elitism = info.dataValues.p_elitism;
     const penaltySameRecSc = info.dataValues.penaltySameRecSc;
-    let FilterCathedra =
-      id_cathedra === null
-        ? {}
-        : {
-            include: {
-              model: db.specialty,
-              required: true,
-              where: {
-                id_cathedra: {
-                  [Op.eq]: id_cathedra,
-                },
-              },
-            },
-          };
+    let FilterCathedra = {};
+    if (id_cathedra) {
+      FilterCathedra = {
+        id_cathedra: {
+          [Op.eq]: id_cathedra,
+        }
+      }
+    }
     let classes = await db.class.findAll({
       include: [
         {
@@ -67,7 +62,11 @@ export const RUN_EA = {
         {
           model: db.assigned_discipline,
           required: true,
-          FilterCathedra,
+          include: {
+            model: db.specialty,
+            required: true,
+            where: FilterCathedra,
+          }
         },
       ],
     });
@@ -83,8 +82,13 @@ export const RUN_EA = {
         model: db.assigned_teacher,
       },
     });
-    let oldSchedules = [];
+    let base_schedule = null;
     if (id_cathedra) {
+      let scheduleForGroups = new Map();
+      let scheduleForTeachers = new Map();
+      let scheduleForAudiences = new Map();
+      base_schedule = { scheduleForGroups, scheduleForTeachers, scheduleForAudiences };
+      await ParseScheduleFromDB(base_schedule);
     }
     recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
     teachers = teachers.map((t) => t.toJSON());
@@ -106,7 +110,8 @@ export const RUN_EA = {
       population_size,
       max_day,
       max_pair,
-      audiences
+      audiences,
+      base_schedule
     );
     let bestPopulation = {
       scheduleForGroups: null,
@@ -270,10 +275,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
