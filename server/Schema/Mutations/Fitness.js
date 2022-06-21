@@ -51,7 +51,6 @@ export const CALC_FITNESS = {
       let day_week = null;
       let pair_type = null;
       scheduleForClass.forEach(sc => {
-        sc.id_class =
       });
 
 
