@@ -247,10 +247,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-          " " +
-          bestPopulation.fitnessValue +
-          " Mean " +
-          MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
