@@ -15,6 +15,7 @@ export const GET_INFO = gql`
       penaltyLateSc
       penaltyEqSc
       penaltySameTimesSc
+      penaltySameRecSc
       p_elitism
     }
   }

@@ -236,6 +236,22 @@ function DataForm({ handleChangeInfo }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Вага: співпадіння занять</Form.Label>
+        <Col>
+          <Form.Control
+            defaultValue={data.GetInfo.penaltySameRecSc}
+            type="number"
+            min={0}
+            onChange={(e) => {
+              handleChangeInfo(
+                "penaltySameRecSc",
+                e ? Number(e.target.value) : null
+              );
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Кількість днів</Form.Label>
         <Col>
           <Form.Control
@@ -273,9 +289,13 @@ function DataForm({ handleChangeInfo }) {
         <Form.Label className="col-5">Фітнес значення</Form.Label>
         <Col>
           <div>
-            {data.GetInfo.fitness_value.split("\\n").map((str) => {
-              return <p>{str}</p>;
-            })}
+            {data.GetInfo.fitness_value === null ? (
+              <p></p>
+            ) : (
+              data.GetInfo.fitness_value.split("\\n").map((str) => {
+                return <p>{str}</p>;
+              })
+            )}
           </div>
         </Col>
       </Form.Group>

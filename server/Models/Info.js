@@ -45,6 +45,9 @@ export default (Sequelize, DataTypes) => {
     penaltySameTimesSc: {
       type: DataTypes.DOUBLE,
     },
+    penaltySameRecSc: {
+      type: DataTypes.DOUBLE,
+    },
     p_elitism: {
       type: DataTypes.DOUBLE,
     },

@@ -44,6 +44,9 @@ const InfoType = new GraphQLObjectType({
     penaltySameTimesSc: {
       type: GraphQLFloat,
     },
+    penaltySameRecSc: {
+      type: GraphQLFloat,
+    },
     p_elitism: {
       type: GraphQLFloat,
     },
