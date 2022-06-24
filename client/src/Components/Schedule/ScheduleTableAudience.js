@@ -44,7 +44,6 @@ function DataTable({ filters, info }) {
       SplitPairs(audience.schedules)
     );
   }
-  debugger;
 
   return TableBody(MapAudience, info, getDescription);
 }

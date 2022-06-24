@@ -51,13 +51,19 @@ export default function TableBody(MapSomething, info, getDescription) {
                         +cl.day_week === day_week + 1
                     );
                     // Проверка на накладку на этот день
-                    if (arrScheduleTotal[day_week].length && (arrScheduleBot[day_week].length || arrScheduleTop[day_week].length)) {
+                    if (
+                      arrScheduleTotal[day_week].length &&
+                      (arrScheduleBot[day_week].length ||
+                        arrScheduleTop[day_week].length)
+                    ) {
                       checkPut[day_week] = false;
-                    }
-                    else if (arrScheduleTotal[day_week].length > 1 || arrScheduleBot[day_week].length > 1 || arrScheduleTop[day_week].length > 1) {
+                    } else if (
+                      arrScheduleTotal[day_week].length > 1 ||
+                      arrScheduleBot[day_week].length > 1 ||
+                      arrScheduleTop[day_week].length > 1
+                    ) {
                       checkPut[day_week] = false;
-                    }
-                    else {
+                    } else {
                       checkPut[day_week] = true;
                     }
                   })}
@@ -69,35 +75,53 @@ export default function TableBody(MapSomething, info, getDescription) {
                         if (checkPut[day_week]) {
                           // Пара по числителю
                           if (arrScheduleTop[day_week][0]) {
-                            return <td>{getDescription(arrScheduleTop[day_week][0])}</td>
+                            return (
+                              <td className="table-warning">
+                                {getDescription(arrScheduleTop[day_week][0])}
+                              </td>
+                            );
                           }
                           // Общая пара
                           else if (arrScheduleTotal[day_week][0]) {
-                            return <td>{getDescription(arrScheduleTotal[day_week][0])}</td>
+                            return (
+                              <td className="table-success">
+                                {getDescription(arrScheduleTotal[day_week][0])}
+                              </td>
+                            );
                           }
                           // Если нету пары
                           else {
-                            return <td></td>
+                            return <td></td>;
                           }
                         }
                         // Если накладка
                         else {
                           let str = "";
                           if (arrScheduleTotal[day_week].length) {
-                            str += "Загальна:"
-                            arrScheduleTotal[day_week].forEach(sc => { str += getDescription(sc) })
+                            str += "Загальна:";
+                            arrScheduleTotal[day_week].forEach((sc) => {
+                              str += getDescription(sc) + "\n";
+                            });
                           }
                           if (arrScheduleTop[day_week].length) {
-                            str += "Чисельник:"
-                            arrScheduleTop[day_week].forEach(sc => { str += getDescription(sc) })
+                            str += "Чисельник:";
+                            arrScheduleTop[day_week].forEach((sc) => {
+                              str += getDescription(sc) + "\n";
+                            });
                           }
                           if (arrScheduleBot[day_week].length) {
-                            str += "Знаменник:"
-                            arrScheduleBot[day_week].forEach(sc => { str += getDescription(sc) })
+                            str += "Знаменник:";
+                            arrScheduleBot[day_week].forEach((sc) => {
+                              str += getDescription(sc) + "\n";
+                            });
                           }
-                          return <td
-                            rowSpan="2"
-                          >{str}</td>
+                          return (
+                            <td rowSpan="2" className="table-danger">
+                              {str.split("\n").map((line) => {
+                                return <p>{line}</p>;
+                              })}
+                            </td>
+                          );
                         }
                       })
                     }
@@ -110,11 +134,15 @@ export default function TableBody(MapSomething, info, getDescription) {
                         if (checkPut[day_week]) {
                           // Пара по знаменателю
                           if (arrScheduleBot[day_week][0]) {
-                            return <td>{getDescription(arrScheduleBot[day_week][0])}</td>
+                            return (
+                              <td className="table-info">
+                                {getDescription(arrScheduleBot[day_week][0])}
+                              </td>
+                            );
                           }
                           // Если нету пары
                           else {
-                            return <td></td>
+                            return <td></td>;
                           }
                         }
                       })
