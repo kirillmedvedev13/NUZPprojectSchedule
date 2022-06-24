@@ -1,6 +1,6 @@
 import { GET_ALL_SCHEDULE_TEACHERS, GET_INFO } from "./queries";
 import { useQuery } from "@apollo/client";
-import React, { Fragment } from "react";
+import React from "react";
 import { Table } from "react-bootstrap";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
@@ -70,7 +70,7 @@ function DataTable({ filters, info }) {
 }
 
 function TableHead({ filters }) {
-  const { loading, error, data } = useQuery(GET_INFO, {});
+  const { loading, error, data } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
@@ -90,7 +90,7 @@ function TableHead({ filters }) {
 }
 class ScheduleTableTeacher extends React.Component {
   render() {
-    const { filters, info } = this.props;
+    const { filters } = this.props;
     return (
       <Table bordered>
         <TableHead filters={filters}></TableHead>
