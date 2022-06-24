@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 import Select from "react-select";
-import { GET_ALL_ASSIGNED_DISCIPLINES } from "./queries";
+import { GET_ALL_ASSIGNED_DISCIPLINES } from "./queries.js";
 
 export default function SelectAssignedDiscipline({
   item,

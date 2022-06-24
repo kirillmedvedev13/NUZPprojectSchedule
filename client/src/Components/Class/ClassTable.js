@@ -60,7 +60,7 @@ function DataTable({
                       return (
                         <tr key={obj.group.id}>
                           <td>
-                            {clas.assigned_discipline.specialty.cathedra
+                            {obj.group.specialty.cathedra
                               .short_name +
                               "-" +
                               obj.group.name}

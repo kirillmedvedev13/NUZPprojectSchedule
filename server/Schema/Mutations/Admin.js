@@ -294,18 +294,29 @@ export const SET_CLASSES = {
 
 export const DELETE_ALL_DATA = {
   type: MessageType,
-  args: {},
-  async resolve(parent) {
+  args: {
+    id_cathedra: { type: GraphQLInt }
+  },
+  async resolve(parent, { id_cathedra }) {
     try {
-      await db.audience.destroy({ truncate: { cascade: true } });
-      await db.teacher.destroy({ truncate: { cascade: true } });
-      await db.discipline.destroy({ truncate: { cascade: true } });
-      await db.group.destroy({ truncate: { cascade: true } });
-      await db.class.destroy({ truncate: { cascade: true } });
-      await db.specialty.destroy({ truncate: { cascade: true } });
+      if (!id_cathedra) {
+        await db.audience.destroy({ truncate: true, cascade: true });
+        await db.teacher.destroy({ truncate: true, cascade: true });
+        await db.discipline.destroy({ truncate: true, cascade: true });
+        await db.group.destroy({ truncate: true, cascade: true });
+        await db.class.destroy({ truncate: true, cascade: true });
+        await db.specialty.destroy({ truncate: true, cascade: true });
+      }
+      else {
+        await db.teacher.destroy({ where: { id_cathedra } });
+        let arr_scep = await db.specialty.findAll({ where: { id_cathedra } });
+        let arr_ad = await db.assigned_discipline.findAll({ where: { id_specialty: arr_scep.map(sp => sp.dataValues.id) } });
+        await db.specialty.destroy({ where: { id_cathedra } });
+        await db.discipline.destroy({ where: { id: arr_ad.map(ad => ad.dataValues.id_discipline) } });
+      }
       return { successful: true, message: "Дані успішно видалено з БД" };
     } catch (err) {
-      return { successful: false, message: "Помилка при видалені даних з БД" };
+      return { successful: false, message: `Помилка при видалені даних з БД + ${err}` };
     }
   },
 };

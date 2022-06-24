@@ -12,8 +12,8 @@ import {
 } from "./ClassModalRecSchedule";
 import ValidatedMessage from "../ValidatedMessage";
 import SaveButton from "./SaveButton";
-import SelectTypeClass from "./SelectTypeClass";
-import SelectAssignedDiscipline from "./SelectAssignedDiscipline";
+import SelectAssignedDiscipline from "../SelectsModalWindow/SelectAssignedDiscipline.js";
+import SelectTypeClass from "../SelectsModalWindow/SelectTypeClass.js";
 import cloneDeep from "clone-deep";
 
 class ClassModal extends React.Component {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import SaveButton from "./SaveButton";
-import SelectCathedras from "./SelectCathedras";
+import SelectCathedras from "../SelectsModalWindow/SelectCathedras";
 import ValidatedMessage from "../ValidatedMessage";
 import cloneDeep from "clone-deep";
 

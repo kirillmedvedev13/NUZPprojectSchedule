@@ -49,7 +49,7 @@ function DataTable({ filters, info }) {
 }
 
 function TableHead({ filters }) {
-  const { loading, error, data } = useQuery(GET_INFO, {});
+  const { loading, error, data } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
