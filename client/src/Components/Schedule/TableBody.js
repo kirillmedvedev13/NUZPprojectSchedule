@@ -67,7 +67,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                       checkPut[day_week] = true;
                     }
                   })}
-                  <tr>
+                  <tr key={object.id + "trTop" + number_pair}>
                     {
                       // Вставка в таблицу ВВЕРХ
                       [...Array(info.max_day)].map((i, day_week) => {
@@ -76,7 +76,12 @@ export default function TableBody(MapSomething, info, getDescription) {
                           // Пара по числителю
                           if (arrScheduleTop[day_week][0]) {
                             return (
-                              <td className="table-warning">
+                              <td
+                                key={
+                                  object.id + "tdTop" + number_pair + day_week
+                                }
+                                className="table-warning"
+                              >
                                 {getDescription(arrScheduleTop[day_week][0])}
                               </td>
                             );
@@ -84,14 +89,25 @@ export default function TableBody(MapSomething, info, getDescription) {
                           // Общая пара
                           else if (arrScheduleTotal[day_week][0]) {
                             return (
-                              <td className="table-success">
+                              <td
+                                key={
+                                  object.id + "tdTotal" + number_pair + day_week
+                                }
+                                className="table-success"
+                              >
                                 {getDescription(arrScheduleTotal[day_week][0])}
                               </td>
                             );
                           }
                           // Если нету пары
                           else {
-                            return <td></td>;
+                            return (
+                              <td
+                                key={
+                                  object.id + "tdNull" + number_pair + day_week
+                                }
+                              ></td>
+                            );
                           }
                         }
                         // Если накладка
@@ -116,9 +132,27 @@ export default function TableBody(MapSomething, info, getDescription) {
                             });
                           }
                           return (
-                            <td rowSpan="2" className="table-danger">
-                              {str.split("\n").map((line) => {
-                                return <p>{line}</p>;
+                            <td
+                              key={
+                                object.id + "tdDanger" + number_pair + day_week
+                              }
+                              rowSpan="2"
+                              className="table-danger"
+                            >
+                              {str.split("\n").map((line, i) => {
+                                return (
+                                  <p
+                                    key={
+                                      object.id +
+                                      "p" +
+                                      number_pair +
+                                      day_week +
+                                      i
+                                    }
+                                  >
+                                    {line}
+                                  </p>
+                                );
                               })}
                             </td>
                           );
@@ -126,7 +160,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                       })
                     }
                   </tr>
-                  <tr>
+                  <tr key={object.id + "trBot" + number_pair}>
                     {
                       // Вставка в таблицу ВНИЗ
                       [...Array(info.max_day)].map((i, day_week) => {
@@ -135,14 +169,25 @@ export default function TableBody(MapSomething, info, getDescription) {
                           // Пара по знаменателю
                           if (arrScheduleBot[day_week][0]) {
                             return (
-                              <td className="table-info">
+                              <td
+                                key={
+                                  object.id + "tdBot" + number_pair + day_week
+                                }
+                                className="table-info"
+                              >
                                 {getDescription(arrScheduleBot[day_week][0])}
                               </td>
                             );
                           }
                           // Если нету пары
                           else {
-                            return <td></td>;
+                            return (
+                              <td
+                                key={
+                                  object.id + "tdNull1" + number_pair + day_week
+                                }
+                              ></td>
+                            );
                           }
                         }
                       })

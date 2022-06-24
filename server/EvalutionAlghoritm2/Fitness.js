@@ -14,13 +14,14 @@ export default function Fitness(
   for (let value of schedule.scheduleForAudiences.values()) sortSchedule(value);
   let fitnessGr = fitnessByGroups(
     schedule.scheduleForGroups,
-    penaltyGrWin,
-    penaltySameTimesSc
+
+    penaltySameTimesSc,
+    penaltyGrWin
   );
   let fitnessTeach = fitnessByTeachers(
     schedule.scheduleForTeachers,
-    penaltyTeachWin,
-    penaltySameTimesSc
+    penaltySameTimesSc,
+    penaltyTeachWin
   );
   let fitnessAud =
     penaltySameTimesSc === 0
@@ -30,10 +31,10 @@ export default function Fitness(
     penaltySameRecSc === 0
       ? 0
       : fitnessSameSchedules(
-        schedule.scheduleForAudiences,
-        recommended_schedules,
-        penaltySameTimesSc
-      );
+          schedule.scheduleForAudiences,
+          recommended_schedules,
+          penaltySameTimesSc
+        );
   let fitnessValue =
     fitnessGr.fitnessValue +
     fitnessTeach.fitnessValue +
