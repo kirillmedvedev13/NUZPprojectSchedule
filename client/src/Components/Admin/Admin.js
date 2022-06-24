@@ -142,14 +142,17 @@ class Admin extends React.Component {
             </div>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
-            <div className="d-flex justify-content-center  ">
-              <Card className="my-2">
+            <div className="d-flex justify-content-center">
+              <Card className="my-2 w-50">
                 <Card.Header className="text-center">
                   Видалення даних
                 </Card.Header>
-                <Card.Body></Card.Body>
+                <Card.Body>
+                  <SelectCathedra setCathedra={this.setCathedra}>
+                  </SelectCathedra>
+                </Card.Body>
                 <Card.Footer>
-                  <ButtonDeleteAllData></ButtonDeleteAllData>
+                  <ButtonDeleteAllData id_cathedra={this.state.id_cathedra}></ButtonDeleteAllData>
                 </Card.Footer>
               </Card>
             </div>
