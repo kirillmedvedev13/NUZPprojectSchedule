@@ -86,7 +86,6 @@ export const UPDATE_CLASS = {
     parent,
     { id, id_type_class, times_per_week, id_assigned_discipline }
   ) {
-    console.log(id, id_type_class, times_per_week, id_assigned_discipline);
     let res = await db.class.update(
       { id_type_class, times_per_week, id_assigned_discipline },
       {
@@ -242,7 +241,7 @@ export const ADD_GROUP_TO_CLASS = {
     let ag = res.map((r) => {
       return r.dataValues;
     });
-    console.log(res);
+
     return res
       ? {
           successful: true,

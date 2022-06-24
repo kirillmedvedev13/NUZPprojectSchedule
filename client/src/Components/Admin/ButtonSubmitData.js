@@ -23,7 +23,6 @@ export default function ButtonSubmitData({ id_cathedra, file, sheetIndex }) {
           });
         }
         ReadFile(file, sheetIndex).then((data) => {
-          console.log(JSON.parse(data));
           const variables = { variables: { data, id_cathedra } };
           SetClasses(variables).then((res) => {
             CreateNotification(res.data.SetClasses);

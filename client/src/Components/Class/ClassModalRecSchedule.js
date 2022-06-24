@@ -120,13 +120,19 @@ export function AddRecScheduleToClass({
             type="number"
             placeholder="Номер пари"
             onChange={(e) => {
-              if (+e.target.value >= 1 && +e.target.value <= +query.data.GetInfo.max_pair && Number.isInteger(+e.target.value)) {
+              if (
+                +e.target.value >= 1 &&
+                +e.target.value <= +query.data.GetInfo.max_pair &&
+                Number.isInteger(+e.target.value)
+              ) {
                 handleChangeState("selectedRecNumberPair", +e.target.value);
                 handleChangeState("validatedRecNumberPair", { status: true });
-              }
-              else {
+              } else {
                 e.target.value = selectedRecNumberPair;
-                handleChangeState("validatedRecNumberPair", { status: false, message: `Номер пари повинен бути у проміжку [1-${query.data.GetInfo.max_pair}] та цілочисельний` });
+                handleChangeState("validatedRecNumberPair", {
+                  status: false,
+                  message: `Номер пари повинен бути у проміжку [1-${query.data.GetInfo.max_pair}] та цілочисельний`,
+                });
               }
             }}
           ></Form.Control>
@@ -197,7 +203,6 @@ export function AddRecScheduleToClass({
                   });
                 }
               } else {
-                debugger;
                 if (!selectedRecDayWeek)
                   handleChangeState("validatedRecDayWeek", {
                     status: false,
