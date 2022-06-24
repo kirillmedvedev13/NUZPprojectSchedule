@@ -20,11 +20,3 @@ export const GET_ALL_AUDIENCES = gql`
     }
   }
 `;
-export const GET_ALL_TYPE_CLASSES = gql`
-  query {
-    GetAllTypeClasses {
-      id
-      name
-    }
-  }
-`;

@@ -13,7 +13,6 @@ export function TableGroups({ item, handleChangeItem }) {
   );
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
-  console.log(item);
   return (
     <Table striped bordered hover className="my-2">
       <thead>
@@ -142,7 +141,7 @@ export function AddGroupToClass({
                     (gr) =>
                       +gr.semester === +selectedGroup.semester &&
                       gr.specialty.cathedra.short_name ===
-                        selectedGroup.specialty.cathedra.short_name
+                      selectedGroup.specialty.cathedra.short_name
                   );
                 else {
                   groups = [selectedGroup];

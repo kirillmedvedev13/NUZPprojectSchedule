@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import { UPDATE_DISCIPLINE, CREATE_DISCIPLINE } from "./mutations";
 import { CreateNotification } from "../Alert";
+import { GET_ALL_ASSIGNED_DISCIPLINES } from "../SelectsModalWindow/queries";
 
 export default function SaveButton({
   item,
@@ -10,7 +11,7 @@ export default function SaveButton({
   handleChangeState,
 }) {
   const mutation = item.id ? UPDATE_DISCIPLINE : CREATE_DISCIPLINE;
-  const [mutateFunction, { loading, error }] = useMutation(mutation);
+  const [mutateFunction, { loading, error }] = useMutation(mutation, { updateQueries: [{ query: GET_ALL_ASSIGNED_DISCIPLINES }] });
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id

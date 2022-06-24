@@ -29,13 +29,11 @@ function GetTeachers(schedules) {
 }
 
 function DataTable({ filters, info }) {
-  const { id_cathedra, id_group, id_specialty, semester } = filters;
+  const { id_cathedra, id_teacher } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_TEACHERS, {
     variables: {
-      id_specialty,
-      id_group,
       id_cathedra,
-      semester,
+      id_teacher,
     },
   });
   if (loading) return null;

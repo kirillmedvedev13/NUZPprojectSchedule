@@ -4,7 +4,7 @@ import ValidatedMessage from "../ValidatedMessage";
 import AddCathedraToAudience from "./AddCathedraToAudience";
 import SaveButton from "./SaveButton";
 import TableCathedras from "./TableCathedras";
-import SelectTypeClass from "./SelectTypeClass";
+import SelectTypeClass from "../SelectsModalWindow/SelectTypeClass.js";
 import cloneDeep from "clone-deep";
 
 class AudienceModal extends React.Component {
