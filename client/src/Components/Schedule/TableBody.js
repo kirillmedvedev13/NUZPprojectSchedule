@@ -3,22 +3,26 @@ export default function TableBody(MapSomething, info, getDescription) {
   return (
     <tbody>
       {[...MapSomething].map((map) => {
+        let object = map[0];
+        let array = map[1];
         return (
-          <Fragment key={`${map[0].id}-Frag1`}>
-            <tr key={map[0].id}>
-              <td rowSpan={3 * info.max_pair + 1} key={map[0].id + map[0].name}>
-                {map[0].name}
+          <Fragment key={`${object.id}-Frag1`}>
+            <tr key={object.id}>
+              <td rowSpan={3 * info.max_pair + 1} key={object.id + object.name}>
+                {object.name}
               </td>
             </tr>
             {[...Array(info.max_pair)].map((i, number_pair) => {
-              let arrScheduleTotal = [];
-              let arrScheduleBot = [];
+              let arrScheduleTop = new Array(info.max_day);
+              let arrScheduleTotal = new Array(info.max_day);
+              let arrScheduleBot = new Array(info.max_day);
+              let checkPut = new Array(info.max_day);
               return (
-                <Fragment key={`${map[0].id}-Frag2-${number_pair}`}>
-                  <tr key={`${map[0].id}-data-${number_pair}`}>
+                <Fragment key={`${object.id}-Frag2-${number_pair}`}>
+                  <tr key={`${object.id}-data-${number_pair}`}>
                     <td
                       rowSpan="3"
-                      key={`${map[0].id}-td-${number_pair}`}
+                      key={`${object.id}-td-${number_pair}`}
                       className={
                         number_pair % 2 === 0 ? "table-active" : "table-default"
                       }
@@ -26,115 +30,95 @@ export default function TableBody(MapSomething, info, getDescription) {
                       {number_pair + 1}
                     </td>
                   </tr>
-                  <tr key={map[0].id + "trTop" + number_pair}>
-                    {[...Array(info.max_day)].map((i, day_week) => {
-                      // По числителю запоминать расписание
-                      let arrScheduleTop = map[1].filter(
-                        (cl) =>
-                          +cl.pair_type === 1 &&
-                          +cl.number_pair === number_pair + 1 &&
-                          +cl.day_week === day_week + 1
-                      );
-
-                      arrScheduleTotal = map[1].filter(
-                        (cl) =>
-                          +cl.pair_type === 3 &&
-                          +cl.number_pair === number_pair + 1 &&
-                          +cl.day_week === day_week + 1
-                      );
-
-                      if (arrScheduleTop.length) {
-                        let description = "";
-
-                        arrScheduleTop.forEach((cl) => {
-                          description += getDescription(cl);
-                        });
-                        return (
-                          <td
-                            key={map[0].id + "tdTop" + number_pair + day_week}
-                            className={
-                              arrScheduleTop.length > 1
-                                ? "table-danger"
-                                : "table-warning"
-                            }
-                          >
-                            {description}
-                          </td>
-                        );
-                      } else if (arrScheduleTotal.length) {
-                        let description = "";
-                        arrScheduleTotal.forEach((cl) => {
-                          description += getDescription(cl);
-                        });
-                        let isBot = arrScheduleBot.find(
-                          (cl) =>
-                            +cl.pair_type === 2 &&
-                            +cl.number_pair === number_pair + 1 &&
-                            +cl.day_week === day_week + 1
-                        );
-                        return (
-                          <td
+                  {[...Array(info.max_day)].forEach((i, day_week) => {
+                    // Заполнение массивов
+                    arrScheduleTop[day_week] = array.filter(
+                      (cl) =>
+                        +cl.pair_type === 1 &&
+                        +cl.number_pair === number_pair + 1 &&
+                        +cl.day_week === day_week + 1
+                    );
+                    arrScheduleBot[day_week] = array.filter(
+                      (cl) =>
+                        +cl.pair_type === 2 &&
+                        +cl.number_pair === number_pair + 1 &&
+                        +cl.day_week === day_week + 1
+                    );
+                    arrScheduleTotal[day_week] = array.filter(
+                      (cl) =>
+                        +cl.pair_type === 3 &&
+                        +cl.number_pair === number_pair + 1 &&
+                        +cl.day_week === day_week + 1
+                    );
+                    // Проверка на накладку на этот день
+                    if (arrScheduleTotal[day_week].length && (arrScheduleBot[day_week].length || arrScheduleTop[day_week].length)) {
+                      checkPut[day_week] = false;
+                    }
+                    else if (arrScheduleTotal[day_week].length > 1 || arrScheduleBot[day_week].length > 1 || arrScheduleTop[day_week].length > 1) {
+                      checkPut[day_week] = false;
+                    }
+                    else {
+                      checkPut[day_week] = true;
+                    }
+                  })}
+                  <tr>
+                    {
+                      // Вставка в таблицу ВВЕРХ
+                      [...Array(info.max_day)].map((i, day_week) => {
+                        // Если нету накладок, то обычная вставка
+                        if (checkPut[day_week]) {
+                          // Пара по числителю
+                          if (arrScheduleTop[day_week][0]) {
+                            return <td>{getDescription(arrScheduleTop[day_week][0])}</td>
+                          }
+                          // Общая пара
+                          else if (arrScheduleTotal[day_week][0]) {
+                            return <td>{getDescription(arrScheduleTotal[day_week][0])}</td>
+                          }
+                          // Если нету пары
+                          else {
+                            return <td></td>
+                          }
+                        }
+                        // Если накладка
+                        else {
+                          let str = "";
+                          if (arrScheduleTotal[day_week].length) {
+                            str += "Загальна:"
+                            arrScheduleTotal[day_week].forEach(sc => { str += getDescription(sc) })
+                          }
+                          if (arrScheduleTop[day_week].length) {
+                            str += "Чисельник:"
+                            arrScheduleTop[day_week].forEach(sc => { str += getDescription(sc) })
+                          }
+                          if (arrScheduleBot[day_week].length) {
+                            str += "Знаменник:"
+                            arrScheduleBot[day_week].forEach(sc => { str += getDescription(sc) })
+                          }
+                          return <td
                             rowSpan="2"
-                            key={map[0].id + "tdBoth" + number_pair + day_week}
-                            className={
-                              arrScheduleTotal.length > 1 || isBot
-                                ? "table-danger"
-                                : "table-success"
-                            }
-                          >
-                            {description}
-                          </td>
-                        );
-                      } else
-                        return (
-                          <td
-                            key={map[0].id + "tdNull" + number_pair + day_week}
-                          ></td>
-                        );
-                    })}
+                          >{str}</td>
+                        }
+                      })
+                    }
                   </tr>
-                  <tr key={map[0].id + "trBot" + number_pair}>
-                    {[...Array(info.max_day)].map((i, day_week) => {
-                      arrScheduleBot = map[1].filter(
-                        (cl) =>
-                          +cl.pair_type === 2 &&
-                          +cl.number_pair === number_pair + 1 &&
-                          +cl.day_week === day_week + 1
-                      );
-                      let isTotal = arrScheduleTotal.find(
-                        (cl) =>
-                          +cl.pair_type === 3 &&
-                          +cl.number_pair === number_pair + 1 &&
-                          +cl.day_week === day_week + 1
-                      );
-                      if (isTotal) return null;
-                      else if (arrScheduleBot.length) {
-                        let description = "";
-                        arrScheduleBot.forEach((cl) => {
-                          description += getDescription(cl);
-                        });
-
-                        return (
-                          <td
-                            key={map[0].id + "tdBot" + number_pair + day_week}
-                            className={
-                              arrScheduleBot.length > 1
-                                ? "table-danger"
-                                : "table-info"
-                            }
-                          >
-                            {description}
-                          </td>
-                        );
-                      } else
-                        return (
-                          <td
-                            key={map[0].id + "tdNull" + number_pair + day_week}
-                          >
-                            {map[0].id}
-                          </td>
-                        );
-                    })}
+                  <tr>
+                    {
+                      // Вставка в таблицу ВНИЗ
+                      [...Array(info.max_day)].map((i, day_week) => {
+                        // Если нету накладок, то обычная вставка
+                        if (checkPut[day_week]) {
+                          // Пара по знаменателю
+                          if (arrScheduleBot[day_week][0]) {
+                            return <td>{getDescription(arrScheduleBot[day_week][0])}</td>
+                          }
+                          // Если нету пары
+                          else {
+                            return <td></td>
+                          }
+                        }
+                      })
+                    }
                   </tr>
                 </Fragment>
               );
