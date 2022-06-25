@@ -43,19 +43,13 @@ function DataTable({ filters, info }) {
   let MapTeacher = new Map();
   let teachers = GetTeachers(data.GetAllScheduleTeachers);
   for (const teacher of teachers) {
-    let temp = [];
-    data.GetAllScheduleTeachers.forEach((schedule) => {
-      for (
-        let i = 0;
-        i < schedule.assigned_group.class.assigned_teachers.length;
-        i++
-      ) {
-        if (
-          schedule.assigned_group.class.assigned_teachers[i].teacher.id ===
-          teacher.id
-        )
-          temp.push(schedule);
-      }
+    if (+teacher.id === 657) debugger;
+    let classes = data.GetAllScheduleTeachers.filter((schedule) => {
+      let temp = schedule.assigned_group.class.assigned_teachers.find(
+        (teach) => +teach.teacher.id === +teacher.id
+      );
+      if (temp) return true;
+      else return false;
     });
 
     MapTeacher.set(
@@ -63,7 +57,7 @@ function DataTable({ filters, info }) {
         id: teacher.id,
         name: `${teacher.surname} ${teacher.name} ${teacher.patronymic}`,
       },
-      SplitPairs(temp)
+      classes.length === 0 ? [] : SplitPairs(classes)
     );
   }
 
