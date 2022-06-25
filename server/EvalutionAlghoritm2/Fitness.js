@@ -119,6 +119,21 @@ function fitnessWindows(schedule, penaltyWin) {
     for (let j = i + 1; j < len; j++) {
       if (+schedule[i].day_week === +schedule[j].day_week) {
         if (+schedule[i].number_pair !== +schedule[j].number_pair) {
+          if (schedule[i].pair_type === 3) {
+            while (j < len && schedule[i].day_week === +schedule[j].day_week) {
+              if (
+                schedule[j - 1].pair_type !== schedule[j].pair_type &&
+                schedule[j].pair_type !== 3
+              )
+                fitnessValue +=
+                  (schedule[j].number_pair - schedule[i].number_pair - 1) *
+                  penaltyWin;
+              else break;
+              j += 1;
+            }
+            break;
+          }
+
           fitnessValue +=
             (schedule[j].number_pair - schedule[i].number_pair - 1) *
             penaltyWin;
