@@ -87,6 +87,7 @@ export const GET_ALL_SCHEDULE_AUDIENCES = gql`
             name
           }
           class {
+            id
             type_class {
               id
               name

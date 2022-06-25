@@ -18,7 +18,7 @@ export default function SplitPairs(schedule) {
         " " + classes[j].assigned_group.group.name;
     }
     splitSchedule.push(tempClas);
-    i += classes.length;
+    i += classes.length === 0 ? 1 : classes.length;
   }
   sortSchedule(splitSchedule);
   return splitSchedule;

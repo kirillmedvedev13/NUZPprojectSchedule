@@ -38,7 +38,10 @@ function DataTable({ filters, info }) {
   if (error) return `Error! ${error}`;
   if (!data.GetAllScheduleAudiences.length) return <tbody></tbody>;
   let MapAudience = new Map();
+
   for (const audience of data.GetAllScheduleAudiences) {
+    debugger;
+    SplitPairs(audience.schedules);
     MapAudience.set(
       { id: audience.id, name: audience.name },
       SplitPairs(audience.schedules)

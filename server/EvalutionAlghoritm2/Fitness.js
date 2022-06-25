@@ -33,7 +33,7 @@ export default function Fitness(
       : fitnessSameSchedules(
           schedule.scheduleForAudiences,
           recommended_schedules,
-          penaltySameTimesSc
+          penaltySameRecSc
         );
   let fitnessValue =
     fitnessGr.fitnessValue +
@@ -112,22 +112,22 @@ function fitnessByAudiences(schedule, penaltySameTimesSc) {
     fitnessValue,
   };
 }
-function fitnessWindows(schedule, penaltyGrWin) {
+function fitnessWindows(schedule, penaltyWin) {
   let fitnessValue = 0;
   let len = schedule.length;
   for (let i = 0; i < len - 1; i++) {
     for (let j = i + 1; j < len; j++) {
-      if (schedule[i].day_week == schedule[j].day_week) {
-        if (schedule[i].number_pair != schedule[j].number_pair)
+      if (+schedule[i].day_week === +schedule[j].day_week) {
+        if (+schedule[i].number_pair !== +schedule[j].number_pair) {
           fitnessValue +=
             (schedule[j].number_pair - schedule[i].number_pair - 1) *
-            penaltyGrWin;
-        if (
-          schedule[i].pair_type == schedule[j].pair_type ||
-          schedule[j].pair_type == 3
-        ) {
-          break;
+            penaltyWin;
         }
+        if (
+          +schedule[i].pair_type === +schedule[j].pair_type ||
+          +schedule[j].pair_type === 3
+        )
+          break;
       } else break;
     }
   }
@@ -135,22 +135,22 @@ function fitnessWindows(schedule, penaltyGrWin) {
 }
 function fitnessSameTimes(schedule, penaltySameTimesSc) {
   let fitnessValue = 0;
-  let index = 1;
-  while (index < schedule.length) {
+  let i = 0;
+  while (i < schedule.length - 1) {
     //в границе одного дня
-    if (schedule[index - 1].day_week == schedule[index].day_week) {
+    if (schedule[i].day_week === schedule[i + 1].day_week) {
       //если у двух пар совпадает номер пары
-      if (schedule[index - 1].number_pair == schedule[index].number_pair) {
+      if (schedule[i].number_pair === schedule[i + 1].number_pair) {
         //все случае кроме если стоит числитель и знаменатель
         if (
-          schedule[index - 1].pair_type == schedule[index].pair_type ||
-          schedule[index - 1].pair_type == 3 ||
-          schedule[index].pair_type == 3
+          schedule[i].pair_type === schedule[i + 1].pair_type ||
+          schedule[i].pair_type === 3 ||
+          schedule[i + 1].pair_type === 3
         )
           fitnessValue += penaltySameTimesSc;
       }
     }
-    index++;
+    i++;
   }
   return fitnessValue;
 }
@@ -165,8 +165,9 @@ function fitnessSameSchedules(
     for (let clas of value) {
       let recSc = recommended_schedules.filter(
         (rs) =>
-          rs.id_class === clas.id_class &&
-          (rs.day_week !== clas.day_week || rs.number_pair !== clas.number_pair)
+          +rs.id_class === +clas.id_class &&
+          (+rs.day_week !== +clas.day_week ||
+            +rs.number_pair !== +clas.number_pair)
       );
 
       if (recSc.length) {
