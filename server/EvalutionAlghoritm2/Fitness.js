@@ -122,6 +122,10 @@ function fitnessWindows(schedule, penaltyWin) {
           fitnessValue +=
             (schedule[j].number_pair - schedule[i].number_pair - 1) *
             penaltyWin;
+          /*if (schedule[j].number_pair - schedule[i].number_pair - 1 > 0) {
+            console.log();
+            console.log();
+          }*/
         }
         if (
           +schedule[i].pair_type === +schedule[j].pair_type ||
