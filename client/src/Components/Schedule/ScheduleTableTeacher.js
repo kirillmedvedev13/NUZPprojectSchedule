@@ -39,6 +39,7 @@ function DataTable({ filters, info }) {
   if (loading) return null;
   if (error) return `Error! ${error}`;
   if (!data.GetAllScheduleTeachers.length) return <tbody></tbody>;
+  console.log(data);
   let MapTeacher = new Map();
   let teachers = GetTeachers(data.GetAllScheduleTeachers);
   for (const teacher of teachers) {
