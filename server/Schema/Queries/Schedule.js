@@ -3,6 +3,7 @@ import db from "../../database.js";
 import AudienceType from "../TypeDefs/AudienceType.js";
 import { ScheduleType } from "../TypeDefs/ScheduleType.js";
 import { Op } from "sequelize";
+import TeacherType from "../TypeDefs/TeacherType.js";
 
 export const GET_ALL_SCHEDULE_GROUPS = {
   type: new GraphQLList(ScheduleType),
@@ -193,6 +194,58 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
         filterCathedra = { id_cathedra: { [Op.eq]: id_cathedra } };
       }
     }
+    // const res2 = await db.teacher.findAll({
+    //   order: [
+    //     ["surname", "ASC"],
+    //     ["name", "ASC"],
+    //     ["patronymic", "ASC"],
+    //   ],
+    //   include: {
+    //     model: db.assigned_teacher,
+    //     required: true,
+    //     include: {
+    //       model: db.class,
+    //       required: true,
+    //       include: [
+    //         {
+    //           model: db.assigned_discipline,
+    //           required: true,
+    //           include: {
+    //             model: db.discipline,
+    //             required: true,
+    //           }
+    //         },
+    //         {
+    //           include: db.assigned_group,
+    //           required: true,
+    //           include: [
+    //             {
+    //               model: db.group,
+    //               required: true,
+    //               include: {
+    //                 model: db.specialty,
+    //                 required: true,
+    //                 include: {
+    //                   model: db.cathedra,
+    //                   required: true,
+    //                 }
+    //               }
+    //             },
+    //             {
+    //               model: db.schedule,
+    //               required: true,
+
+    //             }
+    //           ]
+    //         },
+    //         {
+    //           include: db.type_class,
+    //           required: true,
+    //         }
+    //       ]
+    //     }
+    //   }
+    // })
     const res = await db.schedule.findAll({
       order: [
         ["day_week", "ASC"],

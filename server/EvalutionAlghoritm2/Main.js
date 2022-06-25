@@ -95,7 +95,7 @@ export const RUN_EA = {
     groups = groups.map((g) => g.toJSON());
     audiences = audiences.map((a) => a.toJSON());
     classes = classes.map((c) => c.toJSON());
-    let type_select = "ranging";
+    let type_select = "tournament";
 
     // Создание пула потоков
     const numCPUs = cpus().length;
@@ -140,6 +140,14 @@ export const RUN_EA = {
               classes,
             ])
           );
+          if (r1 > r2) {
+            populations.splice(r1, 1);
+            populations.splice(r2, 1);
+          }
+          else {
+            populations.splice(r2, 1);
+            populations.splice(r1, 1);
+          }
         }
       }
       await Promise.all(arr_promisses).then((res) => {
@@ -152,7 +160,7 @@ export const RUN_EA = {
       console.time("Muta");
       // Мутации
       arr_promisses = [];
-      populations.map((mutant) => {
+      populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
           arr_promisses.push(
             pool.exec("workMutation", [
@@ -164,6 +172,7 @@ export const RUN_EA = {
               classes,
             ])
           );
+          populations.splice(index, 1);
         }
       });
       await Promise.all(arr_promisses).then((res) => {

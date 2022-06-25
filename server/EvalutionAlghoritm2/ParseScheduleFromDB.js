@@ -13,9 +13,7 @@ export default async function ParseScheduleFromDB(schedule) {
       {
         model: db.recommended_audience,
       },
-      {
-        model: db.recommended_schedule,
-      },
+
     ],
   });
 

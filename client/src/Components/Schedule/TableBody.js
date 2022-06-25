@@ -90,6 +90,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                           else if (arrScheduleTotal[day_week][0]) {
                             return (
                               <td
+                                rowSpan="2"
                                 key={
                                   object.id + "tdTotal" + number_pair + day_week
                                 }
@@ -166,28 +167,30 @@ export default function TableBody(MapSomething, info, getDescription) {
                       [...Array(info.max_day)].map((i, day_week) => {
                         // Если нету накладок, то обычная вставка
                         if (checkPut[day_week]) {
-                          // Пара по знаменателю
-                          if (arrScheduleBot[day_week][0]) {
-                            return (
-                              <td
-                                key={
-                                  object.id + "tdBot" + number_pair + day_week
-                                }
-                                className="table-info"
-                              >
-                                {getDescription(arrScheduleBot[day_week][0])}
-                              </td>
-                            );
-                          }
-                          // Если нету пары
-                          else {
-                            return (
-                              <td
-                                key={
-                                  object.id + "tdNull1" + number_pair + day_week
-                                }
-                              ></td>
-                            );
+                          if (!arrScheduleTotal[day_week][0]) {
+                            // Пара по знаменателю
+                            if (arrScheduleBot[day_week][0]) {
+                              return (
+                                <td
+                                  key={
+                                    object.id + "tdBot" + number_pair + day_week
+                                  }
+                                  className="table-info"
+                                >
+                                  {getDescription(arrScheduleBot[day_week][0])}
+                                </td>
+                              );
+                            }
+                            // Если нету пары
+                            else {
+                              return (
+                                <td
+                                  key={
+                                    object.id + "tdNull1" + number_pair + day_week
+                                  }
+                                ></td>
+                              );
+                            }
                           }
                         }
                       })

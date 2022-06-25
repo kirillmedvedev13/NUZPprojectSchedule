@@ -4,6 +4,7 @@ import { Table } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_GROUPS, GET_INFO } from "./queries";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
+import { GET_ALL_CLASSES } from "../Class/queries";
 
 function getDescription(schedule) {
   const desciption = `
@@ -50,6 +51,7 @@ function DataTable({ filters, info }) {
 
 function TableHead({ filters }) {
   const { loading, error, data } = useQuery(GET_INFO);
+  const { loading2, error2, data2 } = useQuery(GET_ALL_CLASSES);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (

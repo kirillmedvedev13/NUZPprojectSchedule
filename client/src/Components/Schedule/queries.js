@@ -160,3 +160,44 @@ export const GET_ALL_SCHEDULE_TEACHERS = gql`
     }
   }
 `;
+
+// export const GET_ALL_SCHEDULE_TEACHERS = gql`
+//   query ($id_teacher: Int, $id_cathedra: Int) {
+//     GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
+//      id,
+//      name,
+//      surname,
+//      patronymic,
+//      assigned_teachers{
+//       class{
+//         type_class{
+//           name
+//         }
+//         assigned_discipline{
+//           discipline{
+//             name
+//           }
+//         }
+//         assigned_groups{
+//           group{
+//             name
+//             specialty{
+//               cathedra{
+//                 short_name
+//               }
+//             }
+//           }
+//           schedules{
+//             number_pair
+//             day_week
+//             pair_type
+//             audience{
+//               name
+//             }
+//           }
+//         }
+//       }
+//      }
+//     }
+//   }
+// `;
