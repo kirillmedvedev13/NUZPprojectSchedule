@@ -168,14 +168,15 @@ function fitnessSameSchedules(
   for (let value of schedule.values()) {
     for (let clas of value) {
       let recSc = recommended_schedules.filter(
-        (rs) =>
-          +rs.id_class === +clas.id_class &&
-          (+rs.day_week !== +clas.day_week ||
-            +rs.number_pair !== +clas.number_pair)
+        (rs) => +rs.id_class === +clas.id_class
       );
-
       if (recSc.length) {
-        fitnessSameRecSc += penaltySameRecSchedules * recSc.length;
+        let isSame = recSc.filter(
+          (rs) =>
+            +rs.day_week === +clas.day_week &&
+            +rs.number_pair === +clas.number_pair
+        );
+        if (!isSame.length) fitnessSameRecSc += penaltySameRecSchedules;
       }
     }
   }
