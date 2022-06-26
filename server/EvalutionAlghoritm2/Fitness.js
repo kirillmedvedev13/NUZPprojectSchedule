@@ -31,10 +31,10 @@ export default function Fitness(
     penaltySameRecSc === 0
       ? 0
       : fitnessSameSchedules(
-        schedule.scheduleForAudiences,
-        recommended_schedules,
-        penaltySameRecSc
-      );
+          schedule.scheduleForAudiences,
+          recommended_schedules,
+          penaltySameRecSc
+        );
   let fitnessValue =
     fitnessGr.fitnessValue +
     fitnessTeach.fitnessValue +
@@ -129,9 +129,9 @@ function fitnessByAudiences(schedule, penaltySameTimesSc) {
 function getClosePair(array) {
   let max = array[0];
   for (let i = 1; i < array.length; i++) {
-    if (max && array[i]) {
+    if (array[i] && max) {
       if (max.number_pair < array[i]?.number_pair) max = array[i];
-    } else max = array[i];
+    } else if (!max) max = array[i];
   }
   return max;
 }
@@ -235,6 +235,10 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
   let fitnessSameTimes = 0;
 
   for (let i = 0; i < schedule.length - 1; i++) {
+    if (+schedule.id_class === 2498) {
+      console.log();
+      console.log();
+    }
     if (schedule[i].day_week === schedule[i + 1].day_week) {
       //накладки
       if (schedule[i].number_pair === schedule[i + 1].number_pair) {
@@ -260,17 +264,21 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
         let closePair =
           schedule[i + 1].pair_type === 3
             ? [
-              getClosePair([lastTop, lastTotal]),
-              getClosePair([lastBot, lastTotal]),
-            ]
+                getClosePair([lastTop, lastTotal]),
+                getClosePair([lastBot, lastTotal]),
+              ]
             : schedule[i + 1].pair_type === 2
-              ? getClosePair([lastBot, lastTotal])
-              : getClosePair([lastTop, lastTotal]);
+            ? getClosePair([lastBot, lastTotal])
+            : getClosePair([lastTop, lastTotal]);
         if (closePair)
           if (closePair?.length) {
             let closePair1 = closePair[0];
             let closePair2 = closePair[1];
-            if (closePair1?.pair_type !== closePair2?.pair_type) {
+            if (
+              closePair1 &&
+              closePair2 &&
+              closePair1?.pair_type !== closePair2?.pair_type
+            ) {
               /* if (
                 schedule[i + 1].number_pair - closePair1.number_pair - 1 >
                 0
