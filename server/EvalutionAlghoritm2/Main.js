@@ -189,6 +189,7 @@ export const RUN_EA = {
           pool.exec("workFitness", [
             JSON.stringify(individ, replacer),
             recommended_schedules,
+            max_day,
             penaltySameRecSc,
             penaltyGrWin,
             penaltySameTimesSc,

@@ -55,34 +55,34 @@ export default function Mutation(schedule,
         let number_pair = null;
         let id_audience = null;
         let index = 0;
-        if (clas.recommended_schedules[i]) {
-          day_week = clas.recommended_schedules[i].day_week;
-          number_pair = clas.recommended_schedules[i].number_pair;
-        }
-        else {
-          day_week = GetRndInteger(1, max_day);
-          number_pair = GetRndInteger(1, max_pair);
-        }
-        id_audience = GetIdAudienceForClass(clas, audiences);
-        // Пока все условия не сойдутся, рандомно выбирать параметры
-        // while (!checkAud || !checkTeach || !checkGroup) {
-        //   index++;
-        //   if (index > 1000)
-        //     break;
-        //   // Если есть рек время, то не выбирать случайно
-        //   if (clas.recommended_schedules[i]) {
-        //     day_week = clas.recommended_schedules[i].day_week;
-        //     number_pair = clas.recommended_schedules[i].number_pair;
-        //   }
-        //   else {
-        //     day_week = GetRndInteger(1, max_day);
-        //     number_pair = GetRndInteger(1, max_pair);
-        //   }
-        //   id_audience = GetIdAudienceForClass(clas, audiences);
-        //   checkAud = CheckPutClassForAudience(schedule.scheduleForAudiences.get(id_audience), day_week, number_pair, pair_type);
-        //   checkTeach = CheckPutClassForTeacher(schedule.scheduleForTeachers, clas, day_week, number_pair, pair_type);
-        //   checkGroup = CheckPutClassForGroup(schedule.scheduleForGroups, clas, day_week, number_pair, pair_type);
+        // if (clas.recommended_schedules[i]) {
+        //   day_week = clas.recommended_schedules[i].day_week;
+        //   number_pair = clas.recommended_schedules[i].number_pair;
         // }
+        // else {
+        //   day_week = GetRndInteger(1, max_day);
+        //   number_pair = GetRndInteger(1, max_pair);
+        // }
+        // id_audience = GetIdAudienceForClass(clas, audiences);
+        // Пока все условия не сойдутся, рандомно выбирать параметры
+        while (!checkAud || !checkTeach || !checkGroup) {
+          index++;
+          if (index > 1000)
+            break;
+          // Если есть рек время, то не выбирать случайно
+          if (clas.recommended_schedules[i]) {
+            day_week = clas.recommended_schedules[i].day_week;
+            number_pair = clas.recommended_schedules[i].number_pair;
+          }
+          else {
+            day_week = GetRndInteger(1, max_day);
+            number_pair = GetRndInteger(1, max_pair);
+          }
+          id_audience = GetIdAudienceForClass(clas, audiences);
+          checkAud = CheckPutClassForAudience(schedule.scheduleForAudiences.get(id_audience), day_week, number_pair, pair_type);
+          checkTeach = CheckPutClassForTeacher(schedule.scheduleForTeachers, clas, day_week, number_pair, pair_type);
+          checkGroup = CheckPutClassForGroup(schedule.scheduleForGroups, clas, day_week, number_pair, pair_type);
+        }
         // вставить в расписание для всех групп
         AddClassToSchedule(schedule, clas, day_week, number_pair, pair_types[i], id_audience);
       }

@@ -12,6 +12,7 @@ function workCrossing(schedule1, schedule2, classes) {
 function workFitness(
     schedule,
     recommended_schedules,
+    max_day,
     penaltySameRecSc,
     penaltyGrWin,
     penaltySameTimesSc,
@@ -20,6 +21,7 @@ function workFitness(
     return Fitness(
         schedule,
         recommended_schedules,
+        max_day,
         penaltySameRecSc,
         penaltyGrWin,
         penaltySameTimesSc,
