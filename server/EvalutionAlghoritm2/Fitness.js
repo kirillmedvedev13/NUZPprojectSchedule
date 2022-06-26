@@ -125,7 +125,7 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
   let lastTop;
   let lastBot;
   let lastTotal;
-  for (let i = 0; i < schedule.length - 1; i++) {
+  for (let i = -1; i < schedule.length - 1; i++) {
     // Переход на новый день
     if (currentDay !== schedule[i + 1].day_week) {
       currentDay = schedule[i + 1].day_week;
