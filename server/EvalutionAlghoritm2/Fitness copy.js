@@ -125,7 +125,7 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
   let lastTop;
   let lastBot;
   let lastTotal;
-  for (let i = 0; i < schedule.length - 1; i++) {
+  for (let i = -1; i < schedule.length - 1; i++) {
     // Переход на новый день
     if (currentDay !== schedule[i + 1].day_week) {
       currentDay = schedule[i + 1].day_week;
@@ -180,14 +180,26 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
           }
         }
         // Если знаменатель/общая а перед ним числитель
-        if ((schedule[i + 1].pair_type === 2 || schedule[i + 1].pair_type === 3) && lastTop?.number_pair === schedule[i + 1].number_pair - 1) {
-          if (lastBot?.number_pair < schedule[i + 1].number_pair - 1) {
-            fitnessWindows += (schedule[i + 1].number_pair - lastBot?.number_pair - 1) * penaltyWin;
-            continue;
+        if ((schedule[i + 1].pair_type === 2 || schedule[i + 1].pair_type === 3)) {
+          if (lastTop?.number_pair === schedule[i + 1].number_pair - 1) {
+            if (lastBot?.number_pair < schedule[i + 1].number_pair - 1) {
+              fitnessWindows += (schedule[i + 1].number_pair - lastBot?.number_pair - 1) * penaltyWin;
+              continue;
+            }
+            if (lastTotal?.number_pair < schedule[i + 1].number_pair - 1) {
+              fitnessWindows += (schedule[i + 1].number_pair - lastTotal?.number_pair - 1) * penaltyWin;
+              continue;
+            }
           }
-          if (lastTotal?.number_pair < schedule[i + 1].number_pair - 1) {
-            fitnessWindows += (schedule[i + 1].number_pair - lastTotal?.number_pair - 1) * penaltyWin;
-            continue;
+          if (schedule.find(sc => sc.day_week === currentDay && sc.number_pair === schedule[i + 1].number_pair - 1 && sc.pair_type === 1)) {
+            if (lastBot?.number_pair < schedule[i + 1].number_pair - 1) {
+              fitnessWindows += (schedule[i + 1].number_pair - lastBot?.number_pair - 1) * penaltyWin;
+              continue;
+            }
+            if (lastTotal?.number_pair < schedule[i + 1].number_pair - 1) {
+              fitnessWindows += (schedule[i + 1].number_pair - lastTotal?.number_pair - 1) * penaltyWin;
+              continue;
+            }
           }
         }
       }
