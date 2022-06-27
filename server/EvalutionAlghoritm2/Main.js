@@ -95,7 +95,8 @@ export const RUN_EA = {
     groups = groups.map((g) => g.toJSON());
     audiences = audiences.map((a) => a.toJSON());
     classes = classes.map((c) => c.toJSON());
-    let type_select = "tournament";
+
+    let type_select = "ranging";
 
     // Создание пула потоков
     const numCPUs = cpus().length;
@@ -140,14 +141,14 @@ export const RUN_EA = {
               classes,
             ])
           );
-          if (r1 > r2) {
-            populations.splice(r1, 1);
-            populations.splice(r2, 1);
-          }
-          else {
-            populations.splice(r2, 1);
-            populations.splice(r1, 1);
-          }
+          // if (r1 > r2) {
+          //   populations.splice(r1, 1);
+          //   populations.splice(r2, 1);
+          // }
+          // else {
+          //   populations.splice(r2, 1);
+          //   populations.splice(r1, 1);
+          // }
         }
       }
       await Promise.all(arr_promisses).then((res) => {
@@ -172,7 +173,7 @@ export const RUN_EA = {
               classes,
             ])
           );
-          populations.splice(index, 1);
+          // populations.splice(index, 1);
         }
       });
       await Promise.all(arr_promisses).then((res) => {

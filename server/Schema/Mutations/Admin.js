@@ -76,16 +76,7 @@ export const SET_CLASSES = {
           },
         },
       });
-      let audiences = await db.audience.findAll({
-        include: {
-          model: db.assigned_audience,
-          required: true,
-          include: {
-            model: db.cathedra,
-            required: true,
-          },
-        },
-      });
+      let audiences = await db.audience.findAll();
       audiences = audiences.map((a) => a.toJSON());
       groups = groups.map((g) => g.toJSON());
       cathedras = cathedras.map((c) => c.toJSON());

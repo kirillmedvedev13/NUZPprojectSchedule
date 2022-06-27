@@ -1,6 +1,6 @@
 import workerpool from "workerpool"
 import Crossing from "./Crossing.js";
-import Fitness from "./Fitness.js";
+import Fitness from "./Fitness1.js";
 import Mutation from "./Mutation.js";
 import SelectRanging from "./SelectRanging.js";
 import SelectTournament from "./SelectTournament.js";

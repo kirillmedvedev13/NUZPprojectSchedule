@@ -263,7 +263,7 @@ function DataForm({ handleChangeInfo, info }) {
             max={7}
             onChange={(e) => {
               handleChangeInfo(
-                "penaltySameTimesSc",
+                "max_day",
                 e ? Number(e.target.value) : null
               );
             }}
@@ -280,7 +280,7 @@ function DataForm({ handleChangeInfo, info }) {
             max={8}
             onChange={(e) => {
               handleChangeInfo(
-                "penaltySameTimesSc",
+                "max_pair",
                 e ? Number(e.target.value) : null
               );
             }}
