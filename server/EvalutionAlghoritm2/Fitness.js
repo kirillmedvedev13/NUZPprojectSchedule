@@ -164,7 +164,7 @@ function FitnessSameTimesAndWindows(schedule, max_day, penaltySameTimesSc, penal
     else if (schedule[i].pair_type === 3) {
       lastTotal = schedule[i];
     }
-    // if (schedule[i].id_assigned_group === 6535 || schedule[i + 1].id_assigned_group === 6535) {
+    // if (schedule[i].id_assigned_group === 6457 || schedule[i + 1].id_assigned_group === 6457) {
     //   console.log();
     // }
     // Проверка накладки
@@ -190,19 +190,25 @@ function FitnessSameTimesAndWindows(schedule, max_day, penaltySameTimesSc, penal
   for (let currentDay = 1; currentDay <= max_day; currentDay++) {
     let schedule_top = schedule.filter(sc => (sc.pair_type === 1 || sc.pair_type === 3) && sc.day_week === currentDay);
     let schedule_bot = schedule.filter(sc => (sc.pair_type === 2 || sc.pair_type === 3) && sc.day_week === currentDay);
-    let schedule_total = schedule.filter(sc => sc.pair_type === 3 && sc.day_week === currentDay);
+    let array = [];
     for (let i = 0; i < schedule_top.length - 1; i++) {
-      if (schedule_top[i + 1].number_pair - schedule_top[i].number_pair > 1 && !(schedule_top[i + 1].pair_type === 3 && schedule_top[i].pair_type === 3)) {
+      if (schedule_top[i + 1].number_pair - schedule_top[i].number_pair > 1) {
         fitnessWindows += (schedule_top[i + 1].number_pair - schedule_top[i].number_pair - 1) * penaltyWin;
+        if (schedule_top[i + 1].pair_type === 3 && schedule_top[i].pair_type === 3) {
+          array.push([schedule_top[i], schedule_top[i + 1]]);
+        }
       }
     }
     for (let i = 0; i < schedule_bot.length - 1; i++) {
-      if (schedule_bot[i + 1].number_pair - schedule_bot[i].number_pair > 1 && !(schedule_bot[i + 1].pair_type === 3 && schedule_bot[i].pair_type === 3)) {
+      if (schedule_bot[i + 1].number_pair - schedule_bot[i].number_pair > 1) {
+        if (schedule_bot[i + 1].pair_type === 3 && schedule_bot[i].pair_type === 3) {
+          if (array.find(sc => sc[0] === schedule_bot[i] && sc[1] === schedule_bot[i + 1])) {
+            continue;
+          }
+        }
         fitnessWindows += (schedule_bot[i + 1].number_pair - schedule_bot[i].number_pair - 1) * penaltyWin;
       }
-      if (schedule_bot[i + 1].number_pair - schedule_bot[i].number_pair > 1 && schedule_bot[i + 1].pair_type === 3 && schedule_bot[i].pair_type === 3) {
-        fitnessWindows += (schedule_bot[i + 1].number_pair - schedule_bot[i].number_pair - 1) * penaltyWin;
-      }
+
     }
   }
   return { fitnessWindows, fitnessSameTimes }
