@@ -45,7 +45,8 @@ export default async function ParseData(sheet) {
                 break;
               case "audiences":
                 let aud = String(sheet[i][j]);
-                clas[key] = aud.indexOf(".") ? aud.split(".") : aud;
+                clas[key] = aud.split(/[,.]/);
+
                 break;
               case "type_class":
                 if (sheet[i][j] === "лекції" || sheet[i][j] === "лк")
