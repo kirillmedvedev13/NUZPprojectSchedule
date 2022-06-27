@@ -6,6 +6,7 @@ import { DaysWeek } from "./DaysWeek";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
+import GetGroupsName from "./GetGroupsName";
 
 function getDescription(schedule) {
   let teachers = " ";
@@ -18,8 +19,10 @@ function getDescription(schedule) {
       teacher.teacher.patronymic;
   });
   const desciption = `
-   ${schedule.assigned_group.class.type_class.name} ${schedule.assigned_group.class.assigned_discipline.discipline.name} 
-   ${schedule.assigned_group.group.name} 
+   ${schedule.assigned_group.class.type_class.name} ${
+    schedule.assigned_group.class.assigned_discipline.discipline.name
+  } 
+   ${GetGroupsName(schedule.assigned_group.group.name)} 
    ${teachers}
  
   `;
@@ -40,8 +43,6 @@ function DataTable({ filters, info }) {
   let MapAudience = new Map();
 
   for (const audience of data.GetAllScheduleAudiences) {
-    debugger;
-    SplitPairs(audience.schedules);
     MapAudience.set(
       { id: audience.id, name: audience.name },
       SplitPairs(audience.schedules)

@@ -168,7 +168,15 @@ export const GET_ALL_SCHEDULE_AUDIENCES = {
                   },
                 ],
               },
-              { model: db.group },
+              {
+                model: db.group,
+                include: {
+                  model: db.specialty,
+                  include: {
+                    model: db.cathedra,
+                  },
+                },
+              },
             ],
           },
         ],
@@ -240,6 +248,12 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
             {
               model: db.group,
               required: true,
+              include: {
+                model: db.specialty,
+                include: {
+                  model: db.cathedra,
+                },
+              },
             },
           ],
         },

@@ -186,7 +186,10 @@ export default function TableBody(MapSomething, info, getDescription) {
                               return (
                                 <td
                                   key={
-                                    object.id + "tdNull1" + number_pair + day_week
+                                    object.id +
+                                    "tdNull1" +
+                                    number_pair +
+                                    day_week
                                   }
                                 ></td>
                               );

@@ -85,6 +85,11 @@ export const GET_ALL_SCHEDULE_AUDIENCES = gql`
           group {
             id
             name
+            specialty {
+              cathedra {
+                short_name
+              }
+            }
           }
           class {
             id
@@ -131,6 +136,11 @@ export const GET_ALL_SCHEDULE_TEACHERS = gql`
         group {
           id
           name
+          specialty {
+            cathedra {
+              short_name
+            }
+          }
         }
         class {
           id

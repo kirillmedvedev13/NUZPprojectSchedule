@@ -8,11 +8,13 @@ import { GET_ALL_CLASSES } from "../Class/queries";
 
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.assigned_group.class.type_class.name} ауд.${schedule.audience.name
-    } ${schedule.assigned_group.class.assigned_discipline.discipline.name
-    } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
-      return ` ${teacher.surname}`;
-    })}
+  ${schedule.assigned_group.class.type_class.name} ауд.${
+    schedule.audience.name
+  } ${
+    schedule.assigned_group.class.assigned_discipline.discipline.name
+  } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
+    return ` ${teacher.surname}`;
+  })}
 `;
   return desciption;
 }
@@ -39,12 +41,17 @@ function DataTable({ filters, info }) {
       curGroup = schedule.assigned_group.group;
     }
     if (schedule.assigned_group.group !== curGroup && curGroup) {
+      curGroup = JSON.parse(JSON.stringify(curGroup));
+      curGroup.name =
+        curGroup.specialty.cathedra.short_name + "-" + curGroup.name;
       MapGroup.set(curGroup, temp);
       curGroup = schedule.assigned_group.group;
       temp = [];
     }
     temp.push(schedule);
   });
+  curGroup = JSON.parse(JSON.stringify(curGroup));
+  curGroup.name = curGroup.specialty.cathedra.short_name + "-" + curGroup.name;
   MapGroup.set(curGroup, temp);
   return TableBody(MapGroup, info, getDescription);
 }

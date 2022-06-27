@@ -5,11 +5,16 @@ import { Table } from "react-bootstrap";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
 import SplitPairs from "./SplitPairs";
+import GetGroupsName from "./GetGroupsName";
 
 function getDescription(schedule) {
   const desciption = `
-   ауд.${schedule.audience.name} ${schedule.assigned_group.group.name}
-  ${schedule.assigned_group.class.type_class.name} ${schedule.assigned_group.class.assigned_discipline.discipline.name} 
+   ауд.${schedule.audience.name} ${GetGroupsName(
+    schedule.assigned_group.group.name
+  )}
+  ${schedule.assigned_group.class.type_class.name} ${
+    schedule.assigned_group.class.assigned_discipline.discipline.name
+  } 
   `;
   return desciption;
 }
@@ -39,11 +44,9 @@ function DataTable({ filters, info }) {
   if (loading) return null;
   if (error) return `Error! ${error}`;
   if (!data.GetAllScheduleTeachers.length) return <tbody></tbody>;
-  console.log(data);
   let MapTeacher = new Map();
   let teachers = GetTeachers(data.GetAllScheduleTeachers);
   for (const teacher of teachers) {
-    if (+teacher.id === 657) debugger;
     let classes = data.GetAllScheduleTeachers.filter((schedule) => {
       let temp = schedule.assigned_group.class.assigned_teachers.find(
         (teach) => +teach.teacher.id === +teacher.id

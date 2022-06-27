@@ -1,10 +1,13 @@
 export default function SplitPairs(schedule) {
-  debugger;
   let splitSchedule = [];
 
   let i = 0;
   while (i < schedule.length) {
     let tempClas = JSON.parse(JSON.stringify(schedule[i]));
+    tempClas.assigned_group.group.name =
+      tempClas.assigned_group.group.specialty.cathedra.short_name +
+      "-" +
+      tempClas.assigned_group.group.name;
     let classes = schedule.filter(
       (cl) =>
         +cl.day_week === +tempClas.day_week &&
@@ -12,10 +15,12 @@ export default function SplitPairs(schedule) {
         +cl.pair_type === +tempClas.pair_type &&
         +cl.assigned_group.class.id === +tempClas.assigned_group.class.id
     );
-    for (let j = 0; j < classes.length; j++) {
-      if (j === 0) continue;
+    for (let j = 1; j < classes.length; j++) {
       tempClas.assigned_group.group.name +=
-        " " + classes[j].assigned_group.group.name;
+        "," +
+        classes[j].assigned_group.group.specialty.cathedra.short_name +
+        "-" +
+        classes[j].assigned_group.group.name;
     }
     splitSchedule.push(tempClas);
     i += classes.length === 0 ? 1 : classes.length;
