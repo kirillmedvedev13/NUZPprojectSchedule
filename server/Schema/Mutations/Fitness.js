@@ -12,6 +12,7 @@ export const CALC_FITNESS = {
     const penaltyTeachWin = info.dataValues.penaltyTeachWin;
     const penaltySameTimesSc = info.dataValues.penaltySameTimesSc;
     const penaltySameRecSc = info.dataValues.penaltySameRecSc;
+    const max_day = info.dataValues.max_day;
     let recommended_schedules = await db.recommended_schedule.findAll();
     recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
     let scheduleForGroups = new Map();
@@ -27,6 +28,7 @@ export const CALC_FITNESS = {
     let fitnessValue = Fitness(
       JSON.stringify(schedule, replacer),
       recommended_schedules,
+      max_day,
       penaltySameRecSc,
       penaltyGrWin,
       penaltySameTimesSc,
