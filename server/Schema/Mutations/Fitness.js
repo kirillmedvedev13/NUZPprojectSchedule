@@ -1,5 +1,5 @@
 import db from "../../database.js";
-import Fitness from "../../EvalutionAlghoritm2/Fitness1.js";
+import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
 import MessageType from "../TypeDefs/MessageType.js";
 import replacer from "../../EvalutionAlghoritm2/JSONReplacer.js";
 import ParseScheduleFromDB from "../../EvalutionAlghoritm2/ParseScheduleFromDB.js";
