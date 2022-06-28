@@ -80,7 +80,7 @@ export function AddTeacherToClass({
   let options = [];
   query.data.GetAllTeachers.forEach((element) => {
     options.push({
-      label: `${element.surname} ${element.name} - ${element.cathedra.short_name}`,
+      label: `${element.surname} ${element.name} ${element.patronymic} - ${element.cathedra.short_name}`,
       value: +element.id,
     });
   });
@@ -95,6 +95,14 @@ export function AddTeacherToClass({
           <Select
             options={options}
             placeholder="Викладач"
+            defaultValue={() => {
+              if (selectedTeacher) {
+                return {
+                  label: `${selectedTeacher.surname} ${selectedTeacher.name} ${selectedTeacher.patronymic} - ${selectedTeacher.cathedra.short_name}`,
+                  value: +selectedTeacher.id,
+                }
+              }
+            }}
             onChange={(e) => {
               handleChangeState(
                 "selectedTeacher",
@@ -151,7 +159,6 @@ export function AddTeacherToClass({
                     handleChangeItem("assigned_teachers", arrAT);
                     handleIncCounter("counterTeachers");
                   }
-                  handleChangeState("selectedTeacher", null);
                 } else {
                   handleChangeState("validatedSelectedTeacher", {
                     status: false,

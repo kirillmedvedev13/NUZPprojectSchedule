@@ -96,7 +96,7 @@ export function AddRecScheduleToClass({
   if (statusAddRecScheduleToClass) {
     // Если открыт селект
     return (
-      <Form.Group as={Row} className="my-2 mx-2 px-0">
+      <Form.Group as={Row} className="my-2 mx-2 px-0 ">
         <Form.Label className="col-auto px-1">Виберiть час</Form.Label>
         <Col className="px-1">
           <Select
@@ -107,6 +107,7 @@ export function AddRecScheduleToClass({
               handleChangeState("validatedRecDayWeek", {
                 status: true,
               });
+              handleChangeState("validatedRecNumberPair", { status: true });
             }}
           ></Select>
           {!validatedRecDayWeek.status && (
@@ -127,6 +128,9 @@ export function AddRecScheduleToClass({
               ) {
                 handleChangeState("selectedRecNumberPair", +e.target.value);
                 handleChangeState("validatedRecNumberPair", { status: true });
+                handleChangeState("validatedRecDayWeek", {
+                  status: true,
+                });
               } else {
                 e.target.value = selectedRecNumberPair;
                 handleChangeState("validatedRecNumberPair", {

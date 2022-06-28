@@ -82,7 +82,7 @@ export function AddRecAudienceToClass({
   if (query.error) return `Error! ${error}`;
   let options = [];
   query.data.GetAllAudiences.forEach((element) => {
-    options.push({ label: element.name, value: Number(element.id) });
+    options.push({ label: element.name, value: +element.id });
   });
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
@@ -96,6 +96,11 @@ export function AddRecAudienceToClass({
           <Select
             options={options}
             placeholder="Аудиторія"
+            defaultValue={() => {
+              if (selectedRecAudience) {
+                return { label: selectedRecAudience.name, value: +selectedRecAudience.id }
+              }
+            }}
             onChange={(e) => {
               handleChangeState(
                 "selectedRecAudience",
@@ -155,7 +160,6 @@ export function AddRecAudienceToClass({
                     handleChangeItem("recommended_audiences", arrRA);
                     handleIncCounter("counterRecAudience");
                   }
-                  handleChangeState("selectedRecAudience", null);
                 } else {
                   handleChangeState("validatedSelectedRecAudience", {
                     status: false,

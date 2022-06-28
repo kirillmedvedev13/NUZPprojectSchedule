@@ -42,6 +42,7 @@ export default function AddSpecialtyToDiscipline({
           <Select
             options={options}
             placeholder="Спеціальність"
+            defaultValue={{ label: selectedSpecialtyToAdd?.name, value: +selectedSpecialtyToAdd?.id }}
             onChange={(e) => {
               handleChangeState(
                 "selectedSpecialtyToAdd",
@@ -49,7 +50,9 @@ export default function AddSpecialtyToDiscipline({
               );
               handleChangeState("validatedSelectedSpecialtyToAdd", {
                 status: true,
-                message: "",
+              });
+              handleChangeState("validatedSemesterToAdd", {
+                status: true,
               });
             }}
           ></Select>
@@ -63,14 +66,15 @@ export default function AddSpecialtyToDiscipline({
           <Form.Control
             required
             type="number"
-            min="1"
-            max="13"
+            defaultValue={+selectedSemesterToAdd}
             placeholder="Семестр"
             onChange={(e) => {
               handleChangeState("selectedSemesterToAdd", +e.target.value);
               handleChangeState("validatedSemesterToAdd", {
                 status: true,
-                message: "",
+              });
+              handleChangeState("validatedSelectedSpecialtyToAdd", {
+                status: true,
               });
             }}
           ></Form.Control>

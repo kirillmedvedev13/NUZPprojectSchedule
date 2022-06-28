@@ -39,6 +39,7 @@ export default function AddCathedraToAudience({
           <Select
             options={options}
             placeholder="Кафедра"
+            defaultValue={{ label: selectedCathedraToAdd?.name, value: +selectedCathedraToAdd?.id }}
             onChange={(e) => {
               handleChangeState(
                 "selectedCathedraToAdd",

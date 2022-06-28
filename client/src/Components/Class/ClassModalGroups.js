@@ -84,7 +84,6 @@ export function AddGroupToClass({
     setCathSemester.add(
       JSON.stringify({
         name: "All",
-
         specialty: {
           cathedra: {
             short_name: element.specialty.cathedra.short_name,

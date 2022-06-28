@@ -13,7 +13,7 @@ class DisciplineModal extends React.Component {
     statusAddDisciplineToSpecialty: false, // Если тру то форма с добавлением специальности
     selectedSpecialtyToAdd: null, // выбранная специльность для добавление к дисциплине
     validatedSemesterToAdd: { status: true }, // проверка семестра
-    selectedSemesterToAdd: null, // семестр для добавления специальности
+    selectedSemesterToAdd: 1, // семестр для добавления специальности
     counterSpecialties: 0, // счётчик для ключей в массиве специальностей
   };
 

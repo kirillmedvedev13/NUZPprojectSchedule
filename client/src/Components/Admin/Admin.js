@@ -6,7 +6,6 @@ import ButtonRunEA from "./ButtonRunEA";
 import { ButtonDeleteAllData } from "./ButtonDeleteAllData";
 import ButtonSubmitData from "./ButtonSubmitData";
 import SelectCathedra from "./SelectCathedra";
-import update from "react-addons-update";
 import FormEA from "./FormEA";
 
 class Admin extends React.Component {
@@ -36,8 +35,8 @@ class Admin extends React.Component {
   };
 
   handleChangeInfo = (name, value) => {
-    this.setState((PrevState) => ({
-      info: update(PrevState.info, { $merge: { [name]: value } }),
+    this.setState(PrevState => ({
+      info: Object.assign({ ...PrevState.info }, { [name]: value })
     }));
   };
 
@@ -60,7 +59,7 @@ class Admin extends React.Component {
         .catch((err) => {
           CreateNotification({
             successful: false,
-            message: "Помилка завантаження даних!",
+            message: `Помилка завантаження даних! ${err}`,
           });
         });
     };
@@ -82,7 +81,6 @@ class Admin extends React.Component {
                 </Card.Header>
                 <Card.Body>
                   <FormEA
-                    setCathedra={this.setCathedra}
                     handleChangeInfo={this.handleChangeInfo}
                     info={this.state.info}
                   ></FormEA>
@@ -90,6 +88,7 @@ class Admin extends React.Component {
                 <Card.Footer>
                   <SelectCathedra
                     setCathedra={this.setCathedra}
+                    id_cathedra={this.state.id_cathedra}
                   ></SelectCathedra>
                   <ButtonRunEA
                     id_cathedra={this.state.id_cathedra}
@@ -114,6 +113,7 @@ class Admin extends React.Component {
                       }}
                     />
                     <SelectCathedra
+                      id_cathedra={this.state.id_cathedra}
                       setCathedra={this.setCathedra}
                     ></SelectCathedra>
                     <Form.Select
@@ -148,7 +148,10 @@ class Admin extends React.Component {
                   Видалення даних
                 </Card.Header>
                 <Card.Body>
-                  <SelectCathedra setCathedra={this.setCathedra}>
+                  <SelectCathedra
+                    id_cathedra={this.state.id_cathedra}
+                    setCathedra={this.setCathedra}
+                  >
                   </SelectCathedra>
                 </Card.Body>
                 <Card.Footer>
