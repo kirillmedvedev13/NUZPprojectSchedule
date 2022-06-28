@@ -1,5 +1,5 @@
 import db from "../../database.js";
-import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
+import Fitness from "../../EvalutionAlghoritm2/Fitness1.js";
 import MessageType from "../TypeDefs/MessageType.js";
 import replacer from "../../EvalutionAlghoritm2/JSONReplacer.js";
 import ParseScheduleFromDB from "../../EvalutionAlghoritm2/ParseScheduleFromDB.js";
@@ -53,9 +53,9 @@ export const CALC_FITNESS = {
     );
     return res[0]
       ? {
-        successful: true,
-        message: "Значення пораховано успішно",
-      }
+          successful: true,
+          message: "Значення пораховано успішно",
+        }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

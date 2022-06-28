@@ -122,6 +122,47 @@ function getClosePair(array) {
     } else return array[0];
   } else return array[1];
 }
+function getFitnessFromClosePair(
+  schedule,
+  lastTop,
+  lastBot,
+  lastTotal,
+  penaltyWin
+) {
+  let fitnessWindows = 0;
+  let closePair =
+    schedule.pair_type === 3
+      ? [getClosePair([lastTop, lastTotal]), getClosePair([lastBot, lastTotal])]
+      : schedule.pair_type === 2
+      ? getClosePair([lastBot, lastTotal])
+      : getClosePair([lastTop, lastTotal]);
+  if (closePair) {
+    if (closePair.length) {
+      if (
+        closePair[0] &&
+        closePair[1] &&
+        closePair[0].pair_type !== closePair[1].pair_type
+      ) {
+        fitnessWindows +=
+          (schedule.number_pair - closePair[0].number_pair - 1) * penaltyWin;
+        fitnessWindows +=
+          (schedule.number_pair - closePair[1].number_pair - 1) * penaltyWin;
+      } else {
+        if (closePair[0]) {
+          fitnessWindows +=
+            (schedule.number_pair - closePair[0].number_pair - 1) * penaltyWin;
+        } else if (closePair[1]) {
+          fitnessWindows +=
+            (schedule.number_pair - closePair[1].number_pair - 1) * penaltyWin;
+        }
+      }
+    } else {
+      fitnessWindows +=
+        (schedule.number_pair - closePair.number_pair - 1) * penaltyWin;
+    }
+  }
+  return fitnessWindows;
+}
 
 function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
   let lastTop = null;
@@ -145,6 +186,13 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
       //накладки
       if (schedule[i].number_pair === schedule[i + 1].number_pair) {
         //все случае кроме если стоит числитель и знаменатель
+        fitnessWindows += getFitnessFromClosePair(
+          schedule[i + 1],
+          lastTop,
+          lastBot,
+          lastTotal,
+          penaltyWin
+        );
         if (
           schedule[i].pair_type === schedule[i + 1].pair_type ||
           schedule[i].pair_type === 3 ||
@@ -152,45 +200,13 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
         )
           fitnessSameTimes += penaltySameTimesSc;
       } else {
-        let closePair =
-          schedule[i + 1].pair_type === 3
-            ? [
-                getClosePair([lastTop, lastTotal]),
-                getClosePair([lastBot, lastTotal]),
-              ]
-            : schedule[i + 1].pair_type === 2
-            ? getClosePair([lastBot, lastTotal])
-            : getClosePair([lastTop, lastTotal]);
-        if (closePair) {
-          if (closePair.length) {
-            if (
-              closePair[0] &&
-              closePair[1] &&
-              closePair[0].pair_type !== closePair[1].pair_type
-            ) {
-              fitnessWindows +=
-                (schedule[i + 1].number_pair - closePair[0].number_pair - 1) *
-                penaltyWin;
-              fitnessWindows +=
-                (schedule[i + 1].number_pair - closePair[1].number_pair - 1) *
-                penaltyWin;
-            } else {
-              if (closePair[0]) {
-                fitnessWindows +=
-                  (schedule[i + 1].number_pair - closePair[0].number_pair - 1) *
-                  penaltyWin;
-              } else if (closePair[1]) {
-                fitnessWindows +=
-                  (schedule[i + 1].number_pair - closePair[1].number_pair - 1) *
-                  penaltyWin;
-              }
-            }
-          } else {
-            fitnessWindows +=
-              (schedule[i + 1].number_pair - closePair.number_pair - 1) *
-              penaltyWin;
-          }
-        }
+        fitnessWindows += getFitnessFromClosePair(
+          schedule[i + 1],
+          lastTop,
+          lastBot,
+          lastTotal,
+          penaltyWin
+        );
       }
     } else {
       lastTop = null;
