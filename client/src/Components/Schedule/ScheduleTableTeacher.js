@@ -9,12 +9,10 @@ import GetGroupsName from "./GetGroupsName";
 
 function getDescription(schedule) {
   const desciption = `
-   ауд.${schedule.audience.name} ${GetGroupsName(
-    schedule.assigned_group.group.name
-  )}
-  ${schedule.assigned_group.class.type_class.name} ${
-    schedule.assigned_group.class.assigned_discipline.discipline.name
-  } 
+  ${schedule.assigned_group.class.type_class.name}
+  ауд.${schedule.audience.name} 
+  ${schedule.assigned_group.class.assigned_discipline.discipline.name} 
+  ${GetGroupsName(schedule.assigned_group.group.name)}
   `;
   return desciption;
 }
