@@ -65,8 +65,9 @@ function sortSchedule(schedule) {
 function fitnessByGroups(schedule, penaltySameTimesSc, penaltyGrWin) {
   let fitnessGrWin = 0;
   let fitnessSameTimesSc = 0;
-  for (let value of schedule.values()) {
-    let { fitnessSameTimes, fitnessWindows } = FitnessSameTimesAndWindows(
+  for (let [key, value] of schedule) {
+    let { fitnessWindows, fitnessSameTimes } = FitnessSameTimesAndWindows(
+      key,
       value,
       penaltySameTimesSc,
       penaltyGrWin
@@ -84,8 +85,9 @@ function fitnessByGroups(schedule, penaltySameTimesSc, penaltyGrWin) {
 function fitnessByTeachers(schedule, penaltySameTimesSc, penaltyTeachWin) {
   let fitnessTeachWin = 0;
   let fitnessSameTimesSc = 0;
-  for (let value of schedule.values()) {
-    let { fitnessSameTimes, fitnessWindows } = FitnessSameTimesAndWindows(
+  for (let [key, value] of schedule) {
+    let { fitnessWindows, fitnessSameTimes } = FitnessSameTimesAndWindows(
+      key,
       value,
       penaltySameTimesSc,
       penaltyTeachWin
@@ -122,6 +124,11 @@ function getClosePair(array) {
     } else return array[0];
   } else return array[1];
 }
+function sumFitness(schedule, closePair, penaltyWin) {
+  return schedule.number_pair === closePair.number_pair
+    ? 0
+    : (schedule.number_pair - closePair.number_pair - 1) * penaltyWin;
+}
 function getFitnessFromClosePair(
   schedule,
   lastTop,
@@ -143,33 +150,37 @@ function getFitnessFromClosePair(
         closePair[1] &&
         closePair[0].pair_type !== closePair[1].pair_type
       ) {
-        fitnessWindows +=
-          (schedule.number_pair - closePair[0].number_pair - 1) * penaltyWin;
-        fitnessWindows +=
-          (schedule.number_pair - closePair[1].number_pair - 1) * penaltyWin;
+        fitnessWindows += sumFitness(schedule, closePair[0], penaltyWin);
+        fitnessWindows += sumFitness(schedule, closePair[1], penaltyWin);
       } else {
         if (closePair[0]) {
-          fitnessWindows +=
-            (schedule.number_pair - closePair[0].number_pair - 1) * penaltyWin;
+          fitnessWindows += sumFitness(schedule, closePair[0], penaltyWin);
         } else if (closePair[1]) {
-          fitnessWindows +=
-            (schedule.number_pair - closePair[1].number_pair - 1) * penaltyWin;
+          fitnessWindows += sumFitness(schedule, closePair[1], penaltyWin);
         }
       }
     } else {
-      fitnessWindows +=
-        (schedule.number_pair - closePair.number_pair - 1) * penaltyWin;
+      fitnessWindows += sumFitness(schedule, closePair, penaltyWin);
     }
   }
   return fitnessWindows;
 }
 
-function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
+function FitnessSameTimesAndWindows(
+  key,
+  schedule,
+  penaltySameTimesSc,
+  penaltyWin
+) {
   let lastTop = null;
   let lastBot = null;
   let lastTotal = null;
   let fitnessWindows = 0;
   let fitnessSameTimes = 0;
+  if (JSON.stringify(key) === "774") {
+    console.log();
+    console.log();
+  }
   for (let i = 0; i < schedule.length - 1; i++) {
     if (schedule[i].day_week === schedule[i + 1].day_week) {
       switch (schedule[i].pair_type) {
@@ -183,36 +194,33 @@ function FitnessSameTimesAndWindows(schedule, penaltySameTimesSc, penaltyWin) {
           lastTotal = schedule[i];
           break;
       }
+      fitnessWindows += getFitnessFromClosePair(
+        schedule[i + 1],
+        lastTop,
+        lastBot,
+        lastTotal,
+        penaltyWin
+      );
       //накладки
       if (schedule[i].number_pair === schedule[i + 1].number_pair) {
         //все случае кроме если стоит числитель и знаменатель
-        fitnessWindows += getFitnessFromClosePair(
-          schedule[i + 1],
-          lastTop,
-          lastBot,
-          lastTotal,
-          penaltyWin
-        );
+
         if (
           schedule[i].pair_type === schedule[i + 1].pair_type ||
           schedule[i].pair_type === 3 ||
           schedule[i + 1].pair_type === 3
         )
           fitnessSameTimes += penaltySameTimesSc;
-      } else {
-        fitnessWindows += getFitnessFromClosePair(
-          schedule[i + 1],
-          lastTop,
-          lastBot,
-          lastTotal,
-          penaltyWin
-        );
       }
     } else {
       lastTop = null;
       lastBot = null;
       lastTotal = null;
     }
+  }
+  if (fitnessWindows < 0) {
+    console.log();
+    console.log();
   }
   return { fitnessWindows, fitnessSameTimes };
 }
