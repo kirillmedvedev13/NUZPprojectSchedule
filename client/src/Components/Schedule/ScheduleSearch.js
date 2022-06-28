@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import Select from "react-select"
-import SelectSpecialty from "../SelectsSearch/SelectSpeacialty";
+import SelectSpecialty from "../SelectsSearch/SelectSpecialty";
 import SelectTeacher from "../SelectsSearch/SelectTeacher";
 import SelectAudience from "../SelectsSearch/SelectAudience";
 import SelectCathedra from "../SelectsSearch/SelectCathedra";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, InputGroup, FormControl } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
-import SelectSpecialty from "../SelectsSearch/SelectSpeacialty";
+import SelectSpecialty from "../SelectsSearch/SelectSpecialty";
 
 class DisciplineSearch extends React.Component {
   render() {
