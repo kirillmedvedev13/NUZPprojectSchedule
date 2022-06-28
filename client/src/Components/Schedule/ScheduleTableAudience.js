@@ -87,7 +87,7 @@ class ScheduleTableAudience extends React.Component {
             buttonText="Завантажити XLS"
           />
         </div>
-        <Table bordered id="tableAudience">
+        <Table bordered id="tableAudience" className="border border-dark">
           <TableHead filters={filters}></TableHead>
         </Table>
       </>
