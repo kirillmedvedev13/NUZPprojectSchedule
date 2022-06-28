@@ -3,11 +3,11 @@ import replacer from "./JSONReplacer.js";
 import reviver from "./JSONReviver.js";
 
 export default function Crossing(schedule1, schedule2, classes) {
-  let s = GetRndInteger(0, (classes.length - 1) / 2);
-  let f = GetRndInteger(0, (classes.length - 1) / 2);
+  let s = GetRndInteger(0, (classes.length - 1));
+  let f = GetRndInteger(s, (classes.length - 1));
   let population_child1 = JSON.parse(schedule1, reviver)
   let population_child2 = JSON.parse(schedule2, reviver)
-  for (let i = s; i <= s + f; i++) {
+  for (let i = s; i <= f; i++) {
     let id_audiences1 = new Set();
     let id_audiences2 = new Set();
     let isFirst = false;
