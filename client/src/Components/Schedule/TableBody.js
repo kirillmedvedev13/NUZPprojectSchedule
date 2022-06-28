@@ -196,6 +196,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                             }
                           }
                         }
+                        return null;
                       })
                     }
                   </tr>

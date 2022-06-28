@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { Fragment } from "react";
+import React from "react";
 import { Table } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_AUDIENCES, GET_INFO } from "./queries";
 import { DaysWeek } from "./DaysWeek";
@@ -10,7 +10,7 @@ import GetGroupsName from "./GetGroupsName";
 
 function getDescription(schedule) {
   let teachers = " ";
-  schedule.assigned_group.class.assigned_teachers.map((teacher) => {
+  schedule.assigned_group.class.assigned_teachers.forEach((teacher) => {
     teachers +=
       teacher.teacher.surname +
       " " +
@@ -19,9 +19,8 @@ function getDescription(schedule) {
       teacher.teacher.patronymic;
   });
   const desciption = `
-   ${schedule.assigned_group.class.type_class.name} ${
-    schedule.assigned_group.class.assigned_discipline.discipline.name
-  } 
+   ${schedule.assigned_group.class.type_class.name} ${schedule.assigned_group.class.assigned_discipline.discipline.name
+    } 
    ${GetGroupsName(schedule.assigned_group.group.name)} 
    ${teachers}
  
@@ -74,7 +73,7 @@ function TableHead({ filters }) {
 
 class ScheduleTableAudience extends React.Component {
   render() {
-    const { filters, info } = this.props;
+    const { filters } = this.props;
     return (
       <>
         <div className="d-flex justify-content-end my-2">
