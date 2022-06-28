@@ -53,9 +53,9 @@ export const CALC_FITNESS = {
     );
     return res[0]
       ? {
-          successful: true,
-          message: "Значення пораховано успішно",
-        }
+        successful: true,
+        message: "Значення пораховано успішно",
+      }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

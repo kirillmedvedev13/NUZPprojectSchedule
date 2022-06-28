@@ -166,14 +166,14 @@ export const RUN_EA = {
           arr_promisses.push(
             pool.exec("workMutation", [
               JSON.stringify(mutant, replacer),
-              (populations.length * p_genes) / populations.length,
+              p_genes,
               max_day,
               max_pair,
               audiences,
               classes,
             ])
           );
-          populations.splice(index, 1);
+          // populations.splice(index, 1);
         }
       });
       await Promise.all(arr_promisses).then((res) => {
