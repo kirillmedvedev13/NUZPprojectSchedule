@@ -80,7 +80,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                                 key={
                                   object.id + "tdTop" + number_pair + day_week
                                 }
-                                className="table-warning"
+                                className="bg-warning"
                               >
                                 {getDescription(arrScheduleTop[day_week][0])}
                               </td>
@@ -94,7 +94,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                                 key={
                                   object.id + "tdTotal" + number_pair + day_week
                                 }
-                                className="table-success"
+                                className="bg-success"
                               >
                                 {getDescription(arrScheduleTotal[day_week][0])}
                               </td>
@@ -138,7 +138,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                                 object.id + "tdDanger" + number_pair + day_week
                               }
                               rowSpan="2"
-                              className="table-danger"
+                              className="bg-danger"
                             >
                               {str.split("\n").map((line, i) => {
                                 return (
@@ -175,7 +175,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                                   key={
                                     object.id + "tdBot" + number_pair + day_week
                                   }
-                                  className="table-info"
+                                  className="bg-info"
                                 >
                                   {getDescription(arrScheduleBot[day_week][0])}
                                 </td>

@@ -81,7 +81,7 @@ class ScheduleTableGroup extends React.Component {
   render() {
     const { filters } = this.props;
     return (
-      <Table bordered>
+      <Table bordered className="border border-dark">
         <TableHead filters={filters}></TableHead>
       </Table>
     );
