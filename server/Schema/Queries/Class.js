@@ -34,28 +34,27 @@ export const GET_ALL_CLASSES = {
         include: [
           {
             model: db.assigned_discipline,
+            required: true,
             where: {
               [Op.and]: [FilterDisc, FilterSpec, FilterSemester],
             },
           },
           {
             model: db.assigned_teacher,
+            required: true,
             where: FilterTeach,
           },
           {
             model: db.assigned_group,
+            required: true,
             where: FilterGroup,
-            include: {
-              model: db.group,
-              whete: FilterSemester,
-            },
           },
         ],
       });
       filterClasses.forEach((element) => {
         arrIDsFilteredClasses.push(element.dataValues.id);
       });
-      FilterIDsClasses = { id: arrIDsFilteredClasses };
+      FilterIDsClasses = { id: { [Op.or]: arrIDsFilteredClasses } };
     }
 
     const res = await db.class.findAll({

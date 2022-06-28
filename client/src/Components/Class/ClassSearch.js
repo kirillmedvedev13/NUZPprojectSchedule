@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
-import SelectSpecialty from "../SelectsSearch/SelectSpeacialty";
+import SelectSpecialty from "../SelectsSearch/SelectSpecialty";
 import SelectDiscipine from "../SelectsSearch/SelectDiscipline";
 import SelectTeacher from "../SelectsSearch/SelectTeacher";
 import SelectGroup from "../SelectsSearch/SelectGroup";

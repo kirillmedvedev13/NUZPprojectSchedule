@@ -1,8 +1,8 @@
 import db from "../../database.js";
-import Fitness from "../../EvalutionAlghoritm2/Fitness.js";
+import Fitness from "../../EvalutionAlghoritm3/Fitness.js";
 import MessageType from "../TypeDefs/MessageType.js";
-import replacer from "../../EvalutionAlghoritm2/JSONReplacer.js";
-import ParseScheduleFromDB from "../../EvalutionAlghoritm2/ParseScheduleFromDB.js";
+import replacer from "../../EvalutionAlghoritm3/JSONReplacer.js";
+import ParseScheduleFromDB from "../../EvalutionAlghoritm3/ParseScheduleFromDB.js";
 
 export const CALC_FITNESS = {
   type: MessageType,

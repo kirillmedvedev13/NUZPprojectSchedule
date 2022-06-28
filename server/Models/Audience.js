@@ -7,7 +7,7 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(30),
       allowNull: false,
     },
     id_type_class: {
