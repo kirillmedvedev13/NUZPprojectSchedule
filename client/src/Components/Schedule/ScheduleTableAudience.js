@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_AUDIENCES, GET_INFO } from "./queries";
 import { DaysWeek } from "./DaysWeek";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
-
+import { utils, writeFileXLSX } from "xlsx";
 function getDescription(schedule) {
   let teachers = " ";
   schedule.assigned_group.class.assigned_teachers.forEach((teacher) => {
@@ -72,21 +72,22 @@ function TableHead({ filters }) {
 }
 
 class ScheduleTableAudience extends React.Component {
+  constructor(props) {
+    super(props);
+    this.refTable = React.createRef();
+  }
   render() {
     const { filters } = this.props;
     return (
       <>
         <div className="d-flex justify-content-end my-2">
-          <ReactHTMLTableToExcel
-            id="test-table-xls-button"
-            className="btn btn-primary"
-            table="tableAudience"
-            filename="tableAudienceSchedule"
-            sheet="tablexls"
-            buttonText="Завантажити XLS"
-          />
+          <Button onClick={() => {
+            const workbook = utils.table_to_book(this.refTable.current, { cellStyles: true, sheet: "Розклад для аудиторiй" })
+            console.log(workbook)
+            writeFileXLSX(workbook, "test.xlsx", {});
+          }}>Завантажити таблицю</Button>
         </div>
-        <Table bordered id="tableAudience" className="border border-dark">
+        <Table ref={this.refTable} bordered id="tableAudience" className="border border-dark">
           <TableHead filters={filters}></TableHead>
         </Table>
       </>
