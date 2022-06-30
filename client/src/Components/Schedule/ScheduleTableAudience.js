@@ -7,7 +7,7 @@ import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
-import { utils, writeFileXLSX } from "xlsx";
+import { utils, writeFileXLSX, stream } from "xlsx";
 function getDescription(schedule) {
   let teachers = " ";
   schedule.assigned_group.class.assigned_teachers.forEach((teacher) => {
@@ -19,8 +19,9 @@ function getDescription(schedule) {
       teacher.teacher.patronymic;
   });
   const desciption = `
-   ${schedule.assigned_group.class.type_class.name} ${schedule.assigned_group.class.assigned_discipline.discipline.name
-    } 
+   ${schedule.assigned_group.class.type_class.name} ${
+    schedule.assigned_group.class.assigned_discipline.discipline.name
+  } 
    ${GetGroupsName(schedule.assigned_group.group.name)} 
    ${teachers}
  
@@ -81,13 +82,30 @@ class ScheduleTableAudience extends React.Component {
     return (
       <>
         <div className="d-flex justify-content-end my-2">
-          <Button onClick={() => {
-            const workbook = utils.table_to_book(this.refTable.current, { cellStyles: true, sheet: "Розклад для аудиторiй" })
-            console.log(workbook)
-            writeFileXLSX(workbook, "test.xlsx", {});
-          }}>Завантажити таблицю</Button>
+          <Button
+            onClick={() => {
+              let workSheet = utils.table_to_sheet(this.refTable.current);
+              let html = utils.sheet_to_html(workSheet);
+
+              console.log(html);
+
+              let workBook = utils.table_to_book(this.refTable.current, {
+                cellStyles: true,
+                sheet: "Розклад для аудиторiй",
+              });
+
+              writeFileXLSX(workBook, "test.xlsx", {});
+            }}
+          >
+            Завантажити таблицю
+          </Button>
         </div>
-        <Table ref={this.refTable} bordered id="tableAudience" className="border border-dark">
+        <Table
+          ref={this.refTable}
+          bordered
+          id="tableAudience"
+          className="border border-dark"
+        >
           <TableHead filters={filters}></TableHead>
         </Table>
       </>
