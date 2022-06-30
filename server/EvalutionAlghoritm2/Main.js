@@ -173,7 +173,7 @@ export const RUN_EA = {
               classes,
             ])
           );
-          // populations.splice(index, 1);
+          populations.splice(index, 1);
         }
       });
       await Promise.all(arr_promisses).then((res) => {
