@@ -12,7 +12,7 @@ export default function TableBody(MapSomething, info, getDescription, aoa, handl
     if (JSON.stringify(aoa) !== JSON.stringify(tempAOA)) {
       handleSetAOA(tempAOA, tempMegres);
     }
-    console.log(tempMegres);
+    console.log(tempAOA);
   }
   return (
     <tbody>
@@ -21,6 +21,7 @@ export default function TableBody(MapSomething, info, getDescription, aoa, handl
         let array = map[1];
         let isFirstPutName = true;
         tempMegres.push({ s: { r: countRow, c: 0 }, e: { r: countRow + (info.max_pair * 2) - 1, c: 0 } });
+        console.log(tempMegres)
         return (
           <Fragment key={`${object.id}-Frag1`}>
             <tr key={object.id}>
@@ -43,7 +44,7 @@ export default function TableBody(MapSomething, info, getDescription, aoa, handl
               }
               let tempBot = ["", ""];
               tempMegres.push({ s: { r: countRow, c: 1 }, e: { r: countRow + 1, c: 1 } })
-              countRow++;
+              countRow += 2;
               return (
                 <Fragment key={`${object.id}-Frag2-${number_pair}`}>
                   <tr key={`${object.id}-data-${number_pair}`}>
