@@ -1,10 +1,27 @@
 import React, { Fragment } from "react";
-export default function TableBody(MapSomething, info, getDescription) {
+
+export default function TableBody(MapSomething, info, getDescription, aoa, handleSetAOA) {
+  let tempAOA = [];
+  let countRow = 1;
+  let tempMegres = [];
+  let push = (tempTop, tempBot) => {
+    tempAOA.push(tempTop);
+    tempAOA.push(tempBot);
+  }
+  let checkSet = () => {
+    if (JSON.stringify(aoa) !== JSON.stringify(tempAOA)) {
+      handleSetAOA(tempAOA, tempMegres);
+    }
+    console.log(tempAOA);
+  }
   return (
     <tbody>
       {[...MapSomething].map((map) => {
         let object = map[0];
         let array = map[1];
+        let isFirstPutName = true;
+        tempMegres.push({ s: { r: countRow, c: 0 }, e: { r: countRow + (info.max_pair * 2) - 1, c: 0 } });
+        console.log(tempMegres)
         return (
           <Fragment key={`${object.id}-Frag1`}>
             <tr key={object.id}>
@@ -17,6 +34,17 @@ export default function TableBody(MapSomething, info, getDescription) {
               let arrScheduleTotal = new Array(info.max_day);
               let arrScheduleBot = new Array(info.max_day);
               let checkPut = new Array(info.max_day);
+              let tempTop;
+              if (isFirstPutName) {
+                isFirstPutName = false;
+                tempTop = [object.name, number_pair + 1];
+              }
+              else {
+                tempTop = ["", number_pair + 1];
+              }
+              let tempBot = ["", ""];
+              tempMegres.push({ s: { r: countRow, c: 1 }, e: { r: countRow + 1, c: 1 } })
+              countRow += 2;
               return (
                 <Fragment key={`${object.id}-Frag2-${number_pair}`}>
                   <tr key={`${object.id}-data-${number_pair}`}>
@@ -75,6 +103,8 @@ export default function TableBody(MapSomething, info, getDescription) {
                         if (checkPut[day_week]) {
                           // Пара по числителю
                           if (arrScheduleTop[day_week][0]) {
+                            const text = getDescription(arrScheduleTop[day_week][0]);
+                            tempTop.push(text);
                             return (
                               <td
                                 key={
@@ -82,12 +112,14 @@ export default function TableBody(MapSomething, info, getDescription) {
                                 }
                                 className="bg-warning"
                               >
-                                {getDescription(arrScheduleTop[day_week][0])}
+                                {text}
                               </td>
                             );
                           }
                           // Общая пара
                           else if (arrScheduleTotal[day_week][0]) {
+                            const text = getDescription(arrScheduleTotal[day_week][0]);
+                            tempTop.push(text);
                             return (
                               <td
                                 rowSpan="2"
@@ -96,12 +128,13 @@ export default function TableBody(MapSomething, info, getDescription) {
                                 }
                                 className="bg-success"
                               >
-                                {getDescription(arrScheduleTotal[day_week][0])}
+                                {text}
                               </td>
                             );
                           }
                           // Если нету пары
                           else {
+                            tempTop.push("");
                             return (
                               <td
                                 key={
@@ -132,6 +165,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                               str += getDescription(sc) + "\n";
                             });
                           }
+                          tempTop.push(str);
                           return (
                             <td
                               key={
@@ -170,6 +204,8 @@ export default function TableBody(MapSomething, info, getDescription) {
                           if (!arrScheduleTotal[day_week][0]) {
                             // Пара по знаменателю
                             if (arrScheduleBot[day_week][0]) {
+                              const text = getDescription(arrScheduleBot[day_week][0]);
+                              tempBot.push(text);
                               return (
                                 <td
                                   key={
@@ -177,12 +213,13 @@ export default function TableBody(MapSomething, info, getDescription) {
                                   }
                                   className="bg-info"
                                 >
-                                  {getDescription(arrScheduleBot[day_week][0])}
+                                  {text}
                                 </td>
                               );
                             }
                             // Если нету пары
                             else {
+                              tempBot.push("");
                               return (
                                 <td
                                   key={
@@ -196,16 +233,19 @@ export default function TableBody(MapSomething, info, getDescription) {
                             }
                           }
                         }
+                        tempBot.push("");
                         return null;
                       })
                     }
                   </tr>
+                  {push(tempTop, tempBot)}
                 </Fragment>
               );
             })}
           </Fragment>
         );
       })}
+      {checkSet()}
     </tbody>
   );
 }

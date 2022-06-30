@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
 import { Table, Button } from "react-bootstrap";
-import { GET_ALL_SCHEDULE_AUDIENCES, GET_INFO } from "./queries";
+import { GET_ALL_SCHEDULE_AUDIENCES } from "./queries";
 import { DaysWeek } from "./DaysWeek";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
-import { utils, writeFileXLSX, stream } from "xlsx";
+import { utils, writeFileXLSX } from "xlsx";
+
 function getDescription(schedule) {
   let teachers = " ";
   schedule.assigned_group.class.assigned_teachers.forEach((teacher) => {
@@ -29,7 +29,7 @@ function getDescription(schedule) {
   return desciption;
 }
 
-function DataTable({ filters, info }) {
+function DataTable({ filters, info, aoa, handleSetAOA }) {
   const { id_audience, id_cathedra } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_AUDIENCES, {
     variables: {
@@ -48,27 +48,20 @@ function DataTable({ filters, info }) {
       SplitPairs(audience.schedules)
     );
   }
-
-  return TableBody(MapAudience, info, getDescription);
+  return TableBody(MapAudience, info, getDescription, aoa, handleSetAOA);
 }
 
-function TableHead({ filters }) {
-  const { loading, error, data } = useQuery(GET_INFO, {});
-  if (loading) return null;
-  if (error) return `Error! ${error}`;
+function TableHead({ info }) {
   return (
-    <>
-      <thead>
-        <tr>
-          <th>Аудиторія</th>
-          <th>#</th>
-          {[...Array(data.GetInfo.max_day)].map((i, index) => {
-            return <th key={DaysWeek[index]}>{DaysWeek[index]}</th>;
-          })}
-        </tr>
-      </thead>
-      <DataTable filters={filters} info={data.GetInfo}></DataTable>
-    </>
+    <thead>
+      <tr>
+        <th>Аудиторія</th>
+        <th>#</th>
+        {[...Array(info.max_day)].map((i, index) => {
+          return <th key={DaysWeek[index]}>{DaysWeek[index]}</th>;
+        })}
+      </tr>
+    </thead>
   );
 }
 
@@ -77,8 +70,33 @@ class ScheduleTableAudience extends React.Component {
     super(props);
     this.refTable = React.createRef();
   }
+
+  initWorkSheet = () => {
+    let aoa = [];
+    let temp = [];
+    temp.push("Аудиторія");
+    temp.push("#");
+    [...Array(this.props.info.max_day)].forEach((i, index) => {
+      temp.push(DaysWeek[index]);
+    });
+    aoa.push(temp);
+    let ws = utils.aoa_to_sheet(aoa);
+    return ws;
+  };
+
+  state = {
+    workSheet: this.initWorkSheet(),
+    aoa: null,
+    merges: null,
+  };
+
+  handleSetAOA = (aoa, merges) => {
+    this.setState({ aoa, merges });
+  };
+
   render() {
-    const { filters } = this.props;
+    const { filters, info } = this.props;
+    console.log(this.state.aoa);
     return (
       <>
         <div className="d-flex justify-content-end my-2">
@@ -106,7 +124,13 @@ class ScheduleTableAudience extends React.Component {
           id="tableAudience"
           className="border border-dark"
         >
-          <TableHead filters={filters}></TableHead>
+          <TableHead info={info}></TableHead>
+          <DataTable
+            filters={filters}
+            info={info}
+            aoa={this.state.aoa}
+            handleSetAOA={this.handleSetAOA}
+          ></DataTable>
         </Table>
       </>
     );
