@@ -1,18 +1,20 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_GROUPS } from "./queries";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
-import { utils, writeFileXLSX } from "xlsx";
+import ButtonGetTableExcel from "./ButtonGetTableExcel";
 
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.assigned_group.class.type_class.name} ауд.${schedule.audience.name
-    } ${schedule.assigned_group.class.assigned_discipline.discipline.name
-    } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
-      return ` ${teacher.surname}`;
-    })}
+  ${schedule.assigned_group.class.type_class.name} ауд.${
+    schedule.audience.name
+  } ${
+    schedule.assigned_group.class.assigned_discipline.discipline.name
+  } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
+    return ` ${teacher.surname}`;
+  })}
 `;
   return desciption;
 }
@@ -69,47 +71,22 @@ function TableHead({ info }) {
 }
 
 class ScheduleTableGroup extends React.Component {
-
-  initAOAHead = () => {
-    let aoa = [];
-    let temp = [];
-    temp.push("Група");
-    temp.push("#");
-    [...Array(this.props.info.max_day)].forEach((i, index) => {
-      temp.push(DaysWeek[index]);
-    })
-    aoa.push(temp)
-    return aoa;
-  }
-
-  state = {
-    aoaHead: this.initAOAHead(),
-    aoa: null,
-    merges: null,
-  }
-
-  handleSetAOA = (aoa, merges) => {
-    this.setState({ aoa, merges });
+  constructor(props) {
+    super(props);
+    this.refTable = React.createRef();
   }
 
   render() {
     const { filters, info } = this.props;
     return (
       <>
-        <div className="d-flex justify-content-end my-2">
-          <Button onClick={() => {
-            let aoa = [...this.state.aoaHead, ...this.state.aoa]
-            let worksheet = utils.aoa_to_sheet(aoa);
-            worksheet['!merges'] = this.state.merges;
-            const workbook = utils.book_new();
-            utils.book_append_sheet(workbook, worksheet, "Розклад для аудиторiй")
-            console.log(workbook)
-            writeFileXLSX(workbook, "test.xlsx", {});
-          }}>Завантажити таблицю</Button>
-        </div>
-        <Table bordered className="border border-dark">
-          <TableHead info={info} ></TableHead>
-          <DataTable filters={filters} info={info} aoa={this.state.aoa} handleSetAOA={this.handleSetAOA}></DataTable>
+        <ButtonGetTableExcel
+          refTable={this.refTable}
+          nameTable="scheduleTableGroup"
+        ></ButtonGetTableExcel>
+        <Table ref={this.refTable} bordered className="border border-dark">
+          <TableHead info={info}></TableHead>
+          <DataTable filters={filters} info={info}></DataTable>
         </Table>
       </>
     );

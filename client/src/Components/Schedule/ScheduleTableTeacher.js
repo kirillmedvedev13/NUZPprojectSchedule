@@ -6,6 +6,7 @@ import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
 import SplitPairs from "./SplitPairs";
 import GetGroupsName from "./GetGroupsName";
+import ButtonGetTableExcel from "./ButtonGetTableExcel";
 
 function getDescription(schedule) {
   const desciption = `
@@ -85,12 +86,22 @@ function TableHead({ filters }) {
   );
 }
 class ScheduleTableTeacher extends React.Component {
+  constructor(props) {
+    super(props);
+    this.refTable = React.createRef();
+  }
   render() {
     const { filters } = this.props;
     return (
-      <Table bordered className="border border-dark">
-        <TableHead filters={filters}></TableHead>
-      </Table>
+      <>
+        <ButtonGetTableExcel
+          refTable={this.refTable}
+          nameTable="scheduleTableTeacher"
+        ></ButtonGetTableExcel>
+        <Table ref={this.refTable} bordered className="border border-dark">
+          <TableHead filters={filters}></TableHead>
+        </Table>
+      </>
     );
   }
 }

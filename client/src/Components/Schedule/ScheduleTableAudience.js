@@ -6,7 +6,8 @@ import { DaysWeek } from "./DaysWeek";
 import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
-import { utils, writeFileXLSX } from "xlsx";
+
+import ButtonGetTableExcel from "./ButtonGetTableExcel";
 
 function getDescription(schedule) {
   let teachers = " ";
@@ -71,53 +72,15 @@ class ScheduleTableAudience extends React.Component {
     this.refTable = React.createRef();
   }
 
-  initWorkSheet = () => {
-    let aoa = [];
-    let temp = [];
-    temp.push("Аудиторія");
-    temp.push("#");
-    [...Array(this.props.info.max_day)].forEach((i, index) => {
-      temp.push(DaysWeek[index]);
-    });
-    aoa.push(temp);
-    let ws = utils.aoa_to_sheet(aoa);
-    return ws;
-  };
-
-  state = {
-    workSheet: this.initWorkSheet(),
-    aoa: null,
-    merges: null,
-  };
-
-  handleSetAOA = (aoa, merges) => {
-    this.setState({ aoa, merges });
-  };
-
   render() {
     const { filters, info } = this.props;
-    console.log(this.state.aoa);
+
     return (
       <>
-        <div className="d-flex justify-content-end my-2">
-          <Button
-            onClick={() => {
-              let workSheet = utils.table_to_sheet(this.refTable.current);
-              let html = utils.sheet_to_html(workSheet);
-
-              console.log(html);
-
-              let workBook = utils.table_to_book(this.refTable.current, {
-                cellStyles: true,
-                sheet: "Розклад для аудиторiй",
-              });
-
-              writeFileXLSX(workBook, "test.xlsx", {});
-            }}
-          >
-            Завантажити таблицю
-          </Button>
-        </div>
+        <ButtonGetTableExcel
+          refTable={this.refTable}
+          nameTable="scheduleTableAudience"
+        ></ButtonGetTableExcel>
         <Table
           ref={this.refTable}
           bordered
@@ -125,12 +88,7 @@ class ScheduleTableAudience extends React.Component {
           className="border border-dark"
         >
           <TableHead info={info}></TableHead>
-          <DataTable
-            filters={filters}
-            info={info}
-            aoa={this.state.aoa}
-            handleSetAOA={this.handleSetAOA}
-          ></DataTable>
+          <DataTable filters={filters} info={info}></DataTable>
         </Table>
       </>
     );
