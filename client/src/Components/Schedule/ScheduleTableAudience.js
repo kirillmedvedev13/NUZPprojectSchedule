@@ -30,7 +30,7 @@ function getDescription(schedule) {
   return desciption;
 }
 
-function DataTable({ filters, info, aoa, handleSetAOA }) {
+function DataTable({ filters, info }) {
   const { id_audience, id_cathedra } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_AUDIENCES, {
     variables: {
@@ -49,7 +49,7 @@ function DataTable({ filters, info, aoa, handleSetAOA }) {
       SplitPairs(audience.schedules)
     );
   }
-  return TableBody(MapAudience, info, getDescription, aoa, handleSetAOA);
+  return TableBody(MapAudience, info, getDescription);
 }
 
 function TableHead({ info }) {

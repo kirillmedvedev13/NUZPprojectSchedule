@@ -19,7 +19,7 @@ function getDescription(schedule) {
   return desciption;
 }
 
-function DataTable({ filters, info, aoa, handleSetAOA }) {
+function DataTable({ filters, info }) {
   const { id_cathedra, id_group, id_specialty, semester } = filters;
   const { loading, error, data } = useQuery(GET_ALL_SCHEDULE_GROUPS, {
     variables: {
@@ -53,7 +53,7 @@ function DataTable({ filters, info, aoa, handleSetAOA }) {
   curGroup = JSON.parse(JSON.stringify(curGroup));
   curGroup.name = curGroup.specialty.cathedra.short_name + "-" + curGroup.name;
   MapGroup.set(curGroup, temp);
-  return TableBody(MapGroup, info, getDescription, aoa, handleSetAOA);
+  return TableBody(MapGroup, info, getDescription);
 }
 
 function TableHead({ info }) {
