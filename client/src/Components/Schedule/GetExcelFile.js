@@ -19,7 +19,6 @@ export default function GetExcelFIle(
     for (let cell of Object.keys(workSheet).sort()) {
       if (cell === "!ref" || workSheet[cell].length) continue;
 
-      if (prevCell) AddBorder(prevCell, cell, workSheet);
       if (workSheet[cell].t === "z") workSheet[cell].t = "s";
 
       workSheet[cell].s = {
@@ -66,22 +65,23 @@ export default function GetExcelFIle(
       }
       prevCell = cell;
     }
+    AddBorder(workSheet);
     let workBook = utils.book_new();
     utils.book_append_sheet(workBook, workSheet, nameTable);
     writeFile(workBook, `${nameTable}.xlsx`);
-    console.log("Yes");
     setWorkBook(workBook);
   } else writeFile(wb, `${nameTable}.xlsx`);
 }
-
-function AddBorder(cell1, cell2, workSheet) {
-  let letter1 = cell1[0];
-  let letter2 = cell2[0];
-  if (letter1 === letter2) {
-    let number1 = cell1.split(letter1)[1];
-    let number2 = cell2.split(letter1)[1];
-    for (let i = +number1 + 1; i < +number2; i++) {
-      let cell = letter1 + i;
+function AddBorder(workSheet) {
+  let arrMerges = workSheet["!merges"];
+  for (let obj of arrMerges) {
+    let cell1 = utils.encode_cell(obj.s);
+    let cell2 = utils.encode_cell(obj.e);
+    let letter = cell1[0];
+    let number1 = cell1.split(letter)[1];
+    let number2 = cell2.split(letter)[1];
+    for (let i = +number1; i <= +number2; i++) {
+      let cell = letter + i;
       if (!workSheet[cell]) {
         workSheet[cell] = {};
         workSheet[cell].t = "s";
@@ -111,7 +111,7 @@ function AddBorder(cell1, cell2, workSheet) {
         };
       }
     }
-  } else return;
+  }
 }
 
 function GetBgColor(arrMerges, cell, value) {
