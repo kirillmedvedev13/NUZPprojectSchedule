@@ -74,6 +74,15 @@ class ScheduleTableGroup extends React.Component {
   constructor(props) {
     super(props);
     this.refTable = React.createRef();
+    this.state = {
+      workBook: null,
+    };
+    this.setWorkBook = this.setWorkBook.bind(this);
+  }
+  setWorkBook(workBook) {
+    this.setState((PrevState) => ({
+      workBook,
+    }));
   }
 
   render() {
@@ -83,8 +92,15 @@ class ScheduleTableGroup extends React.Component {
         <ButtonGetTableExcel
           refTable={this.refTable}
           nameTable="scheduleTableGroup"
+          wb={this.state.workBook}
+          setWorkBook={this.setWorkBook}
         ></ButtonGetTableExcel>
-        <Table ref={this.refTable} bordered className="border border-dark">
+        <Table
+          bordered
+          ref={this.refTable}
+          id="scheduleTableGroup"
+          className="border border-dark"
+        >
           <TableHead info={info}></TableHead>
           <DataTable filters={filters} info={info}></DataTable>
         </Table>
