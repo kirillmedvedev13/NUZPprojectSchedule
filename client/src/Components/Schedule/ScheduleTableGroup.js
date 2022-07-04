@@ -96,9 +96,9 @@ class ScheduleTableGroup extends React.Component {
           setWorkBook={this.setWorkBook}
         ></ButtonGetTableExcel>
         <Table
+          striped
           bordered
           ref={this.refTable}
-          id="scheduleTableGroup"
           className="border border-dark"
         >
           <TableHead info={info}></TableHead>

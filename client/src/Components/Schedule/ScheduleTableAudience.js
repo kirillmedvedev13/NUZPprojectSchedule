@@ -93,9 +93,9 @@ class ScheduleTableAudience extends React.Component {
           setWorkBook={this.setWorkBook}
         ></ButtonGetTableExcel>
         <Table
+          striped
           ref={this.refTable}
           bordered
-          id="tableAudience"
           className="border border-dark"
         >
           <TableHead info={info}></TableHead>

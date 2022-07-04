@@ -29,7 +29,7 @@ export default function TableBody(MapSomething, info, getDescription) {
                   rowSpan="2"
                   key={`${object.id}-td-${number_pair}`}
                   style={{
-                    backgroundColor: num_pair % 2 === 0 ? "#D6D6D6" : "#FFFFFF",
+                    backgroundColor: num_pair % 2 === 1 ? "#D6D6D6" : "#FFFFFF",
                   }}
                 >
                   {num_pair}
