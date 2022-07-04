@@ -1,33 +1,27 @@
 import { CreateNotification } from "../Alert";
 import { Workbook } from "exceljs";
+import XLSX from "xlsx-color";
 import ParseData from "./ParseData";
 
 export default async function ReadFile(file, sheetIndex) {
   const reader = new FileReader();
   reader.readAsArrayBuffer(file);
   let promise = new Promise((resolve, reject) => {
-    reader.onload = () => {
-      const buffer = reader.result;
-      const workBook = new Workbook();
-      workBook.xlsx
-        .load(buffer)
-        .then((workbook) => {
-          let sheet = workbook.worksheets[sheetIndex];
-          let dataRows = [];
-          sheet.eachRow((row, rowIndex) => {
-            dataRows.push(row.values);
-          });
-          ParseData(dataRows).then((data) => {
-            resolve(data);
-          });
-        })
-        .catch((err) => {
-          CreateNotification({
-            successful: false,
-            message: "Помилка завантаження даних!",
-          });
+    try {
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        let workBook = XLSX.read(data, { type: "array" });
+        let workSheet = workBook.Sheets[workBook.SheetNames[sheetIndex]];
+        ParseData(workSheet).then((data) => {
+          resolve(data);
         });
-    };
+      };
+    } catch (err) {
+      CreateNotification({
+        successful: false,
+        message: "Помилка завантаження даних!",
+      });
+    }
   });
   return await promise;
 }

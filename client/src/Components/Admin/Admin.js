@@ -1,72 +1,74 @@
 import React from "react";
 import { Form, Card, Carousel } from "react-bootstrap";
-import { CreateNotification } from "../Alert";
-import { Workbook } from "exceljs";
 import ButtonRunEA from "./ButtonRunEA";
 import { ButtonDeleteAllData } from "./ButtonDeleteAllData";
-import ButtonSubmitData from "./ButtonSubmitData";
+import { Workbook } from "exceljs";
+import { CreateNotification } from "../Alert";
 import SelectCathedra from "./SelectCathedra";
 import FormEA from "./FormEA";
+import XLSX from "xlsx-color";
+import FormDataLoad from "./FormDataLoad";
 
 class Admin extends React.Component {
-  state = {
-    file: "",
-    id_cathedra: null,
-    sheets: [],
-    sheetIndex: null,
-    onDelete: false,
-    info: {
-      max_pair: null,
-      max_day: null,
-      fintess_value: null,
-      population_size: null,
-      max_generations: null,
-      p_crossover: null,
-      p_mutation: null,
-      p_genes: null,
-      penaltyGrWin: null,
-      penaltyTeachWin: null,
-      penaltyLateSc: null,
-      penaltyEqSc: null,
-      penaltySameTimesSc: null,
-      penaltySameRecSc: null,
-      p_elitism: null,
-    },
-  };
-
-  handleChangeInfo = (name, value) => {
-    this.setState(PrevState => ({
-      info: Object.assign({ ...PrevState.info }, { [name]: value })
-    }));
-  };
-
-  setFile(file) {
-    this.setState({ file });
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = () => {
-      const buffer = reader.result;
-      const workBook = new Workbook();
-      workBook.xlsx
-        .load(buffer)
-        .then((workbook) => {
-          let sheets = [];
-          workbook.worksheets.forEach((sh) => {
-            sheets.push(sh.name);
-          });
-          this.setState({ sheets, sheetIndex: 0 });
-        })
-        .catch((err) => {
-          CreateNotification({
-            successful: false,
-            message: `Помилка завантаження даних! ${err}`,
-          });
-        });
+  constructor(props) {
+    super(props);
+    this.state = {
+      file: "",
+      id_cathedra: null,
+      sheets: [],
+      sheetIndex: null,
+      onDelete: false,
+      info: {
+        max_pair: null,
+        max_day: null,
+        fintess_value: null,
+        population_size: null,
+        max_generations: null,
+        p_crossover: null,
+        p_mutation: null,
+        p_genes: null,
+        penaltyGrWin: null,
+        penaltyTeachWin: null,
+        penaltyLateSc: null,
+        penaltyEqSc: null,
+        penaltySameTimesSc: null,
+        penaltySameRecSc: null,
+        p_elitism: null,
+      },
     };
+
+    this.setFile = this.setFile.bind(this);
   }
 
-  setCathedra = (id_cathedra) => {
-    this.setState({ id_cathedra });
+  setFile(file) {
+    try {
+      this.setState({ file });
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        let workBook = XLSX.read(data, { type: "array" });
+        let sheets = [];
+        workBook.SheetNames.forEach((name) => {
+          sheets.push(name);
+        });
+        this.setState({ sheets, sheetIndex: 0 });
+      };
+    } catch (err) {
+      CreateNotification({
+        successful: false,
+        message: `Помилка завантаження даних! ${err}`,
+      });
+    }
+  }
+
+  handleChangeInfo = (name, value) => {
+    this.setState((PrevState) => ({
+      info: Object.assign({ ...PrevState.info }, { [name]: value }),
+    }));
+  };
+  handleChangeState = (name, item) => {
+    this.setState({ [name]: item });
   };
 
   render() {
@@ -87,7 +89,7 @@ class Admin extends React.Component {
                 </Card.Body>
                 <Card.Footer>
                   <SelectCathedra
-                    setCathedra={this.setCathedra}
+                    handleChangeState={this.handleChangeState}
                     id_cathedra={this.state.id_cathedra}
                   ></SelectCathedra>
                   <ButtonRunEA
@@ -98,48 +100,14 @@ class Admin extends React.Component {
             </div>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
-            <div className="d-flex justify-content-center  ">
-              <Card className="my-2">
-                <Card.Header className="text-center">
-                  Відомість заручень
-                </Card.Header>
-                <Card.Body>
-                  <Form.Group controlId="formFileLg" className=" bg-light mb-3">
-                    <Form.Control
-                      type="file"
-                      size="md"
-                      onChange={(e) => {
-                        this.setFile(e.target.files[0]);
-                      }}
-                    />
-                    <SelectCathedra
-                      id_cathedra={this.state.id_cathedra}
-                      setCathedra={this.setCathedra}
-                    ></SelectCathedra>
-                    <Form.Select
-                      onChange={(e) => {
-                        this.setState({ sheetIndex: e.target.value });
-                      }}
-                    >
-                      {this.state.sheets.map((sh, index) => {
-                        return (
-                          <option key={index} value={index}>
-                            {sh}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                  </Form.Group>
-                  <Card.Footer>
-                    <ButtonSubmitData
-                      id_cathedra={this.state.id_cathedra}
-                      file={this.state.file}
-                      sheetIndex={this.state.sheetIndex}
-                    ></ButtonSubmitData>
-                  </Card.Footer>
-                </Card.Body>
-              </Card>
-            </div>
+            <FormDataLoad
+              setFile={this.setFile}
+              file={this.state.file}
+              sheetIndex={this.state.sheetIndex}
+              id_cathedra={this.state.id_cathedra}
+              sheets={this.state.sheets}
+              handleChangeState={this.handleChangeState}
+            ></FormDataLoad>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
             <div className="d-flex justify-content-center">
@@ -150,12 +118,13 @@ class Admin extends React.Component {
                 <Card.Body>
                   <SelectCathedra
                     id_cathedra={this.state.id_cathedra}
-                    setCathedra={this.setCathedra}
-                  >
-                  </SelectCathedra>
+                    handleChangeState={this.handleChangeState}
+                  ></SelectCathedra>
                 </Card.Body>
                 <Card.Footer>
-                  <ButtonDeleteAllData id_cathedra={this.state.id_cathedra}></ButtonDeleteAllData>
+                  <ButtonDeleteAllData
+                    id_cathedra={this.state.id_cathedra}
+                  ></ButtonDeleteAllData>
                 </Card.Footer>
               </Card>
             </div>

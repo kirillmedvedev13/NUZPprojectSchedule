@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import Select from "react-select";
 import { GET_ALL_CATHEDRAS } from "../Cathedra/queries";
 
-export default function SelectCathedra({ setCathedra, id_cathedra }) {
+export default function SelectCathedra({ handleChangeState, id_cathedra }) {
   const { error, loading, data } = useQuery(GET_ALL_CATHEDRAS);
   if (loading) return "Loading...";
   if (error) return `Error! ${error}`;
@@ -18,12 +18,13 @@ export default function SelectCathedra({ setCathedra, id_cathedra }) {
       options={options}
       placeholder="Кафедра"
       defaultValue={() => {
-        let cathedra = data.GetAllCathedras.find(item => +item.id === +id_cathedra)
-        if (cathedra)
-          return { label: cathedra.name, value: + cathedra.id }
+        let cathedra = data.GetAllCathedras.find(
+          (item) => +item.id === +id_cathedra
+        );
+        if (cathedra) return { label: cathedra.name, value: +cathedra.id };
       }}
       onChange={(e) => {
-        setCathedra(e ? +e.value : null);
+        handleChangeState("id_cathedra", e ? +e.value : null);
       }}
     />
   );

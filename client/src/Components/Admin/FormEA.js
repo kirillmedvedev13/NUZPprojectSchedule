@@ -262,10 +262,7 @@ function DataForm({ handleChangeInfo, info }) {
             min={1}
             max={7}
             onChange={(e) => {
-              handleChangeInfo(
-                "max_day",
-                e ? Number(e.target.value) : null
-              );
+              handleChangeInfo("max_day", e ? Number(e.target.value) : null);
             }}
           />
         </Col>
@@ -279,10 +276,7 @@ function DataForm({ handleChangeInfo, info }) {
             min={1}
             max={8}
             onChange={(e) => {
-              handleChangeInfo(
-                "max_pair",
-                e ? Number(e.target.value) : null
-              );
+              handleChangeInfo("max_pair", e ? Number(e.target.value) : null);
             }}
           />
         </Col>
