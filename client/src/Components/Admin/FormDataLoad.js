@@ -2,6 +2,7 @@ import { Form, Card } from "react-bootstrap";
 import ButtonSubmitData from "./ButtonSubmitData";
 import SelectCathedra from "./SelectCathedra";
 import React from "react";
+import ButtonGetTemplate from "./ButtonGetTemplate";
 
 export default class FormDataLoad extends React.Component {
   render() {
@@ -45,6 +46,7 @@ export default class FormDataLoad extends React.Component {
               </Form.Select>
             </Form.Group>
             <Card.Footer>
+              <ButtonGetTemplate></ButtonGetTemplate>
               <ButtonSubmitData
                 id_cathedra={id_cathedra}
                 file={file}

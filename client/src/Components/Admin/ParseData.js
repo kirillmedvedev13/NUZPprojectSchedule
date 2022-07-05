@@ -13,7 +13,7 @@ export default async function ParseData(workSheet) {
   let flag = false;
   let i = 0;
   let numberRows = 0;
-  debugger;
+
   while (running) {
     if (workSheet[colDisc.l + i])
       if (Number.isInteger(workSheet[colDisc.l + i].v)) {
