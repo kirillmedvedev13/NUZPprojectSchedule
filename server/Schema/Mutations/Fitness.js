@@ -34,7 +34,7 @@ export const CALC_FITNESS = {
       penaltySameTimesSc,
       penaltyTeachWin
     );
-    let stringFitness = `Загальна сума - ${fitnessValue.fitnessValue}
+    /* let stringFitness = `Загальна сума - ${fitnessValue.fitnessValue}
 \nРек. час - ${fitnessValue.fitnessSameRecSc}
 \nГрупи: 
 \n\tВікна - ${fitnessValue.fitnessGr.fitnessGrWin}
@@ -46,16 +46,16 @@ export const CALC_FITNESS = {
 \n\tСума - ${fitnessValue.fitnessTeach.fitnessValue}
 \nАудиторії: 
 \n\tНакладки - ${fitnessValue.fitnessAud.fitnessSameTimesSc}
-\n\tСума - ${fitnessValue.fitnessAud.fitnessValue}`;
+\n\tСума - ${fitnessValue.fitnessAud.fitnessValue}`;*/
     const res = await db.info.update(
-      { fitness_value: stringFitness },
+      { fitness_value: JSON.stringify(fitnessValue) },
       { where: { id: 1 } }
     );
     return res[0]
       ? {
-        successful: true,
-        message: "Значення пораховано успішно",
-      }
+          successful: true,
+          message: "Значення пораховано успішно",
+        }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

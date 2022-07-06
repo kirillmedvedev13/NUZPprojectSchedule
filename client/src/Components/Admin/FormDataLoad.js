@@ -45,15 +45,16 @@ export default class FormDataLoad extends React.Component {
                 })}
               </Form.Select>
             </Form.Group>
-            <Card.Footer>
-              <ButtonGetTemplate></ButtonGetTemplate>
-              <ButtonSubmitData
-                id_cathedra={id_cathedra}
-                file={file}
-                sheetIndex={sheetIndex}
-              ></ButtonSubmitData>
-            </Card.Footer>
           </Card.Body>
+          <Card.Footer>
+            <ButtonGetTemplate></ButtonGetTemplate>
+
+            <ButtonSubmitData
+              id_cathedra={id_cathedra}
+              file={file}
+              sheetIndex={sheetIndex}
+            ></ButtonSubmitData>
+          </Card.Footer>
         </Card>
       </div>
     );

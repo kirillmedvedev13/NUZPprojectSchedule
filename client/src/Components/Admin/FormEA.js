@@ -1,58 +1,8 @@
 import React from "react";
-import { Form, Row, Col, Button } from "react-bootstrap";
-import { useQuery, useMutation } from "@apollo/client";
+import { Form, Row, Col } from "react-bootstrap";
+import { useQuery } from "@apollo/client";
 import { GET_INFO } from "./queries.js";
-import { UPDATE_INFO, CALC_FITNESS } from "./mutations.js";
-import { CreateNotification } from "../Alert.js";
-
-function ButtonUpdateInfo({ info, refetch }) {
-  const [UpdateInfo, { loading, error }] = useMutation(UPDATE_INFO);
-  if (loading) return null;
-  if (error) return `Error! ${error}`;
-  let data = [];
-  for (const [key, value] of Object.entries(info)) {
-    if (value != null) data.push({ key, value });
-  }
-  return (
-    <div className="my-2 mx-2 d-flex justify-content-center">
-      <Button
-        className="col-12"
-        onClick={(e) => {
-          if (data.length === 0) return;
-          else
-            UpdateInfo({ variables: { data: JSON.stringify(data) } }).then(
-              (res) => {
-                CreateNotification(res.data.UpdateInfo);
-                refetch();
-              }
-            );
-        }}
-      >
-        Оновити данi
-      </Button>
-    </div>
-  );
-}
-function ButtonCalcFitness({ refetch }) {
-  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS);
-  if (loading) return null;
-  if (error) return `Error! ${error}`;
-  return (
-    <div className="my-2 mx-2 d-flex justify-content-center">
-      <Button
-        className="col-12"
-        onClick={() => {
-          CalcFitness().then((res) => {
-            CreateNotification(res.data.CalcFitness);
-            refetch();
-          });
-        }}
-      >
-        Порахувати значення фiтнес
-      </Button>
-    </div>
-  );
-}
+import ButtonUpdateInfo from "./ButtonUpdateInfo.js";
 
 function DataForm({ handleChangeInfo, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
@@ -254,47 +204,8 @@ function DataForm({ handleChangeInfo, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість днів</Form.Label>
-        <Col>
-          <Form.Control
-            defaultValue={data.GetInfo.max_day}
-            type="number"
-            min={1}
-            max={7}
-            onChange={(e) => {
-              handleChangeInfo("max_day", e ? Number(e.target.value) : null);
-            }}
-          />
-        </Col>
+        <ButtonUpdateInfo info={info} refetch={refetch}></ButtonUpdateInfo>
       </Form.Group>
-      <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість занять</Form.Label>
-        <Col>
-          <Form.Control
-            defaultValue={data.GetInfo.max_pair}
-            type="number"
-            min={1}
-            max={8}
-            onChange={(e) => {
-              handleChangeInfo("max_pair", e ? Number(e.target.value) : null);
-            }}
-          />
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Фітнес значення</Form.Label>
-        <Col>
-          <div>
-            {data.GetInfo.fitness_value === null ? (
-              <p></p>
-            ) : (
-              <pre>{data.GetInfo.fitness_value} </pre>
-            )}
-          </div>
-        </Col>
-      </Form.Group>
-      <ButtonUpdateInfo info={info} refetch={refetch}></ButtonUpdateInfo>
-      <ButtonCalcFitness refetch={refetch}></ButtonCalcFitness>
     </>
   );
 }

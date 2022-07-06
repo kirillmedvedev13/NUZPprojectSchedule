@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Card, Carousel } from "react-bootstrap";
+import { Form, Card, Carousel, Row } from "react-bootstrap";
 import ButtonRunEA from "./ButtonRunEA";
 import { ButtonDeleteAllData } from "./ButtonDeleteAllData";
 import { Workbook } from "exceljs";
@@ -8,6 +8,7 @@ import SelectCathedra from "./SelectCathedra";
 import FormEA from "./FormEA";
 import XLSX from "xlsx-color";
 import FormDataLoad from "./FormDataLoad";
+import FormScheduleData from "./FormScheduleData";
 
 class Admin extends React.Component {
   constructor(props) {
@@ -88,16 +89,27 @@ class Admin extends React.Component {
                   ></FormEA>
                 </Card.Body>
                 <Card.Footer>
-                  <SelectCathedra
-                    handleChangeState={this.handleChangeState}
-                    id_cathedra={this.state.id_cathedra}
-                  ></SelectCathedra>
-                  <ButtonRunEA
-                    id_cathedra={this.state.id_cathedra}
-                  ></ButtonRunEA>
+                  <Form.Group as={Row} className="my-2 mx-2">
+                    <SelectCathedra
+                      handleChangeState={this.handleChangeState}
+                      id_cathedra={this.state.id_cathedra}
+                    ></SelectCathedra>
+                  </Form.Group>
+                  <Form.Group as={Row} className="my-2 mx-2">
+                    <ButtonRunEA
+                      id_cathedra={this.state.id_cathedra}
+                    ></ButtonRunEA>
+                  </Form.Group>
                 </Card.Footer>
               </Card>
             </div>
+          </Carousel.Item>
+
+          <Carousel.Item className="mb-5">
+            <FormScheduleData
+              handleChangeInfo={this.handleChangeInfo}
+              info={this.state.info}
+            ></FormScheduleData>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
             <FormDataLoad
@@ -116,15 +128,19 @@ class Admin extends React.Component {
                   Видалення даних
                 </Card.Header>
                 <Card.Body>
-                  <SelectCathedra
-                    id_cathedra={this.state.id_cathedra}
-                    handleChangeState={this.handleChangeState}
-                  ></SelectCathedra>
+                  <Form.Group as={Row} className=" mx-2">
+                    <SelectCathedra
+                      id_cathedra={this.state.id_cathedra}
+                      handleChangeState={this.handleChangeState}
+                    ></SelectCathedra>
+                  </Form.Group>
                 </Card.Body>
                 <Card.Footer>
-                  <ButtonDeleteAllData
-                    id_cathedra={this.state.id_cathedra}
-                  ></ButtonDeleteAllData>
+                  <Form.Group as={Row} className="my-2 mx-4">
+                    <ButtonDeleteAllData
+                      id_cathedra={this.state.id_cathedra}
+                    ></ButtonDeleteAllData>
+                  </Form.Group>
                 </Card.Footer>
               </Card>
             </div>
