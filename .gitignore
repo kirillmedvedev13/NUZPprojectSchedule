@@ -5,6 +5,7 @@
 /client/node_modules
 /.pnp
 .pnp.js
+/server/EvulationAlgoritmCpp/EvulationAlgoritmCpp/.vs
 
 # testing
 /coverage
