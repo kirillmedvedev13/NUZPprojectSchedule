@@ -6,11 +6,16 @@
 /.pnp
 .pnp.js
 <<<<<<< HEAD
+<<<<<<< HEAD
 /server/EvulationAlgoritmCpp/EvulationAlgoritmCpp/.vs
 
 =======
 /server/EvalutionAlghrotmCpp/EvalutionAlghrotmCpp/.vs
 >>>>>>> 2f3843351f49a240f2e36e1aeffcb38a5f4884d9
+=======
+**/.vs
+
+>>>>>>> 3d44fb9814053f4d77a7cf0f9a3a0f86b259fff0
 # testing
 /coverage
 
