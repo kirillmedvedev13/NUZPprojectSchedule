@@ -1,0 +1,15 @@
+﻿  AddClassToSchedule.cpp
+  Main.cpp
+  Fitness.cpp
+  GetIdAudienceForClass.cpp
+  GetPairTypeForClass.cpp
+  GetRndDouble.cpp
+  GetRndInteger.cpp
+  Init.cpp
+  SortSchedule.cpp
+C:\WEB\Schedule\NUZPprojectSchedule\server\EvalationAlgoritmCpp\EvulationAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(20,49): warning C4305: return: усечение из "int" в "bool"
+C:\WEB\Schedule\NUZPprojectSchedule\server\EvalationAlgoritmCpp\EvulationAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(22,55): warning C4305: return: усечение из "int" в "bool"
+C:\WEB\Schedule\NUZPprojectSchedule\server\EvalationAlgoritmCpp\EvulationAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(24,51): warning C4305: return: усечение из "int" в "bool"
+  threadpool.cpp
+  Создание кода...
+  EvulationAlgoritmCpp.vcxproj -> C:\WEB\Schedule\NUZPprojectSchedule\server\EvalationAlgoritmCpp\EvulationAlgoritmCpp\Debug\EvulationAlgoritmCpp.exe

@@ -5,7 +5,8 @@
 /client/node_modules
 /.pnp
 .pnp.js
-/server/EvalutionAlghrotmCpp/EvalutionAlghrotmCpp/.vs
+**/.vs
+
 # testing
 /coverage
 
