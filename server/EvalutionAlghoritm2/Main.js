@@ -11,7 +11,7 @@ import replacer from "./JSONReplacer.js";
 import reviver from "./JSONReviver.js";
 import { GraphQLInt } from "graphql";
 import { Op } from "sequelize";
-import ParseScheduleFromDB from "./ParseScheduleFromDB.js"
+import ParseScheduleFromDB from "./ParseScheduleFromDB.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -39,8 +39,8 @@ export const RUN_EA = {
       FilterCathedra = {
         id_cathedra: {
           [Op.eq]: id_cathedra,
-        }
-      }
+        },
+      };
     }
     let classes = await db.class.findAll({
       include: [
@@ -66,7 +66,7 @@ export const RUN_EA = {
             model: db.specialty,
             required: true,
             where: FilterCathedra,
-          }
+          },
         },
       ],
     });
@@ -87,7 +87,11 @@ export const RUN_EA = {
       let scheduleForGroups = new Map();
       let scheduleForTeachers = new Map();
       let scheduleForAudiences = new Map();
-      base_schedule = { scheduleForGroups, scheduleForTeachers, scheduleForAudiences };
+      base_schedule = {
+        scheduleForGroups,
+        scheduleForTeachers,
+        scheduleForAudiences,
+      };
       await ParseScheduleFromDB(base_schedule);
     }
     recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
@@ -144,8 +148,7 @@ export const RUN_EA = {
           if (r1 > r2) {
             populations.splice(r1, 1);
             populations.splice(r2, 1);
-          }
-          else {
+          } else {
             populations.splice(r2, 1);
             populations.splice(r1, 1);
           }
@@ -286,10 +289,10 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
     // Очистка расписания
