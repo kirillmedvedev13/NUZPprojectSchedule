@@ -5,8 +5,12 @@
 /client/node_modules
 /.pnp
 .pnp.js
+<<<<<<< HEAD
 /server/EvulationAlgoritmCpp/EvulationAlgoritmCpp/.vs
 
+=======
+/server/EvalutionAlghrotmCpp/EvalutionAlghrotmCpp/.vs
+>>>>>>> 2f3843351f49a240f2e36e1aeffcb38a5f4884d9
 # testing
 /coverage
 
