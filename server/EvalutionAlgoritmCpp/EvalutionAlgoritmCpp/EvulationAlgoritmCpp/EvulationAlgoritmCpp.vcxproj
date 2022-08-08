@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{b594b0c7-6161-436d-a24b-e3e7dd93edc0}</ProjectGuid>
     <RootNamespace>EvulationAlgoritmCpp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <ProjectName>EvalutionAlgorithmCpp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -117,6 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,6 +151,7 @@
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="SortSchedule.cpp" />
     <ClCompile Include="threadpool.cpp" />
+    <ClCompile Include="TypeDefs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddClassToSchedule.h" />
@@ -163,6 +165,7 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="SortSchedule.h" />
     <ClInclude Include="threadpool.h" />
+    <ClInclude Include="TypeDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data.json" />

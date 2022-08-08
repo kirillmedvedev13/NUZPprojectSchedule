@@ -1,10 +1,9 @@
 #ifndef INIT_H
 #define INIT_H
-#include "json.hpp"
+#include "TypeDefs.h"
 #include <vector>
 using namespace std;
-using namespace nlohmann;
 
-void Init(json &populations,json classes, int population_size, int max_day, int max_pair, json audiences, json base_schedule);
+void Init(vector <individ> &populations, vector <clas> classes, int population_size, int max_day, int max_pair, vector<audience> audiences, json base_schedule);
 
 #endif // INIT_H

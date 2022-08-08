@@ -1,11 +1,8 @@
 #ifndef GETPAIRTYPEFORCLASS_H
 #define GETPAIRTYPEFORCLASS_H
-#include "json.hpp"
-#include <vector>
-
+#include "TypeDefs.h"
 using namespace std;
-using namespace nlohmann;
 
-vector<int> GetPairTypeForClass(json clas);
+vector<int> GetPairTypeForClass(clas clas_);
 
 #endif // GETPAIRTYPEFORCLASS_H

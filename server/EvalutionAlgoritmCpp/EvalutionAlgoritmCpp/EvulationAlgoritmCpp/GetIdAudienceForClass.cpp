@@ -1,33 +1,30 @@
 #include "GetIdAudienceForClass.h"
 #include "GetRndInteger.h"
 #include <iostream>
-#include <vector>
 
-using namespace std;
-
-int GetIdAudienceForClass(json clas, json audiences)
+int GetIdAudienceForClass(clas clas, vector<audience> audiences)
 {
     vector<int> detected_audiences;
-    if (!clas["recommended_audiences"].is_null() && clas["recommended_audiences"].size())
-        detected_audiences.push_back(clas["recommended_audiences"][GetRndInteger(0, clas["recommended_audiences"].size())]["id_audience"]);
+    if (clas.recommended_audiences.size())
+        detected_audiences.push_back(clas.recommended_audiences[GetRndInteger(0, clas.recommended_audiences.size())].id_audience);
     else
     {
         int sum_students = 0;
-        for (json ag : clas["assigned_groups"])
+        for (assigned_group ag : clas.assigned_groups)
         {
-            sum_students += (int)ag["group"]["number_students"];
+            sum_students += ag.a_group.number_students;
         }
-        int id_cathedra = clas["assigned_discipline"]["specialty"]["id_cathedra"];
+        int id_cathedra = clas.cl_assigned_discipline.ad_specialty.id_cathedra;
 
-        for (json aud : audiences)
+        for (audience aud : audiences)
         {
-            if (aud["capacity"] >= sum_students && aud["id_type_class"] == clas["id_type_class"])
+            if (aud.capacity >= sum_students && aud.id_type_class == clas.id_type_class)
             {
-                for (json au : aud["assigned_audiences"])
+                for (assigned_audience au : aud.assigned_audiences)
                 {
-                    if (au["id_cathedra"] == id_cathedra)
+                    if (au.id_cathedra == id_cathedra)
                     {
-                        detected_audiences.push_back(aud["id"]);
+                        detected_audiences.push_back(aud.id);
                         break;
                     }
                 }
@@ -36,11 +33,11 @@ int GetIdAudienceForClass(json clas, json audiences)
         if (!detected_audiences.size())
         {
 
-            for (json aud : audiences)
+            for (audience aud : audiences)
             {
-                if (aud["capacity"] >= sum_students && aud["id_type_class"] == clas["id_type_class"])
+                if (aud.capacity >= sum_students && aud.id_type_class == clas.id_type_class)
                 {
-                    detected_audiences.push_back(aud["id"]);
+                    detected_audiences.push_back(aud.id);
                 }
             }
             if (!detected_audiences.size())

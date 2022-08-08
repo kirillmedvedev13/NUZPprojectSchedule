@@ -2,10 +2,10 @@
 #include "GetRndDouble.h"
 #include "GetRndInteger.h"
 
-vector<int> GetPairTypeForClass(json clas)
+vector<int> GetPairTypeForClass(clas clas_)
 {
     vector<int> times;
-    int times_per_week = clas["times_per_week"];
+    int times_per_week = clas_.times_per_week;
     if (times_per_week <= 1)
         times.push_back(GetRndInteger(1, 2));
 

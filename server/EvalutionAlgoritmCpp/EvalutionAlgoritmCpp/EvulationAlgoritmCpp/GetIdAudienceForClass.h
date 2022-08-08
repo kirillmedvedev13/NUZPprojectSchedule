@@ -1,8 +1,9 @@
 #ifndef GETIDAUDIENCEFORCLASS_H
 #define GETIDAUDIENCEFORCLASS_H
-#include "json.hpp"
-using namespace nlohmann;
+#include "TypeDefs.h"
+#include <vector>
+using namespace std;
 
-int GetIdAudienceForClass(json clas, json audiences);
+int GetIdAudienceForClass(clas clas, vector<audience> audiences);
 
 #endif // GETIDAUDIENCEFORCLASS_H

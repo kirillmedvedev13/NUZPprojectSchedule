@@ -1,18 +1,2 @@
-﻿  AddClassToSchedule.cpp
-  Main.cpp
-  Fitness.cpp
-  GetIdAudienceForClass.cpp
-C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\GetIdAudienceForClass.cpp(12,121): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\GetIdAudienceForClass.cpp(50,77): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-  GetPairTypeForClass.cpp
-  GetRndDouble.cpp
-  GetRndInteger.cpp
-  Init.cpp
-  SortSchedule.cpp
-C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(6,34): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(20,49): warning C4305: return: усечение из "int" в "bool"
-C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(22,55): warning C4305: return: усечение из "int" в "bool"
-C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\SortSchedule.cpp(24,51): warning C4305: return: усечение из "int" в "bool"
-  threadpool.cpp
-  Создание кода...
-  EvulationAlgoritmCpp.vcxproj -> C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\x64\Debug\EvalutionAlgorithmCpp.exe
+﻿  TypeDefs.cpp
+  EvulationAlgoritmCpp.vcxproj -> E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\x64\Debug\EvalutionAlgorithmCpp.exe

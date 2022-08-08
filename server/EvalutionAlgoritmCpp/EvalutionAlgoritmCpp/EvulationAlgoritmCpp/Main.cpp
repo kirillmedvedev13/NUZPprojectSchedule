@@ -2,7 +2,9 @@
 #include "json.hpp"
 #include "Init.h"
 #include "Fitness.h"
+#include "TypeDefs.h"
 #include <fstream>
+#include <vector>
 #include <cstring>
 #include <cstdlib>
 using namespace std;
@@ -51,23 +53,40 @@ int main(int argc, const char *argv[])
         const double p_elitism = info["p_elitism"];
         const double penaltySameRecSc = info["penaltySameRecSc"];
 
-        json classes = data["classes"];
-        json recommended_schedules = data["recommended_schedules"];
-        json groups = data["groups"];
-        json audiences = data["audiences"];
-        json teachers = data["teachers"];
+        vector <clas> classes = vector <clas>();
+        for (json cl : data["classes"]) {
+            clas new_cl(cl);
+            classes.push_back(cl);
+        }
+        vector <recommended_schedule>  recommended_schedules = vector <recommended_schedule>();
+        for (json rc : data["recommended_schedules"]) {
+            recommended_schedule new_rc(rc);
+            recommended_schedules.push_back(new_rc);
+        }
+        vector <group> groups = vector < group>();
+        for(json gr: data["groups"]){
+            group new_gr(gr);
+            groups.push_back(gr);
+        }
+           
+        vector<audience> audiences =  vector<audience>();
+        for (json aud : data["audiences"]) {
+            audience new_aud(aud);
+            audiences.push_back(new_aud);
+        }
+        vector <teacher> teachers =  vector <teacher>();
+        for (json teach : data["teachers"]) {
+            teacher new_teach(teach);
+            teachers.push_back(new_teach);
+        }
 
         json base_schedule = NULL;
-        json populations;
+        vector <individ> populations = vector <individ>();
         cout<<"Init starts"<<endl;
         Init(populations,classes,  population_size, max_day, max_pair, audiences, base_schedule);
         cout<<"Init ends"<<endl;
         cout<<"Fitness starts"<<endl;
 
-        for(json individ: populations){
-            Fitness(individ,recommended_schedules,max_day, penaltySameRecSc, penaltyGrWin,penaltySameTimesSc,penaltyTeachWin);
-            cout<<"fitness "<<individ["fitnessValue"]<<endl;
-        }
         cout<<"Fitness ends"<<endl;
     }
     catch (json::type_error &ex)
