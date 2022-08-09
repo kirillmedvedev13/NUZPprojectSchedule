@@ -9,16 +9,12 @@
 #include "AddClassToSchedule.h"
 
 
-void Init(vector <individ>& populations, vector <clas> classes, int population_size, int max_day, int max_pair, vector<audience> audiences, json base_schedule)
+individ Init(vector <clas> classes, int max_day, int max_pair, vector<audience> audiences, json base_schedule)
 {
 
-    for (int i = 0; i < population_size; i++)
-    {
-        individ i_schedule= individ();
+		individ i_schedule= individ();
         for (int j = 0; j < classes.size(); j++)
         {
-
-            cout<<j<<endl;
             clas clas = classes[j];
             vector<int> info = GetPairTypeForClass(clas);
             for (int j = 0; j < info.size(); j++)
@@ -49,7 +45,6 @@ void Init(vector <individ>& populations, vector <clas> classes, int population_s
         {
         }
         
-        populations.push_back(i_schedule);
-    }
-    // std::cout<<setw(4)<<populations[0]<<std::endl;
+        return i_schedule;
+    
 }

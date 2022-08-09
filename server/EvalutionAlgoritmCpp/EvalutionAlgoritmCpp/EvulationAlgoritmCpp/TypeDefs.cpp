@@ -220,16 +220,30 @@ schedule::schedule()
 	this->id_audience = -1;
 }
 
+bool schedule::compare(schedule sc)
+{
+	if (id == sc.id && number_pair == sc.number_pair && day_week == sc.day_week && pair_type == sc.pair_type && id_assigned_group == sc.id_assigned_group && id_audience == sc.id_audience && id_class == sc.id_class)
+		return true;
+	return false;
+}
+
+bool schedule::isNullOrEmpty()
+{
+	if (id == -1 || number_pair == -1 || day_week == -1 || pair_type == -1 || id_assigned_group == -1 || id_audience == -1 || id_class == -1)
+		return true;
+	return false;
+}
+
 fitness::fitness()
 {
 	this->fitnessValue = -1;
-	this->fitnessGr = -1;
-	this->fitnessTeach = -1;
-	this->fitnessAud = -1;
+	this->fitnessGr = map<string, double>();
+	this->fitnessTeach = map<string, double>();
+	this->fitnessAud = map<string, double>();
 	this->fitnessSameRecSc = -1;
 }
 
-fitness::fitness(int fitnessValue, int fitnessGr, int fitnessTeach, int fitnessAud, int fitnessSameRecSc)
+fitness::fitness(double fitnessValue, map<string, double> fitnessGr, map<string, double> fitnessTeach, map<string, double> fitnessAud, double fitnessSameRecSc)
 {
 	this->fitnessValue= fitnessValue;
 	this->fitnessGr= fitnessGr;

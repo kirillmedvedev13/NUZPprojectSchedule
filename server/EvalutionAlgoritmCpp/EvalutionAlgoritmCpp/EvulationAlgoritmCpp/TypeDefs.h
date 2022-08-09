@@ -51,15 +51,17 @@ struct schedule {
 	int id_class;
 	schedule(int id, int number_pair, int day_week, int pair_type, int id_assigned_group, int id_audience,int id_class);
 	schedule();
+	bool compare(schedule sc);
+	bool isNullOrEmpty();
 };
 struct fitness {
-	int fitnessValue;
-	int fitnessGr;
-	int fitnessTeach;
-	int fitnessAud;
-	int fitnessSameRecSc;
+	double fitnessValue;
+	map<string, double> fitnessGr;
+	map<string, double> fitnessTeach;
+	map<string, double> fitnessAud;
+	double fitnessSameRecSc;
 	fitness();
-	fitness(int fitnessValue,int fitnessGr,int fitnessTeach,int fitnessAud,int fitnessSameRecSc);
+	fitness(double fitnessValue, map<string, double> fitnessGr, map<string, double> fitnessTeach, map<string, double> fitnessAud, double fitnessSameRecSc);
 };
 struct individ {
 	map <int, vector<schedule>> scheduleForGroups;

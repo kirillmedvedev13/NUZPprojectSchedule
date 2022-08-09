@@ -2,6 +2,7 @@
 #include "json.hpp"
 #include "Init.h"
 #include "Fitness.h"
+#include "BS_thread_pool.hpp"
 #include "TypeDefs.h"
 #include <fstream>
 #include <vector>
@@ -9,6 +10,7 @@
 #include <cstdlib>
 using namespace std;
 using namespace nlohmann;
+using namespace BS;
 
 int main(int argc, const char *argv[])
 {
@@ -82,18 +84,67 @@ int main(int argc, const char *argv[])
 
         json base_schedule = NULL;
         vector <individ> populations = vector <individ>();
-        cout<<"Init starts"<<endl;
-        Init(populations,classes,  population_size, max_day, max_pair, audiences, base_schedule);
-        cout<<"Init ends"<<endl;
-        cout<<"Fitness starts"<<endl;
+        thread_pool worker_pool;
+        timer Timer;
 
+        Timer.start();
+        cout<<"Init starts"<<endl;
+        multi_future<vector<individ>> multiFuture = worker_pool.parallelize_loop(0, population_size, [classes, max_day, max_pair, audiences, base_schedule](const int a, const int b)
+            {
+        	   vector<individ> temp;
+               for(int i=a;i<b;i++)
+               {
+                   temp.push_back(Init(classes, max_day, max_pair, audiences, base_schedule));
+               }
+                return temp;
+            });
+        for(vector<individ> temp :multiFuture.get())
+        {
+            populations.insert(populations.end(), temp.begin(), temp.end());
+        }
+        /*for (int i = 0; i < population_size; i++) {
+            worker_pool.push_task([&populations,classes, max_day, max_pair, audiences, base_schedule]()
+            {
+                    individ i_schedule = Init(classes, max_day, max_pair, audiences, base_schedule);
+                    populations.push_back(i_schedule);
+            });
+        }*/
+        Timer.stop();
+        cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+
+        Timer.start();
+        cout<<"Fitness starts"<<endl;
+        multi_future<void> multiFuture1 = worker_pool.parallelize_loop(0, population_size, [&populations,recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin](const int a,const int b)
+        {
+	        for(int i =a;i<b;i++)
+	        {
+                Fitness(populations[i], recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
+	        }
+        });
+        /*for (individ& i_schedule : populations)
+        {
+           worker_pool.push_task([&i_schedule,recommended_schedules,max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin]()
+                {
+                   
+                    Fitness(i_schedule, recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
+                });
+           
+            
+        }
+         worker_pool.wait_for_tasks();
+        */
+        multiFuture1.get();
         cout<<"Fitness ends"<<endl;
+        Timer.stop();
+        cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+        
     }
     catch (json::type_error &ex)
     {
         std::cout << ex.what() << '\n';
 
     }
+   
 
     return 0;
 }

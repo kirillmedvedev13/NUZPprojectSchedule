@@ -1,9 +1,8 @@
 #ifndef SORTSCHEDULE_H
 #define SORTSCHEDULE_H
-#include "json.hpp"
+#include "TypeDefs.h"
 #include <vector>
 using namespace std;
-using namespace nlohmann;
-void SortSchedule(vector<json> &schedule);
+void SortSchedule(vector<schedule> &i_schedule);
 
 #endif // SORTSCHEDULE_H

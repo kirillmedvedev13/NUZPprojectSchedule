@@ -4,114 +4,105 @@
 #include <vector>
 #include "SortSchedule.h"
 using namespace std;
-json FitnessByGroups(map<int, vector<json>> &scheduleForGroups,int max_day,double penaltySameTimesSc,double penaltyGrWin);
-json FitnessByTeachers(map<int, vector<json>> &scheduleForTeachers,int max_day,double penaltySameTimesSc,double penaltyTeachWin);
-json FitnessByAudiences(map<int, vector<json>> &scheduleForAudiences,double penaltySameTimesSc);
-double FitnessWindows(json schedule,int max_day,double penaltyWin);
-double FitnessSameTimes(json schedule,double penaltySameTimesSc);
-double FitnessSameSchedules(map<int, vector<json>> &schedule,json recommedned_schedule,double penaltySameRecSchedules);
+map<string, double> FitnessByGroups(map <int, vector<schedule>> &scheduleForGroups,int max_day,double penaltySameTimesSc,double penaltyGrWin);
+map<string, double> FitnessByTeachers(map <int, vector<schedule>> &scheduleForTeachers,int max_day,double penaltySameTimesSc,double penaltyTeachWin);
+map<string, double> FitnessByAudiences(map <int, vector<schedule>> &scheduleForAudiences,double penaltySameTimesSc);
+double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin);
+double FitnessSameTimes(vector<schedule> i_schedule,double penaltySameTimesSc);
+double FitnessSameSchedules(map <int, vector<schedule>>&i_schedule, vector < recommended_schedule> recommedned_schedules,double penaltySameRecSc);
 
-void Fitness(json &schedule,json recommended_schedules,int max_day,double penaltySameRecSc, double penaltyGrWin, double penaltySameTimesSc,double penaltyTeachWin){
-    map<int, vector<json>> scheduleForGroups = schedule["scheduleForGroups"];
-    map<int, vector<json>> scheduleForTeachers = schedule["scheduleForTeachers"];
-    map<int, vector<json>> scheduleForAudiences = schedule["scheduleForAudiences"];
+void Fitness(individ &i_schedule, vector <recommended_schedule> recommended_schedules,int max_day,double penaltySameRecSc, double penaltyGrWin, double penaltySameTimesSc,double penaltyTeachWin){
     bool sortedGroups = false,sortedTeachers= false,sortedAudiences=false;
-    map<int, vector<json>>::iterator itGr=scheduleForGroups.begin(),itTeach=scheduleForTeachers.begin(),itAud= scheduleForAudiences.begin();
+    auto itGr=i_schedule.scheduleForGroups.begin(),itTeach= i_schedule.scheduleForTeachers.begin(),itAud= i_schedule.scheduleForAudiences.begin();
     while(!sortedGroups || !sortedTeachers || !sortedAudiences){
-        if(itGr!=scheduleForGroups.end()){
+        if(itGr!= i_schedule.scheduleForGroups.end()){
             SortSchedule(itGr->second);
-            itGr++;
+            ++itGr;
         }
         else
             sortedGroups=true;
-        if(itTeach!=scheduleForTeachers.end()){
+        if(itTeach!= i_schedule.scheduleForTeachers.end()){
             SortSchedule(itTeach->second);
-            itTeach++;
+            ++itTeach;
         }
         else
             sortedTeachers=true;
-        if(itAud!=scheduleForAudiences.end()){
+        if(itAud!= i_schedule.scheduleForAudiences.end()){
             SortSchedule(itAud->second);
-            itAud++;
+            ++itAud;
         }
         else
             sortedAudiences=true;
 
     }
-    json fitnessGr=FitnessByGroups(scheduleForGroups,max_day,penaltySameTimesSc,penaltyGrWin);
-    json fitnessTeach = FitnessByTeachers(scheduleForTeachers,max_day,penaltySameTimesSc,penaltyTeachWin);
-    json empty= {{"fitnessValue",0}};
-    json fitnessAud = penaltySameTimesSc == 0 ? empty : FitnessByAudiences(scheduleForAudiences,penaltySameTimesSc);
-    double fitnessSameRecSc = FitnessSameSchedules(scheduleForAudiences,recommended_schedules,penaltySameRecSc);
+    map<string, double> fitnessGr=FitnessByGroups(i_schedule.scheduleForGroups,max_day,penaltySameTimesSc,penaltyGrWin);
+    map<string, double> fitnessTeach = FitnessByTeachers(i_schedule.scheduleForTeachers,max_day,penaltySameTimesSc,penaltyTeachWin);
+    map<string, double> empty = { {"fitnessValue",0},{"fitnessSameTimesSc",0}};
+    map<string, double> fitnessAud = penaltySameTimesSc == 0 ? empty : FitnessByAudiences(i_schedule.scheduleForAudiences,penaltySameTimesSc);
+    double fitnessSameRecSc = FitnessSameSchedules(i_schedule.scheduleForAudiences,recommended_schedules,penaltySameRecSc);
 
-    double fitnessValue = (double)fitnessGr["fitnessValue"] + (double)fitnessTeach["fitnessValue"] + (double)fitnessAud["fitnessValue"] + fitnessSameRecSc;
-    schedule["fitnessValue"]= {
-        {"fitnessValue",fitnessValue},
-        {"fitnessGr",fitnessGr},
-        {"fitnessTeach",fitnessTeach},
-        {"fitnessAud",fitnessAud},
-        {"fitnessSameRecSc",fitnessSameRecSc},
-    };
+    double fitnessValue = fitnessGr["fitnessValue"] + fitnessTeach["fitnessValue"] + fitnessAud["fitnessValue"] + fitnessSameRecSc;
+    i_schedule.fitnessValue = fitness(fitnessValue, fitnessGr, fitnessTeach, fitnessAud, fitnessSameRecSc);
 }
 
 
-json FitnessByGroups(map<int, vector<json>> &scheduleForGroups,int max_day,double penaltySameTimesSc,double penaltyGrWin){
+map<string, double> FitnessByGroups(map <int, vector<schedule>> &scheduleForGroups,int max_day,double penaltySameTimesSc,double penaltyGrWin){
     double fitnessGrWin = 0;
     double fitnessSameTimesSc = 0;
-    map<int, vector<json>>::iterator itGr=scheduleForGroups.begin();
+    auto itGr=scheduleForGroups.begin();
     while(itGr!=scheduleForGroups.end()){
         fitnessGrWin += penaltyGrWin == 0 ? 0 : FitnessWindows(itGr->second,max_day,penaltyGrWin);
         fitnessSameTimesSc += penaltySameTimesSc == 0 ? 0 : FitnessSameTimes(itGr->second,penaltySameTimesSc);
-        itGr++;
+        ++itGr;
     }
     double fitnessValue = fitnessGrWin + fitnessSameTimesSc;
-    return {
-        {"fitnessValue",fitnessValue},
-        {"fitnessGrWin",fitnessGrWin},
-        {"fitnessSameTimesSc",fitnessSameTimesSc},
-    };
+    map<string, double> fitnessV;
+    fitnessV["fitnessValue"] = fitnessValue;
+    fitnessV["fitnessGrWin"] = fitnessGrWin;
+    fitnessV["fitnessSameTimesSc"] = fitnessSameTimesSc;
+    return fitnessV;
 }
-json FitnessByTeachers(map<int, vector<json>> &scheduleForTeachers,int max_day,double penaltySameTimesSc,double penaltyTeachWin){
+map<string, double> FitnessByTeachers(map <int, vector<schedule>>&scheduleForTeachers,int max_day,double penaltySameTimesSc,double penaltyTeachWin){
     double fitnessTeachWin = 0;
     double fitnessSameTimesSc = 0;
-    map<int, vector<json>>::iterator itTeach=scheduleForTeachers.begin();
+    auto itTeach=scheduleForTeachers.begin();
     while(itTeach!=scheduleForTeachers.end()){
         fitnessTeachWin += penaltyTeachWin == 0 ? 0 : FitnessWindows(itTeach->second,max_day,penaltyTeachWin);
         fitnessSameTimesSc += penaltySameTimesSc == 0 ? 0 : FitnessSameTimes(itTeach->second,penaltySameTimesSc);
-        itTeach++;
+        ++itTeach;
     }
     double fitnessValue = fitnessTeachWin + fitnessSameTimesSc;
-    return {
-        {"fitnessValue",fitnessValue},
-        {"fitnessTeachWin",fitnessTeachWin},
-        {"fitnessSameTimesSc",fitnessSameTimesSc},
-    };
+    map<string, double> fitnessV;
+    fitnessV["fitnessValue"] = fitnessValue;
+    fitnessV["fitnessTeachWin"] = fitnessTeachWin;
+    fitnessV["fitnessSameTimesSc"] = fitnessSameTimesSc;
+    return fitnessV;
 }
 
-json FitnessByAudiences(map<int, vector<json>> &scheduleForAudiences,double penaltySameTimesSc){
+map<string, double> FitnessByAudiences(map <int, vector<schedule>>&scheduleForAudiences,double penaltySameTimesSc){
     double fitnessSameTimesSc = 0;
-    map<int, vector<json>>::iterator itAud=scheduleForAudiences.begin();
+    auto itAud=scheduleForAudiences.begin();
     while(itAud!=scheduleForAudiences.end()){
         fitnessSameTimesSc += penaltySameTimesSc == 0 ? 0 : FitnessSameTimes(itAud->second,penaltySameTimesSc);
-        itAud++;
+        ++itAud;
     }
     double fitnessValue = fitnessSameTimesSc;
-    return {
-        {"fitnessValue",fitnessValue},
-        {"fitnessSameTimesSc",fitnessSameTimesSc},
-    };
+    map<string, double> fitnessV;
+    fitnessV["fitnessValue"] = fitnessValue;
+    fitnessV["fitnessSameTimesSc"] = fitnessSameTimesSc;
+    return fitnessV;
 }
 
 
-double FitnessWindows(json schedule,int max_day,double penaltyWin){
+double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin){
     double fitnessWindows = 0;
     for(int current_day = 1; current_day <=max_day;current_day++){
 
-        json schedule_top =json::array();
-        json schedule_bot =json::array();
-        for(json clas: schedule){
-            if((int)clas["day_week"] == current_day){
-                switch((int)clas["pair_type"]){
+        vector<schedule> schedule_top;
+        vector<schedule> schedule_bot;
+        for(schedule &clas: i_schedule){
+            if(clas.day_week == current_day){
+                switch(clas.pair_type){
                     case 1: schedule_top.push_back(clas);
                     break;
                     case 2: schedule_bot.push_back(clas);
@@ -123,14 +114,15 @@ double FitnessWindows(json schedule,int max_day,double penaltyWin){
             }
         }
 
-        json arr = json::array();
+        vector<vector<schedule>> arr;
 
-        for(int i = 0; i<(int)schedule_top.size()-1;i++){
-            int diff = (int)(schedule_top[i+1]["number_pair"])-(int)(schedule_top[i]["number_pair"])-1;
+        if(!schedule_top.empty())
+        for(int i = 0; i<schedule_top.size()-1;i++){
+            int diff = schedule_top[i+1].number_pair-schedule_top[i].number_pair -1;
             if(diff>1){
                 fitnessWindows+=diff*penaltyWin;
-                if((int)(schedule_top[i+1]["pair_type"])==3 && (int)(schedule_top[i]["pair_type"])==3){
-                    json arrT = json::array();
+                if(schedule_top[i+1].pair_type==3 && schedule_top[i].pair_type==3){
+                    vector<schedule> arrT;
                     arrT.push_back(schedule_top[i]);
                     arrT.push_back(schedule_top[i+1]);
                     arr.push_back(arrT);
@@ -139,20 +131,17 @@ double FitnessWindows(json schedule,int max_day,double penaltyWin){
             }
 
         }
-
-        for(int i = 0; i<(int)schedule_bot.size()-1;i++){
-            int diff = (int)(schedule_bot[i+1]["number_pair"])-(int)(schedule_bot[i]["number_pair"])-1;
+        if (!schedule_bot.empty())
+        for(int i = 0; i<schedule_bot.size()-1;i++){
+            int diff = schedule_bot[i+1].number_pair-schedule_bot[i].number_pair-1;
             if(diff>1){
-                if((int)(schedule_bot[i+1]["pair_type"])==3 && (int)schedule_bot[i]["pair_type"]==3){
+                if(schedule_bot[i+1].pair_type==3 && schedule_bot[i].pair_type ==3){
                     bool flag = false;
-                    for(json arrJ: arr){
-                        if(arrJ.find(schedule_bot[i])==arrJ.end() && arrJ.find(schedule_bot[i+1])==arrJ.end()){
-                               flag = true;
-                               break;
+                    for (vector<schedule> arrJ : arr) {
+                        if (arrJ[0].compare(schedule_bot[i]) && arrJ[1].compare(schedule_bot[i + 1])) {
+                            continue;
                         }
                     }
-                    if(flag)
-                            continue;
                 }
 
                 fitnessWindows+=diff*penaltyWin;
@@ -162,68 +151,68 @@ double FitnessWindows(json schedule,int max_day,double penaltyWin){
     return fitnessWindows;
 }
 
-double FitnessSameSchedules(map<int, vector<json>> &schedule,json recommedned_schedule,double penaltySameRecSchedules){
+double FitnessSameSchedules(map <int, vector<schedule>>& i_schedule, vector < recommended_schedule> recommedned_schedules, double penaltySameRecSc){
     double fitnessSameRecSc = 0;
-     map<int, vector<json>>::iterator itSc=schedule.begin();
-     while(itSc!=schedule.end()){
-         for(json clas : itSc->second){
-             json recSc = json::array();
-             for(json rs: recommedned_schedule){
-                 if((int)rs["id_class"] == (int) clas["id_class"])
+     auto itSc=i_schedule.begin();
+     while(itSc!=i_schedule.end()){
+         for(schedule clas : itSc->second){
+             vector<recommended_schedule> recSc;
+             for(recommended_schedule rs: recommedned_schedules){
+                 if(rs.id_class ==  clas.id_class)
                      recSc.push_back(rs);
              }
-             if(clas.size()){
-                 json isSame = json::array();
-                 for(json rs: recSc){
-                     if((int)rs["day_week"] == (int)clas["day_week"] && (int)rs["number_pair"] == (int)clas["number_pair"])
+             if(!recSc.empty()){
+                 vector<recommended_schedule> isSame;
+                 for(recommended_schedule rs: recSc){
+                     if(rs.day_week == clas.day_week && rs.number_pair == clas.number_pair)
                          isSame.push_back(rs);
                  }
-                 if(isSame.size())
-                     fitnessSameRecSc+=penaltySameRecSchedules;
+                 if(!isSame.empty())
+                     fitnessSameRecSc+=penaltySameRecSc;
              }
          }
 
 
-         itSc++;
+         ++itSc;
     }
      return fitnessSameRecSc;
 
 }
 
-double FitnessSameTimes(json schedule,double penaltySameTimesSc){
+double FitnessSameTimes(vector<schedule > i_schedule,double penaltySameTimesSc){
     double fitnessSameTimes = 0;
-    json lastTop,lastBot,lastTotal;
+    schedule lastTop,lastBot,lastTotal;
     int cur_day = -1;
-    for(int i=-1;i<(int)schedule.size()-1;i++){
-        if((int)schedule[i+1]["day_week"] != cur_day){
-            cur_day = (int)schedule[i+1]["day_week"];
-            lastTop = NULL;
-            lastBot = NULL;
-            lastTotal = NULL;
+    for(int i=-1;i<i_schedule.size()-1;i++){
+        if(i_schedule[i+1].day_week != cur_day){
+            cur_day = i_schedule[i+1].day_week;
+            lastTop = schedule();
+            lastBot = schedule();
+            lastTotal = schedule();
             continue;
         }
-        switch ((int)schedule[i]["pair_type"])
+        switch (i_schedule[i].pair_type)
         {
             case 1:
-                    lastTop = schedule[i];
+                    lastTop = i_schedule[i];
                     break;
             case 2:
-                    lastBot = schedule[i];
+                    lastBot = i_schedule[i];
                     break;
             case 3:
-                    lastTotal = schedule[i];
+                    lastTotal = i_schedule[i];
                     break;
         }
-        if((int)schedule[i+1]["number_pair"] == (int)schedule[i]["number_pair"]){
-            if((int)schedule[i+1]["pair_type"] == 1 && (lastTop.is_null() ? false : (int)lastTop["number_pair"] ==(int)schedule[i+1]["number_pair"] || lastTotal.is_null() ? false : (int)lastTotal["number_pair"] ==(int)schedule[i+1]["number_pair"])){
+        if(i_schedule[i+1].number_pair == i_schedule[i].number_pair){
+            if(i_schedule[i+1].pair_type == 1 && (lastTop.isNullOrEmpty() ? false : lastTop.number_pair ==i_schedule[i+1].number_pair || lastTotal.isNullOrEmpty() ? false : lastTotal.number_pair ==i_schedule[i+1].number_pair)){
                 fitnessSameTimes+=penaltySameTimesSc;
                 continue;
             }
-            if((int)schedule[i+1]["pair_type"] == 2 && (lastBot.is_null() ? false : (int)lastBot["number_pair"] ==(int)schedule[i+1]["pair_type"] || lastTotal.is_null() ? false : (int)lastTotal["number_pair"] ==(int)schedule[i+1]["number_pair"])){
+            if(i_schedule[i+1].pair_type == 2 && (lastBot.isNullOrEmpty() ? false : lastBot.number_pair ==i_schedule[i+1].number_pair || lastTotal.isNullOrEmpty() ? false : lastTotal.number_pair ==i_schedule[i+1].number_pair)){
                 fitnessSameTimes+=penaltySameTimesSc;
                 continue;
             }
-            if((int)schedule[i+1]["pair_type"] == 3 && (lastTop.is_null() ? false : (int)lastTop["number_pair"] ==(int)schedule[i+1]["number_pair"] || lastBot.is_null() ? false :(int)lastBot["number_pair"] ==(int)schedule[i+1]["pair_type"] || lastTotal.is_null() ? false : (int)lastTotal["number_pair"] ==(int)schedule[i+1]["number_pair"])){
+            if(i_schedule[i+1].pair_type == 3 && (lastTop.isNullOrEmpty() ? false : lastTop.number_pair ==i_schedule[i+1].number_pair || lastBot.isNullOrEmpty() ? false :lastBot.number_pair ==i_schedule[i+1].number_pair || lastTotal.isNullOrEmpty() ? false : lastTotal.number_pair ==i_schedule[i+1].number_pair)){
                 fitnessSameTimes+=penaltySameTimesSc;
                 continue;
             }
