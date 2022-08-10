@@ -9,7 +9,7 @@
       "max_pair": 8,
       "max_semester": 14,
       "fitness_value": "{\"fitnessValue\":33,\"fitnessGr\":{\"fitnessGrWin\":17,\"fitnessSameTimesSc\":1,\"fitnessValue\":18},\"fitnessTeach\":{\"fitnessTeachWin\":8,\"fitnessSameTimesSc\":0,\"fitnessValue\":8},\"fitnessAud\":{\"fitnessSameTimesSc\":7,\"fitnessValue\":7},\"fitnessSameRecSc\":0}",
-      "population_size": 500,
+      "population_size": 100,
       "max_generations": 100,
       "p_crossover": 0.8,
       "p_mutation": 0.4,

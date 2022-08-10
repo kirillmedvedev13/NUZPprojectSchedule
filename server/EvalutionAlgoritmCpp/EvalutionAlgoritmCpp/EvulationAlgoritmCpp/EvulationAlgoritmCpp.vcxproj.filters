@@ -48,6 +48,15 @@
     <ClCompile Include="TypeDefs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MinFitnessValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Crossing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mutation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddClassToSchedule.h">
@@ -84,6 +93,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TypeDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MinFitnessValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Crossing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mutation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

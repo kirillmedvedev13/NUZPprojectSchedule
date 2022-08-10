@@ -2,6 +2,10 @@
 #include "json.hpp"
 #include "Init.h"
 #include "Fitness.h"
+#include "Crossing.h"
+#include "GetRndDouble.h"
+#include "GetRndInteger.h"
+#include "MinFitnessValue.h"
 #include "BS_thread_pool.hpp"
 #include "TypeDefs.h"
 #include <fstream>
@@ -54,6 +58,7 @@ int main(int argc, const char *argv[])
         const double penaltySameTimesSc = info["penaltySameTimesSc"];
         const double p_elitism = info["p_elitism"];
         const double penaltySameRecSc = info["penaltySameRecSc"];
+        const string type_select = data["type_select"];
 
         vector <clas> classes = vector <clas>();
         for (json cl : data["classes"]) {
@@ -89,9 +94,11 @@ int main(int argc, const char *argv[])
 
         Timer.start();
         cout<<"Init starts"<<endl;
-        multi_future<vector<individ>> multiFuture = worker_pool.parallelize_loop(0, population_size, [classes, max_day, max_pair, audiences, base_schedule](const int a, const int b)
+        multi_future<vector<individ>> multiFuture = worker_pool.parallelize_loop(0, population_size, [&classes, &max_day, &max_pair, &audiences, &base_schedule](const int a, const int b)
             {
         	   vector<individ> temp;
+               if (a == 125)
+                   cout << endl;
                for(int i=a;i<b;i++)
                {
                    temp.push_back(Init(classes, max_day, max_pair, audiences, base_schedule));
@@ -102,41 +109,94 @@ int main(int argc, const char *argv[])
         {
             populations.insert(populations.end(), temp.begin(), temp.end());
         }
-        /*for (int i = 0; i < population_size; i++) {
-            worker_pool.push_task([&populations,classes, max_day, max_pair, audiences, base_schedule]()
-            {
-                    individ i_schedule = Init(classes, max_day, max_pair, audiences, base_schedule);
-                    populations.push_back(i_schedule);
-            });
-        }*/
+        cout << "Init ends" << endl;
         Timer.stop();
         cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+        int countIter = 0;
+        individ bestPopulation=individ();
+        map<string, double> temp;
+        bestPopulation.fitnessValue = fitness(INT_MAX, temp, temp, temp,0);
 
-        Timer.start();
-        cout<<"Fitness starts"<<endl;
-        multi_future<void> multiFuture1 = worker_pool.parallelize_loop(0, population_size, [&populations,recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin](const int a,const int b)
+        while(countIter<max_generations || bestPopulation.fitnessValue.fitnessValue!= 0)
         {
-	        for(int i =a;i<b;i++)
-	        {
-                Fitness(populations[i], recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
-	        }
-        });
-        /*for (individ& i_schedule : populations)
-        {
-           worker_pool.push_task([&i_schedule,recommended_schedules,max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin]()
+            Timer.start();
+            cout << "Crossing starts" << endl;
+            multi_future<void> multiFutureCros = worker_pool.parallelize_loop(0, population_size, [&populations, &classes,&p_crossover](const int a, const int b)
+            {
+	            for(int i=a;i<b;i++)
+	            {
+                    if (GetRndDouble() < p_crossover)
+                    {
+	                    int r1 = GetRndInteger(a, b-1);
+						int r2= GetRndInteger(a, b-1);
+						while(r1==r2)
+						{
+							r1 = GetRndInteger(a, b-1);
+							r2 = GetRndInteger(a, b-1);
+						}
+						Crossing(populations[r1], populations[r2], classes);
+                    }
+	            }
+            });
+            multiFutureCros.get();
+            cout << "Crossing ends" << endl;
+            Timer.stop();
+            cout << "The elapsed time was " << Timer.ms()<< " ms.\n";
+
+            /*
+            Timer.start();
+            cout << "Mutation starts" << endl;
+            cout << "Mutation ends" << endl;
+            Timer.stop();
+            cout << "The elapsed time was " << Timer.ms() << " ms.\n";*/
+
+
+            Timer.start();
+            cout << "Fitness starts" << endl;
+            multi_future<void> multiFutureFitness = worker_pool.parallelize_loop(0, population_size, [&populations, &recommended_schedules, &max_day, &penaltySameRecSc, &penaltyGrWin, &penaltySameTimesSc, &penaltyTeachWin](const int a, const int b)
                 {
-                   
-                    Fitness(i_schedule, recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
+                    for (int i = a; i < b; i++)
+                    {
+                        Fitness(populations[i], recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
+                    }
                 });
-           
-            
+            multiFutureFitness.get();
+            cout << "Fitness ends" << endl;
+            Timer.stop();
+            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+
+            /*
+            Timer.start();
+            cout << "Selection starts" << endl;
+            if(type_select=="ranging")
+            {
+	            
+            }
+            else if(type_select=="tournament")
+            {
+	            
+            }
+            cout << "Selection ends" << endl;
+            Timer.stop();
+            cout << "The elapsed time was " << Timer.ms() << " ms.\n";*/
+
+            multi_future<individ> multiFutureMin = worker_pool.parallelize_loop(0, population_size, [&populations](const int a,const int b)
+            {
+	            return MinFitnessValue(populations,a,b);
+            });
+            vector<individ> temp;
+            for(individ t: multiFutureMin.get())
+            {
+                temp.push_back(t);
+            }
+            temp.push_back(bestPopulation);
+            bestPopulation= MinFitnessValue(temp, 0, temp.size());
+
+            cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << endl;
+            countIter++;
         }
-         worker_pool.wait_for_tasks();
-        */
-        multiFuture1.get();
-        cout<<"Fitness ends"<<endl;
-        Timer.stop();
-        cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+
+       
         
     }
     catch (json::type_error &ex)

@@ -4,5 +4,6 @@ int GetRndInteger(int offset, int range)
 {
     if (range == 0)
         return 0;
-    return offset + (rand() % range);
+    int r = offset + (rand() % static_cast<int>(range - offset));
+    return r;
 }

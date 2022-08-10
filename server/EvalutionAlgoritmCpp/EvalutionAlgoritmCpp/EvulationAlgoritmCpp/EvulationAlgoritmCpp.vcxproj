@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AddClassToSchedule.cpp" />
+    <ClCompile Include="Crossing.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Fitness.cpp" />
     <ClCompile Include="GetIdAudienceForClass.cpp" />
@@ -149,6 +150,8 @@
     <ClCompile Include="GetRndDouble.cpp" />
     <ClCompile Include="GetRndInteger.cpp" />
     <ClCompile Include="Init.cpp" />
+    <ClCompile Include="MinFitnessValue.cpp" />
+    <ClCompile Include="Mutation.cpp" />
     <ClCompile Include="SortSchedule.cpp" />
     <ClCompile Include="threadpool.cpp" />
     <ClCompile Include="TypeDefs.cpp" />
@@ -156,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="AddClassToSchedule.h" />
     <ClInclude Include="BS_thread_pool.hpp" />
+    <ClInclude Include="Crossing.h" />
     <ClInclude Include="Fitness.h" />
     <ClInclude Include="GetIdAudienceForClass.h" />
     <ClInclude Include="GetPairTypeForClass.h" />
@@ -163,6 +167,8 @@
     <ClInclude Include="GetRndInteger.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="MinFitnessValue.h" />
+    <ClInclude Include="Mutation.h" />
     <ClInclude Include="SortSchedule.h" />
     <ClInclude Include="threadpool.h" />
     <ClInclude Include="TypeDefs.h" />

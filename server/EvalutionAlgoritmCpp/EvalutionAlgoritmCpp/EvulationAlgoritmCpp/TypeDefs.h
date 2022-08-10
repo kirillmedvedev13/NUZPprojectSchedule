@@ -69,6 +69,7 @@ struct individ {
 	map <int, vector<schedule>> scheduleForAudiences;
 	fitness fitnessValue;
 	individ();
+	individ(map <int, vector<schedule>> scheduleForGroups,map <int, vector<schedule>> scheduleForTeachers,map <int, vector<schedule>> scheduleForAudiences,fitness fitnessValue);
 };
 struct assigned_teacher {
 	int id;

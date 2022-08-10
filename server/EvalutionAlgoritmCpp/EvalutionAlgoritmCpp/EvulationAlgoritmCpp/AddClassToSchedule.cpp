@@ -7,7 +7,7 @@ void AddClassToSchedule(individ& i_schedule, clas clas, int day_week, int number
     {
         vector<schedule> temp = i_schedule.scheduleForGroups[ag.id_group];
 
-        temp.push_back(schedule(0, number_pair, day_week, pair_type, ag.id, id_audience,-1));
+        temp.push_back(schedule(0, number_pair, day_week, pair_type, ag.id, id_audience, clas.id));
 
         i_schedule.scheduleForGroups[ag.id_group] = temp;
     }

@@ -261,6 +261,14 @@ individ::individ()
 
 }
 
+individ::individ(map<int, vector<schedule>> scheduleForGroups, map<int, vector<schedule>> scheduleForTeachers, map<int, vector<schedule>> scheduleForAudiences, fitness fitnessValue)
+{
+	this->scheduleForGroups = scheduleForGroups;
+	this->scheduleForTeachers = scheduleForTeachers;
+	this->scheduleForAudiences = scheduleForAudiences;
+	this->fitnessValue = fitnessValue;
+}
+
 specialty::specialty(json spec)
 {
 	id= spec["id"];
