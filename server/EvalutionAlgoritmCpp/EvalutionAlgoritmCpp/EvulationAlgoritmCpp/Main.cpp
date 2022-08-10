@@ -4,6 +4,8 @@
 #include "Fitness.h"
 #include "Crossing.h"
 #include "Mutation.h"
+#include "SortPopulations.h"
+#include "SelectRanging.h"
 #include "GetRndDouble.h"
 #include "GetRndInteger.h"
 #include "MinFitnessValue.h"
@@ -60,6 +62,7 @@ int main(int argc, const char *argv[])
         const double p_elitism = info["p_elitism"];
         const double penaltySameRecSc = info["penaltySameRecSc"];
         const string type_select = data["type_select"];
+        const int num_elit = population_size * p_elitism;
 
         vector <clas> classes = vector <clas>();
         for (json cl : data["classes"]) {
@@ -157,6 +160,7 @@ int main(int argc, const char *argv[])
                     }
 	            }
             });
+            multiFutureMuta.get();
             cout << "Mutation ends" << endl;
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
@@ -176,20 +180,46 @@ int main(int argc, const char *argv[])
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
 
-            /*
+            
             Timer.start();
             cout << "Selection starts" << endl;
-            if(type_select=="ranging")
+            SortPopulations(populations);
+            vector<individ> elite;
+            for(int i = 0;i<num_elit;i++)
             {
-	            
+                elite.push_back(populations[i]);
             }
-            else if(type_select=="tournament")
+            multi_future<vector<individ>> multiFutureSelect = worker_pool.parallelize_loop(0, population_size, [&type_select,&populations](const int a, const int b)
             {
-	            
-            }
+                    vector<individ> new_pops;
+                    int length = b - a;
+                    if (type_select == "ranging")
+                    {
+                        vector<double> p_populations;
+                        double p_cur = 0;
+                        for(int i = 0;i<length;i++)
+                        {
+                            double a1 = GetRndDouble() + 1;
+                            double b1 = 2 - a;
+                            p_populations.push_back(p_cur);
+                            p_cur = p_cur + (1.0 / length) * (a - (a - b) * (i / (length - 1)));
+                        }
+                        p_populations.push_back(1.001);
+                        for(int i = 0;i<length;i++)
+                        {
+                            new_pops.push_back(populations[SelectRanging(p_populations)]);
+                        }
+                    }
+                    else if (type_select == "tournament")
+                    {
+
+                    }
+                    return new_pops;
+            });
+            
             cout << "Selection ends" << endl;
             Timer.stop();
-            cout << "The elapsed time was " << Timer.ms() << " ms.\n";*/
+            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
 
             multi_future<individ> multiFutureMin = worker_pool.parallelize_loop(0, population_size, [&populations](const int a,const int b)
             {

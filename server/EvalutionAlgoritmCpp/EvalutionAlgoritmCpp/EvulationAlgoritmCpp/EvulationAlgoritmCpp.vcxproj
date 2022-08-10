@@ -152,6 +152,8 @@
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="MinFitnessValue.cpp" />
     <ClCompile Include="Mutation.cpp" />
+    <ClCompile Include="SelectRanging.cpp" />
+    <ClCompile Include="SortPopulations.cpp" />
     <ClCompile Include="SortSchedule.cpp" />
     <ClCompile Include="threadpool.cpp" />
     <ClCompile Include="TypeDefs.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="MinFitnessValue.h" />
     <ClInclude Include="Mutation.h" />
+    <ClInclude Include="SelectRanging.h" />
+    <ClInclude Include="SortPopulations.h" />
     <ClInclude Include="SortSchedule.h" />
     <ClInclude Include="threadpool.h" />
     <ClInclude Include="TypeDefs.h" />

@@ -57,6 +57,12 @@
     <ClCompile Include="Mutation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SortPopulations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectRanging.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddClassToSchedule.h">
@@ -102,6 +108,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mutation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SortPopulations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectRanging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
