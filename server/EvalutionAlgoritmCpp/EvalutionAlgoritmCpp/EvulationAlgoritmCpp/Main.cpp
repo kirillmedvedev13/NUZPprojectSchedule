@@ -3,6 +3,7 @@
 #include "Init.h"
 #include "Fitness.h"
 #include "Crossing.h"
+#include "Mutation.h"
 #include "GetRndDouble.h"
 #include "GetRndInteger.h"
 #include "MinFitnessValue.h"
@@ -143,12 +144,22 @@ int main(int argc, const char *argv[])
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms()<< " ms.\n";
 
-            /*
+            
             Timer.start();
             cout << "Mutation starts" << endl;
+            multi_future<void> multiFutureMuta = worker_pool.parallelize_loop(0, population_size, [&populations,&p_genes,& max_day,& max_pair, &audiences, &classes, &p_mutation](const int a, const int b)
+            {
+	            for(int i=a;i<b;i++)
+	            {
+                    if (GetRndDouble() < p_mutation)
+                    {
+                        Mutation(populations[i], p_genes, max_day, max_pair, audiences, classes);
+                    }
+	            }
+            });
             cout << "Mutation ends" << endl;
             Timer.stop();
-            cout << "The elapsed time was " << Timer.ms() << " ms.\n";*/
+            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
 
 
             Timer.start();

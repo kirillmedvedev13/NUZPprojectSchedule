@@ -20,12 +20,12 @@ individ Init(vector <clas> classes, int max_day, int max_pair, vector<audience> 
             for (int j = 0; j < info.size(); j++)
             {
                 int day_week, number_pair;
-                vector <recommended_schedule> recommeded_schedules = clas.recommended_schedules;
+                vector <recommended_schedule> recommended_schedules = clas.recommended_schedules;
             
-                if (recommeded_schedules.size())
+                if (recommended_schedules.size())
                 {
-                    day_week = recommeded_schedules[j].day_week;
-                    number_pair = recommeded_schedules[j].number_pair;
+                    day_week = recommended_schedules[j].day_week;
+                    number_pair = recommended_schedules[j].number_pair;
                 }
                 else
                 {

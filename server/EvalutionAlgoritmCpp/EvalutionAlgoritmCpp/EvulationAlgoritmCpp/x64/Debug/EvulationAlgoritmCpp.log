@@ -1,3 +1,3 @@
 ﻿  Main.cpp
-E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(193,65): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(204,65): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   EvulationAlgoritmCpp.vcxproj -> E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\x64\Debug\EvalutionAlgorithmCpp.exe
