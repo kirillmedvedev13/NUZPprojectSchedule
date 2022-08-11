@@ -61,7 +61,8 @@ int main(int argc, const char *argv[])
         const double penaltySameTimesSc = info["penaltySameTimesSc"];
         const double p_elitism = info["p_elitism"];
         const double penaltySameRecSc = info["penaltySameRecSc"];
-        const string type_select = data["type_select"];
+        string type_select = data["type_select"];
+        type_select = "ranging";
         const int num_elit = population_size * p_elitism;
 
         vector <clas> classes = vector <clas>();
@@ -202,12 +203,13 @@ int main(int argc, const char *argv[])
                             double a1 = GetRndDouble() + 1;
                             double b1 = 2 - a;
                             p_populations.push_back(p_cur);
-                            p_cur = p_cur + (1.0 / length) * (a - (a - b) * (i / (length - 1)));
+                            p_cur = p_cur + (1.0 / length) * (a1 - (a1 - b1) * (i / (length - 1)));
                         }
-                        p_populations.push_back(1.001);
+                            p_populations.push_back(1.001);
                         for(int i = 0;i<length;i++)
                         {
-                            new_pops.push_back(populations[SelectRanging(p_populations)]);
+                            int index = SelectRanging(p_populations) + a;
+                            new_pops.push_back(populations[index]);
                         }
                     }
                     else if (type_select == "tournament")
@@ -216,7 +218,25 @@ int main(int argc, const char *argv[])
                     }
                     return new_pops;
             });
-            
+            auto arrFuture = multiFutureSelect.get();
+            vector<individ> new_pops;
+
+            int i = 0;
+            while(new_pops.size()<population_size) {
+                if (i < elite.size())
+                    new_pops.push_back(elite[i]);
+                
+                int j = arrFuture.size()-1;
+                while (j >= 0) {
+                    if (new_pops.size() >= population_size)
+                        break;
+                    if (i < arrFuture[j].size())
+                        new_pops.push_back(arrFuture[j][i]);
+                    j--;
+                }
+                i++;
+            }
+            populations = new_pops;
             cout << "Selection ends" << endl;
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
