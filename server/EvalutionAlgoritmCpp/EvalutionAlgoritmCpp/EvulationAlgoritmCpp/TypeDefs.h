@@ -51,6 +51,7 @@ struct schedule {
 	int id_class;
 	schedule(int id, int number_pair, int day_week, int pair_type, int id_assigned_group, int id_audience,int id_class);
 	schedule();
+	json to_json();
 	bool compare(schedule sc);
 	bool isNullOrEmpty();
 };
@@ -61,6 +62,7 @@ struct fitness {
 	map<string, double> fitnessAud;
 	double fitnessSameRecSc;
 	fitness();
+	json to_json();
 	fitness(double fitnessValue, map<string, double> fitnessGr, map<string, double> fitnessTeach, map<string, double> fitnessAud, double fitnessSameRecSc);
 };
 struct individ {
@@ -68,6 +70,7 @@ struct individ {
 	map <int, vector<schedule>> scheduleForTeachers;
 	map <int, vector<schedule>> scheduleForAudiences;
 	fitness fitnessValue;
+	json to_json();
 	individ();
 	individ(map <int, vector<schedule>> scheduleForGroups,map <int, vector<schedule>> scheduleForTeachers,map <int, vector<schedule>> scheduleForAudiences,fitness fitnessValue);
 };

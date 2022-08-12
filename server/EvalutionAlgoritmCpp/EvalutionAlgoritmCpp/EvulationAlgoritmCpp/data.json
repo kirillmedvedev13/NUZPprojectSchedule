@@ -10,7 +10,7 @@
       "max_semester": 14,
       "fitness_value": "{\"fitnessValue\":33,\"fitnessGr\":{\"fitnessGrWin\":17,\"fitnessSameTimesSc\":1,\"fitnessValue\":18},\"fitnessTeach\":{\"fitnessTeachWin\":8,\"fitnessSameTimesSc\":0,\"fitnessValue\":8},\"fitnessAud\":{\"fitnessSameTimesSc\":7,\"fitnessValue\":7},\"fitnessSameRecSc\":0}",
       "population_size": 100,
-      "max_generations": 100,
+      "max_generations":1000,
       "p_crossover": 0.8,
       "p_mutation": 0.4,
       "p_genes": 0.2,
@@ -20,7 +20,7 @@
       "penaltyEqSc": 0,
       "penaltySameTimesSc": 1,
       "penaltySameRecSc": 10,
-      "p_elitism": 0
+      "p_elitism": 0.20
     },
     "_previousDataValues": {
       "id": 1,

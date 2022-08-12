@@ -1,11 +1,11 @@
 #include "SelectRanging.h"
 #include "GetRndDouble.h"
-int SelectRanging(vector<double> p_populations)
+int SelectRanging(const vector<double>& p_populations)
 {
 	int left = 0;
 	int right = p_populations.size()-1;
-	int middle;
-	int rand = GetRndDouble();
+	size_t middle=0;
+	double rand = GetRndDouble();
 	while(left<=right)
 	{
 		middle = (int)((left + right) / 2);

@@ -9,7 +9,7 @@
 #include "AddClassToSchedule.h"
 
 
-individ Init(vector <clas> classes, int max_day, int max_pair, vector<audience> audiences, json base_schedule)
+individ Init(const vector <clas>& classes, const int& max_day, const int& max_pair, const vector<audience>& audiences, const json& base_schedule)
 {
 
 		individ i_schedule= individ();

@@ -5,7 +5,7 @@
 #include "AddClassToSchedule.h"
 #include "GetRndInteger.h"
 #include <set>
-void Mutation(individ &mutant, double p_genes, int max_day, int max_pair, vector<audience> audiences, vector<clas> classes)
+void Mutation(individ& mutant, const double& p_genes, const int& max_day, const int& max_pair, const vector<audience>& audiences, const vector<clas>& classes)
 {
 	for(clas cl: classes)
 	{
@@ -18,7 +18,7 @@ void Mutation(individ &mutant, double p_genes, int max_day, int max_pair, vector
 			{
 				vector<schedule>& scheduleForGr =mutant.scheduleForGroups.find(ag.id_group)->second;
 				vector<schedule> temp;
-				for(schedule sch: scheduleForGr)
+				for(const schedule &sch: scheduleForGr)
 				{
 					if (cl.id != sch.id_class)
 						temp.push_back(sch);
@@ -32,7 +32,7 @@ void Mutation(individ &mutant, double p_genes, int max_day, int max_pair, vector
 			{
 				vector<schedule>& scheduleForTeach = mutant.scheduleForTeachers.find(at.id_teacher)->second;
 				vector<schedule> temp;
-				for (schedule sch : scheduleForTeach)
+				for (const schedule &sch : scheduleForTeach)
 				{
 					if (cl.id != sch.id_class)
 						temp.push_back(sch);
@@ -43,7 +43,7 @@ void Mutation(individ &mutant, double p_genes, int max_day, int max_pair, vector
 			{
 				vector<schedule>& scheduleForAud = mutant.scheduleForAudiences.find(id_audience)->second;
 				vector<schedule> temp;
-				for (schedule sch : scheduleForAud)
+				for (const schedule &sch : scheduleForAud)
 				{
 					if (cl.id != sch.id_class)
 						temp.push_back(sch);

@@ -220,6 +220,19 @@ schedule::schedule()
 	this->id_audience = -1;
 }
 
+json schedule::to_json()
+{
+	json schedule;
+	schedule["id"] = id;
+	schedule["number_pair"] = number_pair;
+	schedule["day_week"] = day_week;
+	schedule["pair_type"] = pair_type;
+	schedule["id_assigned_group"] = id_assigned_group;
+	schedule["id_audience"] = id_audience;
+	schedule["id_class"] = id_class;
+	return schedule;
+}
+
 bool schedule::compare(schedule sc)
 {
 	if (id == sc.id && number_pair == sc.number_pair && day_week == sc.day_week && pair_type == sc.pair_type && id_assigned_group == sc.id_assigned_group && id_audience == sc.id_audience && id_class == sc.id_class)
@@ -243,6 +256,17 @@ fitness::fitness()
 	this->fitnessSameRecSc = -1;
 }
 
+json fitness::to_json()
+{
+	json fitness;
+	fitness["fitnessValue"] = fitnessValue;
+	fitness["fitnessGr"] = fitnessGr;
+	fitness["fitnessTeach"] = fitnessTeach;
+	fitness["fitnessAud"] = fitnessAud;
+
+	return fitness;
+}
+
 fitness::fitness(double fitnessValue, map<string, double> fitnessGr, map<string, double> fitnessTeach, map<string, double> fitnessAud, double fitnessSameRecSc)
 {
 	this->fitnessValue= fitnessValue;
@@ -250,6 +274,24 @@ fitness::fitness(double fitnessValue, map<string, double> fitnessGr, map<string,
 	this->fitnessTeach= fitnessTeach;
 	this->fitnessAud= fitnessAud;
 	this->fitnessSameRecSc= fitnessSameRecSc;
+}
+
+json individ::to_json()
+{
+	json i_schedule;
+	json scheduleForGr;
+	for (auto sch : scheduleForGroups) {
+		json temp;
+		json arr = json::array();
+		for (schedule t : sch.second) {
+			arr.push_back(t.to_json());
+		}
+		scheduleForGr[to_string(sch.first)] = arr;
+	}
+	i_schedule["scheduleForGr"] = scheduleForGr;
+	i_schedule["fitnessValue"] = fitnessValue.to_json();
+	
+	return i_schedule;
 }
 
 individ::individ()

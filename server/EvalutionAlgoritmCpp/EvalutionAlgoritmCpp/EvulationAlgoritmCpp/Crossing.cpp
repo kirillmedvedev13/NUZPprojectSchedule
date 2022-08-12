@@ -3,7 +3,7 @@
 #include <set>
 #include <iostream>
 using namespace std;
-void Crossing(individ& schedule1, individ& schedule2, vector<clas> classes)
+void Crossing(individ& schedule1, individ& schedule2, const vector<clas>& classes)
 {
 	
 	int start = GetRndInteger(0, (classes.size() - 1));

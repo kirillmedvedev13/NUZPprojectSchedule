@@ -1,5 +1,5 @@
 #include "MinFitnessValue.h"
-individ MinFitnessValue(vector<individ>& populations, int start, int end)
+individ MinFitnessValue(const vector<individ>& populations, int start, int end)
 {
 	double min = INT_MAX;
 	individ minIndivid;

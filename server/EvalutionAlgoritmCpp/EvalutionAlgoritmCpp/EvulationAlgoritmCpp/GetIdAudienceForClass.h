@@ -4,6 +4,6 @@
 #include <vector>
 using namespace std;
 
-int GetIdAudienceForClass(clas clas, vector<audience> audiences);
+int GetIdAudienceForClass(const clas &clas, const vector<audience> &audiences);
 
 #endif // GETIDAUDIENCEFORCLASS_H

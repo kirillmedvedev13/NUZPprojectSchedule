@@ -9,6 +9,7 @@
 #include "GetRndDouble.h"
 #include "GetRndInteger.h"
 #include "MinFitnessValue.h"
+#include "MeanFitnessValue.h"
 #include "BS_thread_pool.hpp"
 #include "TypeDefs.h"
 #include <fstream>
@@ -122,7 +123,7 @@ int main(int argc, const char *argv[])
         map<string, double> temp;
         bestPopulation.fitnessValue = fitness(INT_MAX, temp, temp, temp,0);
 
-        while(countIter<max_generations || bestPopulation.fitnessValue.fitnessValue!= 0)
+        while(countIter<max_generations && bestPopulation.fitnessValue.fitnessValue!= 0)
         {
             Timer.start();
             cout << "Crossing starts" << endl;
@@ -203,7 +204,7 @@ int main(int argc, const char *argv[])
                             double a1 = GetRndDouble() + 1;
                             double b1 = 2 - a;
                             p_populations.push_back(p_cur);
-                            p_cur = p_cur + (1.0 / length) * (a1 - (a1 - b1) * (i / (length - 1)));
+                            p_cur = p_cur + (1.0 / length) * (a1 - (a1 - b1) * (i / (length - 1.0)));
                         }
                             p_populations.push_back(1.001);
                         for(int i = 0;i<length;i++)
@@ -253,10 +254,21 @@ int main(int argc, const char *argv[])
             temp.push_back(bestPopulation);
             bestPopulation= MinFitnessValue(temp, 0, temp.size());
 
-            cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << endl;
-            countIter++;
-        }
+            multi_future<double> multiFutureMean = worker_pool.parallelize_loop(0, population_size, [&populations](const int a, const int b)
+                {
+                    return MeanFitnessValue(populations, a, b);
+                });
+            double mean = 0;
+            auto arrMean = multiFutureMean.get();
+            for (double t :arrMean) {
+                mean += t;
+            }
 
+            cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue <<", Mean fitness: "<<mean/arrMean.size() << endl;
+            countIter++;
+
+        }
+        cout << setw(4) << bestPopulation.to_json() << endl;;
        
         
     }

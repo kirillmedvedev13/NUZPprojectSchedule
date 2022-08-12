@@ -2,5 +2,5 @@
 #include "TypeDefs.h"
 #include  <vector>
 
-individ MinFitnessValue(vector<individ> &populations,int start,int end);
+individ MinFitnessValue(const vector<individ> &populations,int start,int end);
 

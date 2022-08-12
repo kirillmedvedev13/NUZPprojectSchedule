@@ -150,6 +150,7 @@
     <ClCompile Include="GetRndDouble.cpp" />
     <ClCompile Include="GetRndInteger.cpp" />
     <ClCompile Include="Init.cpp" />
+    <ClCompile Include="MeanFitnessValue.cpp" />
     <ClCompile Include="MinFitnessValue.cpp" />
     <ClCompile Include="Mutation.cpp" />
     <ClCompile Include="SelectRanging.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="GetRndInteger.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="MeanFitnessValue.h" />
     <ClInclude Include="MinFitnessValue.h" />
     <ClInclude Include="Mutation.h" />
     <ClInclude Include="SelectRanging.h" />

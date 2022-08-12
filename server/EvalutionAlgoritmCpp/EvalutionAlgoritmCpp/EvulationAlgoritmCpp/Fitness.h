@@ -2,5 +2,5 @@
 #define FITNESS_H
 #include "TypeDefs.h"
 
-void Fitness(individ& schedule, vector <recommended_schedule> recommended_schedules, int max_day, double penaltySameRecSc, double penaltyGrWin, double penaltySameTimesSc, double penaltyTeachWin);
+void Fitness(individ& i_schedule,const vector <recommended_schedule> &recommended_schedules, const int &max_day, const double &penaltySameRecSc, const double &penaltyGrWin, const double &penaltySameTimesSc, const double &penaltyTeachWin);
 #endif // FITNESS_H

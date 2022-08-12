@@ -2,7 +2,7 @@
 #include "GetRndInteger.h"
 #include <iostream>
 
-int GetIdAudienceForClass(clas clas, vector<audience> audiences)
+int GetIdAudienceForClass(const clas& clas, const vector<audience>& audiences)
 {
     vector<int> detected_audiences;
     if (clas.recommended_audiences.size())

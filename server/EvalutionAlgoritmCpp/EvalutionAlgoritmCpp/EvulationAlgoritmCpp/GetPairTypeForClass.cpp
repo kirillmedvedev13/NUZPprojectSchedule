@@ -2,7 +2,7 @@
 #include "GetRndDouble.h"
 #include "GetRndInteger.h"
 
-vector<int> GetPairTypeForClass(clas clas_)
+vector<int> GetPairTypeForClass(const clas& clas_)
 {
     vector<int> times;
     int times_per_week = clas_.times_per_week;

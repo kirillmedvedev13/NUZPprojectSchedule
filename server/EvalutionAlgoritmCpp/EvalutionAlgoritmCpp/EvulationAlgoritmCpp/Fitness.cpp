@@ -4,14 +4,14 @@
 #include <vector>
 #include "SortSchedule.h"
 using namespace std;
-map<string, double> FitnessByGroups(map <int, vector<schedule>> &scheduleForGroups,int max_day,double penaltySameTimesSc,double penaltyGrWin);
-map<string, double> FitnessByTeachers(map <int, vector<schedule>> &scheduleForTeachers,int max_day,double penaltySameTimesSc,double penaltyTeachWin);
-map<string, double> FitnessByAudiences(map <int, vector<schedule>> &scheduleForAudiences,double penaltySameTimesSc);
-double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin);
-double FitnessSameTimes(vector<schedule> i_schedule,double penaltySameTimesSc);
-double FitnessSameSchedules(map <int, vector<schedule>>&i_schedule, vector < recommended_schedule> recommedned_schedules,double penaltySameRecSc);
+map<string, double> FitnessByGroups(map <int, vector<schedule>> &scheduleForGroups,const int &max_day, const double &penaltySameTimesSc, const double &penaltyGrWin);
+map<string, double> FitnessByTeachers(map <int, vector<schedule>> &scheduleForTeachers,const int &max_day,const double &penaltySameTimesSc,const double &penaltyTeachWin);
+map<string, double> FitnessByAudiences(map <int, vector<schedule>> &scheduleForAudiences,const double &penaltySameTimesSc);
+double FitnessWindows(vector<schedule > i_schedule,const int &max_day,const double &penaltyWin);
+double FitnessSameTimes(vector<schedule> i_schedule,const double &penaltySameTimesSc);
+double FitnessSameSchedules(map <int, vector<schedule>>&i_schedule, const vector < recommended_schedule> &recommedned_schedules,const double &penaltySameRecSc);
 
-void Fitness(individ &i_schedule, vector <recommended_schedule> recommended_schedules,int max_day,double penaltySameRecSc, double penaltyGrWin, double penaltySameTimesSc,double penaltyTeachWin){
+void Fitness(individ& i_schedule, const vector <recommended_schedule>& recommended_schedules, const int& max_day, const double& penaltySameRecSc, const double& penaltyGrWin, const double& penaltySameTimesSc, const double& penaltyTeachWin){
     bool sortedGroups = false,sortedTeachers= false,sortedAudiences=false;
     auto itGr=i_schedule.scheduleForGroups.begin(),itTeach= i_schedule.scheduleForTeachers.begin(),itAud= i_schedule.scheduleForAudiences.begin();
     while(!sortedGroups || !sortedTeachers || !sortedAudiences){
@@ -46,7 +46,7 @@ void Fitness(individ &i_schedule, vector <recommended_schedule> recommended_sche
 }
 
 
-map<string, double> FitnessByGroups(map <int, vector<schedule>> &scheduleForGroups,int max_day,double penaltySameTimesSc,double penaltyGrWin){
+map<string, double> FitnessByGroups(map <int, vector<schedule>>& scheduleForGroups, const int& max_day, const double& penaltySameTimesSc, const double& penaltyGrWin){
     double fitnessGrWin = 0;
     double fitnessSameTimesSc = 0;
     auto itGr=scheduleForGroups.begin();
@@ -62,7 +62,7 @@ map<string, double> FitnessByGroups(map <int, vector<schedule>> &scheduleForGrou
     fitnessV["fitnessSameTimesSc"] = fitnessSameTimesSc;
     return fitnessV;
 }
-map<string, double> FitnessByTeachers(map <int, vector<schedule>>&scheduleForTeachers,int max_day,double penaltySameTimesSc,double penaltyTeachWin){
+map<string, double> FitnessByTeachers(map <int, vector<schedule>>& scheduleForTeachers, const int& max_day, const double& penaltySameTimesSc, const double& penaltyTeachWin){
     double fitnessTeachWin = 0;
     double fitnessSameTimesSc = 0;
     auto itTeach=scheduleForTeachers.begin();
@@ -79,7 +79,7 @@ map<string, double> FitnessByTeachers(map <int, vector<schedule>>&scheduleForTea
     return fitnessV;
 }
 
-map<string, double> FitnessByAudiences(map <int, vector<schedule>>&scheduleForAudiences,double penaltySameTimesSc){
+map<string, double> FitnessByAudiences(map <int, vector<schedule>>&scheduleForAudiences, const double& penaltySameTimesSc){
     double fitnessSameTimesSc = 0;
     auto itAud=scheduleForAudiences.begin();
     while(itAud!=scheduleForAudiences.end()){
@@ -94,7 +94,7 @@ map<string, double> FitnessByAudiences(map <int, vector<schedule>>&scheduleForAu
 }
 
 
-double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin){
+double FitnessWindows(vector<schedule > i_schedule, const int& max_day, const double& penaltyWin){
     double fitnessWindows = 0;
     for(int current_day = 1; current_day <=max_day;current_day++){
 
@@ -117,7 +117,7 @@ double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin
         vector<vector<schedule>> arr;
 
         if(!schedule_top.empty())
-        for(int i = 0; i<schedule_top.size()-1;i++){
+        for(size_t i = 0; i<schedule_top.size()-1;i++){
             int diff = schedule_top[i+1].number_pair-schedule_top[i].number_pair -1;
             if(diff>1){
                 fitnessWindows+=diff*penaltyWin;
@@ -132,7 +132,7 @@ double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin
 
         }
         if (!schedule_bot.empty())
-        for(int i = 0; i<schedule_bot.size()-1;i++){
+        for(size_t i = 0; i<schedule_bot.size()-1;i++){
             int diff = schedule_bot[i+1].number_pair-schedule_bot[i].number_pair-1;
             if(diff>1){
                 if(schedule_bot[i+1].pair_type==3 && schedule_bot[i].pair_type ==3){
@@ -151,11 +151,11 @@ double FitnessWindows(vector<schedule > i_schedule,int max_day,double penaltyWin
     return fitnessWindows;
 }
 
-double FitnessSameSchedules(map <int, vector<schedule>>& i_schedule, vector < recommended_schedule> recommedned_schedules, double penaltySameRecSc){
+double FitnessSameSchedules(map <int, vector<schedule>>& i_schedule, const vector < recommended_schedule>& recommedned_schedules, const double& penaltySameRecSc){
     double fitnessSameRecSc = 0;
      auto itSc=i_schedule.begin();
      while(itSc!=i_schedule.end()){
-         for(schedule clas : itSc->second){
+         for(const schedule &clas : itSc->second){
              vector<recommended_schedule> recSc;
              for(recommended_schedule rs: recommedned_schedules){
                  if(rs.id_class ==  clas.id_class)
@@ -179,11 +179,11 @@ double FitnessSameSchedules(map <int, vector<schedule>>& i_schedule, vector < re
 
 }
 
-double FitnessSameTimes(vector<schedule > i_schedule,double penaltySameTimesSc){
+double FitnessSameTimes(vector<schedule > i_schedule, const double& penaltySameTimesSc){
     double fitnessSameTimes = 0;
     schedule lastTop,lastBot,lastTotal;
     int cur_day = -1;
-    for(int i=-1;i<i_schedule.size()-1;i++){
+    for(size_t i=-1;i<i_schedule.size()-1;i++){
         if(i_schedule[i+1].day_week != cur_day){
             cur_day = i_schedule[i+1].day_week;
             lastTop = schedule();
