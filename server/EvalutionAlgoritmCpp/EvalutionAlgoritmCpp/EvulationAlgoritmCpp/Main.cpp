@@ -38,7 +38,8 @@ int main(int argc, const char *argv[])
      }*/
     try
     {
-
+        cout << "Hello0";
+        return 0;
         ifstream fileData("data.json");
         if (!fileData.is_open())
         {
