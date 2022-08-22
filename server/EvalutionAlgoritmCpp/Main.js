@@ -1,9 +1,11 @@
 import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
 import { spawn } from "child_process";
+import fs from "fs";
 import { GraphQLInt } from "graphql";
 import { Op } from "sequelize";
 import ParseScheduleFromDB from "../EvalutionAlghoritm2/ParseScheduleFromDB.js";
+import SpawnChild from "./SpawnChild.js";
 
 export const RUN_EA = {
   type: MessageType,
@@ -77,9 +79,8 @@ export const RUN_EA = {
     groups = groups.map((g) => g.toJSON());
     audiences = audiences.map((a) => a.toJSON());
     classes = classes.map((c) => c.toJSON());
-
     let type_select = "tournament";
-    let params = {
+    let dataStr = JSON.stringify({
       info,
       id_cathedra,
       type_select,
@@ -89,10 +90,17 @@ export const RUN_EA = {
       groups,
       classes,
       audiences,
-    };
+    });
+
     const fileName =
-      "./EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp.exe";
-    let arrRes = [];
+      "E:/kirill/PROJECT SCHEDULE/app/NUZPprojectSchedule/server/EvalutionAlgoritmCpp/EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp";
+    const path = "./data.json";
+
+    fs.writeFileSync(path, dataStr, (err) => {
+      console.log(err);
+    });
+    let params = [1, fs.realpathSync(path, [])];
+    /*let arrRes = [];
     let result = spawn(fileName, [params]);
     result.stdout.on("data", (data) => {
       arrRes.push(data.toString());
@@ -108,6 +116,9 @@ export const RUN_EA = {
       console.log(arrRes.pop());
       console.log("End");
       return { successful: false, message: `Some error` };
+    });*/
+    SpawnChild(fileName, params).then((data) => {
+      console.log(data);
     });
   },
 };

@@ -1,6 +1,6 @@
 ﻿  Main.cpp
-E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(68,46): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(68,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(231,43): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(256,65): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(64,46): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(64,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(227,43): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\EvulationAlgoritmCpp\Main.cpp(252,65): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   EvulationAlgoritmCpp.vcxproj -> E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\x64\Debug\EvalutionAlgorithmCpp.exe

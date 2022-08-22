@@ -38,16 +38,12 @@ int main(int argc, const char *argv[])
      }*/
     try
     {
-        cout << "Hello0";
-        return 0;
-        ifstream fileData("data.json");
-        if (!fileData.is_open())
-        {
-
-            cout << "File is not open" << endl;
-            return 1;
-        }
-        json data = json::parse(fileData);
+        
+        
+        json data;
+        if (argc > 1)
+            data = json::parse(argv[1]);
+        else return 0;
         const json info = data["info"]["dataValues"];
         const int max_day = info["max_day"];
         const int max_pair = info["max_pair"];
@@ -273,9 +269,9 @@ int main(int argc, const char *argv[])
        
         
     }
-    catch (json::type_error &ex)
+    catch (json::parse_error& ex)
     {
-        std::cout << ex.what() << '\n';
+        std::cerr << "parse error at byte " << ex.byte << std::endl;
 
     }
    
