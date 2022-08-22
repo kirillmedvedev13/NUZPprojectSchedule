@@ -2,10 +2,12 @@ import db from "../database.js";
 import MessageType from "../Schema/TypeDefs/MessageType.js";
 import { spawn } from "child_process";
 import fs from "fs";
-import { GraphQLInt } from "graphql";
+import { GraphQLInt, __DirectiveLocation } from "graphql";
 import { Op } from "sequelize";
 import ParseScheduleFromDB from "../EvalutionAlghoritm2/ParseScheduleFromDB.js";
 import SpawnChild from "./SpawnChild.js";
+import { fileURLToPath } from "url";
+import path from "path";
 
 export const RUN_EA = {
   type: MessageType,
@@ -92,14 +94,8 @@ export const RUN_EA = {
       audiences,
     });
 
-    const fileName =
-      "E:/kirill/PROJECT SCHEDULE/app/NUZPprojectSchedule/server/EvalutionAlgoritmCpp/EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp";
-    const path = "./data.json";
+    let fileName = path.resolve("./EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp.exe");
 
-    fs.writeFileSync(path, dataStr, (err) => {
-      console.log(err);
-    });
-    let params = [1, fs.realpathSync(path, [])];
     /*let arrRes = [];
     let result = spawn(fileName, [params]);
     result.stdout.on("data", (data) => {
@@ -117,7 +113,7 @@ export const RUN_EA = {
       console.log("End");
       return { successful: false, message: `Some error` };
     });*/
-    SpawnChild(fileName, params).then((data) => {
+    SpawnChild(fileName, dataStr).then((data) => {
       console.log(data);
     });
   },

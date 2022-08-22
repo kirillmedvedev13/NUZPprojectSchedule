@@ -16,7 +16,8 @@
 #include <vector>
 #include <cstring>
 #include <cstdlib>
-using namespace std;
+#include <mutex>
+//using namespace std;
 using namespace nlohmann;
 using namespace BS;
 
@@ -39,11 +40,11 @@ int main(int argc, const char *argv[])
     try
     {
         
-        
-        json data;
-        if (argc > 1)
-            data = json::parse(argv[1]);
-        else return 0;
+        cout << "Enter data" << endl;
+        string data = "123";
+       // cin >> data;
+        cout << data;
+        return 0;
         const json info = data["info"]["dataValues"];
         const int max_day = info["max_day"];
         const int max_pair = info["max_pair"];
@@ -94,23 +95,15 @@ int main(int argc, const char *argv[])
         vector <individ> populations = vector <individ>();
         thread_pool worker_pool;
         timer Timer;
-
         Timer.start();
         cout<<"Init starts"<<endl;
-        multi_future<vector<individ>> multiFuture = worker_pool.parallelize_loop(0, population_size, [&classes, &max_day, &max_pair, &audiences, &base_schedule](const int a, const int b)
-            {
-        	   vector<individ> temp;
-               if (a == 125)
-                   cout << endl;
-               for(int i=a;i<b;i++)
-               {
-                   temp.push_back(Init(classes, max_day, max_pair, audiences, base_schedule));
-               }
-                return temp;
-            });
-        for(vector<individ> temp :multiFuture.get())
-        {
-            populations.insert(populations.end(), temp.begin(), temp.end());
+        for (int i = 0; i < population_size; i++) {
+            worker_pool.push_task( [&classes, &max_day, &max_pair, &audiences, &base_schedule, &populations]()
+                {
+                        auto temp = Init(classes, max_day, max_pair, audiences, base_schedule);
+                        unique_lock<mutex> ul(mutex);
+                        populations.push_back(temp);
+                });
         }
         cout << "Init ends" << endl;
         Timer.stop();
