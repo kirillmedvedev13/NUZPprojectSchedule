@@ -100,19 +100,21 @@ int main(int argc, const char* argv[])
         }
 
         json base_schedule = NULL;
-        vector <individ> populations = vector <individ>();
+        vector <individ> populations = vector <individ>(population_size);
         thread_pool worker_pool;
         timer Timer;
         Timer.start();
         cout << "Init starts" << endl;
         for (int i = 0; i < population_size; i++) {
-            worker_pool.push_task([&classes, &max_day, &max_pair, &audiences, &base_schedule, &populations]()
+          
+            worker_pool.push_task([&classes, &max_day, &max_pair, &audiences, &base_schedule, &populations,i]()
                 {
-                    auto temp = Init(classes, max_day, max_pair, audiences, base_schedule);
-                    unique_lock<mutex> ul(mutex);
-                    populations.push_back(temp);
+                   
+                    populations[i] = Init(classes, max_day, max_pair, audiences, base_schedule);
+                    
                 });
         }
+        worker_pool.wait_for_tasks();
         cout << "Init ends" << endl;
         Timer.stop();
         cout << "The elapsed time was " << Timer.ms() << " ms.\n";
