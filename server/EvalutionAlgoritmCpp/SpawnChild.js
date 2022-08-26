@@ -1,30 +1,35 @@
 import { spawn, exec } from "child_process";
 
+async function safelyWriteDataToStdin(stdin, data) {
+  stdin.once("error", (error) => {
+    if (error) return error;
+  });
+  stdin.write(data, (error) => {
+    if (error) return error;
+  });
+  stdin.end();
+}
+
 export default async function SpawnChild(fileName, params) {
   try {
-    const child = spawn(fileName, []);
+    const child = spawn(fileName, [params]);
     let data = [];
 
-    // for await (chunk of child.stdin) {
-    //   chunk.write(params);
-    //   chunk.end();
-    // }
-
     for await (const chunk of child.stdout) {
-      let str;
+      /*let str;
       for (const i of chunk) {
         str += String.fromCharCode(i);
-      }
-      console.log(str);
-      data.push(str);
+      }*/
+      console.log(chunk.toString());
+      data.push(chunk.toString());
     }
 
     for await (const chunk of child.stderr) {
-      let str;
+      /*let str;
       for (const i of chunk) {
         str += String.fromCharCode(i);
-      }
-      console.log("ERROR: " + str);
+      }*/
+      console.log("ERROR: " + chunk.toString());
     }
 
     const exitCode = await new Promise((resolve, reject) => {

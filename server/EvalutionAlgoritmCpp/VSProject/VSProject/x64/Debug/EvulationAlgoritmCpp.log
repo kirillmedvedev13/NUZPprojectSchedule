@@ -1,0 +1,8 @@
+﻿E:\kirill\program\Visual Studio\2022\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (EvalutionAlgorithmCpp.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Main.cpp
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\VSProject\VSProject\Main.cpp(73,46): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\VSProject\VSProject\Main.cpp(73,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\VSProject\VSProject\Main.cpp(112,40): warning C4930: 'std::unique_lock<std::mutex> ul(std::mutex)': prototyped function not called (was a variable definition intended?)
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\VSProject\VSProject\Main.cpp(228,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\VSProject\VSProject\Main.cpp(253,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  EvulationAlgoritmCpp.vcxproj -> E:\kirill\PROJECT SCHEDULE\app\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\VSProject\x64\Debug\VSProject.exe
