@@ -1,7 +1,7 @@
 import { GraphQLList, GraphQLInt } from "graphql";
 import db from "../../database.js";
 import AudienceType from "../TypeDefs/AudienceType.js";
-import { ScheduleType } from "../TypeDefs/ScheduleType.js";
+import ScheduleType from "../TypeDefs/ScheduleType.js";
 import { Op } from "sequelize";
 import TeacherType from "../TypeDefs/TeacherType.js";
 

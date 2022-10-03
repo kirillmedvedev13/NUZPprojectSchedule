@@ -6,9 +6,9 @@ import {
   GraphQLString,
 } from "graphql";
 import Assigned_groupType from "./Assigned_groupType.js";
-import { SpecialtyType } from "./SpecialtyType.js";
+import SpecialtyType from "./SpecialtyType.js";
 
-const GroupType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Group",
   fields: () => ({
     id: { type: GraphQLID },
@@ -20,4 +20,3 @@ const GroupType = new GraphQLObjectType({
   }),
 });
 
-export default GroupType;

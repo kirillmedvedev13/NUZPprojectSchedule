@@ -1,7 +1,7 @@
 import { GraphQLID, GraphQLString, GraphQLObjectType } from "graphql";
 import MessageType from "./MessageType.js";
 
-const UserType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "User",
   fields: () => ({
     id: { type: GraphQLID },
@@ -10,5 +10,3 @@ const UserType = new GraphQLObjectType({
     isAuth: { type: MessageType },
   }),
 });
-
-export default UserType;

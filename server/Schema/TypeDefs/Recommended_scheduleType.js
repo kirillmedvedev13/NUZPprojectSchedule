@@ -1,7 +1,7 @@
 import { GraphQLID, GraphQLObjectType, GraphQLInt } from "graphql";
 import ClassType from "./ClassType.js";
 
-export const Recommended_scheduleType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Recommended_schedule",
   fields: () => ({
     id: { type: GraphQLID },

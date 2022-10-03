@@ -1,19 +1,16 @@
-function InitDataStructure(max_day, max_pair) {
-  temp = [];
-  for (let i = 0; i < max_day; i++) {
-    temp1 = [];
-    for (let j = 0; j < max_pair; j++) {
-      temp1[i].push({ 1: null, 2: null, 3: null });
-    }
-    temp.push({ i: temp1, isFirstPair: false });
-  }
-  return temp;
-}
+// Получить все возможные вставки занятий
 function GetAvailableTimeSlots(schedule) {
   timeSlots = [];
-
   for (let i = 0; i < schedule.length; i++) {
-    for (let object of Object.entries(schedule[i])) {
+    for (let j = 0; j < schedule[i].arr.length; j++) {
+      // Если в этот день вообще нету пар
+      if (!schedule[i].isHasPair) {
+
+      }
+      // Если есть пары
+      else {
+
+      }
     }
   }
 }
@@ -22,8 +19,13 @@ export default function AddClassToSchedule(schedule, max_day, max_pair, clas) {
   // Для каждой группы добавление расписания
   clas.assigned_groups.forEach((ag) => {
     let temp = schedule.scheduleForGroups.get(ag.id_group);
+    // Если для группы нету занятий
     if (!temp) {
       temp = InitDataStructure(max_day, max_pair);
+    }
+    // Если для группы уже есть занятия
+    else {
+
     }
     temp.push({
       number_pair,

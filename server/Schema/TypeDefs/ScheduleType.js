@@ -4,16 +4,16 @@ import {
   GraphQLObjectType,
 } from "graphql";
 import AudienceType from "./AudienceType.js";
-import Assigned_groupType from "./Assigned_groupType.js";
+import ClassType from "./ClassType.js";
 
-export const ScheduleType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Schedule",
   fields: () => ({
     id: { type: GraphQLID },
     number_pair: { type: GraphQLInt },
     day_week: { type: GraphQLInt },
     pair_type: { type: GraphQLInt },
-    assigned_group: { type: Assigned_groupType },
     audience: { type: AudienceType },
+    class: { type: ClassType },
   }),
 });

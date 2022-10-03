@@ -1,6 +1,6 @@
 import { GraphQLList, GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
-import { DisciplineType } from "../TypeDefs/DisciplineType.js";
+import DisciplineType from "../TypeDefs/DisciplineType.js";
 import { Op } from "sequelize";
 
 export const GET_ALL_DISCIPLINES = {

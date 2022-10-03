@@ -18,7 +18,7 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    id_assigned_group: {
+    id_class: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -29,8 +29,8 @@ export default (Sequelize, DataTypes) => {
   });
   Schedule.associate = (models) => {
     Schedule.belongsTo(models.audience, { foreignKey: "id_audience" });
-    Schedule.belongsTo(models.assigned_group, {
-      foreignKey: "id_assigned_group",
+    Schedule.belongsTo(models.class, {
+      foreignKey: "id_class",
       onDelete: "cascade",
     });
   };

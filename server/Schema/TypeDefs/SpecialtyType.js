@@ -1,7 +1,7 @@
 import { GraphQLID, GraphQLObjectType, GraphQLString, GraphQLInt } from "graphql";
 import CathedraType from "./CathedraType.js";
 
-export const SpecialtyType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Specialty",
   fields: () => ({
     id: { type: GraphQLID },

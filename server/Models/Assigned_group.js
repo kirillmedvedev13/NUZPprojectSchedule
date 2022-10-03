@@ -22,9 +22,6 @@ export default (Sequelize, DataTypes) => {
     Assigned_group.belongsTo(models.class, {
       foreignKey: "id_class",
     });
-    Assigned_group.hasMany(models.schedule, {
-      foreignKey: "id_assigned_group",
-    });
   };
 
   return Assigned_group;

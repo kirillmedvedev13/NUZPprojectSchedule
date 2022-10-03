@@ -8,10 +8,11 @@ import Assigned_disciplineType from "./Assigned_disciplineType.js";
 import Assigned_groupType from "./Assigned_groupType.js";
 import Assigned_teacherType from "./Assigned_teacherType.js";
 import Type_classType from "./Type_classType.js";
-import { Recommended_audienceType } from "./Recommended_audienceType.js";
-import { Recommended_scheduleType } from "./Recommended_scheduleType.js";
+import Recommended_audienceType from "./Recommended_audienceType.js";
+import Recommended_scheduleType from "./Recommended_scheduleType.js";
+import ScheduleType from "./ScheduleType.js";
 
-const ClassType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Class",
   fields: () => ({
     id: { type: GraphQLID },
@@ -22,7 +23,7 @@ const ClassType = new GraphQLObjectType({
     assigned_teachers: { type: new GraphQLList(Assigned_teacherType) },
     recommended_audiences: { type: new GraphQLList(Recommended_audienceType) },
     recommended_schedules: { type: new GraphQLList(Recommended_scheduleType) },
+    schedules: { type: new GraphQLList(ScheduleType) },
   }),
-});
+})
 
-export default ClassType;

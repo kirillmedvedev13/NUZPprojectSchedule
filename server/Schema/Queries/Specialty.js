@@ -1,6 +1,6 @@
 import { GraphQLList, GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
-import { SpecialtyType } from "../TypeDefs/SpecialtyType.js";
+import SpecialtyType from "../TypeDefs/SpecialtyType.js";
 import { Op } from "sequelize";
 
 export const GET_ALL_SPECIALTY = {

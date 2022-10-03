@@ -13,44 +13,16 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
     fitness_value: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(500),
     },
-    population_size: {
-      type: DataTypes.INTEGER,
+    general_values: {
+      type: DataTypes.STRING(500),
     },
-    max_generations: {
-      type: DataTypes.INTEGER,
-    },
-    p_crossover: {
-      type: DataTypes.DOUBLE,
-    },
-    p_mutation: {
-      type: DataTypes.DOUBLE,
-    },
-    p_genes: {
-      type: DataTypes.DOUBLE,
-    },
-    penaltyGrWin: {
-      type: DataTypes.DOUBLE,
-    },
-    penaltyTeachWin: {
-      type: DataTypes.DOUBLE,
-    },
-    penaltyLateSc: {
-      type: DataTypes.DOUBLE,
-    },
-    penaltyEqSc: {
-      type: DataTypes.DOUBLE,
-    },
-    penaltySameTimesSc: {
-      type: DataTypes.DOUBLE,
-    },
-    penaltySameRecSc: {
-      type: DataTypes.DOUBLE,
-    },
-    p_elitism: {
-      type: DataTypes.DOUBLE,
-    },
+    evolution_values: {
+      type: DataTypes.STRING(500),
+    }
+    // {"penaltyGrWin":2,"penaltyTeachWin":2,"penaltyLateSc":2,"penaltyEqSc":2,"penaltySameTimesSc":2,"penaltySameRecSc":5}
+    // {"population_size":300,"max_generations":400,"p_crossover":0.5,"p_mutation":0.3,"p_genes":0.1,"p_elitism":0.4}
   });
 
   return Info;

@@ -7,9 +7,9 @@ import {
 } from "graphql";
 import Type_classType from "./Type_classType.js";
 import Assigned_audienceType from "./Assigned_audienceType.js";
-import { ScheduleType } from "./ScheduleType.js";
+import ScheduleType from "./ScheduleType.js";
 
-const AudienceType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Audience",
   fields: () => ({
     id: { type: GraphQLID },
@@ -21,4 +21,3 @@ const AudienceType = new GraphQLObjectType({
   }),
 });
 
-export default AudienceType;

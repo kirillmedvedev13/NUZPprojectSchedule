@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLBoolean } from "graphql";
 
-const MessageType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Message",
   fields: () => ({
     successful: { type: GraphQLBoolean },
@@ -9,4 +9,3 @@ const MessageType = new GraphQLObjectType({
   }),
 });
 
-export default MessageType;

@@ -1,5 +1,5 @@
 import { GetDataFromDB } from "../Services/GetDataFromDB.js";
-import { ParseScheduleFromDB } from "../Services/ParseScheduleFromDB.js";
+import { ParseScheduleFromDB } from "./ParseScheduleFromDB.js";
 import AddClassToSchedule from "./AddClassToSchedule.js";
 export const RUN_SA = {
   type: MessageType,
@@ -32,7 +32,7 @@ export const RUN_SA = {
         scheduleForTeachers,
         scheduleForAudiences,
       };
-      await ParseScheduleFromDB(schedule, id_cathedra);
+      await ParseScheduleFromDB(schedule, id_cathedra, max_day, max_pair);
     }
     for (let clas in classes) {
       AddClassToSchedule(schedule, clas);

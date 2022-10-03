@@ -1,8 +1,8 @@
 import { GraphQLID, GraphQLObjectType, GraphQLInt } from "graphql";
-import { DisciplineType } from "./DisciplineType.js";
-import { SpecialtyType } from "./SpecialtyType.js";
+import DisciplineType from "./DisciplineType.js";
+import SpecialtyType from "./SpecialtyType.js";
 
-const Assigned_disciplineType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Assigned_discipline",
   fields: () => ({
     id: { type: GraphQLID },
@@ -11,12 +11,3 @@ const Assigned_disciplineType = new GraphQLObjectType({
     semester: { type: GraphQLInt },
   }),
 });
-export const Assigned_disciplineInput = new GraphQLObjectType({
-  name: "Assigned_discipline",
-  fields: () => ({
-    specialty: { type: SpecialtyType },
-    semester: { type: GraphQLInt },
-  }),
-});
-
-export default Assigned_disciplineType;

@@ -50,6 +50,9 @@ export default (Sequelize, DataTypes) => {
       foreignKey: "id_class",
       through: models.assigned_group,
     });
+    Class.hasMany(models.schedule, {
+      foreignKey: "id_class"
+    })
   };
   return Class;
 };

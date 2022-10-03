@@ -1,56 +1,17 @@
 import {
   GraphQLInt,
   GraphQLObjectType,
-  GraphQLFloat,
   GraphQLString,
 } from "graphql";
 
-const InfoType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Info",
   fields: () => ({
     max_day: { type: GraphQLInt },
     max_pair: { type: GraphQLInt },
     max_semester: { type: GraphQLInt },
-    population_size: {
-      type: GraphQLInt,
-    },
-    max_generations: {
-      type: GraphQLInt,
-    },
-    fitness_value: {
-      type: GraphQLString,
-    },
-    p_crossover: {
-      type: GraphQLFloat,
-    },
-    p_mutation: {
-      type: GraphQLFloat,
-    },
-    p_genes: {
-      type: GraphQLFloat,
-    },
-    penaltyGrWin: {
-      type: GraphQLFloat,
-    },
-    penaltyTeachWin: {
-      type: GraphQLFloat,
-    },
-    penaltyLateSc: {
-      type: GraphQLFloat,
-    },
-    penaltyEqSc: {
-      type: GraphQLFloat,
-    },
-    penaltySameTimesSc: {
-      type: GraphQLFloat,
-    },
-    penaltySameRecSc: {
-      type: GraphQLFloat,
-    },
-    p_elitism: {
-      type: GraphQLFloat,
-    },
+    fitness_value: { type: GraphQLString },
+    general_values: { type: GraphQLString },
+    evolution_values: { type: GraphQLString },
   }),
 });
-
-export default InfoType;

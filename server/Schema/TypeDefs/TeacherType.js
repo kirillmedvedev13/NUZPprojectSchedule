@@ -7,7 +7,7 @@ import {
 import Assigned_teacherType from "./Assigned_teacherType.js";
 import CathedraType from "./CathedraType.js";
 
-const TeacherType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Teacher",
   fields: () => ({
     id: { type: GraphQLID },
@@ -18,5 +18,3 @@ const TeacherType = new GraphQLObjectType({
     cathedra: { type: CathedraType },
   }),
 });
-
-export default TeacherType;
