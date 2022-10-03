@@ -94,12 +94,8 @@ export const RUN_EA = {
       audiences,
     });
 
-    let fileName = path.resolve(
-      "./EvalutionAlgoritmCpp/VSProject/x64/Debug/",
-      "VSProject.exe"
-    );
-    let dataFileName = path.resolve("./EvalutionAlgoritmCpp/data.json");
-    fs.writeFileSync(dataFileName, dataStr, "utf8");
+    let fileName = path.resolve("./EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp.exe");
+
     /*let arrRes = [];
     let result = spawn(fileName, [params]);
     result.stdout.on("data", (data) => {
