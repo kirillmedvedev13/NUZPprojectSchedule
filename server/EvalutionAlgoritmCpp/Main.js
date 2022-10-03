@@ -95,7 +95,6 @@ export const RUN_EA = {
     });
 
     let fileName = path.resolve("./EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp.exe");
-    //"C:\WEB\Schedule\NUZPprojectSchedule\server\EvalutionAlgoritmCpp\EvalutionAlgoritmCpp\x64\Debug\EvalutionAlgorithmCpp.exe"
 
     /*let arrRes = [];
     let result = spawn(fileName, [params]);
@@ -114,7 +113,7 @@ export const RUN_EA = {
       console.log("End");
       return { successful: false, message: `Some error` };
     });*/
-    SpawnChild(fileName, dataStr).then((data) => {
+    SpawnChild(fileName, dataFileName).then((data) => {
       console.log(data);
     });
   },

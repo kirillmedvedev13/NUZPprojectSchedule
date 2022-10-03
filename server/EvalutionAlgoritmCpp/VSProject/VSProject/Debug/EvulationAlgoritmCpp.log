@@ -1,0 +1,21 @@
+﻿  AddClassToSchedule.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  Main.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\yvals.h(12,10): fatal error C1083: Cannot open include file: 'crtdbg.h': No such file or directory
+  Fitness.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  GetIdAudienceForClass.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  GetPairTypeForClass.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  GetRndDouble.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  GetRndInteger.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  Init.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  SortSchedule.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\cstdlib(12,10): fatal error C1083: Cannot open include file: 'math.h': No such file or directory
+  threadpool.cpp
+E:\kirill\program\Visual Studio\2022\VC\Tools\MSVC\14.32.31326\include\yvals.h(12,10): fatal error C1083: Cannot open include file: 'crtdbg.h': No such file or directory
+  Generating Code...
