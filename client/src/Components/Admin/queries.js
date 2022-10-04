@@ -5,18 +5,8 @@ export const GET_INFO = gql`
       max_day
       max_pair
       fitness_value
-      population_size
-      max_generations
-      p_crossover
-      p_mutation
-      p_genes
-      penaltyGrWin
-      penaltyTeachWin
-      penaltyLateSc
-      penaltyEqSc
-      penaltySameTimesSc
-      penaltySameRecSc
-      p_elitism
+      general_values
+      evolution_values
     }
   }
 `;

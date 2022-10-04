@@ -47,7 +47,6 @@ export default async function ParseData(workSheet) {
               ? 1
               : 2;
           clas[colTimes.name] = +workSheet[colTimes.l + j].v;
-          console.log(clas);
           classes.push(clas);
         }
         i += numberRows;
@@ -56,6 +55,7 @@ export default async function ParseData(workSheet) {
     i++;
   }
   Data["classes"] = classes;
+  debugger;
   return Data;
 }
 

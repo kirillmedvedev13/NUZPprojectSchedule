@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "./queries.js";
 import ButtonUpdateInfo from "./ButtonUpdateInfo.js";
@@ -8,21 +8,21 @@ function DataForm({ handleChangeSomeValues, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let evolution_values = JSON.parse(data.GetInfo.evolution_values);
-  let objectName = "evolution_values";
+  let general_values = JSON.parse(data.GetInfo.general_values);
+  let objectName = "general_values";
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Розмір популяції</Form.Label>
+        <Form.Label className="col-5">Вага: вікна групи</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.population_size}
+            defaultValue={general_values.penaltyGrWin}
             type="number"
             min={0}
             onChange={(e) => {
               handleChangeSomeValues(
                 objectName,
-                "population_size",
+                "penaltyGrWin",
                 e ? Number(e.target.value) : null
               );
             }}
@@ -30,18 +30,16 @@ function DataForm({ handleChangeSomeValues, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">
-          Максимальна кiлькiсть iтерацiй
-        </Form.Label>
+        <Form.Label className="col-5">Вага: вікна викладачiв</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.max_generations}
+            defaultValue={general_values.penaltyTeachWin}
             type="number"
             min={0}
             onChange={(e) => {
               handleChangeSomeValues(
                 objectName,
-                "max_generations",
+                "penaltyTeachWin",
                 e ? Number(e.target.value) : null
               );
             }}
@@ -49,18 +47,16 @@ function DataForm({ handleChangeSomeValues, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Ймовірність схрещування</Form.Label>
+        <Form.Label className="col-5">Вага: пізні заняття</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_crossover}
+            defaultValue={general_values.penaltyLateSc}
             type="number"
             min={0}
-            max={1}
-            step={0.05}
             onChange={(e) => {
               handleChangeSomeValues(
                 objectName,
-                "p_crossover",
+                "penaltyLateSc",
                 e ? Number(e.target.value) : null
               );
             }}
@@ -68,18 +64,16 @@ function DataForm({ handleChangeSomeValues, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Ймовірність мутації</Form.Label>
+        <Form.Label className="col-5">Вага: рівномірний розклад</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_mutation}
+            defaultValue={general_values.penaltyEqSc}
             type="number"
             min={0}
-            max={1}
-            step={0.05}
             onChange={(e) => {
               handleChangeSomeValues(
                 objectName,
-                "p_mutation",
+                "penaltyEqSc",
                 e ? Number(e.target.value) : null
               );
             }}
@@ -87,18 +81,16 @@ function DataForm({ handleChangeSomeValues, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Ймовірність мутації гена</Form.Label>
+        <Form.Label className="col-5">Вага: накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_genes}
+            defaultValue={general_values.penaltySameTimesSc}
             type="number"
             min={0}
-            max={1}
-            step={0.001}
             onChange={(e) => {
               handleChangeSomeValues(
                 objectName,
-                "p_genes",
+                "penaltySameTimesSc",
                 e ? Number(e.target.value) : null
               );
             }}
@@ -106,25 +98,22 @@ function DataForm({ handleChangeSomeValues, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Елітизм</Form.Label>
+        <Form.Label className="col-5">Вага: співпадіння занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_elitism}
+            defaultValue={general_values.penaltySameRecSc}
             type="number"
             min={0}
-            max={0.5}
-            step={0.01}
             onChange={(e) => {
               handleChangeSomeValues(
                 objectName,
-                "p_elitism",
+                "penaltySameRecSc",
                 e ? Number(e.target.value) : null
               );
             }}
           />
         </Col>
       </Form.Group>
-
       <Form.Group as={Row} className="my-2 mx-2">
         <ButtonUpdateInfo info={info} refetch={refetch}></ButtonUpdateInfo>
       </Form.Group>
@@ -132,16 +121,23 @@ function DataForm({ handleChangeSomeValues, info }) {
   );
 }
 
-export default class FormEA extends React.Component {
+export default class FormGeneralValues extends React.Component {
   render() {
     const { handleChangeSomeValues, info } = this.props;
     return (
-      <Form>
-        <DataForm
-          handleChangeSomeValues={handleChangeSomeValues}
-          info={info}
-        ></DataForm>
-      </Form>
+      <div className="d-flex justify-content-center  ">
+        <Card className="my-2">
+          <Card.Header className="text-center">
+            Загальні дані для алгоритмів
+          </Card.Header>
+          <Card.Body>
+            <DataForm
+              handleChangeSomeValues={handleChangeSomeValues}
+              info={info}
+            ></DataForm>
+          </Card.Body>
+        </Card>
+      </div>
     );
   }
 }

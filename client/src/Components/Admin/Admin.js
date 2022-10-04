@@ -2,13 +2,13 @@ import React from "react";
 import { Form, Card, Carousel, Row } from "react-bootstrap";
 import ButtonRunEA from "./ButtonRunEA";
 import { ButtonDeleteAllData } from "./ButtonDeleteAllData";
-import { Workbook } from "exceljs";
 import { CreateNotification } from "../Alert";
 import SelectCathedra from "./SelectCathedra";
 import FormEA from "./FormEA";
 import XLSX from "xlsx-color";
 import FormDataLoad from "./FormDataLoad";
 import FormScheduleData from "./FormScheduleData";
+import FormGeneralValues from "./FormGeneralValues";
 
 class Admin extends React.Component {
   constructor(props) {
@@ -23,18 +23,22 @@ class Admin extends React.Component {
         max_pair: null,
         max_day: null,
         fintess_value: null,
-        population_size: null,
-        max_generations: null,
-        p_crossover: null,
-        p_mutation: null,
-        p_genes: null,
-        penaltyGrWin: null,
-        penaltyTeachWin: null,
-        penaltyLateSc: null,
-        penaltyEqSc: null,
-        penaltySameTimesSc: null,
-        penaltySameRecSc: null,
-        p_elitism: null,
+        general_values: {
+          penaltyGrWin: null,
+          penaltyTeachWin: null,
+          penaltyLateSc: null,
+          penaltyEqSc: null,
+          penaltySameTimesSc: null,
+          penaltySameRecSc: null,
+        },
+        evolution_values: {
+          population_size: null,
+          max_generations: null,
+          p_crossover: null,
+          p_mutation: null,
+          p_genes: null,
+          p_elitism: null,
+        },
       },
     };
 
@@ -63,6 +67,19 @@ class Admin extends React.Component {
     }
   }
 
+  handleChangeSomeValues = (objectName, name, value) => {
+    this.setState((PrevState) => ({
+      ...PrevState,
+      info: {
+        ...PrevState.info,
+        [objectName]: Object.assign(
+          { ...PrevState.info[objectName] },
+          { [name]: value }
+        ),
+      },
+    }));
+    console.log(this.state);
+  };
   handleChangeInfo = (name, value) => {
     this.setState((PrevState) => ({
       info: Object.assign({ ...PrevState.info }, { [name]: value }),
@@ -84,7 +101,7 @@ class Admin extends React.Component {
                 </Card.Header>
                 <Card.Body>
                   <FormEA
-                    handleChangeInfo={this.handleChangeInfo}
+                    handleChangeSomeValues={this.handleChangeSomeValues}
                     info={this.state.info}
                   ></FormEA>
                 </Card.Body>
@@ -103,6 +120,12 @@ class Admin extends React.Component {
                 </Card.Footer>
               </Card>
             </div>
+          </Carousel.Item>
+          <Carousel.Item className="mb-5">
+            <FormGeneralValues
+              handleChangeSomeValues={this.handleChangeSomeValues}
+              info={this.state.info}
+            ></FormGeneralValues>
           </Carousel.Item>
 
           <Carousel.Item className="mb-5">

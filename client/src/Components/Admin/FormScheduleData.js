@@ -15,13 +15,16 @@ function DataForm({ handleChangeInfo, info }) {
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Загальний фітнес</Form.Label>
         <Col>
-          <Form.Control defaultValue={fitnessValue.fitnessValue} readOnly />
+          <Form.Control defaultValue={fitnessValue?.fitnessValue} readOnly />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Фітнес рек. час</Form.Label>
         <Col>
-          <Form.Control defaultValue={fitnessValue.fitnessSameRecSc} readOnly />
+          <Form.Control
+            defaultValue={fitnessValue?.fitnessSameRecSc}
+            readOnly
+          />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
@@ -31,7 +34,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Загальний</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessGr.fitnessValue}
+            defaultValue={fitnessValue?.fitnessGr.fitnessValue}
             readOnly
           />
         </Col>
@@ -40,7 +43,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Вікна</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessGr.fitnessGrWin}
+            defaultValue={fitnessValue?.fitnessGr.fitnessGrWin}
             readOnly
           />
         </Col>
@@ -49,7 +52,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessGr.fitnessSameTimesSc}
+            defaultValue={fitnessValue?.fitnessGr.fitnessSameTimesSc}
             readOnly
           />
         </Col>
@@ -61,7 +64,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Загальний</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessTeach.fitnessValue}
+            defaultValue={fitnessValue?.fitnessTeach.fitnessValue}
             readOnly
           />
         </Col>
@@ -70,7 +73,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Вікна</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessTeach.fitnessTeachWin}
+            defaultValue={fitnessValue?.fitnessTeach.fitnessTeachWin}
             readOnly
           />
         </Col>
@@ -79,7 +82,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessTeach.fitnessSameTimesSc}
+            defaultValue={fitnessValue?.fitnessTeach.fitnessSameTimesSc}
             readOnly
           />
         </Col>
@@ -91,7 +94,7 @@ function DataForm({ handleChangeInfo, info }) {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue.fitnessAud.fitnessSameTimesSc}
+            defaultValue={fitnessValue?.fitnessAud.fitnessSameTimesSc}
             readOnly
           />
         </Col>
