@@ -55,7 +55,6 @@ export default async function ParseData(workSheet) {
     i++;
   }
   Data["classes"] = classes;
-  debugger;
   return Data;
 }
 
