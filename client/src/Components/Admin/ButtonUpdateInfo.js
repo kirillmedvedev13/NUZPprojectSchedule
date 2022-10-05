@@ -11,13 +11,7 @@ export default function ButtonUpdateInfo({ info, refetch }) {
   let data = [];
   for (const [key, value] of Object.entries(info)) {
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      for (const [key1, value1] of Object.entries(value)) {
-        if (value1 !== null) {
-          let string = JSON.stringify(value);
-          data.push({ key, string });
-          break;
-        }
-      }
+      data.push({ key, value: JSON.stringify(value) });
     } else if (value != null) data.push({ key, value });
   }
 

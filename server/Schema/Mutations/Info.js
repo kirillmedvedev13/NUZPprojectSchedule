@@ -10,6 +10,7 @@ export const UPDATE_INFO = {
   async resolve(parent, { data }) {
     const info = JSON.parse(data);
     let obj = {};
+
     for (const { key, value } of info) {
       obj[key] = value;
     }

@@ -4,12 +4,14 @@ import { useQuery } from "@apollo/client";
 import { GET_INFO } from "./queries.js";
 import ButtonUpdateInfo from "./ButtonUpdateInfo.js";
 
-function DataForm({ handleChangeSomeValues, info }) {
+function DataForm({ handleChangeInfo, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let general_values = JSON.parse(data.GetInfo.general_values);
-  let objectName = "general_values";
+  let general_values =
+    info.general_values !== null
+      ? info.general_values
+      : JSON.parse(data.GetInfo.general_values);
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
@@ -20,11 +22,10 @@ function DataForm({ handleChangeSomeValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              handleChangeSomeValues(
-                objectName,
-                "penaltyGrWin",
-                e ? Number(e.target.value) : null
-              );
+              if (e) {
+                general_values.penaltyGrWin = Number(e.target.value);
+                handleChangeInfo("general_values", general_values);
+              }
             }}
           />
         </Col>
@@ -37,11 +38,10 @@ function DataForm({ handleChangeSomeValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              handleChangeSomeValues(
-                objectName,
-                "penaltyTeachWin",
-                e ? Number(e.target.value) : null
-              );
+              if (e) {
+                general_values.penaltyTeachWin = Number(e.target.value);
+                handleChangeInfo("general_values", general_values);
+              }
             }}
           />
         </Col>
@@ -54,11 +54,10 @@ function DataForm({ handleChangeSomeValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              handleChangeSomeValues(
-                objectName,
-                "penaltyLateSc",
-                e ? Number(e.target.value) : null
-              );
+              if (e) {
+                general_values.penaltyLateSc = Number(e.target.value);
+                handleChangeInfo("general_values", general_values);
+              }
             }}
           />
         </Col>
@@ -71,11 +70,10 @@ function DataForm({ handleChangeSomeValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              handleChangeSomeValues(
-                objectName,
-                "penaltyEqSc",
-                e ? Number(e.target.value) : null
-              );
+              if (e) {
+                general_values.penaltyEqSc = Number(e.target.value);
+                handleChangeInfo("general_values", general_values);
+              }
             }}
           />
         </Col>
@@ -88,11 +86,10 @@ function DataForm({ handleChangeSomeValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              handleChangeSomeValues(
-                objectName,
-                "penaltySameTimesSc",
-                e ? Number(e.target.value) : null
-              );
+              if (e) {
+                general_values.penaltySameTimesSc = Number(e.target.value);
+                handleChangeInfo("general_values", general_values);
+              }
             }}
           />
         </Col>
@@ -105,11 +102,10 @@ function DataForm({ handleChangeSomeValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              handleChangeSomeValues(
-                objectName,
-                "penaltySameRecSc",
-                e ? Number(e.target.value) : null
-              );
+              if (e) {
+                general_values.penaltySameRecSc = Number(e.target.value);
+                handleChangeInfo("general_values", general_values);
+              }
             }}
           />
         </Col>
@@ -123,7 +119,7 @@ function DataForm({ handleChangeSomeValues, info }) {
 
 export default class FormGeneralValues extends React.Component {
   render() {
-    const { handleChangeSomeValues, info } = this.props;
+    const { handleChangeInfo, info } = this.props;
     return (
       <div className="d-flex justify-content-center  ">
         <Card className="my-2">
@@ -132,7 +128,7 @@ export default class FormGeneralValues extends React.Component {
           </Card.Header>
           <Card.Body>
             <DataForm
-              handleChangeSomeValues={handleChangeSomeValues}
+              handleChangeInfo={handleChangeInfo}
               info={info}
             ></DataForm>
           </Card.Body>

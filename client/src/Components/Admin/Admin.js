@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Card, Carousel, Row } from "react-bootstrap";
+
 import ButtonRunEA from "./ButtonRunEA";
 import { ButtonDeleteAllData } from "./ButtonDeleteAllData";
 import { CreateNotification } from "../Alert";
@@ -23,27 +24,15 @@ class Admin extends React.Component {
         max_pair: null,
         max_day: null,
         fintess_value: null,
-        general_values: {
-          penaltyGrWin: null,
-          penaltyTeachWin: null,
-          penaltyLateSc: null,
-          penaltyEqSc: null,
-          penaltySameTimesSc: null,
-          penaltySameRecSc: null,
-        },
-        evolution_values: {
-          population_size: null,
-          max_generations: null,
-          p_crossover: null,
-          p_mutation: null,
-          p_genes: null,
-          p_elitism: null,
-        },
+        general_values: null,
+        evolution_values: null,
       },
     };
 
     this.setFile = this.setFile.bind(this);
   }
+
+  setInfo() {}
 
   setFile(file) {
     try {
@@ -84,6 +73,7 @@ class Admin extends React.Component {
     this.setState((PrevState) => ({
       info: Object.assign({ ...PrevState.info }, { [name]: value }),
     }));
+    console.log(this.state);
   };
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
@@ -101,7 +91,7 @@ class Admin extends React.Component {
                 </Card.Header>
                 <Card.Body>
                   <FormEA
-                    handleChangeSomeValues={this.handleChangeSomeValues}
+                    handleChangeInfo={this.handleChangeInfo}
                     info={this.state.info}
                   ></FormEA>
                 </Card.Body>
@@ -123,7 +113,7 @@ class Admin extends React.Component {
           </Carousel.Item>
           <Carousel.Item className="mb-5">
             <FormGeneralValues
-              handleChangeSomeValues={this.handleChangeSomeValues}
+              handleChangeInfo={this.handleChangeInfo}
               info={this.state.info}
             ></FormGeneralValues>
           </Carousel.Item>
