@@ -10,7 +10,7 @@ export default function (clas) {
         // Занятие 1 раз в неделю: 1) общая пара, 2) 2 раза по числ или знаменателю
         case 2:
             r = Math.random();
-            if (r <= 0.75)
+            if (r <= 0.88)
                 return [3];
             if (r <= 1)
                 return [GetRndInteger(1, 2), GetRndInteger(1, 2)];
@@ -19,7 +19,7 @@ export default function (clas) {
         case 2.5:
         case 3:
             r = Math.random();
-            if (r <= 0.75)
+            if (r <= 0.88)
                 return [3, GetRndInteger(1, 2)];
             if (r <= 1)
                 return [GetRndInteger(1, 2), GetRndInteger(1, 2), GetRndInteger(1, 2)];
