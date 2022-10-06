@@ -7,7 +7,7 @@ import { CreateNotification } from "../Alert";
 import SelectCathedra from "./SelectCathedra";
 import FormEA from "./FormEA";
 import XLSX from "xlsx-color";
-import FormDataLoad from "./FormDataLoad";
+import FormSubmitDataSheet from "./FormSubmitDataSheet";
 import FormScheduleData from "./FormScheduleData";
 import FormGeneralValues from "./FormGeneralValues";
 
@@ -32,7 +32,7 @@ class Admin extends React.Component {
     this.setFile = this.setFile.bind(this);
   }
 
-  setInfo() {}
+  setInfo() { }
 
   setFile(file) {
     try {
@@ -56,24 +56,10 @@ class Admin extends React.Component {
     }
   }
 
-  handleChangeSomeValues = (objectName, name, value) => {
-    this.setState((PrevState) => ({
-      ...PrevState,
-      info: {
-        ...PrevState.info,
-        [objectName]: Object.assign(
-          { ...PrevState.info[objectName] },
-          { [name]: value }
-        ),
-      },
-    }));
-    console.log(this.state);
-  };
   handleChangeInfo = (name, value) => {
     this.setState((PrevState) => ({
       info: Object.assign({ ...PrevState.info }, { [name]: value }),
     }));
-    console.log(this.state);
   };
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
@@ -83,6 +69,12 @@ class Admin extends React.Component {
     return (
       <>
         <Carousel variant="dark" interval={null}>
+          <Carousel.Item className="mb-5">
+            <FormGeneralValues
+              handleChangeInfo={this.handleChangeInfo}
+              info={this.state.info}
+            ></FormGeneralValues>
+          </Carousel.Item>
           <Carousel.Item className="mb-5">
             <div className="d-flex justify-content-center  ">
               <Card className="my-2">
@@ -112,27 +104,19 @@ class Admin extends React.Component {
             </div>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
-            <FormGeneralValues
-              handleChangeInfo={this.handleChangeInfo}
-              info={this.state.info}
-            ></FormGeneralValues>
-          </Carousel.Item>
-
-          <Carousel.Item className="mb-5">
             <FormScheduleData
-              handleChangeInfo={this.handleChangeInfo}
               info={this.state.info}
             ></FormScheduleData>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
-            <FormDataLoad
+            <FormSubmitDataSheet
               setFile={this.setFile}
               file={this.state.file}
               sheetIndex={this.state.sheetIndex}
               id_cathedra={this.state.id_cathedra}
               sheets={this.state.sheets}
               handleChangeState={this.handleChangeState}
-            ></FormDataLoad>
+            ></FormSubmitDataSheet>
           </Carousel.Item>
           <Carousel.Item className="mb-5">
             <div className="d-flex justify-content-center">

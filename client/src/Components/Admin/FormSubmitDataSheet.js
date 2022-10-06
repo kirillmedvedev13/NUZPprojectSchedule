@@ -1,10 +1,10 @@
 import { Form, Card } from "react-bootstrap";
-import ButtonSubmitData from "./ButtonSubmitData";
+import ButtonSubmitDataSheet from "./ButtonSubmitDataSheet";
 import SelectCathedra from "./SelectCathedra";
 import React from "react";
 import ButtonGetTemplate from "./ButtonGetTemplate";
 
-export default class FormDataLoad extends React.Component {
+export default class FormSubmitDataSheet extends React.Component {
   render() {
     const {
       setFile,
@@ -49,11 +49,11 @@ export default class FormDataLoad extends React.Component {
           <Card.Footer>
             <ButtonGetTemplate></ButtonGetTemplate>
 
-            <ButtonSubmitData
+            <ButtonSubmitDataSheet
               id_cathedra={id_cathedra}
               file={file}
               sheetIndex={sheetIndex}
-            ></ButtonSubmitData>
+            ></ButtonSubmitDataSheet>
           </Card.Footer>
         </Card>
       </div>

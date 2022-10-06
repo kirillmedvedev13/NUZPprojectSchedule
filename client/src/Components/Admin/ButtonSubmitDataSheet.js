@@ -6,7 +6,7 @@ import { CreateNotification } from "../Alert";
 import ReadFile from "./ReadFile";
 import { SET_CLASSES } from "./mutations.js";
 
-export default function ButtonSubmitData({ id_cathedra, file, sheetIndex }) {
+export default function ButtonSubmitDataSheet({ id_cathedra, file, sheetIndex }) {
   const [SetClasses, { loading, error }] = useMutation(SET_CLASSES, {
     refetchQueries: [],
   });

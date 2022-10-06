@@ -1,11 +1,11 @@
 import ButtonCalcFitness from "./ButtonCalcFitness";
 import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_INFO } from "./queries.js";
 import ButtonUpdateInfo from "./ButtonUpdateInfo.js";
 
-function DataForm({ handleChangeInfo, info }) {
+function DataForm({ info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
@@ -101,38 +101,7 @@ function DataForm({ handleChangeInfo, info }) {
       </Form.Group>
 
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість днів</Form.Label>
-        <Col>
-          <Form.Control
-            defaultValue={data.GetInfo.max_day}
-            type="number"
-            min={1}
-            max={7}
-            onChange={(e) => {
-              handleChangeInfo("max_day", e ? Number(e.target.value) : null);
-            }}
-          />
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість занять</Form.Label>
-        <Col>
-          <Form.Control
-            defaultValue={data.GetInfo.max_pair}
-            type="number"
-            min={1}
-            max={8}
-            onChange={(e) => {
-              handleChangeInfo("max_pair", e ? Number(e.target.value) : null);
-            }}
-          />
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="my-2 mx-2">
         <ButtonCalcFitness refetch={refetch}></ButtonCalcFitness>
-      </Form.Group>
-      <Form.Group as={Row} className="my-2 mx-2">
-        <ButtonUpdateInfo info={info} refetch={refetch}></ButtonUpdateInfo>
       </Form.Group>
     </>
   );

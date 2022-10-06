@@ -111,6 +111,34 @@ function DataForm({ handleChangeInfo, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Кількість днів</Form.Label>
+        <Col>
+          <Form.Control
+            defaultValue={data.GetInfo.max_day}
+            type="number"
+            min={1}
+            max={7}
+            onChange={(e) => {
+              handleChangeInfo("max_day", e ? Number(e.target.value) : null);
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="my-2 mx-2">
+        <Form.Label className="col-5">Кількість занять</Form.Label>
+        <Col>
+          <Form.Control
+            defaultValue={data.GetInfo.max_pair}
+            type="number"
+            min={1}
+            max={8}
+            onChange={(e) => {
+              handleChangeInfo("max_pair", e ? Number(e.target.value) : null);
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="my-2 mx-2">
         <ButtonUpdateInfo info={info} refetch={refetch}></ButtonUpdateInfo>
       </Form.Group>
     </>

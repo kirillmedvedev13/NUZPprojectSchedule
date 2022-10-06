@@ -1,27 +1,19 @@
 import db from "../database.js";
 import AddClassToSchedule from "./AddClassToSchedule.js";
 
-function InitDataStructure(max_day, max_pair) {
-  temp = [];
-  for (let i = 0; i < max_day; i++) {
-    temp1 = [];
-    for (let j = 0; j < max_pair; j++) {
-      temp1.push({ 1: null, 2: null, 3: null });
-    }
-    temp.push({ arr: temp1, isHasPair: false });
-  }
-  return temp;
-}
-
 //получаем из бд данные расписания занятий для других кафедр в форму
 //   schedule = {
-//   scheduleForGroups = [{arr: [{1: ,2: ,3:} ...max_pair], available_pair: []}, ...max_day],
+//   scheduleForGroups = {id : [ [{1: {clas: clas, isAvailable: true/false} ,2: ,3:} ...max_pair] , isHasPair: true, false ],
 //   scheduleForTeachers,
 //   scheduleForAudiences,
 // };
 export default async function ParseScheduleFromDB(schedule, id_cathedra, max_day, max_pair) {
   let classes = await db.class.findAll({
     include: [
+      {
+        model: db.schedule,
+        required: true
+      },
       {
         model: db.assigned_group,
       },
@@ -42,22 +34,25 @@ export default async function ParseScheduleFromDB(schedule, id_cathedra, max_day
     ],
   });
 
-  if (id_cathedra) {
-    //если в расписание есть занятие этой кафедры то их удаляем
-    let id_ags = [];
-    classes.map((cl) => {
-      if (cl.assigned_discipline.specialty.id_cathedra == id_cathedra)
-        id_ags.push(...cl.assigned_groups.map((ag) => ag.id));
-    });
-    await db.schedule.destroy({ where: { id_assigned_group: id_ags } });
-  }
-
-  let scheduleData = await db.schedule.findAll();
-
-  scheduleData = scheduleData.map((sc) => sc.toJSON());
-
   classes = classes.map((cl) => cl.toJSON());
 
+  if (id_cathedra) {
+    //если в расписание есть занятие этой кафедры то их удаляем
+    let id_schedules = [];
+    classes.map((cl) => {
+      if (cl.assigned_discipline.specialty.id_cathedra === id_cathedra) {
+        for (const sc of cl.schedules) {
+          id_schedules.push(sc.id)
+        }
+      }
+    })
+    await db.schedule.destroy({ where: { id: id_schedules } });
+  }
+
+  // Вставка распсиания в структуру
+  for (const cl in classes) {
+    AddClassToSchedule(schedule, max_day, max_pair, cl, true)
+  }
   // Проставка для каждого занятия id_class
   scheduleData.forEach((sc) => {
     let id_class;
