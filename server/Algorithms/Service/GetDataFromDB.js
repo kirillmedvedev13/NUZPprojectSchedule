@@ -1,5 +1,7 @@
-import db from "../database.js";
-export async function GetDataFromDB(id_cathedra = null) {
+import db from "../../database.js";
+import { Op } from "sequelize";
+
+export default async function GetDataFromDB(id_cathedra = null) {
   const info = await db.info.findOne();
   const max_day = info.dataValues.max_day;
   const max_pair = info.dataValues.max_pair;

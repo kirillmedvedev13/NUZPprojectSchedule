@@ -62,11 +62,12 @@ import {
 import { LOGIN_USER, LOGOUT_USER, RELOGIN_USER } from "../Mutations/User.js";
 import { SET_CLASSES } from "../Mutations/Admin.js";
 import { DELETE_ALL_DATA } from "../Mutations/Admin.js";
-import { RUN_EA } from "../../EvalutionAlgoritmCpp/Main.js";
 import { GET_INFO } from "../Queries/Info.js";
 import { UPDATE_INFO } from "../Mutations/Info.js";
 import { CALC_FITNESS } from "../Mutations/Fitness.js";
 import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
+import { RUN_EA } from "../../EvalutionAlgoritmCpp/Main.js";
+import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js"
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -136,7 +137,7 @@ const Mutation = new GraphQLObjectType({
     SetClasses: SET_CLASSES,
     DeleteAllData: DELETE_ALL_DATA,
     UpdateInfo: UPDATE_INFO,
-    RunEA: RUN_EA,
+    RunEA: RUN_SA,
     CalcFitness: CALC_FITNESS,
   },
 });

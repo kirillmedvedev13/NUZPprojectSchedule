@@ -1,4 +1,4 @@
-import db from "../database.js";
+import db from "../../database.js";
 import AddClassToSchedule from "./AddClassToSchedule.js"
 
 //получаем из бд данные расписания занятий для других кафедр в форму
@@ -12,7 +12,6 @@ export default async function ParseScheduleFromDB(schedule, id_cathedra, max_day
     include: [
       {
         model: db.schedule,
-        required: true
       },
       {
         model: db.assigned_group,

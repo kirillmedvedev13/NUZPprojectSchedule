@@ -1,12 +1,12 @@
-import GetIdAudienceForClass from "../Service/GetIdAudienceForClass";
-import GetPairTypeForClass from "../Service/GetPairTypeForClass";
+import GetIdsAudienceForClass from "../Service/GetIdsAudienceForClass.js";
+import GetPairTypeForClass from "../Service/GetPairTypeForClass.js";
 
 // Получить все возможные вставки занятий
 function GetAvailableTimeSlots(temp) {
-  timeSlots = [];
+  let timeSlots = [];
   for (let i = 0; i < temp.length; i++) {
     for (let j = 0; j < temp[i].length; j++) {
-      for (let k = 0; k < 3; k++) {
+      for (let k = 1; k <= 3; k++) {
         if (temp[i][j][k].isAvailable) {
           timeSlots.push({ day_week: i, number_pair: j, pair_type: k + 1 })
         }
@@ -17,19 +17,19 @@ function GetAvailableTimeSlots(temp) {
 }
 
 function InitDataStructure(max_day, max_pair) {
-  temp = [];
+  let day_weeks = [];
   for (let i = 0; i < max_day; i++) {
-    temp1 = [];
+    let number_pairs = [];
     for (let j = 0; j < max_pair; j++) {
-      temp2 = [];
-      for (let k = 0; k < 3; k++) {
-        temp2.push({ clas: null, isAvailable: true });
-      }
-      temp1.push(temp2);
+      number_pairs.push({
+        1: { clas: null, isAvailable: true },
+        2: { clas: null, isAvailable: true },
+        3: { clas: null, isAvailable: true }
+      })
     }
-    temp.push(temp1);
+    day_weeks.push(number_pairs);
   }
-  return temp;
+  return day_weeks;
 }
 
 function AddSchedule(temp, day_week, number_pair, pair_type, max_day, max_pair, clas) {
@@ -103,79 +103,111 @@ function AddSchedule(temp, day_week, number_pair, pair_type, max_day, max_pair, 
 }
 
 // добавляет в деревья занятие
-export default function AddClassToSchedule(schedule, max_day, max_pair, clas, audiences, isNewSchedule = false) {
-  let available_time_group = [];
-  let available_time_teacher = [];
-  let available_time_audience = [];
+export default function AddClassToSchedule(schedule, max_day, max_pair, clas, audiences, isNewSchedule = true) {
+  let temp_group = [];
+  let temp_teacher = [];
+  let temp_audience = [];
   // Для каждой группы добавление расписания
   clas.assigned_groups.forEach((ag) => {
-    let temp = schedule.scheduleForGroups.get(ag.id_group);
+    let temp_group1 = schedule.scheduleForGroups.get(ag.id_group);
     // Если для группы нету расписания
-    if (!temp) {
-      temp = InitDataStructure(max_day, max_pair);
+    if (!temp_group1) {
+      temp_group1 = InitDataStructure(max_day, max_pair);
     }
-    // Если дзанятия были в базе
+    // Если занятия были в базе
     if (!isNewSchedule) {
-      for (const sc in clas.schedules) {
-        temp = AddSchedule(temp, sc.day_week, sc.number_pair, sc.pair_type, max_day, max_pair, clas)
+      for (const sc of clas.schedules) {
+        temp_group1 = AddSchedule(temp_group1, sc.day_week, sc.number_pair, sc.pair_type, max_day, max_pair, clas)
       }
-      schedule.scheduleForGroups.set(ag.id_group, temp);
+      schedule.scheduleForGroups.set(ag.id_group, temp_group1);
     }
     else {
-      available_time_group.push([ag.id_group, GetAvailableTimeSlots(temp)]);
+      temp_group.push(temp_group1);
     }
   });
   // Для каждого учителей добавление расписания
   clas.assigned_teachers.forEach((at) => {
-    let temp = schedule.scheduleForTeachers.get(at.id_teacher);
+    let temp_teacher1 = schedule.scheduleForTeachers.get(at.id_teacher);
     // Если для учителя нету расписания
-    if (!temp) {
-      temp = InitDataStructure(max_day, max_pair);
+    if (!temp_teacher1) {
+      temp_teacher1 = InitDataStructure(max_day, max_pair);
     }
     // Если занятия были в базе
     if (!isNewSchedule) {
-      for (const sc in clas.schedules) {
-        temp = AddSchedule(temp, sc.day_week, sc.number_pair, sc.pair_type, max_day, max_pair, clas)
+      for (const sc of clas.schedules) {
+        temp_teacher1 = AddSchedule(temp_teacher1, sc.day_week, sc.number_pair, sc.pair_type, max_day, max_pair, clas)
       }
-      schedule.scheduleForTeachers.set(ag.id_teacher, temp);
+      schedule.scheduleForTeachers.set(ag.id_teacher, temp_teacher1);
     }
     else {
-      available_time_teacher.push([at.id_teacher, GetAvailableTimeSlots(temp)]);
+      temp_teacher.push(temp_teacher1);
     }
   });
-  // Получения адуитории для занятия
-  let id_audience = GetIdAudienceForClass(clas, audiences);
-  let temp = schedule.scheduleForAudiences.get(id_audience);
-  // Если для аудитории нету расписания
-  if (!temp) {
-    temp = InitDataStructure(max_day, max_pair);
-  }
-  // Если занятия были в базе
+  let ids_audience = null;
+  // Если расписание есть
   if (!isNewSchedule) {
+    let temp_audience1 = schedule.scheduleForAudiences.get(id_aud);
+    if (!temp_audience1) {
+      temp_audience1 = InitDataStructure(max_day, max_pair);
+    }
     // Если занятия были в базе Для каждой аудитории добавление расписания
-    let temp = schedule.scheduleForTeachers.get(sc.id_audience);
-    temp = AddSchedule(temp, sc.day_week, sc.number_pair, sc.pair_type, max_day, max_pair, clas)
-    schedule.scheduleForTeachers.set(ag.id_teacher, temp);
+    temp_audience1 = AddSchedule(temp_audience1, sc.day_week, sc.number_pair, sc.pair_type, max_day, max_pair, clas)
+    schedule.scheduleForAudiences.set(id_audience, temp_audience1);
   }
+  // Получения аудиторий для занятия
   else {
-    available_time_audience.push([at.id_teacher, GetAvailableTimeSlots(temp)]);
-  }
-  // Выбор данных для вставки расписания
-  const arr_pair_type = GetPairTypeForClass(clas);
-  for (let i = 0; i < arr_pair_type.length; i++) {
-    // Получение свободной пары для групп
-    let day_week_group = [];
-    let number_pair_group = [];
-    for (let j = 0; j < available_time_group.length; j++) {
-      for (let k = j + 1; k < available_time_group.length; k++) {
-        if (available_time_group[j][1].day_week === available_time_group[k][1].day_week
-          && available_time_group[j][1].number_pair === available_time_group[k][1].number_pair
-          && available_time_group[j][1].pair_type === arr_pair_type[i]
-          && available_time_group[k][1].pair_type === arr_pair_type[i]) {
-          day_week_group.push(available_time_group[j][1].day_week);
-          number_pair_group.push(available_time_group[j][1].number_pair);
-        }
+    ids_audience = GetIdsAudienceForClass(clas, audiences);
+    ids_audience.forEach(id_aud => {
+      let temp_audience1 = schedule.scheduleForAudiences.get(id_aud);
+      // Если для аудитории нету расписания
+      if (!temp_audience1) {
+        temp_audience1 = InitDataStructure(max_day, max_pair);
       }
+      temp_audience.push(temp_audience1);
+    })
+  }
+  // Если нужно получить новое расписание для занятия
+  if (isNewSchedule) {
+    // Выбор данных для вставки расписания
+    const arr_pair_type = GetPairTypeForClass(clas);
+    for (let i = 0; i < arr_pair_type.length; i++) {
+      let available_time_group = [];
+      let available_time_teacher = [];
+      let available_time_audience = [];
+      for (let temp of temp_group) {
+        available_time_group.push(GetAvailableTimeSlots(temp));
+      }
+      for (let temp of temp_teacher) {
+        available_time_teacher.push(GetAvailableTimeSlots(temp));
+      }
+      for (let temp of temp_audience) {
+        available_time_audience.push(GetAvailableTimeSlots(temp));
+      }
+      // Получение свободных пар для всех массивов
+      let available_slots = [];
+      for (let i = 0; i < available_time_audience.length; i++) {
+        for (let it = 0; it < available_time_audience[i]; it++)
+          for (let j = 0; j < available_time_teacher.length; j++) {
+            for (let jt = 0; jt < available_time_teacher[j].length; jt++) {
+              for (let k = 0; k < available_time_group.length; j++) {
+                for (let kt = 0; kt < available_time_group[k].length; kt++)
+                  if (available_time_audience[i][it].day_week === available_time_teacher[j][jt].day_week &&
+                    available_time_audience[i][it].pair_type === available_time_teacher[j][jt].pair_type &&
+                    available_time_audience[i][it].number_pair === available_time_teacher[j][jt].number_pair &&
+                    available_time_teacher[j][jt].day_week === available_time_group[k][kt].day_week &&
+                    available_time_teacher[j][jt].pair_type === available_time_group[k][kt].pair_type &&
+                    available_time_teacher[j][jt].number_pair === available_time_group[k][kt].number_pair) {
+                    available_slots.push({
+                      day_week: available_time_group[j][jt].day_week,
+                      number_pair: available_time_teacher[j][jt].number_pair,
+                      pair_type: available_time_teacher[j][jt].pair_type
+                    });
+                  }
+              }
+            }
+          }
+      }
+      console.log(available_slots)
     }
   }
 }
