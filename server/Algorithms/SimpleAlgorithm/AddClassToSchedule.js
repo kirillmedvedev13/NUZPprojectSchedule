@@ -42,63 +42,49 @@ function AddSchedule(
   max_pair,
   clas
 ) {
-  temp[day_week - 1][number_pair - 1][pair_type].clas = clas;
-  temp[day_week - 1][number_pair - 1][pair_type].isAvailable = false;
+  temp[day_week][number_pair][pair_type].clas = clas;
+  temp[day_week][number_pair][pair_type].isAvailable = false;
   for (let i = 0; i < max_day; i++) {
     for (let j = 0; j < max_pair; j++) {
       for (let k = 1; k <= 3; k++) {
         // Если пара не занята
-        if (temp[i][j][k].clas) {
+        if (!temp[i][j][k].clas) {
           // Накладки
           if ((k === 1 || k === 2) && temp[i][j][3].clas) {
             temp[i][j][k].isAvailable = false;
             continue;
-          } else if (k === 3 && (temp[i][j][1].clas || temp[i][j][2].clas)) {
+          }
+          if (k === 3 && (temp[i][j][1].clas || temp[i][j][2].clas)) {
             temp[i][j][k].isAvailable = false;
             continue;
           }
           // Поиск окон вниз
           for (let h = j - 1; h >= 0; h--) {
-            if (k === 1 || k === 3) {
-              if (temp[i][h][3].clas && j - h > 1) {
-                temp[i][j][k].isAvailable = false;
-                break;
-              }
-              if (temp[i][h][1].clas && j - h > 1) {
-                temp[i][j][k].isAvailable = false;
-                break;
-              }
-            } else if (k === 2 || k === 3) {
-              if (temp[i][h][3].clas && j - h > 1) {
-                temp[i][j][k].isAvailable = false;
-                break;
-              }
-              if (temp[i][h][2].clas && j - h > 1) {
-                temp[i][j][k].isAvailable = false;
-                break;
-              }
+            if ((k === 1 || k === 3) && (temp[i][h][1].clas || temp[i][h][3].clas) && j - h > 1) {
+              temp[i][j][k].isAvailable = false;
+              break;
+            } else {
+              temp[i][j][k].isAvailable = true;
+            }
+            if ((k === 2 || k === 3) && (temp[i][h][2].clas || temp[i][h][3].clas) && j - h > 1) {
+              temp[i][j][k].isAvailable = false;
+              break;
+            } else {
+              temp[i][j][k].isAvailable = true;
             }
           }
-        }
-        // Поиск окон вверх
-        for (let h = j + 1; h < max_pair; h++) {
-          if (k === 1 || k === 3) {
-            if (temp[i][h][3].clas && h - j > 1) {
+          // Поиск окон вверх
+          for (let h = j + 1; h < max_pair; h++) {
+            if ((k === 1 || k === 3) && (temp[i][h][1].clas || temp[i][h][3].clas) && h - j > 1) {
               temp[i][j][k].isAvailable = false;
-              break;
+            } else {
+              temp[i][j][k].isAvailable = true;
             }
-            if (temp[i][h][1].clas && h - j > 1) {
+            if ((k === 2 || k === 3) && (temp[i][h][2].clas || temp[i][h][3].clas) && h - j > 1) {
               temp[i][j][k].isAvailable = false;
               break;
-            }
-          } else if (k === 2 || k === 3) {
-            if (temp[i][h][3].clas && h - j > 1) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            }
-            if (temp[i][h][2].clas && h - j > 1) {
-              temp[i][j][k].isAvailable = false;
-              break;
+            } else {
+              temp[i][j][k].isAvailable = true;
             }
           }
         }
@@ -235,7 +221,10 @@ export default function AddClassToSchedule(
           let flag = 0;
           availableTime.forEach((group) => {
             for (let pair of group) {
-              if (JSON.stringify(schedule) === JSON.stringify(pair)) flag++;
+              if (JSON.stringify(schedule) === JSON.stringify(pair)) {
+                flag++;
+                break;
+              }
             }
           });
           if (flag === availableTime.length) return true;
@@ -263,12 +252,13 @@ export default function AddClassToSchedule(
       }
       let { day_week, number_pair, pair_type } =
         intersectionAudGroupTeach[
-          GetRndInteger(0, intersectionAudGroupTeach.length)
+        GetRndInteger(0, intersectionAudGroupTeach.length - 1)
         ];
       if (!intersectionAudGroupTeach.length) {
         console.log();
         return;
       }
+      // Вставка занятия для групп
       for (let i = 0; i < temp_group.length; i++) {
         let sched = AddSchedule(
           temp_group[i],
@@ -281,6 +271,7 @@ export default function AddClassToSchedule(
         );
         schedule.scheduleForGroups.set(clas.assigned_groups[i].id_group, sched);
       }
+      // Вставка занятий для учителей
       for (let i = 0; i < temp_teacher.length; i++) {
         let sched = AddSchedule(
           temp_teacher[i],
@@ -296,6 +287,7 @@ export default function AddClassToSchedule(
           sched
         );
       }
+      // Вставка затий для аудитории
       let sched = temp_audience[ids_audience.indexOf(id_aud)];
       schedule.scheduleForAudiences.set(
         id_aud,
@@ -311,4 +303,5 @@ export default function AddClassToSchedule(
       );
     }
   }
+  return schedule
 }
