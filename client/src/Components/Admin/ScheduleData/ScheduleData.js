@@ -3,13 +3,14 @@ import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "../queries.js";
-import NaviBarAdmin from "../NaviBarAdmin.js"
+import NaviBarAdmin from "../NaviBarAdmin.js";
 
 function DataForm() {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let fitnessValue = JSON.parse(data.GetInfo.fitness_value);
+  let fitnessValue = data.GetInfo.fitness_value;
+  fitnessValue = JSON.parse(fitnessValue);
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
@@ -107,7 +108,6 @@ function DataForm() {
   );
 }
 export default class ScheduleData extends React.Component {
-
   render() {
     return (
       <>
@@ -118,8 +118,7 @@ export default class ScheduleData extends React.Component {
               Дані про поточний розклад
             </Card.Header>
             <Card.Body>
-              <DataForm
-              ></DataForm>
+              <DataForm></DataForm>
             </Card.Body>
           </Card>
         </div>

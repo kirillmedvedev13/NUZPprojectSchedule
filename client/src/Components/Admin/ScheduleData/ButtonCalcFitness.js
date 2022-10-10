@@ -1,10 +1,12 @@
 import { Button } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import { CreateNotification } from "../../Alert";
-import { CALC_FITNESS } from "../mutations"
-
+import { CALC_FITNESS } from "../mutations";
+import { GET_INFO } from "../queries";
 export default function ButtonCalcFitness({ refetch }) {
-  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS);
+  const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS, {
+    refetchQueries: [{ query: GET_INFO }],
+  });
   if (loading) return null;
   if (error) return `Error! ${error}`;
   return (
