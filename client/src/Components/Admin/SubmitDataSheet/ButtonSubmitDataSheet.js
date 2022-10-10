@@ -1,10 +1,9 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
-
 import { Button } from "react-bootstrap";
-import { CreateNotification } from "../Alert";
+import { CreateNotification } from "../../Alert";
 import ReadFile from "./ReadFile";
-import { SET_CLASSES } from "./mutations.js";
+import { SET_CLASSES } from "../mutations.js";
 
 export default function ButtonSubmitDataSheet({ id_cathedra, file, sheetIndex }) {
   const [SetClasses, { loading, error }] = useMutation(SET_CLASSES, {

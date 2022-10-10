@@ -1,10 +1,13 @@
 import React from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
-import { GET_INFO } from "./queries.js";
-import ButtonUpdateInfo from "./ButtonUpdateInfo.js";
+import { GET_INFO } from "../queries.js";
+import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
+import SelectCathedra from "../SelectCathedra.js"
+import ButtonRunEA from "./ButtonRunEA.js"
+import NaviBarAdmin from "../NaviBarAdmin.js"
 
-function DataForm({ handleChangeInfo, info }) {
+function DataForm({ handleChangeEvolutionValues, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
@@ -24,8 +27,7 @@ function DataForm({ handleChangeInfo, info }) {
             min={0}
             onChange={(e) => {
               if (e) {
-                evolution_values.population_size = Number(e.target.value);
-                handleChangeInfo("evolution_values", evolution_values);
+                handleChangeEvolutionValues("population_size", Number(e.target.value));
               }
             }}
           />
@@ -42,8 +44,7 @@ function DataForm({ handleChangeInfo, info }) {
             min={0}
             onChange={(e) => {
               if (e) {
-                evolution_values.max_generations = Number(e.target.value);
-                handleChangeInfo("evolution_values", evolution_values);
+                handleChangeEvolutionValues("max_generations", Number(e.target.value));
               }
             }}
           />
@@ -60,8 +61,7 @@ function DataForm({ handleChangeInfo, info }) {
             step={0.05}
             onChange={(e) => {
               if (e) {
-                evolution_values.p_crossover = Number(e.target.value);
-                handleChangeInfo("evolution_values", evolution_values);
+                handleChangeEvolutionValues("p_crossover", Number(e.target.value));
               }
             }}
           />
@@ -78,8 +78,7 @@ function DataForm({ handleChangeInfo, info }) {
             step={0.05}
             onChange={(e) => {
               if (e) {
-                evolution_values.p_mutation = Number(e.target.value);
-                handleChangeInfo("evolution_values", evolution_values);
+                handleChangeEvolutionValues("p_mutation", Number(e.target.value));
               }
             }}
           />
@@ -96,8 +95,7 @@ function DataForm({ handleChangeInfo, info }) {
             step={0.001}
             onChange={(e) => {
               if (e) {
-                evolution_values.p_genes = Number(e.target.value);
-                handleChangeInfo("evolution_values", evolution_values);
+                handleChangeEvolutionValues("p_genes", Number(e.target.value));
               }
             }}
           />
@@ -114,8 +112,7 @@ function DataForm({ handleChangeInfo, info }) {
             step={0.01}
             onChange={(e) => {
               if (e) {
-                evolution_values.p_elitism = Number(e.target.value);
-                handleChangeInfo("evolution_values", evolution_values);
+                handleChangeEvolutionValues("p_elitism", Number(e.target.value));
               }
             }}
           />
@@ -129,13 +126,53 @@ function DataForm({ handleChangeInfo, info }) {
   );
 }
 
-export default class FormEA extends React.Component {
+export default class EvolutionAlgorithm extends React.Component {
+  constructor(args) {
+    super(args);
+    this.state = {
+      id_cathedra: null,
+      evolution_values: null
+    }
+  }
+
+  handleChangeEvolutionValues = (name, value) => {
+    this.setState((PrevState) => ({
+      evolution_values: Object.assign({ ...PrevState.evolution_values }, { [name]: value }),
+    }));
+  };
+
+  handleChangeState = (name, item) => {
+    this.setState({ [name]: item });
+  };
+
   render() {
-    const { handleChangeInfo, info } = this.props;
     return (
-      <Form>
-        <DataForm handleChangeInfo={handleChangeInfo} info={info}></DataForm>
-      </Form>
+      <>
+        <NaviBarAdmin></NaviBarAdmin>
+        <div className="d-flex justify-content-center  ">
+          <Card className="my-2">
+            <Card.Header className="text-center">
+              Складання розкладу за допомогою Генетичного Алгоритму
+            </Card.Header>
+            <Card.Body>
+              <DataForm handleChangeEvolutionValues={this.handleChangeEvolutionValues} info={this.state}></DataForm>
+            </Card.Body>
+            <Card.Footer>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <SelectCathedra
+                  handleChangeState={this.handleChangeState}
+                  id_cathedra={this.state.id_cathedra}
+                ></SelectCathedra>
+              </Form.Group>
+              <Form.Group as={Row} className="my-2 mx-2">
+                <ButtonRunEA
+                  id_cathedra={this.state.id_cathedra}
+                ></ButtonRunEA>
+              </Form.Group>
+            </Card.Footer>
+          </Card>
+        </div>
+      </>
     );
   }
 }

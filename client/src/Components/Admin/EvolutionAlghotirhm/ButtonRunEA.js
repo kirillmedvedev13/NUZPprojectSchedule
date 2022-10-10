@@ -1,7 +1,7 @@
-import { RUN_EA } from "./mutations.js";
 import { useMutation } from "@apollo/client";
 import { Container, Button } from "react-bootstrap";
-import { CreateNotification } from "../Alert";
+import { CreateNotification } from "../../Alert";
+import { RUN_EA } from "../mutations"
 
 export default function ButtonRunEA({ id_cathedra }) {
   const [RunEA, { loading, error }] = useMutation(RUN_EA, {

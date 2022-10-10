@@ -1,7 +1,7 @@
-import { CALC_FITNESS } from "./mutations.js";
 import { Button } from "react-bootstrap";
-import { useQuery, useMutation } from "@apollo/client";
-import { CreateNotification } from "../Alert.js";
+import { useMutation } from "@apollo/client";
+import { CreateNotification } from "../../Alert";
+import { CALC_FITNESS } from "../mutations"
 
 export default function ButtonCalcFitness({ refetch }) {
   const [CalcFitness, { loading, error }] = useMutation(CALC_FITNESS);

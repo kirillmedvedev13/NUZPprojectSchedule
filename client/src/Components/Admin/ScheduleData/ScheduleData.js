@@ -2,10 +2,10 @@ import ButtonCalcFitness from "./ButtonCalcFitness";
 import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
-import { GET_INFO } from "./queries.js";
-import ButtonUpdateInfo from "./ButtonUpdateInfo.js";
+import { GET_INFO } from "../queries.js";
+import NaviBarAdmin from "../NaviBarAdmin.js"
 
-function DataForm({ info }) {
+function DataForm() {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
@@ -106,23 +106,24 @@ function DataForm({ info }) {
     </>
   );
 }
-export default class FormScheduleData extends React.Component {
+export default class ScheduleData extends React.Component {
+
   render() {
-    const { handleChangeInfo, info } = this.props;
     return (
-      <div className="d-flex justify-content-center  ">
-        <Card className="my-2">
-          <Card.Header className="text-center">
-            Дані про поточний розклад
-          </Card.Header>
-          <Card.Body>
-            <DataForm
-              handleChangeInfo={handleChangeInfo}
-              info={info}
-            ></DataForm>
-          </Card.Body>
-        </Card>
-      </div>
+      <>
+        <NaviBarAdmin></NaviBarAdmin>
+        <div className="d-flex justify-content-center  ">
+          <Card className="my-2">
+            <Card.Header className="text-center">
+              Дані про поточний розклад
+            </Card.Header>
+            <Card.Body>
+              <DataForm
+              ></DataForm>
+            </Card.Body>
+          </Card>
+        </div>
+      </>
     );
   }
 }

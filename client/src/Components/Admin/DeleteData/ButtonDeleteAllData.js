@@ -1,15 +1,16 @@
-import { CreateNotification } from "../Alert";
-import { DELETE_ALL_DATA } from "./mutations.js";
+import { CreateNotification } from "../../Alert";
 import { useMutation } from "@apollo/client";
 import { Button } from "react-bootstrap";
-import { GET_ALL_AUDIENCES } from "../Audience/queries";
-import { GET_ALL_TEACHERS } from "../Teacher/queries";
-import { GET_ALL_ASSIGNED_DISCIPLINES } from "../SelectsModalWindow/queries";
-import { GET_ALL_DISCIPLINES } from "../Discipline/queries";
-import { GET_ALL_GROUPS } from "../Group/queries";
-import { GET_ALL_CLASSES } from "../Class/queries";
-import { GET_ALL_SPECIALTIES } from "../Specialty/queries";
-export function ButtonDeleteAllData({ id_cathedra }) {
+import { GET_ALL_AUDIENCES } from "../../Audience/queries";
+import { GET_ALL_TEACHERS } from "../../Teacher/queries";
+import { GET_ALL_ASSIGNED_DISCIPLINES } from "../../SelectsModalWindow/queries";
+import { GET_ALL_DISCIPLINES } from "../../Discipline/queries";
+import { GET_ALL_GROUPS } from "../../Group/queries";
+import { GET_ALL_CLASSES } from "../../Class/queries";
+import { GET_ALL_SPECIALTIES } from "../../Specialty/queries";
+import { DELETE_ALL_DATA } from "../mutations"
+
+export default function ButtonDeleteAllData({ id_cathedra }) {
   const [DeleteAllData, { loading, error }] = useMutation(DELETE_ALL_DATA, {
     refetchQueries: [
       { query: GET_ALL_AUDIENCES },
