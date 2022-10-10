@@ -3,7 +3,6 @@ import React from "react";
 import { Table, Button } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_AUDIENCES } from "./queries";
 import { DaysWeek } from "./DaysWeek";
-import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
@@ -39,9 +38,8 @@ function getDescription(schedule) {
       teacher.teacher.patronymic;
   });
   const desciption = `
-   ${schedule.class.type_class.name} ${
-    schedule.class.assigned_discipline.discipline.name
-  } 
+   ${schedule.class.type_class.name} ${schedule.class.assigned_discipline.discipline.name
+    } 
    ${GetGroupsName(schedule.class.assigned_groups)} 
    ${teachers}
  

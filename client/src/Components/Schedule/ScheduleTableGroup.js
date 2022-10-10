@@ -30,21 +30,12 @@ function getSchedulesForGroup(group) {
 
 function getDescription(schedule) {
   const desciption = `
-<<<<<<< HEAD
-  ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${
-    schedule.class.assigned_discipline.discipline.name
-  } ${schedule.class.assigned_teachers.map(({ teacher }) => {
-    return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(
-      0
-    )}}`;
-  })}
-=======
-  ${schedule.class.type_class.name} ауд.${schedule.audience.name
-    } ${schedule.class.assigned_discipline.discipline.name
+  ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${schedule.class.assigned_discipline.discipline.name
     } ${schedule.class.assigned_teachers.map(({ teacher }) => {
-      return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(0)}`;
+      return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(
+        0
+      )}}`;
     })}
->>>>>>> 5062fe139a9650bd4f6c033fd184ef516ef9005f
 `;
   return desciption;
 }
