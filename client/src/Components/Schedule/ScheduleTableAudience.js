@@ -6,12 +6,31 @@ import { DaysWeek } from "./DaysWeek";
 import SplitPairs from "./SplitPairs";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
-
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
+import SortSchedule from "./SortSchedule";
 
+function GetSchedules(schedule) {
+  let arrSched = [];
+  for (let pair of schedule) {
+    arrSched.push({
+      id: pair.id,
+      number_pair: pair.number_pair,
+      day_week: pair.day_week,
+      pair_type: pair.pair_type,
+      class: {
+        type_class: pair.class.type_class,
+        assigned_discipline: pair.class.assigned_discipline,
+        assigned_groups: pair.class.assigned_groups,
+        assigned_teachers: pair.class.assigned_teachers,
+      },
+    });
+  }
+  SortSchedule(arrSched);
+  return arrSched;
+}
 function getDescription(schedule) {
   let teachers = " ";
-  schedule.assigned_group.class.assigned_teachers.forEach((teacher) => {
+  schedule.class.assigned_teachers.forEach((teacher) => {
     teachers +=
       teacher.teacher.surname +
       " " +
@@ -20,10 +39,10 @@ function getDescription(schedule) {
       teacher.teacher.patronymic;
   });
   const desciption = `
-   ${schedule.assigned_group.class.type_class.name} ${
-    schedule.assigned_group.class.assigned_discipline.discipline.name
+   ${schedule.class.type_class.name} ${
+    schedule.class.assigned_discipline.discipline.name
   } 
-   ${GetGroupsName(schedule.assigned_group.group.name)} 
+   ${GetGroupsName(schedule.class.assigned_groups)} 
    ${teachers}
  
   `;
@@ -46,7 +65,7 @@ function DataTable({ filters, info }) {
   for (const audience of data.GetAllScheduleAudiences) {
     MapAudience.set(
       { id: audience.id, name: audience.name },
-      SplitPairs(audience.schedules)
+      audience.schedules.length === 0 ? [] : GetSchedules(audience.schedules)
     );
   }
   return TableBody(MapAudience, info, getDescription);

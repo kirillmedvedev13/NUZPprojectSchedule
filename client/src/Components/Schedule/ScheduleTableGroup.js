@@ -5,7 +5,7 @@ import { GET_ALL_SCHEDULE_GROUPS } from "./queries";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
-import SortSchedule from "./SortSchedule"
+import SortSchedule from "./SortSchedule";
 
 function getSchedulesForGroup(group) {
   let arrSched = [];
@@ -30,11 +30,13 @@ function getSchedulesForGroup(group) {
 
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.class.type_class.name} ауд.${schedule.audience.name
-    } ${schedule.class.assigned_discipline.discipline.name
-    } ${schedule.class.assigned_teachers.map(({ teacher }) => {
-      return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(0)}}`;
-    })}
+  ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${
+    schedule.class.assigned_discipline.discipline.name
+  } ${schedule.class.assigned_teachers.map(({ teacher }) => {
+    return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(
+      0
+    )}}`;
+  })}
 `;
   return desciption;
 }
@@ -54,7 +56,12 @@ function DataTable({ filters, info }) {
   if (error) return `Error! ${error}`;
   let MapGroup = new Map();
   for (const group of data.GetAllScheduleGroups) {
-    MapGroup.set(group, getSchedulesForGroup(group));
+    MapGroup.set(
+      { id: group.id, name: group.name },
+      group.assigned_groups.length === 0
+        ? []
+        : getSchedulesForGroup(group.assigned_groups)
+    );
   }
   return TableBody(MapGroup, info, getDescription);
 }

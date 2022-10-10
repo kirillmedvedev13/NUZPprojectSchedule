@@ -9,7 +9,7 @@ import GetGroupsName from "./GetGroupsName";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
 
-function getSchedules(schedule) {
+function GetSchedules(schedule) {
   let arrSched = [];
   for (let clas of schedule) {
     for (let pair of clas.class.schedules) {
@@ -20,7 +20,7 @@ function getSchedules(schedule) {
         pair_type: pair.pair_type,
         audience: pair.audience,
         class: {
-          type_class: clas.class.type_clas,
+          type_class: clas.class.type_class,
           assigned_discipline: clas.class.assigned_discipline,
           assigned_groups: clas.class.assigned_groups,
         },
@@ -60,7 +60,7 @@ function DataTable({ filters, info }) {
       },
       teacher.assigned_teachers.length === 0
         ? []
-        : getSchedules(teacher.assigned_teachers)
+        : GetSchedules(teacher.assigned_teachers)
     );
   }
 
