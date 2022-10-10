@@ -22,7 +22,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Розмір популяції</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.population_size}
+            value={evolution_values.population_size}
             type="number"
             min={0}
             onChange={(e) => {
@@ -38,7 +38,7 @@ function DataForm({ handleChangeState, info }) {
         </Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.max_generations}
+            value={evolution_values.max_generations}
             type="number"
             min={0}
             onChange={(e) => {
@@ -52,7 +52,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Ймовірність схрещування</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_crossover}
+            value={evolution_values.p_crossover}
             type="number"
             min={0}
             max={1}
@@ -68,7 +68,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Ймовірність мутації</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_mutation}
+            value={evolution_values.p_mutation}
             type="number"
             min={0}
             max={1}
@@ -84,7 +84,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Ймовірність мутації гена</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_genes}
+            value={evolution_values.p_genes}
             type="number"
             min={0}
             max={1}
@@ -100,7 +100,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Елітизм</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={evolution_values.p_elitism}
+            value={evolution_values.p_elitism}
             type="number"
             min={0}
             max={0.5}

@@ -19,7 +19,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: вікна групи</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={general_values.penaltyGrWin}
+            value={general_values.penaltyGrWin}
             type="number"
             min={0}
             onChange={(e) => {
@@ -33,7 +33,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: вікна викладачiв</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={general_values.penaltyTeachWin}
+            value={general_values.penaltyTeachWin}
             type="number"
             min={0}
             onChange={(e) => {
@@ -47,7 +47,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: пізні заняття</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={general_values.penaltyLateSc}
+            value={general_values.penaltyLateSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -61,7 +61,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: рівномірний розклад</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={general_values.penaltyEqSc}
+            value={general_values.penaltyEqSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -75,7 +75,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={general_values.penaltySameTimesSc}
+            value={general_values.penaltySameTimesSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -89,7 +89,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: співпадіння занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={general_values.penaltySameRecSc}
+            value={general_values.penaltySameRecSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -103,7 +103,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Кількість днів</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={data.GetInfo.max_day}
+            value={data.GetInfo.max_day}
             type="number"
             min={1}
             max={7}
@@ -117,7 +117,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Кількість занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={data.GetInfo.max_pair}
+            value={data.GetInfo.max_pair}
             type="number"
             min={1}
             max={8}

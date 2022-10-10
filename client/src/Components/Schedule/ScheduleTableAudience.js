@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_AUDIENCES } from "./queries";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";

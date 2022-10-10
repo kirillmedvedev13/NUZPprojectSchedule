@@ -16,7 +16,7 @@ export const GET_ALL_SCHEDULE_GROUPS = gql`
     name
     specialty {
       cathedra {
-        name
+        short_name
       }
     }
     assigned_groups {
