@@ -4,7 +4,6 @@ import React from "react";
 import { Table } from "react-bootstrap";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
-import SplitPairs from "./SplitPairs";
 import GetGroupsName from "./GetGroupsName";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
