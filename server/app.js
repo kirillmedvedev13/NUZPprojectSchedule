@@ -18,7 +18,6 @@ const main = async () => {
   await db.Connection.sync({})
     .then((result) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
-  
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());

@@ -30,12 +30,22 @@ function getSchedulesForGroup(group) {
 
 function getDescription(schedule) {
   const desciption = `
+<<<<<<< HEAD
   ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${schedule.class.assigned_discipline.discipline.name
     } ${schedule.class.assigned_teachers.map(({ teacher }) => {
       return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(
         0
       )}}`;
     })}
+=======
+  ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${
+    schedule.class.assigned_discipline.discipline.name
+  } ${schedule.class.assigned_teachers.map(({ teacher }) => {
+    return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(
+      0
+    )}}`;
+  })}
+>>>>>>> cba0aa14ed710270458d299fdbe292569367c823
 `;
   return desciption;
 }
@@ -57,9 +67,7 @@ function DataTable({ filters, info }) {
   for (const group of data.GetAllScheduleGroups) {
     MapGroup.set(
       { id: group.id, name: group.name },
-      group.assigned_groups.length === 0
-        ? []
-        : getSchedulesForGroup(group.assigned_groups)
+      group.assigned_groups.length === 0 ? [] : getSchedulesForGroup(group)
     );
   }
   return TableBody(MapGroup, info, getDescription);
