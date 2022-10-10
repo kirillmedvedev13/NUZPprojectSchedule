@@ -9,7 +9,7 @@ import SortSchedule from "./SortSchedule"
 
 function getSchedulesForGroup(group) {
   let arrSched = [];
-  for (let assigned_group of group) {
+  for (let assigned_group of group.assigned_groups) {
     for (let schedule of assigned_group.class.schedules) {
       arrSched.push({
         number_pair: schedule.number_pair,
@@ -17,7 +17,7 @@ function getSchedulesForGroup(group) {
         pair_type: schedule.pair_type,
         audience: schedule.audience,
         class: {
-          type_class: assigned_group.class.type_clas,
+          type_class: assigned_group.class.type_class,
           assigned_discipline: assigned_group.class.assigned_discipline,
           assigned_teachers: assigned_group.class.assigned_teachers,
         },
@@ -33,7 +33,7 @@ function getDescription(schedule) {
   ${schedule.class.type_class.name} ауд.${schedule.audience.name
     } ${schedule.class.assigned_discipline.discipline.name
     } ${schedule.class.assigned_teachers.map(({ teacher }) => {
-      return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(0)}}`;
+      return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(0)}`;
     })}
 `;
   return desciption;
