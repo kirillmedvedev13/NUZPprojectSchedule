@@ -7,29 +7,37 @@ import TableBody from "./TableBody";
 import SplitPairs from "./SplitPairs";
 import GetGroupsName from "./GetGroupsName";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
+import SortSchedule from "./SortSchedule";
 
+function getSchedules(schedule) {
+  let arrSched = [];
+  for (let clas of schedule) {
+    for (let pair of clas.class.schedules) {
+      arrSched.push({
+        id: pair.id,
+        number_pair: pair.number_pair,
+        day_week: pair.day_week,
+        pair_type: pair.pair_type,
+        audience: pair.audience,
+        class: {
+          type_class: clas.class.type_clas,
+          assigned_discipline: clas.class.assigned_discipline,
+          assigned_groups: clas.class.assigned_groups,
+        },
+      });
+    }
+  }
+  SortSchedule(arrSched);
+  return arrSched;
+}
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.assigned_group.class.type_class.name}
+  ${schedule.class.type_class.name}
   ауд.${schedule.audience.name} 
-  ${schedule.assigned_group.class.assigned_discipline.discipline.name} 
-  ${GetGroupsName(schedule.assigned_group.group.name)}
+  ${schedule.class.assigned_discipline.discipline.name} 
+  ${GetGroupsName(schedule.class.assigned_groups)}
   `;
   return desciption;
-}
-
-function GetTeachers(schedules) {
-  let teachers = new Set();
-  schedules.forEach((schedule) => {
-    for (
-      let i = 0;
-      i < schedule.assigned_group.class.assigned_teachers.length;
-      i++
-    ) {
-      teachers.add(schedule.assigned_group.class.assigned_teachers[i].teacher);
-    }
-  });
-  return teachers;
 }
 
 function DataTable({ filters, info }) {
@@ -44,22 +52,15 @@ function DataTable({ filters, info }) {
   if (error) return `Error! ${error}`;
   if (!data.GetAllScheduleTeachers.length) return <tbody></tbody>;
   let MapTeacher = new Map();
-  let teachers = GetTeachers(data.GetAllScheduleTeachers);
-  for (const teacher of teachers) {
-    let classes = data.GetAllScheduleTeachers.filter((schedule) => {
-      let temp = schedule.assigned_group.class.assigned_teachers.find(
-        (teach) => +teach.teacher.id === +teacher.id
-      );
-      if (temp) return true;
-      else return false;
-    });
-
+  for (const teacher of data.GetAllScheduleTeachers) {
     MapTeacher.set(
       {
         id: teacher.id,
         name: `${teacher.surname} ${teacher.name} ${teacher.patronymic}`,
       },
-      classes.length === 0 ? [] : SplitPairs(classes)
+      teacher.assigned_teachers.length === 0
+        ? []
+        : getSchedules(teacher.assigned_teachers)
     );
   }
 

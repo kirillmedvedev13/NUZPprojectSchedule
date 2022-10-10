@@ -81,67 +81,6 @@ export const GET_ALL_SCHEDULE_AUDIENCES = gql`
         number_pair
         day_week
         pair_type
-        assigned_group {
-          group {
-            id
-            name
-            specialty {
-              cathedra {
-                short_name
-              }
-            }
-          }
-          class {
-            id
-            type_class {
-              id
-              name
-            }
-            assigned_discipline {
-              discipline {
-                id
-                name
-              }
-            }
-            assigned_teachers {
-              teacher {
-                id
-                surname
-                name
-                patronymic
-                cathedra {
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const GET_ALL_SCHEDULE_TEACHERS = gql`
-  query ($id_teacher: Int, $id_cathedra: Int) {
-    GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
-      id
-      number_pair
-      day_week
-      pair_type
-      audience {
-        id
-        name
-      }
-      assigned_group {
-        group {
-          id
-          name
-          specialty {
-            cathedra {
-              short_name
-            }
-          }
-        }
         class {
           id
           type_class {
@@ -162,6 +101,68 @@ export const GET_ALL_SCHEDULE_TEACHERS = gql`
               patronymic
               cathedra {
                 name
+              }
+            }
+          }
+          assigned_groups {
+            group {
+              id
+              name
+              specialty {
+                cathedra {
+                  short_name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_SCHEDULE_TEACHERS = gql`
+  query ($id_teacher: Int, $id_cathedra: Int) {
+    GetAllScheduleTeachers(id_teacher: $id_teacher, id_cathedra: $id_cathedra) {
+      id
+      surname
+      name
+      patronymic
+      cathedra {
+        name
+      }
+      assigned_teachers {
+        class {
+          id
+          schedules {
+            id
+            number_pair
+            day_week
+            pair_type
+            audience {
+              id
+              name
+            }
+          }
+          type_class {
+            id
+            name
+          }
+          assigned_discipline {
+            discipline {
+              id
+              name
+            }
+          }
+
+          assigned_groups {
+            group {
+              id
+              name
+              specialty {
+                cathedra {
+                  short_name
+                }
               }
             }
           }

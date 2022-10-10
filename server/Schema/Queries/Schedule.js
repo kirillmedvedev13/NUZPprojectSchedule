@@ -128,52 +128,48 @@ export const GET_ALL_SCHEDULE_AUDIENCES = {
       ],
       include: {
         model: db.schedule,
-
         include: [
           {
-            model: db.assigned_group,
+            model: db.class,
 
             include: [
               {
-                model: db.class,
+                model: db.type_class,
+              },
+              {
+                model: db.assigned_discipline,
 
                 include: [
                   {
-                    model: db.type_class,
+                    model: db.discipline,
                   },
                   {
-                    model: db.assigned_discipline,
-
-                    include: [
-                      {
-                        model: db.discipline,
-                      },
-                      {
-                        model: db.specialty,
-                        include: {
-                          model: db.cathedra,
-                        },
-                      },
-                    ],
-                  },
-                  {
-                    model: db.assigned_teacher,
-
+                    model: db.specialty,
                     include: {
-                      model: db.teacher,
-                      include: {
-                        model: db.cathedra,
-                      },
+                      model: db.cathedra,
                     },
                   },
                 ],
               },
               {
-                model: db.group,
+                model: db.assigned_teacher,
+
                 include: {
-                  model: db.specialty,
+                  model: db.teacher,
                   include: {
                     model: db.cathedra,
+                  },
+                },
+              },
+              {
+                model: db.assigned_group,
+                include: {
+                  model: db.group,
+                  include: {
+                    model: db.specialty,
+                    include: {
+                      model: db.cathedra,
+                    },
                   },
                 },
               },
@@ -187,7 +183,7 @@ export const GET_ALL_SCHEDULE_AUDIENCES = {
 };
 
 export const GET_ALL_SCHEDULE_TEACHERS = {
-  type: new GraphQLList(ScheduleType),
+  type: new GraphQLList(TeacherType),
   args: {
     id_cathedra: { type: GraphQLInt },
     id_teacher: { type: GraphQLInt },
@@ -202,15 +198,16 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
         filterCathedra = { id_cathedra: { [Op.eq]: id_cathedra } };
       }
     }
-    const res = await db.schedule.findAll({
+    const res = await db.teacher.findAll({
       order: [
-        ["day_week", "ASC"],
-        ["number_pair", "ASC"],
-        ["pair_type", "ASC"],
+        ["surname", "ASC"],
+        ["name", "ASC"],
       ],
+      where: { [Op.and]: [filterTeacher, filterCathedra] },
+
       include: [
         {
-          model: db.assigned_group,
+          model: db.assigned_teacher,
           required: true,
           include: [
             {
@@ -218,7 +215,29 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
               required: true,
               include: [
                 {
+                  model: db.schedule,
+                  include: {
+                    model: db.audience,
+                  },
+                },
+                {
                   model: db.type_class,
+                },
+                {
+                  model: db.assigned_group,
+                  required: true,
+                  include: [
+                    {
+                      model: db.group,
+                      required: true,
+                      include: {
+                        model: db.specialty,
+                        include: {
+                          model: db.cathedra,
+                        },
+                      },
+                    },
+                  ],
                 },
                 {
                   model: db.assigned_discipline,
@@ -230,38 +249,13 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
                     },
                   ],
                 },
-                {
-                  model: db.assigned_teacher,
-                  required: true,
-                  include: {
-                    model: db.teacher,
-                    required: true,
-                    where: { [Op.and]: [filterTeacher, filterCathedra] },
-                    include: {
-                      model: db.cathedra,
-                      required: true,
-                    },
-                  },
-                },
               ],
-            },
-            {
-              model: db.group,
-              required: true,
-              include: {
-                model: db.specialty,
-                include: {
-                  model: db.cathedra,
-                },
-              },
             },
           ],
         },
-        {
-          model: db.audience,
-        },
       ],
     });
+
     return res;
   },
 };
