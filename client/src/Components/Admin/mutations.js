@@ -18,8 +18,8 @@ export const SET_CLASSES = gql`
   }
 `;
 export const DELETE_ALL_DATA = gql`
-  mutation ($id_cathedra: Int){
-    DeleteAllData (id_cathedra: $id_cathedra) {
+  mutation ($id_cathedra: Int) {
+    DeleteAllData(id_cathedra: $id_cathedra) {
       message
       successful
     }
@@ -28,6 +28,14 @@ export const DELETE_ALL_DATA = gql`
 export const RUN_EA = gql`
   mutation ($id_cathedra: Int) {
     RunEA(id_cathedra: $id_cathedra) {
+      message
+      successful
+    }
+  }
+`;
+export const RUN_SA = gql`
+  mutation ($id_cathedra: Int) {
+    RunSA(id_cathedra: $id_cathedra) {
       message
       successful
     }

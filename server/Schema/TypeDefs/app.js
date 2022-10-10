@@ -67,7 +67,7 @@ import { UPDATE_INFO } from "../Mutations/Info.js";
 import { CALC_FITNESS } from "../Mutations/Fitness.js";
 import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
 import { RUN_EA } from "../../EvalutionAlgoritmCpp/Main.js";
-import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js"
+import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -137,7 +137,8 @@ const Mutation = new GraphQLObjectType({
     SetClasses: SET_CLASSES,
     DeleteAllData: DELETE_ALL_DATA,
     UpdateInfo: UPDATE_INFO,
-    RunEA: RUN_SA,
+    RunEA: RUN_EA,
+    RunSA: RUN_SA,
     CalcFitness: CALC_FITNESS,
   },
 });

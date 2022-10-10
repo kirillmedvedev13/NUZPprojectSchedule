@@ -1,10 +1,10 @@
 import { useMutation } from "@apollo/client";
 import { Container, Button } from "react-bootstrap";
 import { CreateNotification } from "../../Alert";
-import { RUN_EA } from "../mutations";
+import { RUN_SA } from "../mutations";
 
-export default function ButtonRunEA({ id_cathedra }) {
-  const [RunEA, { loading, error }] = useMutation(RUN_EA, {
+export default function ButtonRunSA({ id_cathedra }) {
+  const [RunSA, { loading, error }] = useMutation(RUN_SA, {
     variables: { id_cathedra },
   });
 
@@ -15,8 +15,8 @@ export default function ButtonRunEA({ id_cathedra }) {
       <Button
         className="col-12"
         onClick={() => {
-          RunEA().then((res) => {
-            CreateNotification(res.data.RunEA);
+          RunSA().then((res) => {
+            CreateNotification(res.data.RunSA);
           });
         }}
       >

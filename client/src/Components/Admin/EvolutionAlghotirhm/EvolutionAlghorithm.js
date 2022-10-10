@@ -3,11 +3,11 @@ import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "../queries.js";
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
-import SelectCathedra from "../SelectCathedra.js"
-import ButtonRunEA from "./ButtonRunEA.js"
-import NaviBarAdmin from "../NaviBarAdmin.js"
+import SelectCathedra from "../SelectCathedra.js";
+import ButtonRunEA from "./ButtonRunEA.js";
+import NaviBarAdmin from "../NaviBarAdmin.js";
 
-function DataForm({ handleChangeEvolutionValues, info }) {
+function DataForm({ handleChangeState, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
@@ -26,9 +26,8 @@ function DataForm({ handleChangeEvolutionValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              if (e) {
-                handleChangeEvolutionValues("population_size", Number(e.target.value));
-              }
+              evolution_values.population_size = Number(e.target.value);
+              handleChangeState("evolution_values", evolution_values);
             }}
           />
         </Col>
@@ -43,9 +42,8 @@ function DataForm({ handleChangeEvolutionValues, info }) {
             type="number"
             min={0}
             onChange={(e) => {
-              if (e) {
-                handleChangeEvolutionValues("max_generations", Number(e.target.value));
-              }
+              evolution_values.max_generations = Number(e.target.value);
+              handleChangeState("evolution_values", evolution_values);
             }}
           />
         </Col>
@@ -60,9 +58,8 @@ function DataForm({ handleChangeEvolutionValues, info }) {
             max={1}
             step={0.05}
             onChange={(e) => {
-              if (e) {
-                handleChangeEvolutionValues("p_crossover", Number(e.target.value));
-              }
+              evolution_values.p_crossover = Number(e.target.value);
+              handleChangeState("evolution_values", evolution_values);
             }}
           />
         </Col>
@@ -77,9 +74,8 @@ function DataForm({ handleChangeEvolutionValues, info }) {
             max={1}
             step={0.05}
             onChange={(e) => {
-              if (e) {
-                handleChangeEvolutionValues("p_mutation", Number(e.target.value));
-              }
+              evolution_values.p_mutation = Number(e.target.value);
+              handleChangeState("evolution_values", evolution_values);
             }}
           />
         </Col>
@@ -94,9 +90,8 @@ function DataForm({ handleChangeEvolutionValues, info }) {
             max={1}
             step={0.001}
             onChange={(e) => {
-              if (e) {
-                handleChangeEvolutionValues("p_genes", Number(e.target.value));
-              }
+              evolution_values.p_genes = Number(e.target.value);
+              handleChangeState("evolution_values", evolution_values);
             }}
           />
         </Col>
@@ -111,9 +106,8 @@ function DataForm({ handleChangeEvolutionValues, info }) {
             max={0.5}
             step={0.01}
             onChange={(e) => {
-              if (e) {
-                handleChangeEvolutionValues("p_elitism", Number(e.target.value));
-              }
+              evolution_values.p_elitism = Number(e.target.value);
+              handleChangeState("evolution_values", evolution_values);
             }}
           />
         </Col>
@@ -131,15 +125,9 @@ export default class EvolutionAlgorithm extends React.Component {
     super(args);
     this.state = {
       id_cathedra: null,
-      evolution_values: null
-    }
+      evolution_values: null,
+    };
   }
-
-  handleChangeEvolutionValues = (name, value) => {
-    this.setState((PrevState) => ({
-      evolution_values: Object.assign({ ...PrevState.evolution_values }, { [name]: value }),
-    }));
-  };
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
@@ -155,7 +143,10 @@ export default class EvolutionAlgorithm extends React.Component {
               Складання розкладу за допомогою Генетичного Алгоритму
             </Card.Header>
             <Card.Body>
-              <DataForm handleChangeEvolutionValues={this.handleChangeEvolutionValues} info={this.state}></DataForm>
+              <DataForm
+                handleChangeState={this.handleChangeState}
+                info={this.state}
+              ></DataForm>
             </Card.Body>
             <Card.Footer>
               <Form.Group as={Row} className="my-2 mx-2">
@@ -165,9 +156,7 @@ export default class EvolutionAlgorithm extends React.Component {
                 ></SelectCathedra>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <ButtonRunEA
-                  id_cathedra={this.state.id_cathedra}
-                ></ButtonRunEA>
+                <ButtonRunEA id_cathedra={this.state.id_cathedra}></ButtonRunEA>
               </Form.Group>
             </Card.Footer>
           </Card>

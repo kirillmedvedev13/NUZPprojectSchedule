@@ -1,19 +1,28 @@
 import db from "../../database.js";
-import Fitness from "../../EvalutionAlghoritm3/Fitness.js";
+import Fitness from "../../Algorithms/Service/Fitness.js";
 import MessageType from "../TypeDefs/MessageType.js";
-import replacer from "../../EvalutionAlghoritm3/JSONReplacer.js";
-import ParseScheduleFromDB from "../../EvalutionAlghoritm3/ParseScheduleFromDB.js";
 
 export const CALC_FITNESS = {
   type: MessageType,
   async resolve(parent) {
     const info = await db.info.findOne();
-    const penaltyGrWin = info.dataValues.penaltyGrWin;
-    const penaltyTeachWin = info.dataValues.penaltyTeachWin;
-    const penaltySameTimesSc = info.dataValues.penaltySameTimesSc;
-    const penaltySameRecSc = info.dataValues.penaltySameRecSc;
+    const general_values = JSON.parse(info.dataValues.general_values);
+    const {
+      penaltyGrWin,
+      penaltyTeachWin,
+      penaltySameTimesSc,
+      penaltySameRecSc,
+    } = general_values;
+
     const max_day = info.dataValues.max_day;
-    let recommended_schedules = await db.recommended_schedule.findAll();
+    let recommended_schedules = await db.recommended_schedule.findAll({
+      include: {
+        model: db.class,
+        include: {
+          model: db.schedule,
+        },
+      },
+    });
     recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
     let scheduleForGroups = new Map();
     let scheduleForTeachers = new Map();
@@ -24,9 +33,58 @@ export const CALC_FITNESS = {
       scheduleForAudiences,
       fitnessValue: null,
     };
-    await ParseScheduleFromDB(schedule);
+    let dataSchedules = await db.schedule.findAll({
+      include: [
+        {
+          model: db.audience,
+        },
+        {
+          model: db.class,
+          include: [
+            { model: db.recommended_schedule },
+            {
+              model: db.assigned_group,
+            },
+            {
+              model: db.assigned_teacher,
+            },
+            {
+              model: db.recommended_audience,
+            },
+          ],
+        },
+      ],
+    });
+    for (let pair of dataSchedules) {
+      pair = pair.dataValues;
+      let clas = pair.class.dataValues;
+      let object = {
+        id: pair.id,
+        number_pair: pair.number_pair,
+        day_week: pair.day_week,
+        pair_type: pair.pair_type,
+      };
+      let schedAud = schedule.scheduleForAudiences.get(pair.audience.id);
+      if (!schedAud) schedAud = [];
+      schedAud.push(object);
+      schedule.scheduleForAudiences.set(pair.audience.id, schedAud);
+      for (let group of clas.assigned_groups) {
+        group = group.dataValues;
+        let schedGroup = schedule.scheduleForGroups.get(group.id_group);
+        if (!schedGroup) schedGroup = [];
+        schedGroup.push(object);
+        schedule.scheduleForGroups.set(group.id_group, schedGroup);
+      }
+      for (let teach of clas.assigned_teachers) {
+        teach = teach.dataValues;
+        let schedTeach = schedule.scheduleForTeachers.get(teach.id_teacher);
+        if (!schedTeach) schedTeach = [];
+        schedTeach.push(object);
+        schedule.scheduleForTeachers.set(teach.id_teacher, schedTeach);
+      }
+    }
     let fitnessValue = Fitness(
-      JSON.stringify(schedule, replacer),
+      schedule,
       recommended_schedules,
       max_day,
       penaltySameRecSc,
