@@ -4,9 +4,10 @@ import AudienceType from "../TypeDefs/AudienceType.js";
 import ScheduleType from "../TypeDefs/ScheduleType.js";
 import { Op } from "sequelize";
 import TeacherType from "../TypeDefs/TeacherType.js";
+import GroupType from "../TypeDefs/GroupType.js";
 
 export const GET_ALL_SCHEDULE_GROUPS = {
-  type: new GraphQLList(ScheduleType),
+  type: new GraphQLList(GroupType),
   args: {
     id_cathedra: { type: GraphQLInt },
     id_specialty: { type: GraphQLInt },
@@ -14,92 +15,73 @@ export const GET_ALL_SCHEDULE_GROUPS = {
     semester: { type: GraphQLInt },
   },
   async resolve(parent, { id_cathedra, id_specialty, id_group, semester }) {
-    let FilterGroup = {};
+    // Если указан семестр, то сортировка по семестру
     const FilterSemester = semester ? { semester } : {};
-    if (id_group) FilterGroup = { id_group };
-    else if (id_specialty) {
-      let getSpecGroups = await db.group.findAll({ where: { id_specialty } });
-      let groups = getSpecGroups.map((object) => {
-        return object.dataValues.id;
-      });
-      FilterGroup = { id_group: groups };
-    } else if (id_cathedra) {
-      let getSpecs = await db.specialty.findAll({ where: { id_cathedra } });
-      let specialties = getSpecs.map((object) => {
-        return object.dataValues.id;
-      });
-      let getSpecGroups = await db.group.findAll({
-        where: { id_specialty: specialties },
-      });
-      let groups = getSpecGroups.map((object) => {
-        return object.dataValues.id;
-      });
-      FilterGroup = { id_group: groups };
+    // Если указана конкретная группа, то сортировка по группе
+    const FilterGroup = id_group ? { id: id_group } : {};
+    // Если указаан специаность группы, то сортировка по ней
+    let FilterSpecialty = {}, FilterCathedra = {};
+    if (id_specialty) {
+      FilterSpecialty = { id_specialty };
     }
-    const res = await db.schedule.findAll({
+    else if (id_cathedra) {
+      FilterCathedra = { id_cathedra }
+    }
+    const res = await db.group.findAll({
       order: [
-        ["assigned_group", "group", "name", "ASC"],
-        ["number_pair", "ASC"],
-        ["pair_type", "ASC"],
-        ["day_week", "ASC"],
+        ["semester", "ASC"],
+        ["name", "ASC"]
       ],
+      where: {
+        [Op.and]: [
+          FilterSemester,
+          FilterGroup,
+          FilterSpecialty
+        ]
+      },
       include: [
         {
-          model: db.assigned_group,
-          where: FilterGroup,
-          include: [
-            {
-              model: db.class,
-              include: [
-                {
-                  model: db.type_class,
-                },
-                {
-                  model: db.assigned_discipline,
-
-                  include: [
-                    {
-                      model: db.discipline,
-                    },
-                    {
-                      model: db.specialty,
-                      include: {
-                        model: db.cathedra,
-                      },
-                    },
-                  ],
-                },
-                {
-                  model: db.assigned_teacher,
-                  include: {
-                    model: db.teacher,
-                    include: {
-                      model: db.cathedra,
-                    },
-                  },
-                },
-              ],
-            },
-            {
-              model: db.group,
-              where: FilterSemester,
-              include: {
-                model: db.specialty,
-                include: {
-                  model: db.cathedra,
-                },
-              },
-            },
-          ],
+          model: db.specialty,
+          where: FilterCathedra,
+          include: {
+            model: db.cathedra,
+          },
         },
         {
-          model: db.audience,
-        },
-      ],
+          model: db.assigned_group,
+          include: {
+            model: db.class,
+            include: [
+              {
+                model: db.schedule,
+                include: {
+                  model: db.audience
+                }
+              },
+              {
+                model: db.type_class,
+              },
+              {
+                model: db.assigned_discipline,
+                include: {
+                  model: db.discipline,
+                },
+              },
+              {
+                model: db.assigned_teacher,
+                include: {
+                  model: db.teacher,
+                },
+              },
+            ],
+          },
+        }
+      ]
     });
     return res;
   },
 };
+
 export const GET_ALL_SCHEDULE_AUDIENCES = {
   type: new GraphQLList(AudienceType),
   args: {

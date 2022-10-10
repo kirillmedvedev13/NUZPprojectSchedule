@@ -6,15 +6,34 @@ import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
 
+function getSchedulesForGroup(group) {
+  let arrSched = [];
+  for (let assigned_group of group) {
+    for (let schedule of assigned_group.class.schedules) {
+      arrSched.push({
+        number_pair: schedule.number_pair,
+        day_week: schedule.day_week,
+        pair_type: schedule.pair_type,
+        audience: schedule.audience,
+        class: {
+          type_class: assigned_group.class.type_clas,
+          assigned_discipline: assigned_group.class.assigned_discipline,
+          assigned_teachers: assigned_group.class.assigned_teachers,
+        },
+      });
+    }
+  }
+  SortSchedule(arrSched);
+  return arrSched;
+}
+
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.assigned_group.class.type_class.name} ауд.${
-    schedule.audience.name
-  } ${
-    schedule.assigned_group.class.assigned_discipline.discipline.name
-  } ${schedule.assigned_group.class.assigned_teachers.map(({ teacher }) => {
-    return ` ${teacher.surname}`;
-  })}
+  ${schedule.class.type_class.name} ауд.${schedule.audience.name
+    } ${schedule.class.assigned_discipline.discipline.name
+    } ${schedule.class.assigned_teachers.map(({ teacher }) => {
+      return ` ${teacher.surname} ${teacher.name?.at(0)} ${teacher.patronymic?.at(0)}}`;
+    })}
 `;
   return desciption;
 }
@@ -32,27 +51,10 @@ function DataTable({ filters, info }) {
 
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let curGroup = null;
   let MapGroup = new Map();
-  let temp = [];
-  if (!data.GetAllScheduleGroups.length) return <tbody></tbody>;
-  data.GetAllScheduleGroups.forEach((schedule) => {
-    if (schedule.assigned_group.group !== curGroup && !curGroup) {
-      curGroup = schedule.assigned_group.group;
-    }
-    if (schedule.assigned_group.group !== curGroup && curGroup) {
-      curGroup = JSON.parse(JSON.stringify(curGroup));
-      curGroup.name =
-        curGroup.specialty.cathedra.short_name + "-" + curGroup.name;
-      MapGroup.set(curGroup, temp);
-      curGroup = schedule.assigned_group.group;
-      temp = [];
-    }
-    temp.push(schedule);
-  });
-  curGroup = JSON.parse(JSON.stringify(curGroup));
-  curGroup.name = curGroup.specialty.cathedra.short_name + "-" + curGroup.name;
-  MapGroup.set(curGroup, temp);
+  for (const group of data.GetAllScheduleGroups) {
+    MapGroup.set(group, getSchedulesForGroup(group));
+  }
   return TableBody(MapGroup, info, getDescription);
 }
 
@@ -91,7 +93,7 @@ class ScheduleTableGroup extends React.Component {
       <>
         <ButtonGetTableExcel
           refTable={this.refTable}
-          nameTable="scheduleTableGroup"
+          nameTable="Розклад груп"
           wb={this.state.workBook}
           setWorkBook={this.setWorkBook}
         ></ButtonGetTableExcel>

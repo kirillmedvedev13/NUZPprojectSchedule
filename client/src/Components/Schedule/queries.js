@@ -10,62 +10,46 @@ export const GET_INFO = gql`
 `;
 
 export const GET_ALL_SCHEDULE_GROUPS = gql`
-  query (
-    $id_cathedra: Int
-    $id_group: Int
-    $id_specialty: Int
-    $semester: Int
-  ) {
-    GetAllScheduleGroups(
-      id_cathedra: $id_cathedra
-      id_group: $id_group
-      id_specialty: $id_specialty
-      semester: $semester
-    ) {
-      id
-      number_pair
-      day_week
-      pair_type
-      audience {
-        id
+  query ($id_cathedra: Int, $id_specialty: Int, $id_group: Int, $semester: Int) {
+  GetAllScheduleGroups(id_cathedra: $id_cathedra, id_specialty: $id_specialty, id_group:$id_group, semester: $semester) {
+    id
+    name
+    specialty {
+      cathedra {
         name
       }
-      assigned_group {
-        group {
-          id
+    }
+    assigned_groups {
+      class {
+        type_class {
           name
-          specialty {
-            cathedra {
-              short_name
-            }
-          }
         }
-        class {
-          type_class {
-            id
+        times_per_week
+        assigned_discipline {
+          discipline {
             name
           }
-          assigned_discipline {
-            discipline {
-              id
-              name
-            }
+        }
+        assigned_teachers {
+          teacher {
+            surname
+            name
+            patronymic
           }
-          assigned_teachers {
-            teacher {
-              id
-              surname
-              name
-              patronymic
-              cathedra {
-                name
-              }
-            }
+        }
+        schedules {
+          number_pair
+          day_week
+          pair_type
+          audience {
+            name
           }
         }
       }
     }
   }
+}
+
 `;
 
 export const GET_ALL_SCHEDULE_AUDIENCES = gql`
