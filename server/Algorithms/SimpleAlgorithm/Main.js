@@ -13,17 +13,7 @@ export const RUN_SA = {
   async resolve(parent, { id_cathedra }) {
     let { max_day, max_pair, classes, recommended_schedules, audiences } =
       await GetDataFromDB(id_cathedra);
-    let scheduleForGroups = new Map();
-    let scheduleForTeachers = new Map();
-    let scheduleForAudiences = new Map();
-    let schedule = {
-      scheduleForGroups,
-      scheduleForTeachers,
-      scheduleForAudiences,
-    };
-    if (id_cathedra) {
-      await ParseScheduleFromDB(schedule, id_cathedra, max_day, max_pair);
-    }
+    let schedule = await ParseScheduleFromDB(id_cathedra, max_day, max_pair);
     for (let clas of classes) {
       AddClassToSchedule(schedule, max_day, max_pair, clas, audiences);
     }
