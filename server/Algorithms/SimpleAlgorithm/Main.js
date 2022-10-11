@@ -22,6 +22,7 @@ export const RUN_SA = {
       for (let i = 0; i < max_day; i++) {
         for (let j = 0; j < max_pair; j++) {
           for (let k = 1; k <= 3; k++) {
+            // Вставка уникальных занятий
             if (group[i][j][k].clas) {
               arrClass.add(
                 JSON.stringify({

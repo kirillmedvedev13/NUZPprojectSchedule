@@ -43,6 +43,7 @@ function AddSchedule(
   clas,
   id_audience = null
 ) {
+  // Добавление аудитории, для вставки в базу данных
   if (id_audience)
     temp[day_week][number_pair][pair_type].id_audience = id_audience;
   temp[day_week][number_pair][pair_type].clas = clas;
@@ -214,6 +215,7 @@ export default function AddClassToSchedule(
       let available_time_group = [];
       let available_time_teacher = [];
       let available_time_audience = [];
+      // Получение массивов расписаний свободных
       for (let temp of temp_group) {
         available_time_group.push(GetAvailableTimeSlots(temp));
       }
@@ -224,28 +226,20 @@ export default function AddClassToSchedule(
         available_time_audience.push(GetAvailableTimeSlots(temp));
       }
       // Получение свободных пар для всех массивов
-
       let getIntersection = (availableTime) => {
-        let minLen = Number.MAX_VALUE;
-        let index = 0;
-        for (let i = 0; i < availableTime.length; i++) {
-          if (minLen > availableTime[i].length) {
-            minLen = availableTime[i].length;
-            index = i;
-          }
-        }
-        let intersection = availableTime[index];
-        availableTime.splice(index, 1);
-        intersection = intersection.filter((schedule) => {
+        let intersection = availableTime.splice(0, 1);
+        // Получение одинаковых пар для первого  элемента и остальных
+        intersection = intersection[0].filter((pair_first_element) => {
           let flag = 0;
-          availableTime.forEach((group) => {
-            for (let pair of group) {
-              if (JSON.stringify(schedule) === JSON.stringify(pair)) {
+          availableTime.forEach((element) => {
+            for (let pair of element) {
+              if (JSON.stringify(pair_first_element) === JSON.stringify(pair)) {
                 flag++;
                 break;
               }
             }
           });
+          // Если у всех есть одинаковое время занятия
           if (flag === availableTime.length) return true;
           return false;
         });
@@ -257,26 +251,22 @@ export default function AddClassToSchedule(
         intersectionGroup,
         intersectionTeacher,
       ]);
-      let id_aud;
-      let intersectionAudGroupTeach;
+      let intersectionAudGroupTeach = [];
+      // Получение всех доступных занятий для всех групп учителей аудиторий
       for (let i = 0; i < available_time_audience.length; i++) {
-        intersectionAudGroupTeach = getIntersection([
+        intersectionAudGroupTeach.push(getIntersection([
           intersectionGroupTeacher,
           available_time_audience[i],
-        ]);
-        if (intersectionAudGroupTeach.length) {
-          id_aud = ids_audience[i];
-          break;
-        }
+        ]));
       }
+      // Если не найдена ни одна свободная пара
       if (!intersectionAudGroupTeach.length) {
-        console.log();
+        console.log("!!!");
         return;
       }
-      let { day_week, number_pair, pair_type } =
-        intersectionAudGroupTeach[
-          GetRndInteger(0, intersectionAudGroupTeach.length - 1)
-        ];
+      let index_audience = GetRndInteger(0, intersectionAudGroupTeach.length - 1)
+      let r = GetRndInteger(0, intersectionAudGroupTeach[index_audience].length - 1)
+      let { day_week, number_pair, pair_type } = intersectionAudGroupTeach[index_audience][r];
 
       // Вставка занятия для групп
       for (let i = 0; i < temp_group.length; i++) {
@@ -288,7 +278,7 @@ export default function AddClassToSchedule(
           max_day,
           max_pair,
           clas,
-          id_aud
+          ids_audience[index_audience]
         );
         schedule.scheduleForGroups.set(clas.assigned_groups[i].id_group, sched);
       }
@@ -309,11 +299,10 @@ export default function AddClassToSchedule(
         );
       }
       // Вставка затий для аудитории
-      let sched = temp_audience[ids_audience.indexOf(id_aud)];
       schedule.scheduleForAudiences.set(
-        id_aud,
+        ids_audience[index_audience],
         AddSchedule(
-          sched,
+          temp_audience[index_audience],
           day_week,
           number_pair,
           pair_type,
