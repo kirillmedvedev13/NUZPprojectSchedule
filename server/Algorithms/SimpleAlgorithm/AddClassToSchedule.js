@@ -22,11 +22,19 @@ function InitDataStructure(max_day, max_pair) {
   for (let i = 0; i < max_day; i++) {
     let number_pairs = [];
     for (let j = 0; j < max_pair; j++) {
-      number_pairs.push({
-        1: { clas: [], isAvailable: true },
-        2: { clas: [], isAvailable: true },
-        3: { clas: [], isAvailable: true },
-      });
+      if (j === 0)
+        number_pairs.push({
+          1: { clas: [], isAvailable: true },
+          2: { clas: [], isAvailable: true },
+          3: { clas: [], isAvailable: true },
+          firstPairType: null,
+        });
+      else
+        number_pairs.push({
+          1: { clas: [], isAvailable: true },
+          2: { clas: [], isAvailable: true },
+          3: { clas: [], isAvailable: true },
+        });
     }
     day_weeks.push(number_pairs);
   }
@@ -38,24 +46,101 @@ function AddSchedule(
   day_week,
   number_pair,
   pair_type,
+  max_pair,
   clas,
   id_audience = null
 ) {
-  // Добавление аудитории, для вставки в базу данных
-  if (id_audience)
-    if (temp[day_week][number_pair][pair_type].ids_audience)
-      temp[day_week][number_pair][pair_type].ids_audience.push(id_audience);
-    else
-      temp[day_week][number_pair][pair_type].ids_audience = [id_audience]
-  temp[day_week][number_pair][pair_type].clas.push(clas);
-  temp[day_week][number_pair][pair_type].isAvailable = false;
-  temp[day_week][number_pair][3].isAvailable = false;
-  if (pair_type === 3) {
-    temp[day_week][number_pair][1].isAvailable = false;
-    temp[day_week][number_pair][2].isAvailable = false;
+  {
+    // Добавление аудитории, для вставки в базу данных
+    if (id_audience)
+      if (temp[day_week][number_pair][pair_type].ids_audience)
+        temp[day_week][number_pair][pair_type].ids_audience.push(id_audience);
+      else temp[day_week][number_pair][pair_type].ids_audience = [id_audience];
+    temp[day_week][number_pair][pair_type].clas.push(clas);
+    temp[day_week][number_pair][pair_type].isAvailable = false;
+    if (!temp[day_week][0].firstPairType)
+      temp[day_week][0].firstPairType = pair_type;
+
+    if (pair_type === 3) {
+      temp[day_week][number_pair][1].isAvailable = false;
+      temp[day_week][number_pair][2].isAvailable = false;
+    } else temp[day_week][number_pair][3].isAvailable = false;
+
+    for (let i = number_pair - 1; i >= 0; i--) {
+      if (i < 0) break;
+      temp[day_week][i][pair_type].isAvailable = false;
+
+      if (pair_type === 3) {
+        temp[day_week][i][2].isAvailable = false;
+        temp[day_week][i][1].isAvailable = false;
+      } else temp[day_week][i][3].isAvailable = false;
+    }
+
+    if (pair_type === 3) {
+      for (let i = number_pair - 1; i >= 0; i--) {
+        if (i < 0) break;
+        if (
+          !temp[day_week][i][3].clas.length &&
+          !temp[day_week][i][1].clas.length &&
+          !temp[day_week][i][2].clas.length
+        ) {
+          temp[day_week][i][3].isAvailable = true;
+          break;
+        }
+      }
+    } else {
+      for (let i = number_pair - 1; i >= 0; i--) {
+        if (i < 0) break;
+        if (
+          !temp[day_week][i][3].clas.length &&
+          !temp[day_week][i][pair_type].clas.length
+        ) {
+          if (temp[day_week][0].firstPairType === pair_type)
+            if (!temp[day_week][i][3 - pair_type].clas.length)
+              temp[day_week][i][3].isAvailable = true;
+          temp[day_week][i][pair_type].isAvailable = true;
+          break;
+        }
+      }
+    }
+    for (let i = number_pair + 1; i < max_pair; i++) {
+      if (i > max_pair) break;
+      temp[day_week][i][pair_type].isAvailable = false;
+      if (pair_type === 3) {
+        temp[day_week][i][2].isAvailable = false;
+        temp[day_week][i][1].isAvailable = false;
+      } else temp[day_week][i][3].isAvailable = false;
+    }
+
+    if (pair_type === 3) {
+      for (let i = number_pair + 1; i < max_pair; i++) {
+        if (i > max_pair) break;
+        if (
+          !temp[day_week][i][3].clas.length &&
+          !temp[day_week][i][1].clas.length &&
+          !temp[day_week][i][2].clas.length
+        ) {
+          temp[day_week][i][pair_type].isAvailable = true;
+          break;
+        }
+      }
+    } else {
+      for (let i = number_pair + 1; i < max_pair; i++) {
+        if (i < 0) break;
+        if (
+          !temp[day_week][i][3].clas.length &&
+          !temp[day_week][i][pair_type].clas.length
+        ) {
+          if (temp[day_week][0].firstPairType === pair_type)
+            if (!temp[day_week][i][3 - pair_type].clas.length)
+              temp[day_week][i][3].isAvailable = true;
+          temp[day_week][i][pair_type].isAvailable = true;
+          break;
+        }
+      }
+    }
+    return temp;
   }
-  // Проход по числителю
-  return temp;
 }
 
 // добавляет в деревья занятие
@@ -111,7 +196,7 @@ export default function AddClassToSchedule(
           sc.number_pair - 1,
           sc.pair_type,
           max_pair,
-          clas,
+          clas
         );
       }
       schedule.scheduleForTeachers.set(at.id_teacher, temp_teacher1);
@@ -134,7 +219,7 @@ export default function AddClassToSchedule(
         sc.number_pair - 1,
         sc.pair_type,
         max_pair,
-        clas,
+        clas
       );
       schedule.scheduleForAudiences.set(sc.id_audience, temp_audience1);
     }
@@ -161,13 +246,19 @@ export default function AddClassToSchedule(
       let available_time_audience = [];
       // Получение массивов расписаний свободных
       for (let temp of temp_group) {
-        available_time_group.push(GetAvailableTimeSlots(temp, arr_pair_type[i]));
+        available_time_group.push(
+          GetAvailableTimeSlots(temp, arr_pair_type[i])
+        );
       }
       for (let temp of temp_teacher) {
-        available_time_teacher.push(GetAvailableTimeSlots(temp, arr_pair_type[i]));
+        available_time_teacher.push(
+          GetAvailableTimeSlots(temp, arr_pair_type[i])
+        );
       }
       for (let temp of temp_audience) {
-        available_time_audience.push(GetAvailableTimeSlots(temp, arr_pair_type[i]));
+        available_time_audience.push(
+          GetAvailableTimeSlots(temp, arr_pair_type[i])
+        );
       }
       // Получение свободных пар для всех массивов
       let getIntersection = (availableTime) => {
@@ -198,20 +289,25 @@ export default function AddClassToSchedule(
       let intersectionAudGroupTeach = [];
       // Получение всех доступных занятий для всех групп учителей аудиторий
       for (let i = 0; i < available_time_audience.length; i++) {
-        intersectionAudGroupTeach.push(getIntersection([
-          intersectionGroupTeacher,
-          available_time_audience[i],
-        ]));
+        intersectionAudGroupTeach.push(
+          getIntersection([
+            intersectionGroupTeacher,
+            available_time_audience[i],
+          ])
+        );
       }
       let t = [];
       for (let i = 0; i < intersectionAudGroupTeach.length; i++) {
         // Если для аудитории нету расписания
         if (intersectionAudGroupTeach[i].length) {
-          t.push(intersectionAudGroupTeach[i])
+          t.push(intersectionAudGroupTeach[i]);
         }
       }
       intersectionAudGroupTeach = t;
-      let day_week, number_pair, pair_type = arr_pair_type[i], index_audience;
+      let day_week,
+        number_pair,
+        pair_type = arr_pair_type[i],
+        index_audience;
       // Если не найдена ни одна свободная пара
       if (!intersectionAudGroupTeach.length) {
         day_week = GetRndInteger(0, max_day - 1);
@@ -220,8 +316,11 @@ export default function AddClassToSchedule(
       }
       // Если найдена свободная пара
       else {
-        index_audience = GetRndInteger(0, intersectionAudGroupTeach.length - 1)
-        let r = GetRndInteger(0, intersectionAudGroupTeach[index_audience].length - 1)
+        index_audience = GetRndInteger(0, intersectionAudGroupTeach.length - 1);
+        let r = GetRndInteger(
+          0,
+          intersectionAudGroupTeach[index_audience].length - 1
+        );
         day_week = intersectionAudGroupTeach[index_audience][r].day_week;
         number_pair = intersectionAudGroupTeach[index_audience][r].number_pair;
       }
