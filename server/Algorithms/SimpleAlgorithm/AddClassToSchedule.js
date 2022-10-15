@@ -2,14 +2,14 @@ import GetIdsAudienceForClass from "../Service/GetIdsAudienceForClass.js";
 import GetPairTypeForClass from "../Service/GetPairTypeForClass.js";
 import GetRndInteger from "../Service/GetRndInteger.js";
 
-// Получить все возможные вставки занятий
-function GetAvailableTimeSlots(temp) {
+// Получить все возможные вставки занятий для типа пары
+function GetAvailableTimeSlots(temp, pair_type) {
   let timeSlots = [];
   for (let i = 0; i < temp.length; i++) {
     for (let j = 0; j < temp[i].length; j++) {
-      for (let k = 1; k <= 3; k++) {
-        if (temp[i][j][k].isAvailable) {
-          timeSlots.push({ day_week: i, number_pair: j, pair_type: k });
+      for (let h = 0; h < temp[i][j][pair_type].clas.length; h++) {
+        if (temp[i][j][pair_type].isAvailable) {
+          timeSlots.push({ day_week: i, number_pair: j, pair_type });
         }
       }
     }
@@ -23,9 +23,9 @@ function InitDataStructure(max_day, max_pair) {
     let number_pairs = [];
     for (let j = 0; j < max_pair; j++) {
       number_pairs.push({
-        1: { clas: null, isAvailable: true },
-        2: { clas: null, isAvailable: true },
-        3: { clas: null, isAvailable: true },
+        1: { clas: [], isAvailable: true },
+        2: { clas: [], isAvailable: true },
+        3: { clas: [], isAvailable: true },
       });
     }
     day_weeks.push(number_pairs);
@@ -38,76 +38,24 @@ function AddSchedule(
   day_week,
   number_pair,
   pair_type,
-  max_day,
   max_pair,
   clas,
   id_audience = null
 ) {
   // Добавление аудитории, для вставки в базу данных
   if (id_audience)
-    temp[day_week][number_pair][pair_type].id_audience = id_audience;
-  temp[day_week][number_pair][pair_type].clas = clas;
+    if (temp[day_week][number_pair][pair_type].ids_audience)
+      temp[day_week][number_pair][pair_type].ids_audience.push(id_audience);
+    else
+      temp[day_week][number_pair][pair_type].ids_audience = [id_audience]
+  temp[day_week][number_pair][pair_type].clas.push(clas);
   temp[day_week][number_pair][pair_type].isAvailable = false;
-  for (let i = 0; i < max_day; i++) {
-    for (let j = 0; j < max_pair; j++) {
-      for (let k = 1; k <= 3; k++) {
-        // Если пара не занята
-        if (!temp[i][j][k].clas) {
-          // Накладки
-          if ((k === 1 || k === 2) && temp[i][j][3].clas) {
-            temp[i][j][k].isAvailable = false;
-            continue;
-          }
-          if (k === 3 && (temp[i][j][1].clas || temp[i][j][2].clas)) {
-            temp[i][j][k].isAvailable = false;
-            continue;
-          }
-          // Поиск окон вниз
-          for (let h = j - 1; h >= 0; h--) {
-            if (
-              (k === 1 || k === 3) &&
-              (temp[i][h][1].clas || temp[i][h][3].clas) &&
-              j - h > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-            if (
-              (k === 2 || k === 3) &&
-              (temp[i][h][2].clas || temp[i][h][3].clas) &&
-              j - h > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-          }
-          // Поиск окон вверх
-          for (let h = j + 1; h < max_pair; h++) {
-            if (
-              (k === 1 || k === 3) &&
-              (temp[i][h][1].clas || temp[i][h][3].clas) &&
-              h - j > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-            if (
-              (k === 2 || k === 3) &&
-              (temp[i][h][2].clas || temp[i][h][3].clas) &&
-              h - j > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-          }
-        }
+  for (let i = 0; i < max_pair; i++) {
+    for (let k = 1; k <= 3; k++) {
+      // Если пара не занята
+      if (!temp[day_week][i][k].clas) {
+        // Поиск окон вниз
+
       }
     }
   }
@@ -138,12 +86,12 @@ export default function AddClassToSchedule(
       for (const sc of clas.schedules) {
         temp_group1 = AddSchedule(
           temp_group1,
-          sc.day_week,
-          sc.number_pair,
+          sc.day_week - 1,
+          sc.number_pair - 1,
           sc.pair_type,
-          max_day,
           max_pair,
-          clas
+          clas,
+          sc.id_audience
         );
       }
       schedule.scheduleForGroups.set(ag.id_group, temp_group1);
@@ -163,15 +111,14 @@ export default function AddClassToSchedule(
       for (const sc of clas.schedules) {
         temp_teacher1 = AddSchedule(
           temp_teacher1,
-          sc.day_week,
-          sc.number_pair,
+          sc.day_week - 1,
+          sc.number_pair - 1,
           sc.pair_type,
-          max_day,
           max_pair,
-          clas
+          clas,
         );
       }
-      schedule.scheduleForTeachers.set(ag.id_teacher, temp_teacher1);
+      schedule.scheduleForTeachers.set(at.id_teacher, temp_teacher1);
     } else {
       temp_teacher.push(temp_teacher1);
     }
@@ -179,21 +126,22 @@ export default function AddClassToSchedule(
   let ids_audience = null;
   // Если расписание есть
   if (!isNewSchedule) {
-    let temp_audience1 = schedule.scheduleForAudiences.get(id_aud);
-    if (!temp_audience1) {
-      temp_audience1 = InitDataStructure(max_day, max_pair);
+    for (const sc of clas.schedules) {
+      let temp_audience1 = schedule.scheduleForAudiences.get(sc.id_audience);
+      if (!temp_audience1) {
+        temp_audience1 = InitDataStructure(max_day, max_pair);
+      }
+      // Если занятия были в базе Для каждой аудитории добавление расписания
+      temp_audience1 = AddSchedule(
+        temp_audience1,
+        sc.day_week - 1,
+        sc.number_pair - 1,
+        sc.pair_type,
+        max_pair,
+        clas,
+      );
+      schedule.scheduleForAudiences.set(sc.id_audience, temp_audience1);
     }
-    // Если занятия были в базе Для каждой аудитории добавление расписания
-    temp_audience1 = AddSchedule(
-      temp_audience1,
-      sc.day_week,
-      sc.number_pair,
-      sc.pair_type,
-      max_day,
-      max_pair,
-      clas
-    );
-    schedule.scheduleForAudiences.set(id_audience, temp_audience1);
   }
   // Получения аудиторий для занятия
   else {
@@ -217,13 +165,13 @@ export default function AddClassToSchedule(
       let available_time_audience = [];
       // Получение массивов расписаний свободных
       for (let temp of temp_group) {
-        available_time_group.push(GetAvailableTimeSlots(temp));
+        available_time_group.push(GetAvailableTimeSlots(temp, arr_pair_type[i]));
       }
       for (let temp of temp_teacher) {
-        available_time_teacher.push(GetAvailableTimeSlots(temp));
+        available_time_teacher.push(GetAvailableTimeSlots(temp, arr_pair_type[i]));
       }
       for (let temp of temp_audience) {
-        available_time_audience.push(GetAvailableTimeSlots(temp));
+        available_time_audience.push(GetAvailableTimeSlots(temp, arr_pair_type[i]));
       }
       // Получение свободных пар для всех массивов
       let getIntersection = (availableTime) => {
@@ -259,14 +207,28 @@ export default function AddClassToSchedule(
           available_time_audience[i],
         ]));
       }
+      let t = [];
+      for (let i = 0; i < intersectionAudGroupTeach.length; i++) {
+        // Если для аудитории нету расписания
+        if (intersectionAudGroupTeach[i].length) {
+          t.push(intersectionAudGroupTeach[i])
+        }
+      }
+      intersectionAudGroupTeach = t;
+      let day_week, number_pair, pair_type = arr_pair_type[i], index_audience;
       // Если не найдена ни одна свободная пара
       if (!intersectionAudGroupTeach.length) {
-        console.log("!!!");
-        return;
+        day_week = GetRndInteger(0, max_day - 1);
+        number_pair = GetRndInteger(0, max_day - 1);
+        index_audience = GetRndInteger(0, ids_audience.length - 1);
       }
-      let index_audience = GetRndInteger(0, intersectionAudGroupTeach.length - 1)
-      let r = GetRndInteger(0, intersectionAudGroupTeach[index_audience].length - 1)
-      let { day_week, number_pair, pair_type } = intersectionAudGroupTeach[index_audience][r];
+      // Если найдена свободная пара
+      else {
+        index_audience = GetRndInteger(0, intersectionAudGroupTeach.length - 1)
+        let r = GetRndInteger(0, intersectionAudGroupTeach[index_audience].length - 1)
+        day_week = intersectionAudGroupTeach[index_audience][r].day_week;
+        number_pair = intersectionAudGroupTeach[index_audience][r].number_pair;
+      }
 
       // Вставка занятия для групп
       for (let i = 0; i < temp_group.length; i++) {
@@ -275,7 +237,6 @@ export default function AddClassToSchedule(
           day_week,
           number_pair,
           pair_type,
-          max_day,
           max_pair,
           clas,
           ids_audience[index_audience]
@@ -289,7 +250,6 @@ export default function AddClassToSchedule(
           day_week,
           number_pair,
           pair_type,
-          max_day,
           max_pair,
           clas
         );

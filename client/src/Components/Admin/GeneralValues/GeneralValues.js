@@ -13,6 +13,8 @@ function DataForm({ handleChangeState, info }) {
     info.general_values !== null
       ? info.general_values
       : JSON.parse(data.GetInfo.general_values);
+  let max_day = info.max_day !== null ? info.max_day : data.GetInfo.max_day;
+  let max_pair = info.max_pair !== null ? info.max_pair : data.GetInfo.max_pair;
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
@@ -103,12 +105,11 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Кількість днів</Form.Label>
         <Col>
           <Form.Control
-            value={data.GetInfo.max_day}
+            value={max_day}
             type="number"
             min={1}
-            max={7}
             onChange={(e) => {
-              handleChangeState("max_day", e ? Number(e.target.value) : null);
+              handleChangeState("max_day", e.target.value);
             }}
           />
         </Col>
@@ -117,12 +118,11 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Кількість занять</Form.Label>
         <Col>
           <Form.Control
-            value={data.GetInfo.max_pair}
+            value={max_pair}
             type="number"
             min={1}
-            max={8}
             onChange={(e) => {
-              handleChangeState("max_pair", e ? Number(e.target.value) : null);
+              handleChangeState("max_pair", e.target.value);
             }}
           />
         </Col>
