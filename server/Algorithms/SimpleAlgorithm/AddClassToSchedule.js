@@ -7,10 +7,8 @@ function GetAvailableTimeSlots(temp, pair_type) {
   let timeSlots = [];
   for (let i = 0; i < temp.length; i++) {
     for (let j = 0; j < temp[i].length; j++) {
-      for (let h = 0; h < temp[i][j][pair_type].clas.length; h++) {
-        if (temp[i][j][pair_type].isAvailable) {
-          timeSlots.push({ day_week: i, number_pair: j, pair_type });
-        }
+      if (temp[i][j][pair_type].isAvailable) {
+        timeSlots.push({ day_week: i, number_pair: j, pair_type });
       }
     }
   }
@@ -308,8 +306,10 @@ export default function AddClassToSchedule(
         number_pair,
         pair_type = arr_pair_type[i],
         index_audience;
+
       // Если не найдена ни одна свободная пара
       if (!intersectionAudGroupTeach.length) {
+        continue;
         day_week = GetRndInteger(0, max_day - 1);
         number_pair = GetRndInteger(0, max_day - 1);
         index_audience = GetRndInteger(0, ids_audience.length - 1);
@@ -340,6 +340,9 @@ export default function AddClassToSchedule(
       }
       // Вставка занятий для учителей
       for (let i = 0; i < temp_teacher.length; i++) {
+        if (clas.assigned_teachers[i].id_teacher === 20) {
+          console.log();
+        }
         let sched = AddSchedule(
           temp_teacher[i],
           day_week,
