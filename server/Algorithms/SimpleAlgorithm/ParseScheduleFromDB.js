@@ -1,13 +1,8 @@
 import db from "../../database.js";
 import AddClassToSchedule from "./AddClassToSchedule.js"
 
-//получаем из бд данные расписания занятий для других кафедр в форму
-//   schedule = {
-//   scheduleForGroups = {id : [ [{1: {clas: clas, isAvailable: true/false} ,2: ,3:} ...max_pair] ],
-//   scheduleForTeachers,
-//   scheduleForAudiences,
-// };
-export default async function ParseScheduleFromDB(id_cathedra, max_day, max_pair) {
+//получаем из бд данные расписания занятий для других кафедр
+export default async function ParseScheduleFromDB(id_cathedra, max_day, max_pair, audiences) {
   let scheduleForGroups = new Map();
   let scheduleForTeachers = new Map();
   let scheduleForAudiences = new Map();
@@ -48,14 +43,12 @@ export default async function ParseScheduleFromDB(id_cathedra, max_day, max_pair
       if (cl.assigned_discipline.specialty.id_cathedra === id_cathedra) {
         for (const sc of cl.schedules) {
           id_schedules.push(sc.id)
+          // Вставка расписания в структуру
+          AddClassToSchedule(schedule, max_day, max_pair, cl, audiences, false)
         }
       }
     })
     await db.schedule.destroy({ where: { id: id_schedules } });
-    // Вставка расписания в структуру
-    for (const cl in classes) {
-      AddClassToSchedule(schedule, max_day, max_pair, cl, true)
-    }
   }
   // Если кафедра не указана, то удаляеми всё расписание
   else {

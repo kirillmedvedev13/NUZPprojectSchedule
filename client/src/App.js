@@ -100,7 +100,6 @@ class App extends React.Component {
               <Route path="/classes" element={<Class></Class>} />
               <Route path="/groups" element={<Group></Group>} />
               <Route path="/teachers" element={<Teacher></Teacher>} />
-              <Route exact path="/admin" element={<ScheduleData></ScheduleData>} />
               <Route path="/admin/evolution_algorithm" element={<EvolutionAlgorithm></EvolutionAlgorithm>} />
               <Route path="/admin/general_values" element={<GeneralValues></GeneralValues>} />
               <Route path="/admin/simple_algorithm" element={<SimpleAlgorithm></SimpleAlgorithm>} />

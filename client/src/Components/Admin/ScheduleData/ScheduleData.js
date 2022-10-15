@@ -9,21 +9,20 @@ function DataForm() {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let fitnessValue = data.GetInfo.fitness_value;
-  fitnessValue = JSON.parse(fitnessValue);
+  let fitnessValue = JSON.parse(data.GetInfo.fitness_value);
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Загальний фітнес</Form.Label>
         <Col>
-          <Form.Control defaultValue={fitnessValue?.fitnessValue} readOnly />
+          <Form.Control value={fitnessValue?.fitnessValue} readOnly />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Фітнес рек. час</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessSameRecSc}
+            value={fitnessValue?.fitnessSameRecSc}
             readOnly
           />
         </Col>
@@ -35,7 +34,7 @@ function DataForm() {
         <Form.Label className="col-5">Загальний</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessGr.fitnessValue}
+            value={fitnessValue?.fitnessGr.fitnessValue}
             readOnly
           />
         </Col>
@@ -44,7 +43,7 @@ function DataForm() {
         <Form.Label className="col-5">Вікна</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessGr.fitnessGrWin}
+            value={fitnessValue?.fitnessGr.fitnessGrWin}
             readOnly
           />
         </Col>
@@ -53,7 +52,7 @@ function DataForm() {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessGr.fitnessSameTimesSc}
+            value={fitnessValue?.fitnessGr.fitnessSameTimesSc}
             readOnly
           />
         </Col>
@@ -65,7 +64,7 @@ function DataForm() {
         <Form.Label className="col-5">Загальний</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessTeach.fitnessValue}
+            value={fitnessValue?.fitnessTeach.fitnessValue}
             readOnly
           />
         </Col>
@@ -74,7 +73,7 @@ function DataForm() {
         <Form.Label className="col-5">Вікна</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessTeach.fitnessTeachWin}
+            value={fitnessValue?.fitnessTeach.fitnessTeachWin}
             readOnly
           />
         </Col>
@@ -83,7 +82,7 @@ function DataForm() {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessTeach.fitnessSameTimesSc}
+            value={fitnessValue?.fitnessTeach.fitnessSameTimesSc}
             readOnly
           />
         </Col>
@@ -95,19 +94,20 @@ function DataForm() {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            defaultValue={fitnessValue?.fitnessAud.fitnessSameTimesSc}
+            value={fitnessValue?.fitnessAud.fitnessSameTimesSc}
             readOnly
           />
         </Col>
       </Form.Group>
 
       <Form.Group as={Row} className="my-2 mx-2">
-        <ButtonCalcFitness refetch={refetch}></ButtonCalcFitness>
+        <ButtonCalcFitness refetch={refetch} ></ButtonCalcFitness>
       </Form.Group>
     </>
   );
 }
 export default class ScheduleData extends React.Component {
+
   render() {
     return (
       <>
@@ -118,7 +118,7 @@ export default class ScheduleData extends React.Component {
               Дані про поточний розклад
             </Card.Header>
             <Card.Body>
-              <DataForm></DataForm>
+              <DataForm handleChangeState={this.handleChangeState} ></DataForm>
             </Card.Body>
           </Card>
         </div>

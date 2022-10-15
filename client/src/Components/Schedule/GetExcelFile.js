@@ -15,7 +15,6 @@ export default function GetExcelFIle(
     });
     workSheet["!cols"] = cols;
     workSheet["!rows"] = [{ hpt: 40, hpx: 40 }];
-    let prevCell = null;
     for (let cell of Object.keys(workSheet).sort()) {
       if (cell === "!ref" || workSheet[cell].length) continue;
 
@@ -63,7 +62,6 @@ export default function GetExcelFIle(
 
         workSheet[cell].s["font"]["sz"] = 14;
       }
-      prevCell = cell;
     }
     AddBorder(workSheet);
     let workBook = utils.book_new();
@@ -124,15 +122,15 @@ function GetBgColor(arrMerges, cell, value) {
         if (Number.isInteger(+value)) {
           return value % 2 === 0
             ? {
-                type: "pattern",
-                patternType: "solid",
-                fgColor: { rgb: "D6D6D6" },
-              }
+              type: "pattern",
+              patternType: "solid",
+              fgColor: { rgb: "D6D6D6" },
+            }
             : {
-                type: "pattern",
-                patternType: "solid",
-                fgColor: { rgb: "FFFFFF" },
-              };
+              type: "pattern",
+              patternType: "solid",
+              fgColor: { rgb: "FFFFFF" },
+            };
         }
 
         if (value.split(":").length > 1)
