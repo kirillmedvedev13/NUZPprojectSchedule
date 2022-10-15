@@ -22,11 +22,19 @@ function InitDataStructure(max_day, max_pair) {
   for (let i = 0; i < max_day; i++) {
     let number_pairs = [];
     for (let j = 0; j < max_pair; j++) {
-      number_pairs.push({
-        1: { clas: null, isAvailable: true },
-        2: { clas: null, isAvailable: true },
-        3: { clas: null, isAvailable: true },
-      });
+      if (j === 0)
+        number_pairs.push({
+          1: { clas: null, isAvailable: true },
+          2: { clas: null, isAvailable: true },
+          3: { clas: null, isAvailable: true },
+          firstPairType: null,
+        });
+      else
+        number_pairs.push({
+          1: { clas: null, isAvailable: true },
+          2: { clas: null, isAvailable: true },
+          3: { clas: null, isAvailable: true },
+        });
     }
     day_weeks.push(number_pairs);
   }
@@ -47,66 +55,76 @@ function AddSchedule(
     temp[day_week][number_pair][pair_type].id_audience = id_audience;
   temp[day_week][number_pair][pair_type].clas = clas;
   temp[day_week][number_pair][pair_type].isAvailable = false;
-  for (let i = 0; i < max_day; i++) {
-    for (let j = 0; j < max_pair; j++) {
-      for (let k = 1; k <= 3; k++) {
-        // Если пара не занята
-        if (!temp[i][j][k].clas) {
-          // Накладки
-          if ((k === 1 || k === 2) && temp[i][j][3].clas) {
-            temp[i][j][k].isAvailable = false;
-            continue;
-          }
-          if (k === 3 && (temp[i][j][1].clas || temp[i][j][2].clas)) {
-            temp[i][j][k].isAvailable = false;
-            continue;
-          }
-          // Поиск окон вниз
-          for (let h = j - 1; h >= 0; h--) {
-            if (
-              (k === 1 || k === 3) &&
-              (temp[i][h][1].clas || temp[i][h][3].clas) &&
-              j - h > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-            if (
-              (k === 2 || k === 3) &&
-              (temp[i][h][2].clas || temp[i][h][3].clas) &&
-              j - h > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-          }
-          // Поиск окон вверх
-          for (let h = j + 1; h < max_pair; h++) {
-            if (
-              (k === 1 || k === 3) &&
-              (temp[i][h][1].clas || temp[i][h][3].clas) &&
-              h - j > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-            if (
-              (k === 2 || k === 3) &&
-              (temp[i][h][2].clas || temp[i][h][3].clas) &&
-              h - j > 1
-            ) {
-              temp[i][j][k].isAvailable = false;
-              break;
-            } else {
-              temp[i][j][k].isAvailable = true;
-            }
-          }
-        }
+  if (!temp[day_week][0].firstPairType)
+    temp[day_week][0].firstPairType = pair_type;
+
+  if (pair_type === 3) {
+    temp[day_week][number_pair][1].isAvailable = false;
+    temp[day_week][number_pair][2].isAvailable = false;
+  } else temp[day_week][number_pair][3].isAvailable = false;
+
+  for (let i = number_pair - 1; i >= 0; i--) {
+    if (i < 0) break;
+    temp[day_week][i][pair_type].isAvailable = false;
+
+    if (pair_type === 3) {
+      temp[day_week][i][2].isAvailable = false;
+      temp[day_week][i][1].isAvailable = false;
+    } else temp[day_week][i][3].isAvailable = false;
+  }
+
+  if (pair_type === 3) {
+    for (let i = number_pair - 1; i >= 0; i--) {
+      if (i < 0) break;
+      if (
+        !temp[day_week][i][3].clas &&
+        !temp[day_week][i][1].clas &&
+        !temp[day_week][i][2].clas
+      ) {
+        temp[day_week][i][3].isAvailable = true;
+        break;
+      }
+    }
+  } else {
+    for (let i = number_pair - 1; i >= 0; i--) {
+      if (i < 0) break;
+      if (!temp[day_week][i][3].clas && !temp[day_week][i][pair_type].clas) {
+        if (temp[day_week][0].firstPairType === pair_type)
+          temp[day_week][i][3].isAvailable = true;
+        temp[day_week][i][pair_type].isAvailable = true;
+        break;
+      }
+    }
+  }
+  for (let i = number_pair + 1; i < max_pair; i++) {
+    if (i > max_pair) break;
+    temp[day_week][i][pair_type].isAvailable = false;
+    if (pair_type === 3) {
+      temp[day_week][i][2].isAvailable = false;
+      temp[day_week][i][1].isAvailable = false;
+    } else temp[day_week][i][3].isAvailable = false;
+  }
+
+  if (pair_type === 3) {
+    for (let i = number_pair + 1; i < max_pair; i++) {
+      if (i > max_pair) break;
+      if (
+        !temp[day_week][i][3].clas &&
+        !temp[day_week][i][1].clas &&
+        !temp[day_week][i][2].clas
+      ) {
+        temp[day_week][i][pair_type].isAvailable = true;
+        break;
+      }
+    }
+  } else {
+    for (let i = number_pair + 1; i < max_pair; i++) {
+      if (i < 0) break;
+      if (!temp[day_week][i][3].clas && !temp[day_week][i][pair_type].clas) {
+        if (temp[day_week][0].firstPairType === pair_type)
+          temp[day_week][i][3].isAvailable = true;
+        temp[day_week][i][pair_type].isAvailable = true;
+        break;
       }
     }
   }
@@ -137,8 +155,8 @@ export default function AddClassToSchedule(
       for (const sc of clas.schedules) {
         temp_group1 = AddSchedule(
           temp_group1,
-          sc.day_week,
-          sc.number_pair,
+          sc.day_week - 1,
+          sc.number_pair - 1,
           sc.pair_type,
           max_day,
           max_pair,
@@ -162,8 +180,8 @@ export default function AddClassToSchedule(
       for (const sc of clas.schedules) {
         temp_teacher1 = AddSchedule(
           temp_teacher1,
-          sc.day_week,
-          sc.number_pair,
+          sc.day_week - 1,
+          sc.number_pair - 1,
           sc.pair_type,
           max_day,
           max_pair,
@@ -185,8 +203,8 @@ export default function AddClassToSchedule(
     // Если занятия были в базе Для каждой аудитории добавление расписания
     temp_audience1 = AddSchedule(
       temp_audience1,
-      sc.day_week,
-      sc.number_pair,
+      sc.day_week - 1,
+      sc.number_pair - 1,
       sc.pair_type,
       max_day,
       max_pair,
@@ -270,7 +288,7 @@ export default function AddClassToSchedule(
         }
       }
       if (!intersectionAudGroupTeach.length) {
-        console.log();
+        console.log("!!!");
         return;
       }
       let { day_week, number_pair, pair_type } =
