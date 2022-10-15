@@ -50,15 +50,13 @@ function AddSchedule(
       temp[day_week][number_pair][pair_type].ids_audience = [id_audience]
   temp[day_week][number_pair][pair_type].clas.push(clas);
   temp[day_week][number_pair][pair_type].isAvailable = false;
-  for (let i = 0; i < max_pair; i++) {
-    for (let k = 1; k <= 3; k++) {
-      // Если пара не занята
-      if (!temp[day_week][i][k].clas) {
-        // Поиск окон вниз
-
-      }
-    }
+  temp[day_week][number_pair][3].isAvailable = false;
+  if (pair_type === 3) {
+    temp[day_week][number_pair][1].isAvailable = false;
+    temp[day_week][number_pair][2].isAvailable = false;
   }
+  // Проход по числителю
+
   return temp;
 }
 
