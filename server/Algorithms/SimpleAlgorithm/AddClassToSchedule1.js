@@ -22,11 +22,27 @@ function InitDataStructure(max_day, max_pair) {
   for (let i = 0; i < max_day; i++) {
     let number_pairs = [];
     for (let j = 0; j < max_pair; j++) {
+<<<<<<< HEAD:server/Algorithms/SimpleAlgorithm/AddClassToSchedule1.js
+      if (j === 0)
+        number_pairs.push({
+          1: { clas: null, isAvailable: true },
+          2: { clas: null, isAvailable: true },
+          3: { clas: null, isAvailable: true },
+          firstPairType: null,
+        });
+      else
+        number_pairs.push({
+          1: { clas: null, isAvailable: true },
+          2: { clas: null, isAvailable: true },
+          3: { clas: null, isAvailable: true },
+        });
+=======
       number_pairs.push({
         1: { clas: [], isAvailable: true },
         2: { clas: [], isAvailable: true },
         3: { clas: [], isAvailable: true },
       });
+>>>>>>> ddac037e7a777eb2ee02263960a1d2e1661b7a10:server/Algorithms/SimpleAlgorithm/AddClassToSchedule.js
     }
     day_weeks.push(number_pairs);
   }
@@ -38,6 +54,7 @@ function AddSchedule(
   day_week,
   number_pair,
   pair_type,
+  max_pair,
   clas,
   id_audience = null
 ) {
@@ -49,12 +66,88 @@ function AddSchedule(
       temp[day_week][number_pair][pair_type].ids_audience = [id_audience]
   temp[day_week][number_pair][pair_type].clas.push(clas);
   temp[day_week][number_pair][pair_type].isAvailable = false;
-  temp[day_week][number_pair][3].isAvailable = false;
+<<<<<<< HEAD:server/Algorithms/SimpleAlgorithm/AddClassToSchedule1.js
+  if (!temp[day_week][0].firstPairType)
+    temp[day_week][0].firstPairType = pair_type;
+
   if (pair_type === 3) {
     temp[day_week][number_pair][1].isAvailable = false;
     temp[day_week][number_pair][2].isAvailable = false;
+  } else temp[day_week][number_pair][3].isAvailable = false;
+
+  for (let i = number_pair - 1; i >= 0; i--) {
+    if (i < 0) break;
+    temp[day_week][i][pair_type].isAvailable = false;
+
+    if (pair_type === 3) {
+      temp[day_week][i][2].isAvailable = false;
+      temp[day_week][i][1].isAvailable = false;
+    } else temp[day_week][i][3].isAvailable = false;
   }
-  // Проход по числителю
+
+  if (pair_type === 3) {
+    for (let i = number_pair - 1; i >= 0; i--) {
+      if (i < 0) break;
+      if (
+        !temp[day_week][i][3].clas &&
+        !temp[day_week][i][1].clas &&
+        !temp[day_week][i][2].clas
+      ) {
+        temp[day_week][i][3].isAvailable = true;
+        break;
+      }
+    }
+  } else {
+    for (let i = number_pair - 1; i >= 0; i--) {
+      if (i < 0) break;
+      if (!temp[day_week][i][3].clas && !temp[day_week][i][pair_type].clas) {
+        if (temp[day_week][0].firstPairType === pair_type)
+          temp[day_week][i][3].isAvailable = true;
+        temp[day_week][i][pair_type].isAvailable = true;
+        break;
+      }
+    }
+  }
+  for (let i = number_pair + 1; i < max_pair; i++) {
+    if (i > max_pair) break;
+    temp[day_week][i][pair_type].isAvailable = false;
+    if (pair_type === 3) {
+      temp[day_week][i][2].isAvailable = false;
+      temp[day_week][i][1].isAvailable = false;
+    } else temp[day_week][i][3].isAvailable = false;
+  }
+
+  if (pair_type === 3) {
+    for (let i = number_pair + 1; i < max_pair; i++) {
+      if (i > max_pair) break;
+      if (
+        !temp[day_week][i][3].clas &&
+        !temp[day_week][i][1].clas &&
+        !temp[day_week][i][2].clas
+      ) {
+        temp[day_week][i][pair_type].isAvailable = true;
+        break;
+      }
+    }
+  } else {
+    for (let i = number_pair + 1; i < max_pair; i++) {
+      if (i < 0) break;
+      if (!temp[day_week][i][3].clas && !temp[day_week][i][pair_type].clas) {
+        if (temp[day_week][0].firstPairType === pair_type)
+          temp[day_week][i][3].isAvailable = true;
+        temp[day_week][i][pair_type].isAvailable = true;
+        break;
+=======
+  for (let i = 0; i < max_pair; i++) {
+    for (let k = 1; k <= 3; k++) {
+      // Если пара не занята
+      if (!temp[day_week][i][k].clas) {
+        // Поиск окон вниз
+
+>>>>>>> ddac037e7a777eb2ee02263960a1d2e1661b7a10:server/Algorithms/SimpleAlgorithm/AddClassToSchedule.js
+      }
+    }
+  }
   return temp;
 }
 
@@ -138,6 +231,20 @@ export default function AddClassToSchedule(
       );
       schedule.scheduleForAudiences.set(sc.id_audience, temp_audience1);
     }
+<<<<<<< HEAD:server/Algorithms/SimpleAlgorithm/AddClassToSchedule1.js
+    // Если занятия были в базе Для каждой аудитории добавление расписания
+    temp_audience1 = AddSchedule(
+      temp_audience1,
+      sc.day_week - 1,
+      sc.number_pair - 1,
+      sc.pair_type,
+      max_day,
+      max_pair,
+      clas
+    );
+    schedule.scheduleForAudiences.set(id_audience, temp_audience1);
+=======
+>>>>>>> ddac037e7a777eb2ee02263960a1d2e1661b7a10:server/Algorithms/SimpleAlgorithm/AddClassToSchedule.js
   }
   // Получения аудиторий для занятия
   else {
@@ -214,6 +321,10 @@ export default function AddClassToSchedule(
       let day_week, number_pair, pair_type = arr_pair_type[i], index_audience;
       // Если не найдена ни одна свободная пара
       if (!intersectionAudGroupTeach.length) {
+<<<<<<< HEAD:server/Algorithms/SimpleAlgorithm/AddClassToSchedule1.js
+        console.log("!!!");
+        return;
+=======
         day_week = GetRndInteger(0, max_day - 1);
         number_pair = GetRndInteger(0, max_day - 1);
         index_audience = GetRndInteger(0, ids_audience.length - 1);
@@ -224,6 +335,7 @@ export default function AddClassToSchedule(
         let r = GetRndInteger(0, intersectionAudGroupTeach[index_audience].length - 1)
         day_week = intersectionAudGroupTeach[index_audience][r].day_week;
         number_pair = intersectionAudGroupTeach[index_audience][r].number_pair;
+>>>>>>> ddac037e7a777eb2ee02263960a1d2e1661b7a10:server/Algorithms/SimpleAlgorithm/AddClassToSchedule.js
       }
 
       // Вставка занятия для групп
