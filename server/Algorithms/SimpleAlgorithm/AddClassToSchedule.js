@@ -3,15 +3,27 @@ import GetPairTypeForClass from "../Service/GetPairTypeForClass.js";
 import GetRndInteger from "../Service/GetRndInteger.js";
 
 // Получить все возможные вставки занятий для типа пары
-function GetAvailableTimeSlots(temp, pair_type) {
+function GetAvailableTimeSlots(temp, pair_type, setWindows = false) {
   let timeSlots = [];
   for (let i = 0; i < temp.length; i++) {
     for (let j = 0; j < temp[i].length; j++) {
-      if (temp[i][j][pair_type].isAvailable) {
-        timeSlots.push({ day_week: i, number_pair: j, pair_type });
+      if (!setWindows) {
+        if (temp[i][j][pair_type].isAvailable) {
+          timeSlots.push({ day_week: i, number_pair: j, pair_type });
+        }
+      } else {
+        if (temp[i][j][3].clas.length) continue;
+        if (pair_type === 3) {
+          if (!temp[i][j][1].clas.length && !temp[i][j][2].clas.length)
+            timeSlots.push({ day_week: i, number_pair: j, pair_type });
+        } else {
+          if (!temp[i][j][pair_type].clas.length)
+            timeSlots.push({ day_week: i, number_pair: j, pair_type });
+        }
       }
     }
   }
+
   return timeSlots;
 }
 
@@ -61,7 +73,7 @@ function AddSchedule(
     temp[day_week][number_pair][2].isAvailable = false;
   }
   // Проход числитель
-  let total_top = new Array(max_pair)
+  let total_top = new Array(max_pair);
   for (let h = 0; h < max_pair; h++) {
     // Если текущая пара уже есть то не проверять
     if (temp[day_week][h][1].clas.length || temp[day_week][h][3].clas.length)
@@ -69,13 +81,19 @@ function AddSchedule(
     let next_pair = null;
     let prev_pair = null;
     for (let k = h + 1; k < max_pair; k++) {
-      if (temp[day_week][k][1].clas.length || temp[day_week][k][3].clas.length) {
+      if (
+        temp[day_week][k][1].clas.length ||
+        temp[day_week][k][3].clas.length
+      ) {
         next_pair = k;
         break;
       }
     }
     for (let k = h - 1; k >= 0; k--) {
-      if (temp[day_week][k][1].clas.length || temp[day_week][k][3].clas.length) {
+      if (
+        temp[day_week][k][1].clas.length ||
+        temp[day_week][k][3].clas.length
+      ) {
         prev_pair = k;
         break;
       }
@@ -110,7 +128,7 @@ function AddSchedule(
     total_top[h] = false;
   }
   // Проход знаменателю
-  let total_bot = new Array(max_pair)
+  let total_bot = new Array(max_pair);
   for (let h = 0; h < max_pair; h++) {
     // Если текущая пара уже есть то не проверять
     if (temp[day_week][h][2].clas.length || temp[day_week][h][3].clas.length)
@@ -118,13 +136,19 @@ function AddSchedule(
     let next_pair = null;
     let prev_pair = null;
     for (let k = h + 1; k < max_pair; k++) {
-      if (temp[day_week][k][2].clas.length || temp[day_week][k][3].clas.length) {
+      if (
+        temp[day_week][k][2].clas.length ||
+        temp[day_week][k][3].clas.length
+      ) {
         next_pair = k;
         break;
       }
     }
     for (let k = h - 1; k >= 0; k--) {
-      if (temp[day_week][k][2].clas.length || temp[day_week][k][3].clas.length) {
+      if (
+        temp[day_week][k][2].clas.length ||
+        temp[day_week][k][3].clas.length
+      ) {
         prev_pair = k;
         break;
       }
@@ -163,6 +187,29 @@ function AddSchedule(
     temp[day_week][h][3].isAvailable = Boolean(total_bot[h] & total_top[h]);
   }
   return temp;
+}
+// Получение свободных пар для всех массивов
+function getIntersection(availableTime) {
+  let intersection = availableTime.splice(0, 1);
+
+  // Получение одинаковых пар для первого  элемента и остальных
+
+  let tempIntersection = intersection[0].filter((pair_first_element) => {
+    let flag = 0;
+    availableTime.forEach((element) => {
+      for (let pair of element) {
+        if (JSON.stringify(pair_first_element) === JSON.stringify(pair)) {
+          flag++;
+          break;
+        }
+      }
+    });
+    // Если у всех есть одинаковое время занятия
+    if (flag === availableTime.length) return true;
+    else return false;
+  });
+
+  return tempIntersection;
 }
 
 // добавляет в деревья занятие
@@ -263,92 +310,73 @@ export default function AddClassToSchedule(
     // Выбор данных для вставки расписания
     const arr_pair_type = GetPairTypeForClass(clas);
     for (let i = 0; i < arr_pair_type.length; i++) {
-      let available_time_group = [];
-      let available_time_teacher = [];
-      let available_time_audience = [];
       // Получение массивов расписаний свободных
-      for (let temp of temp_group) {
-        available_time_group.push(
-          GetAvailableTimeSlots(temp, arr_pair_type[i])
-        );
-      }
-      for (let temp of temp_teacher) {
-        available_time_teacher.push(
-          GetAvailableTimeSlots(temp, arr_pair_type[i])
-        );
-      }
-      for (let temp of temp_audience) {
-        available_time_audience.push(
-          GetAvailableTimeSlots(temp, arr_pair_type[i])
-        );
-      }
-      // Получение свободных пар для всех массивов
-      let getIntersection = (availableTime) => {
-        let intersection = availableTime.splice(0, 1);
-        // Получение одинаковых пар для первого  элемента и остальных
-        intersection = intersection[0].filter((pair_first_element) => {
-          let flag = 0;
-          availableTime.forEach((element) => {
-            for (let pair of element) {
-              if (JSON.stringify(pair_first_element) === JSON.stringify(pair)) {
-                flag++;
-                break;
-              }
-            }
-          });
-          // Если у всех есть одинаковое время занятия
-          if (flag === availableTime.length) return true;
-          return false;
-        });
-        return intersection;
-      };
-      let intersectionGroup = getIntersection(available_time_group);
-      let intersectionTeacher = getIntersection(available_time_teacher);
-      let intersectionGroupTeacher = getIntersection([
-        intersectionGroup,
-        intersectionTeacher,
-      ]);
+      let isRunning = true;
       let intersectionAudGroupTeach = [];
-      // Получение всех доступных занятий для всех групп учителей аудиторий
-      for (let i = 0; i < available_time_audience.length; i++) {
-        intersectionAudGroupTeach.push(
-          getIntersection([
-            intersectionGroupTeacher,
-            available_time_audience[i],
-          ])
-        );
-      }
-      let t = [];
-      for (let i = 0; i < intersectionAudGroupTeach.length; i++) {
-        // Если для аудитории нету расписания
-        if (intersectionAudGroupTeach[i].length) {
-          t.push(intersectionAudGroupTeach[i]);
+      let setWindows = false;
+      while (isRunning) {
+        let available_time_group = [];
+        let available_time_teacher = [];
+        let available_time_audience = [];
+        for (let temp of temp_group) {
+          available_time_group.push(
+            GetAvailableTimeSlots(temp, arr_pair_type[i], setWindows)
+          );
         }
-      }
-      intersectionAudGroupTeach = t;
-      let day_week,
-        number_pair,
-        pair_type = arr_pair_type[i],
-        index_audience;
+        for (let temp of temp_teacher) {
+          available_time_teacher.push(
+            GetAvailableTimeSlots(temp, arr_pair_type[i], setWindows)
+          );
+        }
+        for (let temp of temp_audience) {
+          available_time_audience.push(
+            GetAvailableTimeSlots(temp, arr_pair_type[i], setWindows)
+          );
+        }
 
-      // Если не найдена ни одна свободная пара
-      if (!intersectionAudGroupTeach.length) {
-        continue;
-        day_week = GetRndInteger(0, max_day - 1);
-        number_pair = GetRndInteger(0, max_day - 1);
-        index_audience = GetRndInteger(0, ids_audience.length - 1);
+        // Получение всех доступных занятий для всех групп учителей аудиторий
+        for (let i = 0; i < available_time_audience.length; i++) {
+          intersectionAudGroupTeach.push(
+            getIntersection([
+              available_time_audience[i],
+              ...available_time_teacher,
+              ...available_time_group,
+            ])
+          );
+        }
+        let t = [];
+        for (let i = 0; i < intersectionAudGroupTeach.length; i++) {
+          // Если для аудитории нету расписания
+          if (intersectionAudGroupTeach[i].length) {
+            t.push(intersectionAudGroupTeach[i]);
+          }
+        }
+        intersectionAudGroupTeach = t;
+
+        // Если не найдена ни одна свободная пара
+        if (!intersectionAudGroupTeach.length) {
+          if (setWindows) {
+            console.log("!!!");
+
+            isRunning = false;
+          }
+          setWindows = true;
+        } else isRunning = false;
       }
       // Если найдена свободная пара
-      else {
-        index_audience = GetRndInteger(0, intersectionAudGroupTeach.length - 1);
-        let r = GetRndInteger(
-          0,
-          intersectionAudGroupTeach[index_audience].length - 1
-        );
-        day_week = intersectionAudGroupTeach[index_audience][r].day_week;
-        number_pair = intersectionAudGroupTeach[index_audience][r].number_pair;
-      }
 
+      let index_audience = GetRndInteger(
+        0,
+        intersectionAudGroupTeach.length - 1
+      );
+      let r = GetRndInteger(
+        0,
+        intersectionAudGroupTeach[index_audience].length - 1
+      );
+      let day_week = intersectionAudGroupTeach[index_audience][r].day_week;
+      let number_pair =
+        intersectionAudGroupTeach[index_audience][r].number_pair;
+      let pair_type = arr_pair_type[i];
       // Вставка занятия для групп
       for (let i = 0; i < temp_group.length; i++) {
         let sched = AddSchedule(
