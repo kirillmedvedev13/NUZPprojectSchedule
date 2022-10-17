@@ -1,6 +1,10 @@
 import db from "../../database.js";
-import AddClassToSchedule from "../SimpleAlgorithm/AddClassToScheduleNew.js"
-import { GET_ALL_SCHEDULE_AUDIENCES, GET_ALL_SCHEDULE_GROUPS, GET_ALL_SCHEDULE_TEACHERS } from "../../Schema/Queries/Schedule.js"
+import AddClassToSchedule from "../SimpleAlgorithm/AddClassToScheduleNew.js";
+import {
+  GET_ALL_SCHEDULE_AUDIENCES,
+  GET_ALL_SCHEDULE_GROUPS,
+  GET_ALL_SCHEDULE_TEACHERS,
+} from "../../Schema/Queries/Schedule.js";
 
 //получаем из бд данные расписания занятий для других кафедр
 export default async function ParseScheduleFromDB(id_cathedra) {
@@ -24,7 +28,7 @@ export default async function ParseScheduleFromDB(id_cathedra) {
           model: db.assigned_discipline,
           include: {
             model: db.specialty,
-            where: { id_cathedra }
+            where: { id_cathedra },
           },
         },
       ],
@@ -33,9 +37,9 @@ export default async function ParseScheduleFromDB(id_cathedra) {
     let id_schedules = [];
     classes.map((cl) => {
       for (const sc of cl.schedules) {
-        id_schedules.push(sc.id)
+        id_schedules.push(sc.id);
       }
-    })
+    });
     // Удаления расписания для выбранной кафедры
     await db.schedule.destroy({ where: { id: id_schedules } });
     // Получение расписания для учителей и групп выбранной кафедры из других кафедр
@@ -55,19 +59,21 @@ export default async function ParseScheduleFromDB(id_cathedra) {
               },
             ],
           },
-        }
-      ]
+        },
+      ],
     });
     let schedule_group = [];
+    let sched_ids = new Set();
     for (let gr of db_schedule_group) {
       let schedule = [];
       for (let ag of gr.assigned_groups) {
         for (let sc of ag.class.schedules) {
-          schedule.push(Object.assign(sc, { class: ag.class }))
+          schedule.push(Object.assign(sc, { class: ag.class }));
+          sched_ids.add(sc.id);
         }
       }
       if (schedule.length) {
-        schedule_group.push({ id: gr.id, schedule })
+        schedule_group.push({ id: gr.id, schedule });
       }
     }
     let db_schedule_teacher = await db.teacher.findAll({
@@ -87,33 +93,36 @@ export default async function ParseScheduleFromDB(id_cathedra) {
       let schedule = [];
       for (let at of teach.assigned_teachers) {
         for (let sc of at.class.schedules) {
-          schedule.push(Object.assign(sc, { class: at.class }))
+          schedule.push(Object.assign(sc, { class: at.class }));
+          sched_ids.add(sc.id);
         }
       }
       if (schedule.length) {
-        schedule_teacher.push({ id: teach.id, schedule })
+        schedule_teacher.push({ id: teach.id, schedule });
       }
     }
     let db_schedule_audience = await db.audience.findAll({
       include: {
-        model: db.schedule
-      }
-    })
+        model: db.schedule,
+      },
+    });
     let schedule_audience = [];
     for (let aud of db_schedule_audience) {
-      let schedule = []
+      let schedule = [];
       for (let sc of aud.schedules) {
         schedule.push(Object.assign(sc, { class: aud.class }));
+        sched_ids.add(sc.id);
       }
       if (schedule.length) {
-        schedule_audience.push({ id: aud.id, schedule })
+        schedule_audience.push({ id: aud.id, schedule });
       }
     }
-    return { schedule_group, schedule_teacher, schedule_audience }
+    await db.schedule.destroy({ where: { id: Array.from(sched_ids) } });
+    return { schedule_group, schedule_teacher, schedule_audience };
   }
   // Если кафедра не указана, то удаляеми всё расписание
   else {
-    await db.schedule.destroy({ where: {}, truncate: true })
+    await db.schedule.destroy({ where: {}, truncate: true });
     return null;
   }
 }
