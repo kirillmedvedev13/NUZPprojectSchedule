@@ -1,6 +1,6 @@
 import GetDataFromDB from "../Service/GetDataFromDB.js";
-import ParseScheduleFromDB from "./ParseScheduleFromDB.js";
-import AddClassToSchedule from "./AddClassToSchedule.js";
+import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
+import AddClassToSchedule from "./AddClassToScheduleNew.js";
 import MessageType from "../../Schema/TypeDefs/MessageType.js";
 import { GraphQLInt } from "graphql";
 import db from "../../database.js";
@@ -13,7 +13,21 @@ export const RUN_SA = {
   async resolve(parent, { id_cathedra }) {
     let { max_day, max_pair, classes, recommended_schedules, audiences } =
       await GetDataFromDB(id_cathedra);
-    let schedule = await ParseScheduleFromDB(id_cathedra, max_day, max_pair, audiences);
+    let scheduleForGroups = new Map();
+    let scheduleForTeachers = new Map();
+    let scheduleForAudiences = new Map();
+    let schedule = {
+      scheduleForGroups,
+      scheduleForTeachers,
+      scheduleForAudiences,
+    };
+    // Получения расписания для груп учителей если они есть  в других кафедрах
+    let db_schedule = await ParseScheduleFromDB(id_cathedra);
+    if (db_schedule) {
+      for (let teach of db_schedule.schedule_teacher) {
+        AddClassToSchedule(schedule.max_day, max_pair, teach.schedule.class, audiences, true)
+      }
+    }
     for (let clas of classes) {
       AddClassToSchedule(schedule, max_day, max_pair, clas, audiences);
     }
@@ -24,17 +38,15 @@ export const RUN_SA = {
           for (let k = 1; k <= 3; k++) {
             for (let h = 0; h < group[i][j][k].clas.length; h++) {
               // Вставка уникальных занятий
-              if (group[i][j][k].clas) {
-                arrClass.add(
-                  JSON.stringify({
-                    day_week: i + 1,
-                    number_pair: j + 1,
-                    pair_type: k,
-                    id_class: group[i][j][k].clas[h].id,
-                    id_audience: group[i][j][k].ids_audience[h],
-                  })
-                );
-              }
+              arrClass.add(
+                JSON.stringify({
+                  day_week: i + 1,
+                  number_pair: j + 1,
+                  pair_type: k,
+                  id_class: group[i][j][k].clas[h].id,
+                  id_audience: group[i][j][k].ids_audience[h],
+                })
+              );
             }
           }
         }
