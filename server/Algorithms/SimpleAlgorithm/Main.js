@@ -1,9 +1,10 @@
 import GetDataFromDB from "../Service/GetDataFromDB.js";
 import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
-import AddClassToSchedule from "./AddClassToScheduleNew.js";
 import MessageType from "../../Schema/TypeDefs/MessageType.js";
 import { GraphQLInt } from "graphql";
 import db from "../../database.js";
+import AddClassToScheduleNew from "./AddClassToScheduleNew.js";
+import AddClassToScheduleOld from "./AddClassToScheduleOld.js";
 
 export const RUN_SA = {
   type: MessageType,
@@ -24,12 +25,10 @@ export const RUN_SA = {
     // Получения расписания для груп учителей если они есть  в других кафедрах
     let db_schedule = await ParseScheduleFromDB(id_cathedra);
     if (db_schedule) {
-      for (let teach of db_schedule.schedule_teacher) {
-        AddClassToSchedule(schedule.max_day, max_pair, teach.schedule.class, audiences, true)
-      }
+      AddClassToScheduleOld(schedule, db_schedule, max_day, max_pair);
     }
     for (let clas of classes) {
-      AddClassToSchedule(schedule, max_day, max_pair, clas, audiences);
+      AddClassToScheduleNew(schedule, max_day, max_pair, clas, audiences);
     }
     let arrClass = new Set();
     for (let group of schedule.scheduleForGroups.values()) {
