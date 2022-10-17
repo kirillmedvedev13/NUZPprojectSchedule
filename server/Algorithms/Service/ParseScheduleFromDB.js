@@ -94,7 +94,7 @@ export default async function ParseScheduleFromDB(id_cathedra) {
         schedule_teacher.push({ id: teach.id, schedule })
       }
     }
-    let db_schedule_audience = await db.audience.findALL({
+    let db_schedule_audience = await db.audience.findAll({
       include: {
         model: db.schedule
       }

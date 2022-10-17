@@ -18,7 +18,7 @@ export default function AddClassToScheduleOld(schedule, schedule_record, max_day
                 sc.number_pair - 1,
                 sc.pair_type,
                 max_pair,
-                sc.clas,
+                sc.class,
                 sc.id_audience
             );
         }
@@ -39,7 +39,7 @@ export default function AddClassToScheduleOld(schedule, schedule_record, max_day
                 sc.number_pair - 1,
                 sc.pair_type,
                 max_pair,
-                sc.clas,
+                sc.class,
                 sc.id_audience
             );
         }
@@ -60,7 +60,7 @@ export default function AddClassToScheduleOld(schedule, schedule_record, max_day
                 sc.number_pair - 1,
                 sc.pair_type,
                 max_pair,
-                sc.clas,
+                sc.class,
                 sc.id_audience
             );
         }
