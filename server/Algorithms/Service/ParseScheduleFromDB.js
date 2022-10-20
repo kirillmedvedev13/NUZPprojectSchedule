@@ -19,6 +19,9 @@ export default async function ParseScheduleFromDB(id_cathedra) {
           model: db.recommended_audience,
         },
         {
+          model: db.recommended_schedules,
+        },
+        {
           model: db.assigned_discipline,
           include: {
             model: db.specialty,

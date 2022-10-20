@@ -3,26 +3,26 @@ import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "../queries.js";
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
-import SelectCathedra from "../SelectCathedra.js";
 import ButtonRunEA from "./ButtonRunEA.js";
-import NaviBarAdmin from "../NaviBarAdmin.js";
 
 function DataForm({ handleChangeState, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-
   let evolution_values =
     info.evolution_values !== null
       ? info.evolution_values
       : JSON.parse(data.GetInfo.evolution_values);
+  if (!evolution_values) {
+    evolution_values = {}
+  }
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Розмір популяції</Form.Label>
         <Col>
           <Form.Control
-            value={evolution_values.population_size}
+            value={evolution_values?.population_size}
             type="number"
             min={0}
             onChange={(e) => {
@@ -38,7 +38,7 @@ function DataForm({ handleChangeState, info }) {
         </Form.Label>
         <Col>
           <Form.Control
-            value={evolution_values.max_generations}
+            value={evolution_values?.max_generations}
             type="number"
             min={0}
             onChange={(e) => {
@@ -52,7 +52,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Ймовірність схрещування</Form.Label>
         <Col>
           <Form.Control
-            value={evolution_values.p_crossover}
+            value={evolution_values?.p_crossover}
             type="number"
             min={0}
             max={1}
@@ -68,7 +68,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Ймовірність мутації</Form.Label>
         <Col>
           <Form.Control
-            value={evolution_values.p_mutation}
+            value={evolution_values?.p_mutation}
             type="number"
             min={0}
             max={1}
@@ -84,7 +84,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Ймовірність мутації гена</Form.Label>
         <Col>
           <Form.Control
-            value={evolution_values.p_genes}
+            value={evolution_values?.p_genes}
             type="number"
             min={0}
             max={1}
@@ -100,7 +100,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Елітизм</Form.Label>
         <Col>
           <Form.Control
-            value={evolution_values.p_elitism}
+            value={evolution_values?.p_elitism}
             type="number"
             min={0}
             max={0.5}
@@ -124,7 +124,6 @@ export default class EvolutionAlgorithm extends React.Component {
   constructor(args) {
     super(args);
     this.state = {
-      id_cathedra: null,
       evolution_values: null,
     };
   }
@@ -134,10 +133,10 @@ export default class EvolutionAlgorithm extends React.Component {
   };
 
   render() {
+    const { id_cathedra } = this.props;
     return (
       <>
-        <NaviBarAdmin></NaviBarAdmin>
-        <div className="d-flex justify-content-center  ">
+        <div className="d-flex justify-content-center mx-5">
           <Card className="my-2">
             <Card.Header className="text-center">
               Складання розкладу за допомогою Генетичного Алгоритму
@@ -150,13 +149,7 @@ export default class EvolutionAlgorithm extends React.Component {
             </Card.Body>
             <Card.Footer>
               <Form.Group as={Row} className="my-2 mx-2">
-                <SelectCathedra
-                  handleChangeState={this.handleChangeState}
-                  id_cathedra={this.state.id_cathedra}
-                ></SelectCathedra>
-              </Form.Group>
-              <Form.Group as={Row} className="my-2 mx-2">
-                <ButtonRunEA id_cathedra={this.state.id_cathedra}></ButtonRunEA>
+                <ButtonRunEA id_cathedra={id_cathedra}></ButtonRunEA>
               </Form.Group>
             </Card.Footer>
           </Card>

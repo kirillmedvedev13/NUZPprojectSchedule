@@ -13,5 +13,6 @@ export default new GraphQLObjectType({
     fitness_value: { type: GraphQLString },
     general_values: { type: GraphQLString },
     evolution_values: { type: GraphQLString },
+    simulated_annealing: { type: GraphQLString },
   }),
 });

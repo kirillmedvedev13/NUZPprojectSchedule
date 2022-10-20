@@ -41,6 +41,14 @@ export const RUN_SA = gql`
     }
   }
 `;
+export const RUN_SIMULATED_ANNEALING = gql`
+  mutation ($id_cathedra: Int) {
+    RunSimulatedAnnealing(id_cathedra: $id_cathedra) {
+      message
+      successful
+    }
+  }
+`;
 export const CALC_FITNESS = gql`
   mutation {
     CalcFitness {

@@ -15,13 +15,16 @@ function DataForm({ handleChangeState, info }) {
       : JSON.parse(data.GetInfo.general_values);
   let max_day = info.max_day !== null ? info.max_day : data.GetInfo.max_day;
   let max_pair = info.max_pair !== null ? info.max_pair : data.GetInfo.max_pair;
+  if (!general_values) {
+    general_values = {};
+  }
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Вага: вікна групи</Form.Label>
         <Col>
           <Form.Control
-            value={general_values.penaltyGrWin}
+            value={general_values?.penaltyGrWin}
             type="number"
             min={0}
             onChange={(e) => {
@@ -35,7 +38,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: вікна викладачiв</Form.Label>
         <Col>
           <Form.Control
-            value={general_values.penaltyTeachWin}
+            value={general_values?.penaltyTeachWin}
             type="number"
             min={0}
             onChange={(e) => {
@@ -49,7 +52,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: пізні заняття</Form.Label>
         <Col>
           <Form.Control
-            value={general_values.penaltyLateSc}
+            value={general_values?.penaltyLateSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -63,7 +66,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: рівномірний розклад</Form.Label>
         <Col>
           <Form.Control
-            value={general_values.penaltyEqSc}
+            value={general_values?.penaltyEqSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -77,7 +80,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: накладання занять</Form.Label>
         <Col>
           <Form.Control
-            value={general_values.penaltySameTimesSc}
+            value={general_values?.penaltySameTimesSc}
             type="number"
             min={0}
             onChange={(e) => {
@@ -91,7 +94,7 @@ function DataForm({ handleChangeState, info }) {
         <Form.Label className="col-5">Вага: співпадіння занять</Form.Label>
         <Col>
           <Form.Control
-            value={general_values.penaltySameRecSc}
+            value={general_values?.penaltySameRecSc}
             type="number"
             min={0}
             onChange={(e) => {

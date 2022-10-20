@@ -7,6 +7,7 @@ export const GET_INFO = gql`
       fitness_value
       general_values
       evolution_values
+      simulated_annealing
     }
   }
 `;

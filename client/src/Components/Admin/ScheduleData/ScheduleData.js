@@ -10,6 +10,9 @@ function DataForm() {
   if (loading) return null;
   if (error) return `Error! ${error}`;
   let fitnessValue = JSON.parse(data.GetInfo.fitness_value);
+  if (!fitnessValue) {
+    fitnessValue = {};
+  }
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
@@ -34,7 +37,7 @@ function DataForm() {
         <Form.Label className="col-5">Загальний</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessGr.fitnessValue}
+            value={fitnessValue?.fitnessGr?.fitnessValue}
             readOnly
           />
         </Col>
@@ -43,7 +46,7 @@ function DataForm() {
         <Form.Label className="col-5">Вікна</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessGr.fitnessGrWin}
+            value={fitnessValue?.fitnessGr?.fitnessGrWin}
             readOnly
           />
         </Col>
@@ -52,7 +55,7 @@ function DataForm() {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessGr.fitnessSameTimesSc}
+            value={fitnessValue?.fitnessGr?.fitnessSameTimesSc}
             readOnly
           />
         </Col>
@@ -64,7 +67,7 @@ function DataForm() {
         <Form.Label className="col-5">Загальний</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessTeach.fitnessValue}
+            value={fitnessValue?.fitnessTeach?.fitnessValue}
             readOnly
           />
         </Col>
@@ -73,7 +76,7 @@ function DataForm() {
         <Form.Label className="col-5">Вікна</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessTeach.fitnessTeachWin}
+            value={fitnessValue?.fitnessTeach?.fitnessTeachWin}
             readOnly
           />
         </Col>
@@ -82,7 +85,7 @@ function DataForm() {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessTeach.fitnessSameTimesSc}
+            value={fitnessValue?.fitnessTeach?.fitnessSameTimesSc}
             readOnly
           />
         </Col>
@@ -94,7 +97,7 @@ function DataForm() {
         <Form.Label className="col-5">Накладання занять</Form.Label>
         <Col>
           <Form.Control
-            value={fitnessValue?.fitnessAud.fitnessSameTimesSc}
+            value={fitnessValue?.fitnessAud?.fitnessSameTimesSc}
             readOnly
           />
         </Col>

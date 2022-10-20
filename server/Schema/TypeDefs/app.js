@@ -68,6 +68,7 @@ import { CALC_FITNESS } from "../Mutations/Fitness.js";
 import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
 import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
+import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -139,6 +140,7 @@ const Mutation = new GraphQLObjectType({
     UpdateInfo: UPDATE_INFO,
     RunEA: RUN_EA,
     RunSA: RUN_SA,
+    RunSimulatedAnnealing: RUN_SIMULATED_ANNEALING,
     CalcFitness: CALC_FITNESS,
   },
 });

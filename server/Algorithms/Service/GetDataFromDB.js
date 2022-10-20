@@ -81,5 +81,7 @@ export default async function GetDataFromDB(id_cathedra = null) {
     audiences,
     groups,
     teachers,
+    simulated_annealing: JSON.parse(info.dataValues.simulated_annealing),
+    general_values: JSON.parse(info.dataValues.general_values),
   };
 }

@@ -15,12 +15,11 @@ import Class from "./Components/Class/Class";
 import Group from "./Components/Group/Group";
 import Teacher from "./Components/Teacher/Teacher";
 import { Routes, Route } from "react-router-dom";
-import EvolutionAlgorithm from "./Components/Admin/EvolutionAlghotirhm/EvolutionAlghorithm";
 import GeneralValues from "./Components/Admin/GeneralValues/GeneralValues";
 import ScheduleData from "./Components/Admin/ScheduleData/ScheduleData";
 import SubmitDataSheet from "./Components/Admin/SubmitDataSheet/SubmitDataSheet";
 import DeleteData from "./Components/Admin/DeleteData/DeleteData";
-import SimpleAlgorithm from "./Components/Admin/SimpleAlgorithm/SimpleAlgorithm";
+import Algorithms from "./Components/Admin/Algorithms/Alghorithms"
 
 class App extends React.Component {
   state = {
@@ -100,12 +99,11 @@ class App extends React.Component {
               <Route path="/classes" element={<Class></Class>} />
               <Route path="/groups" element={<Group></Group>} />
               <Route path="/teachers" element={<Teacher></Teacher>} />
-              <Route path="/admin/evolution_algorithm" element={<EvolutionAlgorithm></EvolutionAlgorithm>} />
               <Route path="/admin/general_values" element={<GeneralValues></GeneralValues>} />
-              <Route path="/admin/simple_algorithm" element={<SimpleAlgorithm></SimpleAlgorithm>} />
               <Route path="/admin/delete_data" element={<DeleteData></DeleteData>} />
               <Route path="/admin/submit_data_sheet" element={<SubmitDataSheet></SubmitDataSheet>} />
               <Route path="/admin/schedule_data" element={<ScheduleData></ScheduleData>} />
+              <Route path="/admin/algorithms" element={<Algorithms></Algorithms>} />
             </Fragment>
           )}
           <Route path="*" element={<Error></Error>} />
