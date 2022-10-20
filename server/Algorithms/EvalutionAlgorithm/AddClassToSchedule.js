@@ -17,7 +17,6 @@ export default function AddClassToSchedule(
       day_week,
       pair_type,
       id_audience,
-      id_assigned_group: ag.id,
       id_class: clas.id,
     });
     schedule.scheduleForGroups.set(ag.id_group, temp);

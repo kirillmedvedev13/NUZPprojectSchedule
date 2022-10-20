@@ -1,10 +1,4 @@
 import db from "../../database.js";
-import AddClassToSchedule from "../SimpleAlgorithm/AddClassToScheduleNew.js";
-import {
-  GET_ALL_SCHEDULE_AUDIENCES,
-  GET_ALL_SCHEDULE_GROUPS,
-  GET_ALL_SCHEDULE_TEACHERS,
-} from "../../Schema/Queries/Schedule.js";
 
 //получаем из бд данные расписания занятий для других кафедр
 export default async function ParseScheduleFromDB(id_cathedra) {

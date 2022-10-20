@@ -1,3 +1,5 @@
+import reviver from "../EvalutionAlgorithm/JSONReviver.js";
+
 export default function Fitness(
   schedule,
   recommended_schedules,
@@ -5,8 +7,10 @@ export default function Fitness(
   penaltySameRecSc,
   penaltyGrWin,
   penaltySameTimesSc,
-  penaltyTeachWin
+  penaltyTeachWin,
+  parse = false
 ) {
+  if (parse) schedule = JSON.parse(schedule, reviver);
   for (let value of schedule.scheduleForGroups.values()) sortSchedule(value);
   for (let value of schedule.scheduleForTeachers.values()) sortSchedule(value);
   for (let value of schedule.scheduleForAudiences.values()) sortSchedule(value);

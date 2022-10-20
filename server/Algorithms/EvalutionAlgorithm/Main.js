@@ -1,87 +1,55 @@
-import db from "../database.js";
-import MessageType from "../Schema/TypeDefs/MessageType.js";
+import db from "../../database.js";
+import MessageType from "../../Schema/TypeDefs/MessageType.js";
 import Init from "./Init.js";
 import MinFitnessValue from "./MinFitnessValue.js";
 import MeanFitnessValue from "./MeanFitnessValue.js";
-import GetRndInteger from "./GetRndInteger.js";
 import { cpus } from "node:os";
-import GetMapTeacherAndAG from "./GetMapTeacherAndAG.js";
-import GetMapGroupAndAG from "./GetMapGroupAndAG.js";
 import workerpool from "workerpool";
 import cloneDeep from "clone-deep";
+import replacer from "./JSONReplacer.js";
+import reviver from "./JSONReviver.js";
+import { GraphQLInt } from "graphql";
+import GetDataFromDB from "../Service/GetDataFromDB.js";
+import GetRndInteger from "../Service/GetRndInteger.js";
+import GetBaseSchedule from "./GetBaseSchedule.js";
 
 export const RUN_EA = {
   type: MessageType,
-  async resolve(parent) {
-    const info = await db.info.findAll();
-    const max_day = info[0].dataValues.max_day;
-    const max_pair = info[0].dataValues.max_pair;
-    const population_size = info[0].dataValues.population_size;
-    const max_generations = info[0].dataValues.max_generations;
-    const p_crossover = info[0].dataValues.p_crossover;
-    const p_mutation = info[0].dataValues.p_mutation;
-    const p_genes = info[0].dataValues.p_genes;
-    const penaltyGrWin = info[0].dataValues.penaltyGrWin;
-    const penaltyTeachWin = info[0].dataValues.penaltyTeachWin;
-    const penaltyLateSc = info[0].dataValues.penaltyLateSc;
-    const penaltyEqSc = info[0].dataValues.penaltyEqSc;
-    const penaltySameTimesSc = info[0].dataValues.penaltySameTimesSc;
-    const p_elitism = info[0].dataValues.p_elitism;
-    let classes = await db.class.findAll({
-      include: [
-        {
-          model: db.assigned_group,
-          include: {
-            model: db.group,
-          },
-        },
-        {
-          model: db.assigned_teacher,
-        },
-        {
-          model: db.recommended_audience,
-        },
-        {
-          model: db.recommended_schedule,
-        },
-        {
-          model: db.assigned_discipline,
-          required: true,
-          include: {
-            model: db.specialty,
-            required: true,
-          },
-        },
-      ],
-    });
-    let audiences = await db.audience.findAll({
-      include: {
-        model: db.assigned_audience,
-      },
-    });
-    let groups = await db.group.findAll();
-    let teachers = await db.teacher.findAll({
-      include: {
-        model: db.assigned_teacher,
-      },
-    });
+  args: {
+    id_cathedra: { type: GraphQLInt },
+  },
+  async resolve(parent, { id_cathedra }) {
+    const {
+      max_day,
+      max_pair,
+      population_size,
+      max_generations,
+      p_crossover,
+      p_mutation,
+      p_genes,
+      penaltyGrWin,
+      penaltyTeachWin,
+      penaltyLateSc,
+      penaltyEqSc,
+      penaltySameTimesSc,
+      p_elitism,
+      penaltySameRecSc,
+      classes,
+      recommended_schedules,
+      audiences,
+      groups,
+      teachers,
+    } = await GetDataFromDB(id_cathedra);
 
+    let base_schedule = null;
+    GetBaseSchedule(base_schedule, id_cathedra);
 
-    teachers = teachers.map((t) => t.toJSON());
-    groups = groups.map((g) => g.toJSON());
-    audiences = audiences.map((a) => a.toJSON());
-    classes = classes.map((c) => c.toJSON());
-    let type_select = "ranging";
-
-    // Структура для каждой группы массив закрепленных для неё занятий
-    let mapGroupAndAG = GetMapGroupAndAG(groups, classes);
-    // Структура для каждого учителя массив закрепленных для него занятий
-    let mapTeacherAndAG = GetMapTeacherAndAG(teachers, classes);
+    let type_select = "tournament";
 
     // Создание пула потоков
     const numCPUs = cpus().length;
-    const pool = workerpool.pool("./EvalutionAlghoritm/Worker.js", {
-      workerType: "thread",
+    const pool = workerpool.pool("./Algorithms/EvalutionAlgorithm/Worker.js", {
+      workerType: "auto",
       maxWorkers: numCPUs,
     });
 
@@ -91,9 +59,13 @@ export const RUN_EA = {
       population_size,
       max_day,
       max_pair,
-      audiences
+      audiences,
+      base_schedule
     );
-    let bestPopulation = { schedule: null, fitnessValue: Number.MAX_VALUE };
+    let bestPopulation = {
+      scheduleForGroups: null,
+      fitnessValue: Number.MAX_VALUE,
+    };
     const num_elit = Math.floor(population_size * p_elitism);
 
     for (const generationCount of Array(max_generations)
@@ -104,33 +76,56 @@ export const RUN_EA = {
       let arr_promisses = [];
       for (let i = 0; i < population_size / 2; i++) {
         if (Math.random() < p_crossover) {
+          let r1 = GetRndInteger(0, populations.length - 1);
+          let r2 = GetRndInteger(0, populations.length - 1);
+          while (r1 === r2) {
+            r1 = GetRndInteger(0, populations.length - 1);
+            r2 = GetRndInteger(0, populations.length - 1);
+          }
           arr_promisses.push(
             pool.exec("workCrossing", [
-              populations[GetRndInteger(0, populations.length - 1)].schedule,
-              populations[GetRndInteger(0, populations.length - 1)].schedule,
-              classes
+              JSON.stringify(populations[r1], replacer),
+              JSON.stringify(populations[r2], replacer),
+              classes,
             ])
           );
+          if (r1 > r2) {
+            populations.splice(r1, 1);
+            populations.splice(r2, 1);
+          } else {
+            populations.splice(r2, 1);
+            populations.splice(r1, 1);
+          }
         }
       }
       await Promise.all(arr_promisses).then((res) => {
         res.map((r) => {
-          populations.push(r.population_child1);
-          populations.push(r.population_child2);
+          populations.push(JSON.parse(r.population_child1, reviver));
+          populations.push(JSON.parse(r.population_child2, reviver));
         });
       });
       console.timeEnd("Cross");
       console.time("Muta");
       // Мутации
       arr_promisses = [];
-      populations.map((mutant) => {
+      populations.map((mutant, index) => {
         if (Math.random() < p_mutation) {
-          arr_promisses.push(pool.exec('workMutation', [mutant.schedule, (populations.length * p_genes) / populations.length, max_day, max_pair, audiences, mapGroupAndAG, mapTeacherAndAG]));
+          arr_promisses.push(
+            pool.exec("workMutation", [
+              JSON.stringify(mutant, replacer),
+              p_genes,
+              max_day,
+              max_pair,
+              audiences,
+              classes,
+            ])
+          );
+          populations.splice(index, 1);
         }
       });
       await Promise.all(arr_promisses).then((res) => {
         res.map((sch) => {
-          populations.push({ schedule: sch, fitnessValue: null });
+          populations.push(JSON.parse(sch, reviver));
         });
       });
       console.timeEnd("Muta");
@@ -140,14 +135,14 @@ export const RUN_EA = {
       populations.map((individ) => {
         arr_promisses.push(
           pool.exec("workFitness", [
-            individ.schedule,
-            mapTeacherAndAG,
-            mapGroupAndAG,
+            JSON.stringify(individ, replacer),
+            recommended_schedules,
+            max_day,
+            penaltySameRecSc,
             penaltyGrWin,
-            penaltyLateSc,
-            penaltyEqSc,
             penaltySameTimesSc,
             penaltyTeachWin,
+            true,
           ])
         );
       });
@@ -166,7 +161,7 @@ export const RUN_EA = {
       });
       let elit = new Array(num_elit);
       for (let j = 0; j < num_elit; j++) {
-        elit[j] = { schedule: populations[j].schedule.map(sc => Object.assign({}, sc)), fitnessValue: cloneDeep(populations[j].fitnessValue) };
+        elit[j] = cloneDeep(populations[j]);
       }
       // Отбор
       let new_populations = [];
@@ -188,10 +183,7 @@ export const RUN_EA = {
           }
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
-              new_populations.push({
-                schedule: populations[index].schedule.map(sc => Object.assign({}, sc)),
-                fitnessValue: cloneDeep(populations[index].fitnessValue),
-              });
+              new_populations.push(cloneDeep(populations[index]));
             });
           });
           break;
@@ -210,11 +202,11 @@ export const RUN_EA = {
               index: i1,
             };
             const population2 = {
-              fitnessValue: populations[i1].fitnessValue,
+              fitnessValue: populations[i2].fitnessValue,
               index: i2,
             };
             const population3 = {
-              fitnessValue: populations[i1].fitnessValue,
+              fitnessValue: populations[i3].fitnessValue,
               index: i3,
             };
             arr_promisses.push(
@@ -227,10 +219,7 @@ export const RUN_EA = {
           }
           await Promise.all(arr_promisses).then((res) => {
             res.map((index) => {
-              new_populations.push({
-                schedule: populations[index].schedule.map(sc => Object.assign({}, sc)),
-                fitnessValue: cloneDeep(populations[index].fitnessValue),
-              });
+              new_populations.push(populations[index]);
             });
           });
           break;
@@ -245,26 +234,30 @@ export const RUN_EA = {
 
       console.log(
         generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+          " " +
+          bestPopulation.fitnessValue +
+          " Mean " +
+          MeanFitnessValue(populations)
       );
     }
-    // Очистка расписания
-    await db.schedule.destroy({ truncate: true });
     //Вставка в бд
-    let isBulk = await db.schedule.bulkCreate(
-      bestPopulation.schedule.map((schedule) => {
-        return {
-          number_pair: schedule.number_pair,
-          day_week: schedule.day_week,
-          pair_type: schedule.pair_type,
-          id_assigned_group: schedule.id_assigned_group,
-          id_audience: schedule.id_audience,
-        };
-      })
-    );
+    let arrClass = new Set();
+    for (let value of bestPopulation.scheduleForGroups.values()) {
+      value.forEach((schedule) => {
+        arrClass.add(
+          JSON.stringify({
+            number_pair: schedule.number_pair,
+            day_week: schedule.day_week,
+            pair_type: schedule.pair_type,
+            id_class: schedule.id_class,
+            id_audience: schedule.id_audience,
+          })
+        );
+      });
+    }
+    let arr = [];
+    arrClass.forEach((sched) => arr.push(JSON.parse(sched)));
+    let isBulk = await db.schedule.bulkCreate(arr);
     if (isBulk)
       return {
         successful: true,

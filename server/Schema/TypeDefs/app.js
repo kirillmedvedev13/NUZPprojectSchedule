@@ -66,7 +66,7 @@ import { GET_INFO } from "../Queries/Info.js";
 import { UPDATE_INFO } from "../Mutations/Info.js";
 import { CALC_FITNESS } from "../Mutations/Fitness.js";
 import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
-import { RUN_EA } from "../../EvalutionAlgoritmCpp/Main.js";
+import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
 
 const RootQuery = new GraphQLObjectType({
