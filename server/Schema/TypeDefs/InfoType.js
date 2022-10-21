@@ -9,10 +9,11 @@ export default new GraphQLObjectType({
   fields: () => ({
     max_day: { type: GraphQLInt },
     max_pair: { type: GraphQLInt },
-    max_semester: { type: GraphQLInt },
+    max_semester: { type: GraphQLString },
     fitness_value: { type: GraphQLString },
     general_values: { type: GraphQLString },
     evolution_values: { type: GraphQLString },
     simulated_annealing: { type: GraphQLString },
+    results: { type: GraphQLString }
   }),
 });

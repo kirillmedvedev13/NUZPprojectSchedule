@@ -34,9 +34,6 @@ export default function Mutation(
   }
   let ids_audience = GetIdsAudienceForClass(mutation_sched.clas, audiences);
   let id_audience = ids_audience[GetRndInteger(0, ids_audience.length - 1)];
-  if (currId_audience !== id_audience) {
-    console.log();
-  }
   mutation_sched.day_week = day_week;
   mutation_sched.number_pair = number_pair;
   mutation_sched.id_audience = id_audience;

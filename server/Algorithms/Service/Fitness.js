@@ -4,36 +4,39 @@ export default function Fitness(
   schedule,
   recommended_schedules,
   max_day,
-  penaltySameRecSc,
-  penaltyGrWin,
-  penaltySameTimesSc,
-  penaltyTeachWin,
+  general_values,
   parse = false
 ) {
   if (parse) schedule = JSON.parse(schedule, reviver);
-  for (let value of schedule.scheduleForGroups.values()) sortSchedule(value);
-  for (let value of schedule.scheduleForTeachers.values()) sortSchedule(value);
-  for (let value of schedule.scheduleForAudiences.values()) sortSchedule(value);
+  for (let value of schedule.scheduleForGroups.values()) {
+    sortSchedule(value);
+  }
+  for (let value of schedule.scheduleForTeachers.values()) {
+    sortSchedule(value);
+  }
+  for (let value of schedule.scheduleForAudiences.values()) {
+    sortSchedule(value);
+  }
   let fitnessGr = fitnessByGroups(
     schedule.scheduleForGroups,
     max_day,
-    penaltySameTimesSc,
-    penaltyGrWin
+    general_values?.penaltySameTimesSc,
+    general_values?.penaltyGrWin
   );
   let fitnessTeach = fitnessByTeachers(
     schedule.scheduleForTeachers,
     max_day,
-    penaltySameTimesSc,
-    penaltyTeachWin
+    general_values?.penaltySameTimesSc,
+    general_values?.penaltyTeachWin
   );
   let fitnessAud =
-    penaltySameTimesSc === 0
+    general_values?.penaltySameTimesSc === 0
       ? 0
-      : fitnessByAudiences(schedule.scheduleForAudiences, penaltySameTimesSc);
+      : fitnessByAudiences(schedule.scheduleForAudiences, general_values?.penaltySameTimesSc);
   let fitnessSameRecSc =
-    penaltySameRecSc === 0
+    general_values?.penaltySameRecSc === 0
       ? 0
-      : fitnessSameSchedules(recommended_schedules, penaltySameRecSc);
+      : fitnessSameSchedules(recommended_schedules, general_values?.penaltySameRecSc);
   let fitnessValue =
     fitnessGr.fitnessValue +
     fitnessTeach.fitnessValue +
