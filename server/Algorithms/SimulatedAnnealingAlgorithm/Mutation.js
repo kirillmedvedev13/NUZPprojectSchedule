@@ -2,7 +2,7 @@ import GetIdsAudienceForClass from "../Service/GetIdsAudienceForClass.js";
 import GetRndInteger from "../Service/GetRndInteger.js";
 
 function RemoveClassToSchedule(temp, id_schedule) {
-  temp = temp.filter(sc => sc.id !== id_schedule);
+  temp = temp.filter((sc) => sc.id !== id_schedule);
   return temp;
 }
 
@@ -14,22 +14,28 @@ export default function Mutation(
   mutation_sched
 ) {
   let clas = mutation_sched.clas;
-  let id_audience = mutation_sched.id_audience;
-  let temp = schedule.scheduleForAudiences.get(id_audience);
+  let currId_audience = mutation_sched.id_audience;
+  let temp = schedule.scheduleForAudiences.get(currId_audience);
   if (!temp) {
     temp = [];
   }
   temp = RemoveClassToSchedule(temp, mutation_sched.id);
-  schedule.scheduleForAudiences.set(id_audience, temp);
+  schedule.scheduleForAudiences.set(currId_audience, temp);
   // Получение нового данных для занятия
-  let day_week = null, number_pair = null;
+  let day_week = null,
+    number_pair = null;
   if (clas.recommended_schedules.length) {
-    let r = GetRndInteger(0, clas.recommended_schedules.length - 1)
+    let r = GetRndInteger(0, clas.recommended_schedules.length - 1);
     day_week = clas.recommended_schedules[r].day_week;
     number_pair = clas.recommended_schedules[r].number_pair;
   } else {
     day_week = GetRndInteger(1, max_day);
     number_pair = GetRndInteger(1, max_pair);
+  }
+  let ids_audience = GetIdsAudienceForClass(mutation_sched.clas, audiences);
+  let id_audience = ids_audience[GetRndInteger(0, ids_audience.length - 1)];
+  if (currId_audience !== id_audience) {
+    console.log();
   }
   mutation_sched.day_week = day_week;
   mutation_sched.number_pair = number_pair;
@@ -42,27 +48,26 @@ export default function Mutation(
   }
   // Удаление старого занятия для групп и вставка нового
   for (const ag of clas.assigned_groups) {
-    let temp = schedule.scheduleForGroups.get(ag.id_group);
-    temp = RemoveClassToSchedule(temp, mutation_sched.id);
-    temp.push(mutation_sched);
-    schedule.scheduleForGroups.set(ag.id_group, temp);
+    let temp1 = schedule.scheduleForGroups.get(ag.id_group);
+    temp1 = RemoveClassToSchedule(temp1, mutation_sched.id);
+    temp1.push(mutation_sched);
+    schedule.scheduleForGroups.set(ag.id_group, temp1);
   }
   // Удаление старого занятия для учителей и вставка нового
   for (const at of clas.assigned_teachers) {
-    let temp = schedule.scheduleForTeachers.get(at.id_teacher);
-    temp = RemoveClassToSchedule(temp, mutation_sched.id);
-    temp.push(mutation_sched);
-    schedule.scheduleForTeachers.set(at.id_teacher, temp);
+    let temp2 = schedule.scheduleForTeachers.get(at.id_teacher);
+    temp2 = RemoveClassToSchedule(temp2, mutation_sched.id);
+    temp2.push(mutation_sched);
+    schedule.scheduleForTeachers.set(at.id_teacher, temp2);
   }
   // Получение новой аудитории для занятия
-  let ids_audience = GetIdsAudienceForClass(mutation_sched.clas, audiences);
-  id_audience = ids_audience[GetRndInteger(0, ids_audience.length - 1)];
+
   // Вставка занятия для аудитории
-  temp = schedule.scheduleForAudiences.get(id_audience);
-  if (!temp) {
-    temp = [];
+  let temp3 = schedule.scheduleForAudiences.get(id_audience);
+  if (!temp3) {
+    temp3 = [];
   }
-  temp.push(mutation_sched);
-  schedule.scheduleForAudiences.set(id_audience, temp);
+  temp3.push(mutation_sched);
+  schedule.scheduleForAudiences.set(id_audience, temp3);
   return schedule;
 }
