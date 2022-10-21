@@ -29,8 +29,14 @@ export const RUN_SIMULATED_ANNEALING = {
       let chooseSchedule = false;
       let mutation_sched = null;
       while (!chooseSchedule) {
-        if (i > 1000)
+        if (i > 10000)
           console.log()
+        let sum = 0;
+        let arr = Array.from(schedule.scheduleForAudiences.values());
+        for (let j = 0; j < arr.length; j++) {
+          sum += arr[j].length;
+        }
+        console.log(`sum = ${sum}`)
         console.log(`iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`);
         console.time("it");
         // Случайное занятие у учителя группы или аудитории
@@ -49,7 +55,7 @@ export const RUN_SIMULATED_ANNEALING = {
           }
         }
       }
-      Mutation(newSchedule, max_day, max_pair, audiences, mutation_sched);
+      newSchedule = Mutation(newSchedule, max_day, max_pair, audiences, mutation_sched);
       let newFitness = Fitness(newSchedule, recommended_schedules, max_day, general_values);
       let difference = newFitness.fitnessValue - currentFitness.fitnessValue;
       if (difference < 0) {
@@ -63,7 +69,7 @@ export const RUN_SIMULATED_ANNEALING = {
           currentFitness = newFitness;
         }
       }
-      temperature += alpha * temperature;
+      temperature = alpha * temperature;
       i += 1;
       console.timeEnd("it")
     }

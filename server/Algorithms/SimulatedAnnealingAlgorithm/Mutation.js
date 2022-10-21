@@ -21,9 +21,6 @@ export default function Mutation(
   }
   temp = RemoveClassToSchedule(temp, mutation_sched.id);
   schedule.scheduleForAudiences.set(id_audience, temp);
-  // Получение новой аудитории для занятия
-  let ids_audience = GetIdsAudienceForClass(mutation_sched.clas, audiences);
-  id_audience = ids_audience[GetRndInteger(0, ids_audience.length - 1)];
   // Получение нового данных для занятия
   let day_week = null, number_pair = null;
   if (clas.recommended_schedules.length) {
@@ -37,6 +34,12 @@ export default function Mutation(
   mutation_sched.day_week = day_week;
   mutation_sched.number_pair = number_pair;
   mutation_sched.id_audience = id_audience;
+  // Если занятие по числителю или знаменателю, то тип пары можем поменятся
+  if (mutation_sched.pair_type === 1 || mutation_sched.pair_type === 2) {
+    if (Math.random() <= 0.5) {
+      mutation_sched.pair_type = 3 - mutation_sched.pair_type;
+    }
+  }
   // Удаление старого занятия для групп и вставка нового
   for (const ag of clas.assigned_groups) {
     let temp = schedule.scheduleForGroups.get(ag.id_group);
@@ -51,6 +54,9 @@ export default function Mutation(
     temp.push(mutation_sched);
     schedule.scheduleForTeachers.set(at.id_teacher, temp);
   }
+  // Получение новой аудитории для занятия
+  let ids_audience = GetIdsAudienceForClass(mutation_sched.clas, audiences);
+  id_audience = ids_audience[GetRndInteger(0, ids_audience.length - 1)];
   // Вставка занятия для аудитории
   temp = schedule.scheduleForAudiences.get(id_audience);
   if (!temp) {
@@ -58,4 +64,5 @@ export default function Mutation(
   }
   temp.push(mutation_sched);
   schedule.scheduleForAudiences.set(id_audience, temp);
+  return schedule;
 }
