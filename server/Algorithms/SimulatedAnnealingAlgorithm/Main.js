@@ -4,10 +4,10 @@ import MessageType from "../../Schema/TypeDefs/MessageType.js";
 import { GraphQLInt } from "graphql";
 import db from "../../database.js";
 import Init from "./Init.js";
-import cloneDeep from "clone-deep";
+import cloneDeep from "lodash.clonedeep"
 import GetRndInteger from "../Service/GetRndInteger.js";
 import Mutation from "./Mutation.js";
-import Fitness from "../Service/Fitness2.js";
+import Fitness from "../Service/Fitness.js";
 
 export const RUN_SIMULATED_ANNEALING = {
   type: MessageType,
@@ -23,6 +23,7 @@ export const RUN_SIMULATED_ANNEALING = {
       audiences,
       simulated_annealing,
       general_values,
+      results
     } = await GetDataFromDB(id_cathedra);
     let { temperature, alpha } = simulated_annealing;
     // Получения расписания для груп учителей если они есть  в других кафедрах
@@ -41,21 +42,12 @@ export const RUN_SIMULATED_ANNEALING = {
       max_day,
       general_values
     );
+    let newResults = [];
+    let start_time = new Date().getTime();
     while (currentFitness.fitnessValue > 0) {
       let newSchedule = cloneDeep(currentSchedule);
       let chooseSchedule = false;
       let mutation_sched = null;
-      if (i > 10000) console.log();
-      let sum = 0;
-      let arr = Array.from(currentSchedule.scheduleForAudiences.values());
-      for (let j = 0; j < arr.length; j++) {
-        sum += arr[j].length;
-      }
-      console.log(`sum = ${sum}`);
-      console.log(
-        `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
-      );
-      console.time("it");
       while (!chooseSchedule) {
         // Случайное занятие у учителя группы или аудитории
         let r = GetRndInteger(1, 3);
@@ -63,8 +55,8 @@ export const RUN_SIMULATED_ANNEALING = {
           r === 1
             ? newSchedule.scheduleForGroups
             : r === 2
-            ? newSchedule.scheduleForTeachers
-            : newSchedule.scheduleForAudiences;
+              ? newSchedule.scheduleForTeachers
+              : newSchedule.scheduleForAudiences;
         sc = Array.from(sc.values());
         // Выбор случайной сущности
         if (sc.length) {
@@ -103,8 +95,41 @@ export const RUN_SIMULATED_ANNEALING = {
         }
       }
       temperature = alpha * temperature;
+      if (i % 100 === 0) {
+        console.log(
+          `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
+        );
+        newResults.push([new Date().getTime() - start_time, currentFitness.fitnessValue])
+      }
       i += 1;
-      console.timeEnd("it");
     }
+    console.log(
+      `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
+    );
+    results.simulated_annealing = newResults;
+    results = JSON.stringify(results);
+    await db.info.update({ results }, { where: { id: 1 } })
+    let arrClass = new Set();
+    let arrGroup = Array.from(currentSchedule.scheduleForGroups.values());
+    for (const sc_group of arrGroup) {
+      for (const sc of sc_group) {
+        arrClass.add(JSON.stringify({
+          day_week: sc.day_week,
+          number_pair: sc.number_pair,
+          pair_type: sc.pair_type,
+          id_class: sc.clas.id,
+          id_audience: sc.id_audience
+        }))
+      }
+    }
+    let arr = [];
+    arrClass.forEach((sched) => arr.push(JSON.parse(sched)));
+    let isBulk = await db.schedule.bulkCreate(arr);
+    if (isBulk)
+      return {
+        successful: true,
+        message: `Success`,
+      };
+    else return { successful: false, message: `Some error` };
   },
 };

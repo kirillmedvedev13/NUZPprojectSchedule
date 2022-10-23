@@ -5,8 +5,6 @@ export default async function GetDataFromDB(id_cathedra = null) {
   const info = await db.info.findOne();
   const max_day = info.dataValues.max_day;
   const max_pair = info.dataValues.max_pair;
-  const { population_size, max_generations, p_crossover, p_mutation, p_genes, p_elitism } = JSON.parse(info.dataValues.evolution_values);
-  const { penaltyGrWin, penaltyTeachWin, penaltyLateSc, penaltyEqSc, penaltySameTimesSc, penaltySameRecSc } = JSON.parse(info.dataValues.general_values);
   let FilterCathedra = {};
   if (id_cathedra) {
     FilterCathedra = {
@@ -60,28 +58,21 @@ export default async function GetDataFromDB(id_cathedra = null) {
   groups = groups.map((g) => g.toJSON());
   audiences = audiences.map((a) => a.toJSON());
   classes = classes.map((c) => c.toJSON());
-
+  let results = JSON.parse(info.dataValues.results);
+  if (!results) {
+    results = {};
+  }
   return {
     max_day,
     max_pair,
-    population_size,
-    max_generations,
-    p_crossover,
-    p_mutation,
-    p_genes,
-    penaltyGrWin,
-    penaltyTeachWin,
-    penaltyLateSc,
-    penaltyEqSc,
-    penaltySameTimesSc,
-    p_elitism,
-    penaltySameRecSc,
     classes,
     recommended_schedules,
     audiences,
     groups,
     teachers,
+    evolution_values: JSON.parse(info.dataValues.evolution_values),
     simulated_annealing: JSON.parse(info.dataValues.simulated_annealing),
     general_values: JSON.parse(info.dataValues.general_values),
+    results
   };
 }

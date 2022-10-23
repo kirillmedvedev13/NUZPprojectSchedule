@@ -7,12 +7,6 @@ export const CALC_FITNESS = {
   async resolve(parent) {
     const info = await db.info.findOne();
     const general_values = JSON.parse(info.dataValues.general_values);
-    const {
-      penaltyGrWin,
-      penaltyTeachWin,
-      penaltySameTimesSc,
-      penaltySameRecSc,
-    } = general_values;
 
     const max_day = info.dataValues.max_day;
     let recommended_schedules = await db.recommended_schedule.findAll({
@@ -87,33 +81,17 @@ export const CALC_FITNESS = {
       schedule,
       recommended_schedules,
       max_day,
-      penaltySameRecSc,
-      penaltyGrWin,
-      penaltySameTimesSc,
-      penaltyTeachWin
+      general_values
     );
-    /* let stringFitness = `Загальна сума - ${fitnessValue.fitnessValue}
-\nРек. час - ${fitnessValue.fitnessSameRecSc}
-\nГрупи: 
-\n\tВікна - ${fitnessValue.fitnessGr.fitnessGrWin}
-\n\tНакладки - ${fitnessValue.fitnessGr.fitnessSameTimesSc}
-\n\tСума - ${fitnessValue.fitnessGr.fitnessValue}
-\nВикладачi: 
-\n\tВікна - ${fitnessValue.fitnessTeach.fitnessTeachWin}
-\n\tНакладки - ${fitnessValue.fitnessTeach.fitnessSameTimesSc}
-\n\tСума - ${fitnessValue.fitnessTeach.fitnessValue}
-\nАудиторії: 
-\n\tНакладки - ${fitnessValue.fitnessAud.fitnessSameTimesSc}
-\n\tСума - ${fitnessValue.fitnessAud.fitnessValue}`;*/
     const res = await db.info.update(
       { fitness_value: JSON.stringify(fitnessValue) },
       { where: { id: 1 } }
     );
     return res[0]
       ? {
-          successful: true,
-          message: "Значення пораховано успішно",
-        }
+        successful: true,
+        message: "Значення пораховано успішно",
+      }
       : { successful: false, message: "Помилка при рахуванні значення" };
   },
 };

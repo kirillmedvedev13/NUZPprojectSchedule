@@ -5,6 +5,8 @@ import NaviBarAdmin from "../NaviBarAdmin.js";
 import EvolutionAlgorithm from "./EvolutionAlghorithm.js";
 import SimpleAlgorithm from "./SimpleAlgorithm.js";
 import SimulatedAnnealingAlgorithm from "./SimulatedAnnealingAlgorithm.js";
+import { LineChart, Line } from "recharts";
+
 
 export default class Algorithms extends React.Component {
   constructor(args) {
@@ -41,6 +43,9 @@ export default class Algorithms extends React.Component {
           <EvolutionAlgorithm id_cathedra={this.state.id_cathedra}></EvolutionAlgorithm>
           <SimpleAlgorithm id_cathedra={this.state.id_cathedra}></SimpleAlgorithm>
           <SimulatedAnnealingAlgorithm id_cathedra={this.state.id_cathedra}></SimulatedAnnealingAlgorithm>
+        </div>
+        <div className="d-flex justify-content-center">
+
         </div>
       </>
     );
