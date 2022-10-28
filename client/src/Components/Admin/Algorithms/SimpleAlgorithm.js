@@ -3,12 +3,8 @@ import { Form, Row, Card } from "react-bootstrap";
 import ButtonRunSA from "./ButtonRunSA.js";
 
 export default class SimpleAlgorithm extends React.Component {
-
-  handleChangeState = (name, item) => {
-    this.setState({ [name]: item });
-  };
   render() {
-    const { id_cathedra } = this.props;
+    let { id_cathedra } = this.props;
     return (
       <>
         <div className="d-flex justify-content-center mx-5">

@@ -7,24 +7,44 @@ import SimpleAlgorithm from "./SimpleAlgorithm.js";
 import SimulatedAnnealingAlgorithm from "./SimulatedAnnealingAlgorithm.js";
 import SelectAlgoritm from "./SelectAlgorithm.js";
 import { GET_INFO } from "../queries";
+import { useQuery } from "@apollo/client";
+import { FragmentsOnCompositeTypesRule } from "graphql";
 
-function GetAlgorithmForm({ algorithm, id_cathedra }) {
+function GetAlgorithmForm({ state, handleChangeState }) {
+  let { id_cathedra, algorithm, evolution_values, simulated_annealing } = state;
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
+  console.log(data)
   switch (algorithm) {
     case "evolution_algorithm":
+      if (evolution_values === null) {
+        evolution_values = JSON.parse(data.GetInfo.evolution_values);
+      }
+      if (!evolution_values) {
+        evolution_values = {};
+      }
       return (
         <EvolutionAlgorithm
           id_cathedra={id_cathedra}
-          data={data.GetInfo}
+          evolution_values={evolution_values}
           refetch={refetch}
+          handleChangeState={handleChangeState}
         ></EvolutionAlgorithm>
       );
     case "simulated_annealing":
+      if (simulated_annealing === null) {
+        simulated_annealing = JSON.parse(data.GetInfo.simulated_annealing)
+      }
+      if (!simulated_annealing) {
+        simulated_annealing = {};
+      }
       return (
         <SimulatedAnnealingAlgorithm
           id_cathedra={id_cathedra}
+          simulated_annealing={simulated_annealing}
+          refetch={refetch}
+          handleChangeState={handleChangeState}
         ></SimulatedAnnealingAlgorithm>
       );
     default:
@@ -38,6 +58,8 @@ export default class Algorithms extends React.Component {
     this.state = {
       id_cathedra: null,
       algorithm: null,
+      evolution_values: null,
+      simulated_annealing: null
     };
   }
 
@@ -72,8 +94,8 @@ export default class Algorithms extends React.Component {
         </div>
         <div className="d-flex justify-content-center">
           <GetAlgorithmForm
-            algorithm={this.state.algorithm}
-            id_cathedra={this.state.id_cathedra}
+            state={this.state}
+            handleChangeState={this.handleChangeState}
           ></GetAlgorithmForm>
         </div>
         <div className="d-flex justify-content-center"></div>
