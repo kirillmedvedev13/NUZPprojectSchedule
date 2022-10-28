@@ -8,6 +8,7 @@ export const GET_INFO = gql`
       general_values
       evolution_values
       simulated_annealing
+      results
     }
   }
 `;

@@ -3,7 +3,7 @@ import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "../queries.js";
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
-import ButtonRunSimulatedAnnealingAlgorithm from "./ButtonRunSimulatedAnnealingAlgorithm.js"
+import ButtonRunSimulatedAnnealingAlgorithm from "./ButtonRunSimulatedAnnealingAlgorithm.js";
 
 function DataForm({ handleChangeState, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
@@ -33,9 +33,7 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">
-          Коефіцієнт alpha
-        </Form.Label>
+        <Form.Label className="col-5">Коефіцієнт alpha</Form.Label>
         <Col>
           <Form.Control
             value={simulated_annealing?.alpha}
@@ -85,7 +83,9 @@ export default class SimulatedAnnealingAlgorithm extends React.Component {
             </Card.Body>
             <Card.Footer>
               <Form.Group as={Row} className="my-2 mx-2">
-                <ButtonRunSimulatedAnnealingAlgorithm id_cathedra={id_cathedra}></ButtonRunSimulatedAnnealingAlgorithm>
+                <ButtonRunSimulatedAnnealingAlgorithm
+                  id_cathedra={id_cathedra}
+                ></ButtonRunSimulatedAnnealingAlgorithm>
               </Form.Group>
             </Card.Footer>
           </Card>
