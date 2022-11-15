@@ -33,6 +33,14 @@ export const RUN_EA = gql`
     }
   }
 `;
+export const RUN_EACpp = gql`
+  mutation ($id_cathedra: Int) {
+    RunEACpp(id_cathedra: $id_cathedra) {
+      message
+      successful
+    }
+  }
+`;
 export const RUN_SA = gql`
   mutation ($id_cathedra: Int) {
     RunSA(id_cathedra: $id_cathedra) {

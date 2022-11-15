@@ -39,7 +39,7 @@ export default async function ParseScheduleFromDB(id_cathedra) {
     });
     // Удаления расписания для выбранной кафедры
     await db.schedule.destroy({ where: { id: id_schedules } });
-    // Получение расписания для учителей и групп выбранной кафедры из других кафедр
+    // Получение расписания занятий для учителей групп аудиторий выбранной кафедры из других кафедр
     let db_schedule_group = await db.group.findAll({
       include: [
         {
@@ -60,13 +60,11 @@ export default async function ParseScheduleFromDB(id_cathedra) {
       ],
     });
     let schedule_group = [];
-    let sched_ids = new Set();
     for (let gr of db_schedule_group) {
       let schedule = [];
       for (let ag of gr.assigned_groups) {
         for (let sc of ag.class.schedules) {
           schedule.push(Object.assign(sc, { class: ag.class }));
-          sched_ids.add(sc.id);
         }
       }
       if (schedule.length) {
@@ -91,7 +89,6 @@ export default async function ParseScheduleFromDB(id_cathedra) {
       for (let at of teach.assigned_teachers) {
         for (let sc of at.class.schedules) {
           schedule.push(Object.assign(sc, { class: at.class }));
-          sched_ids.add(sc.id);
         }
       }
       if (schedule.length) {
@@ -108,13 +105,11 @@ export default async function ParseScheduleFromDB(id_cathedra) {
       let schedule = [];
       for (let sc of aud.schedules) {
         schedule.push(Object.assign(sc, { class: aud.class }));
-        sched_ids.add(sc.id);
       }
       if (schedule.length) {
         schedule_audience.push({ id: aud.id, schedule });
       }
     }
-    await db.schedule.destroy({ where: { id: Array.from(sched_ids) } });
     return { schedule_group, schedule_teacher, schedule_audience };
   }
   // Если кафедра не указана, то удаляеми всё расписание

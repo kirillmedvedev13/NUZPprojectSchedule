@@ -70,6 +70,7 @@ import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
 import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
 
+
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
   fields: {

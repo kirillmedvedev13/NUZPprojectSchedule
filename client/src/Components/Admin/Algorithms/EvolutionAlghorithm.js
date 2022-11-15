@@ -3,6 +3,7 @@ import { Form, Row, Col, Card } from "react-bootstrap";
 
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
 import ButtonRunEA from "./ButtonRunEA.js";
+import ButtonRunEACpp from "./ButtonRunEACpp.js";
 
 export default class EvolutionAlgorithm extends React.Component {
   render() {
@@ -137,6 +138,7 @@ export default class EvolutionAlgorithm extends React.Component {
           <Card.Footer>
             <Form.Group as={Row} className="my-2 mx-2">
               <ButtonRunEA id_cathedra={id_cathedra}></ButtonRunEA>
+              <ButtonRunEACpp id_cathedra={id_cathedra}></ButtonRunEACpp>
             </Form.Group>
           </Card.Footer>
         </Card>
