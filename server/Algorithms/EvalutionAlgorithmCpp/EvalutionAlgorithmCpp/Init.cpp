@@ -7,17 +7,20 @@
 #include "GetPairTypeForClass.h"
 #include "GetIdAudienceForClass.h"
 #include "AddClassToSchedule.h"
+#include "TypeDefs.h"
 
-
-individ Init(const vector <clas>& classes, const int& max_day, const int& max_pair, const vector<audience>& audiences, const json& base_schedule)
+vector <individ> Init(const vector <clas>& classes, const int& max_day,const int &population_size, const int& max_pair, const vector<audience>& audiences, const base_schedule  &bs)
 {
-
+    vector <individ> populations = vector <individ>(population_size);
+        for (int j = 0; j < population_size; j++){
+            AddClassToBaseSchedule(populations[j], bs);
+        }
+    for (int k = 0; k < population_size; k++){
 		individ i_schedule= individ();
-        for (int j = 0; j < classes.size(); j++)
-        {
-            clas clas = classes[j];
+        for (size_t i = 0; i < classes.size(); i++){
+            clas clas = classes[i];
             vector<int> info = GetPairTypeForClass(clas);
-            for (int j = 0; j < info.size(); j++)
+            for (size_t j = 0; j < info.size(); j++)
             {
                 int day_week, number_pair;
                 vector <recommended_schedule> recommended_schedules = clas.recommended_schedules;
@@ -41,10 +44,6 @@ individ Init(const vector <clas>& classes, const int& max_day, const int& max_pa
 
             }
         }
-        if (!base_schedule.is_null())
-        {
-        }
-        
-        return i_schedule;
-    
+    }
+    return populations;
 }
