@@ -1,16 +1,13 @@
-import MessageType from "../Schema/TypeDefs/MessageType.js";
+import MessageType from "../../Schema/TypeDefs/MessageType.js"
 import { spawn } from "child_process";
 import fs from "fs";
 import { GraphQLInt, __DirectiveLocation } from "graphql";
-import { Op } from "sequelize";
-import ParseScheduleFromDB from "../EvalutionAlghoritm2/ParseScheduleFromDB.js";
 import SpawnChild from "./SpawnChild.js";
-import { fileURLToPath } from "url";
 import path from "path";
-import GetDataFromDB from "../Algorithms/Service/GetDataFromDB.js";
-import { json } from "body-parser";
+import GetDataFromDB from "../Service/GetDataFromDB.js";
+import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js"
 
-export const RUN_EA = {
+export const RUN_EACPP = {
   type: MessageType,
   args: {
     id_cathedra: { type: GraphQLInt },
@@ -26,6 +23,8 @@ export const RUN_EA = {
       results
     } = await GetDataFromDB(id_cathedra);
 
+    let base_schedule = await ParseScheduleFromDB(id_cathedra);
+
     let jsonData = JSON.stringify({
       max_day,
       max_pair,
@@ -36,14 +35,15 @@ export const RUN_EA = {
       general_values
     });
 
-    let fileName = path.resolve("./EvalutionAlgoritmCpp/x64/Debug/EvalutionAlgorithmCpp.exe");
+    let fileName = path.resolve("./EvalutionAlgorithms/EvalutionAlgoritmCpp/VSProject/x64/Debug/EvalutionAlgorithmCpp.exe");
+    let fileData = path.resolve("./EvalutionAlgorithms/EvalutionAlgoritmCpp/")
 
-    fs.writeFile("data.json", jsonData, (err) => {
+    fs.writeFile(fileData + "/data.json", jsonData, (err) => {
       if (err)
         console.log(err)
     })
 
-    SpawnChild(fileName, dataFileName).then((data) => {
+    SpawnChild(fileName).then((data) => {
       console.log(data);
     });
   },
