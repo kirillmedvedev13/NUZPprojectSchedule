@@ -35,6 +35,7 @@ function GetDataForCharts(results) {
 export default class MultiCharts extends React.Component {
   render() {
     let { results } = this.props;
+    let colors = ["red", "green", "blue"];
     let dataForCharts = GetDataForCharts(results);
     return (
       <LineChart width={500} height={300}>
@@ -63,9 +64,11 @@ export default class MultiCharts extends React.Component {
         </YAxis>
         <Tooltip />
         <Legend align="center" />
-        {dataForCharts.map((algorithm) => (
+        {dataForCharts.map((algorithm, i) => (
           <Line
-            dot={null}
+            dot={false}
+            strokeWidth={3}
+            stroke={i < colors.length ? colors[i] : colors[i % colors.length]}
             dataKey="fitness"
             data={algorithm.data}
             name={algorithm.name}
