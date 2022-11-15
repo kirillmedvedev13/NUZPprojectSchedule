@@ -17,7 +17,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <mutex>
-//using namespace std;
+using namespace std;
 using namespace nlohmann;
 using namespace BS;
 
@@ -30,6 +30,9 @@ int main(int argc, const char* argv[])
 
         ifstream fileData("data.json");
         data = json::parse(fileData);
+        cout << "Test!!" << endl;
+        cout << "Test!!" << endl;
+        return 0;
         const json info = data["info"];
    
         const int max_day = info["max_day"];
