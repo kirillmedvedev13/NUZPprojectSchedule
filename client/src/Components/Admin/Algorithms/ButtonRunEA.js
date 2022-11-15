@@ -13,7 +13,7 @@ export default function ButtonRunEA({ id_cathedra }) {
   return (
     <Container>
       <Button
-        className="col-12"
+        className="col-12 my-2"
         onClick={() => {
           RunEA().then((res) => {
             CreateNotification(res.data.RunEA);
