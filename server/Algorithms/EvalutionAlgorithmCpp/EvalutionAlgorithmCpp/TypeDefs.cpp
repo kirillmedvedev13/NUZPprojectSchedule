@@ -2,359 +2,253 @@
 
 teacher::teacher()
 {
-	id=-1;
-	name = "";
-	surname = "";
-	patronymic = "";
-	id_cathedra = -1;
-	assigned_teachers = vector<assigned_teacher>();
+    id=-1;
 }
 
-teacher::teacher(json teacher)
+teacher::teacher(json &teacher)
 {
-	id = (int)teacher["id"];
-	name = teacher["name"];
-	surname = teacher["surname"];
-	patronymic = teacher["patronymic"];
-	id_cathedra = (int)teacher["id_cathedra"];
-	assigned_teachers = vector<assigned_teacher>();
-	for (json at : teacher["assigned_teachers"]) {
-		assigned_teachers.push_back(assigned_teacher (at));
-	}
+    id = (int)teacher["id"];
 
 }
 
-bool teacher::isNullOrEmpty()
-{
-	if (id == -1 || name.empty() || surname.empty() || patronymic.empty() || id_cathedra == -1)
-		return true;
-	return false;
-}
 
 recommended_schedule::recommended_schedule()
 {
-	id = -1;
 	number_pair = -1;
 	day_week = -1;
-	id_class = -1;
 }
 
-recommended_schedule::recommended_schedule(json rec_schedule)
+recommended_schedule::recommended_schedule(json &rec_schedule)
 {
-	id = (int)rec_schedule["id"];
 	number_pair = (int)rec_schedule["number_pair"];
 	day_week = (int)rec_schedule["day_week"];
-	id_class = (int)rec_schedule["id_class"];
 }
 
-bool recommended_schedule::isNullOrEmpty()
-{
-	if (id == -1 || number_pair == -1 || day_week == -1 || id_class == -1)
-		return true;
-	return false;
-}
 
-assigned_teacher::assigned_teacher(json at)
-{
-	id = at["id"];
-	id_class = at["id_class"];
-	id_teacher = at["id_teacher"];
-}
-
-assigned_teacher::assigned_teacher()
-{
-
-	id = -1;
-	id_class = -1;
-	id_teacher = -1;
-}
 
 group::group()
 {
 	id=-1;
-	name ="";
 	number_students = -1;
 	semester = -1;
-	id_specialty = -1;
 }
 
-group::group(json group)
+group::group(json &group)
 {
 	id = (int)group["id"];
-	name = group["name"];
 	number_students = (int)group["number_students"];
 	semester = (int)group["semester"];
-	id_specialty = (int)group["id_specialty"];
-
 }
 
-bool group::isNullOrEmpty()
-{
-	if (id == -1 || name.empty() || number_students == -1 || semester == -1 || id_specialty == -1)
-		return true;
-	return false;
-}
-
-clas::clas()
-{
-	id = -1;
-	id_type_class = -1;
-	times_per_week = -1;
-	id_assigned_discipline=-1;
-	assigned_groups= vector <assigned_group>();
-	assigned_teachers= vector <assigned_teacher>();
-	recommended_audiences= vector <recommended_audience>();
-	recommended_schedules= vector <recommended_schedule >();
-	cl_assigned_discipline = assigned_discipline();
-}
-
-clas::clas(json clas)
-{
-	id = (int)clas["id"];
-	id_type_class = (int)clas["id_type_class"];
-	times_per_week = (double)clas["times_per_week"];
-	id_assigned_discipline = (int)clas["id_assigned_discipline"];
-	cl_assigned_discipline = assigned_discipline(clas["assigned_discipline"]);
-	assigned_groups = vector <assigned_group>();
-	assigned_teachers = vector <assigned_teacher>();
-	recommended_audiences = vector <recommended_audience>();
-	recommended_schedules = vector <recommended_schedule >();
-	for (json ag : clas["assigned_groups"]) {
-		assigned_groups.push_back(assigned_group (ag));
-	}
-	for (json at : clas["assigned_teachers"]) {
-		assigned_teachers.push_back(assigned_teacher(at));
-	}
-	for (json ra : clas["recommended_audiences"]) {
-		recommended_audiences.push_back(recommended_audience(ra));
-	}
-	for (json rs : clas["recommended_schedules"]) {
-		recommended_schedules.push_back(recommended_schedule(rs));
-	}
-}
-
-bool clas::isNullOrEmpty()
-{
-	if (id==-1 || id_type_class==-1 || times_per_week==-1||id_assigned_discipline ==-1)
-		return true;
-	return false;
-}
-
-assigned_group::assigned_group(json ag)
-{
-    id = (int)ag["id"];
-	id_class = (int)ag["id_class"];
-	id_group = (int)ag["id_group"];
-	this->a_group = group(ag["group"]);
-}
-
-assigned_group::assigned_group()
-{
-	int id = -1;
-	int id_class = -1;
-	int id_group = -1;
-	this->a_group = group();
-
-}
 
 audience::audience()
 {
-	id=-1;
-	name="";
-	id_type_class = -1;
-	capacity = -1;
-	assigned_audiences= vector <assigned_audience>();
+    id=-1;
+    id_type_class = -1;
+    capacity = -1;
+    cathedras = vector <int>();
 }
 
-audience::audience(json audience)
+audience::audience(json &audience)
 {
-	id = audience["id"];
-	name = audience["name"];
-	id_type_class = audience["id_type_class"];
-	capacity = audience["capacity"];
-	assigned_audiences = vector <assigned_audience>();
-	for (json aa : audience["assigned_audiences"]) {
-		assigned_audiences.push_back(assigned_audience(aa));
-	}
+    id = audience["id"];
+    id_type_class = audience["id_type_class"];
+    capacity = audience["capacity"];
+    cathedras = vector <int>();
+    for (json &aa : audience["assigned_audiences"]) {
+        cathedras.push_back(aa["id_cathedra"]);
+    }
 }
 
-bool audience::isNullOrEmpty()
+schedule::schedule(int id, int number_pair, int day_week, int pair_type, int id_audience, int id_class)
 {
-	if (id == -1 || name.empty() || id_type_class == -1 || capacity == -1)
-		return true;
-	return false;
+    this->id = id;
+    this->number_pair = number_pair;
+    this->day_week = day_week;
+    this->pair_type = pair_type;
+    this->id_audience = id_audience;
+    this->clas = nullptr;
+    this->id_class = id_class;
 }
 
-assigned_audience::assigned_audience(json aa)
+schedule::schedule(int id, int number_pair, int day_week, int pair_type, int id_audience,struct clas &clas)
 {
-	id = (int)aa["id"];
-	id_audience= (int)aa["id_audience"];
-	id_cathedra = (int)aa["id_cathedra"];
-}
-
-assigned_audience::assigned_audience()
-{
-	id = -1;
-	id_audience = -1;
-	id_cathedra = -1;
-}
-
-schedule::schedule(int id, int number_pair, int day_week, int pair_type, int id_assigned_group, int id_audience,int id_class)
-{
-	this->id = id;
-	this->number_pair = number_pair;
-	this->day_week = day_week;
-	this->pair_type = pair_type;
-	this->id_assigned_group = id_assigned_group;
-	this->id_audience = id_audience;
-	this->id_class = id_class;
+    this->id = id;
+    this->number_pair = number_pair;
+    this->day_week = day_week;
+    this->pair_type = pair_type;
+    this->id_audience = id_audience;
+    this->clas = &clas;
+    this->id_class = -1;
 }
 
 schedule::schedule()
 {
-	this->id = -1;
-	this->number_pair = -1;
-	this->day_week = -1;
-	this->pair_type = -1;
-	this->id_assigned_group = -1;
-	this->id_audience = -1;
+    this->id = -1;
+    this->number_pair = -1;
+    this->day_week = -1;
+    this->pair_type = -1;
+    this->id_audience = -1;
+    this->clas = nullptr;
+    this->id_class = -1;
 }
 
 json schedule::to_json()
 {
-	json schedule;
-	schedule["id"] = id;
-	schedule["number_pair"] = number_pair;
-	schedule["day_week"] = day_week;
-	schedule["pair_type"] = pair_type;
-	schedule["id_assigned_group"] = id_assigned_group;
-	schedule["id_audience"] = id_audience;
-	schedule["id_class"] = id_class;
-	return schedule;
+    json schedule;
+    schedule["id"] = id;
+    schedule["number_pair"] = number_pair;
+    schedule["day_week"] = day_week;
+    schedule["pair_type"] = pair_type;
+    schedule["id_audience"] = id_audience;
+    schedule["id_class"] = clas->id;
+    return schedule;
 }
 
-bool schedule::compare(schedule sc)
-{
-	if (id == sc.id && number_pair == sc.number_pair && day_week == sc.day_week && pair_type == sc.pair_type && id_assigned_group == sc.id_assigned_group && id_audience == sc.id_audience && id_class == sc.id_class)
-		return true;
-	return false;
-}
-
-bool schedule::isNullOrEmpty()
-{
-	if (id == -1 || number_pair == -1 || day_week == -1 || pair_type == -1 || id_assigned_group == -1 || id_audience == -1 || id_class == -1)
-		return true;
-	return false;
-}
 
 fitness::fitness()
 {
-	this->fitnessValue = -1;
-	this->fitnessGr = map<string, double>();
-	this->fitnessTeach = map<string, double>();
-	this->fitnessAud = map<string, double>();
-	this->fitnessSameRecSc = -1;
+    this->fitnessValue = -1;
+    this->fitnessGr = map<string, double>();
+    this->fitnessTeach = map<string, double>();
+    this->fitnessAud = map<string, double>();
+    this->fitnessSameRecSc = -1;
 }
 
 json fitness::to_json()
 {
-	json fitness;
-	fitness["fitnessValue"] = fitnessValue;
-	fitness["fitnessGr"] = fitnessGr;
-	fitness["fitnessTeach"] = fitnessTeach;
-	fitness["fitnessAud"] = fitnessAud;
+    json fitness;
+    fitness["fitnessValue"] = fitnessValue;
+    fitness["fitnessGr"] = fitnessGr;
+    fitness["fitnessTeach"] = fitnessTeach;
+    fitness["fitnessAud"] = fitnessAud;
 
-	return fitness;
+    return fitness;
 }
 
 fitness::fitness(double fitnessValue, map<string, double> fitnessGr, map<string, double> fitnessTeach, map<string, double> fitnessAud, double fitnessSameRecSc)
 {
-	this->fitnessValue= fitnessValue;
-	this->fitnessGr= fitnessGr;
-	this->fitnessTeach= fitnessTeach;
-	this->fitnessAud= fitnessAud;
-	this->fitnessSameRecSc= fitnessSameRecSc;
+    this->fitnessValue= fitnessValue;
+    this->fitnessGr= fitnessGr;
+    this->fitnessTeach= fitnessTeach;
+    this->fitnessAud= fitnessAud;
+    this->fitnessSameRecSc= fitnessSameRecSc;
 }
 
 json individ::to_json()
 {
-	json i_schedule;
-	json scheduleForGr;
-	for (auto sch : scheduleForGroups) {
-		json temp;
-		json arr = json::array();
-		for (schedule t : sch.second) {
-			arr.push_back(t.to_json());
-		}
-		scheduleForGr[to_string(sch.first)] = arr;
-	}
-	i_schedule["scheduleForGr"] = scheduleForGr;
-	i_schedule["fitnessValue"] = fitnessValue.to_json();
-	
-	return i_schedule;
+    json i_schedule;
+    json scheduleForGr;
+    for (auto sch : this->scheduleForGroups) {
+        json temp;
+        json arr = json::array();
+        for (schedule t : sch.second) {
+            arr.push_back(t.to_json());
+        }
+        scheduleForGr[to_string(sch.first)] = arr;
+    }
+    i_schedule["scheduleForGr"] = scheduleForGr;
+    i_schedule["fitnessValue"] = fitnessValue.to_json();
+
+    return i_schedule;
 }
 
 individ::individ()
 {
-	scheduleForGroups= map <int, vector<schedule>>();
-	scheduleForTeachers= map <int, vector<schedule>>();
-	scheduleForAudiences= map <int, vector<schedule>>();
-	fitnessValue = fitness();
-
+    scheduleForGroups= map <int, vector<schedule>>();
+    scheduleForTeachers= map <int, vector<schedule>>();
+    scheduleForAudiences= map <int, vector<schedule>>();
+    fitnessValue = fitness();
 }
 
-individ::individ(map<int, vector<schedule>> scheduleForGroups, map<int, vector<schedule>> scheduleForTeachers, map<int, vector<schedule>> scheduleForAudiences, fitness fitnessValue)
-{
-	this->scheduleForGroups = scheduleForGroups;
-	this->scheduleForTeachers = scheduleForTeachers;
-	this->scheduleForAudiences = scheduleForAudiences;
-	this->fitnessValue = fitnessValue;
-}
 
-specialty::specialty(json spec)
+recommended_audience::recommended_audience(json &ra)
 {
-	id= spec["id"];
-	name= spec["name"];
-	code= spec["code"];
-	id_cathedra=spec["id_cathedra"];
-}
-
-specialty::specialty()
-{
-	id = -1;
-	name = "";
-	code = -1;
-	id_cathedra = -1;
-}
-
-assigned_discipline::assigned_discipline(json ad)
-{
-	id= ad["id"];
-	id_specialty = ad["id_specialty"];
-	id_discipline = ad["id_discipline"];
-	semester = ad["semester"];
-	this->ad_specialty =specialty(ad["specialty"]);
-}
-
-assigned_discipline::assigned_discipline()
-{
-	id = -1;
-	id_specialty = -1;
-	id_discipline = -1;
-	semester = -1;
-	this->ad_specialty = specialty();
-}
-
-recommended_audience::recommended_audience(json ra)
-{
-	id=ra["id"];
-	id_audience = ra["id_audience"];
-	id_class = ra["id_class"];
+    id_audience = ra["id_audience"];
 }
 
 recommended_audience::recommended_audience()
 {
-	id = -1;
-	id_audience = -1;
-	id_class = -1;
+    id_audience = -1;
 }
+
+base_schedule::base_schedule(){
+    this->base_schedule_group = vector<schedule>();
+    this->base_schedule_teacher = vector<schedule>();
+    this->base_schedule_audience = vector<schedule>();
+}
+
+base_schedule::base_schedule(json &base_schedule_group, json &base_schedule_teacher, json &base_schedule_audience){
+    this->base_schedule_group = vector<schedule>();
+    this->base_schedule_teacher = vector<schedule>();
+    this->base_schedule_audience = vector<schedule>();
+    for (size_t i = 0; i < base_schedule_group.size(); i++){
+             this->base_schedule_group.push_back(
+                    schedule(base_schedule_group[i]["schedule"]["id"],
+                    base_schedule_group[i]["schedule"]["number_pair"],
+                    base_schedule_group[i]["schedule"]["day_week"],
+                    base_schedule_group[i]["schedule"]["pair_type"],
+                    base_schedule_group[i]["schedule"]["id_audience"],
+                    base_schedule_group[i]["schedule"]["id_class"]));
+    }
+    for (size_t i = 0; i < base_schedule_teacher.size(); i++){
+            this->base_schedule_teacher.push_back(
+                    schedule(base_schedule_teacher[i]["schedule"]["id"],
+                    base_schedule_teacher[i]["schedule"]["number_pair"],
+                    base_schedule_teacher[i]["schedule"]["day_week"],
+                    base_schedule_teacher[i]["schedule"]["pair_type"],
+                    base_schedule_teacher[i]["schedule"]["id_audience"],
+                    base_schedule_teacher[i]["schedule"]["id_class"]));
+    }
+    for (size_t i = 0; i < base_schedule_audience.size(); i++){
+             this->base_schedule_audience.push_back(
+                    schedule(base_schedule_audience[i]["schedule"]["id"],
+                    base_schedule_audience[i]["schedule"]["number_pair"],
+                    base_schedule_audience[i]["schedule"]["day_week"],
+                    base_schedule_audience[i]["schedule"]["pair_type"],
+                    base_schedule_audience[i]["schedule"]["id_audience"],
+                    base_schedule_audience[i]["schedule"]["id_class"]));
+    }
+
+}
+
+clas::clas()
+{
+    id = -1;
+    id_type_class = -1;
+    times_per_week = -1;
+    id_assigned_discipline=-1;
+    assigned_groups= vector <group>();
+    assigned_teachers= vector <teacher>();
+    recommended_audiences= vector <recommended_audience>();
+    recommended_schedules= vector <recommended_schedule >();
+    id_cathedra = -1;
+}
+
+
+clas::clas(json &clas)
+{
+	id = (int)clas["id"];
+	id_type_class = (int)clas["id_type_class"];
+    times_per_week = (double)clas["times_per_week"];
+    id_assigned_discipline = (int)clas["id_assigned_discipline"];
+    assigned_groups = vector <group>();
+    assigned_teachers = vector <teacher>();
+	recommended_audiences = vector <recommended_audience>();
+	recommended_schedules = vector <recommended_schedule >();
+    id_cathedra = int(clas["assigned_discipline"]["specialty"]["id_cathedra"]);
+    for (json &ag : clas["assigned_groups"]) {
+        assigned_groups.push_back(group(ag["group"]));
+	}
+    for (json &at : clas["assigned_teachers"]) {
+        assigned_teachers.push_back(teacher(at["teacher"]));
+	}
+    for (json &ra : clas["recommended_audiences"]) {
+		recommended_audiences.push_back(recommended_audience(ra));
+	}
+    for (json &rs : clas["recommended_schedules"]) {
+        recommended_schedules.push_back(recommended_schedule(rs));
+	}
+}
+
+

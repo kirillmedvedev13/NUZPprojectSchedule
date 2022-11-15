@@ -9,14 +9,15 @@ export default async function SpawnChild(fileName) {
     }
 
     for await (const chunk of child.stderr) {
-
       console.log("ERROR: " + chunk.toString());
+      return false;
     }
 
     const exitCode = await new Promise((resolve, reject) => {
       child.on("close", resolve);
     });
-    if (exitCode) return false;
+    if (exitCode)
+      return exitCode;
 
   } catch (err) {
     console.log(err);

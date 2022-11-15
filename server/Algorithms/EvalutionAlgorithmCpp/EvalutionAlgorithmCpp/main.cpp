@@ -21,9 +21,8 @@ using namespace std;
 using namespace nlohmann;
 using namespace BS;
 
-int main(int argc, const char* argv[])
+int main()
 {
-
     try
     {
         json data = json();
@@ -32,41 +31,30 @@ int main(int argc, const char* argv[])
         data = json::parse(fileData);
         cout << "Test!!" << endl;
         cout << "Test!!" << endl;
-        return 0;
-        const json info = data["info"];
-   
-        const int max_day = info["max_day"];
-        const int max_pair = info["max_pair"];
-        int population_size = info["population_size"];
-        const int max_generations = info["max_generations"];
-        const double p_crossover = info["p_crossover"];
-        const double p_mutation = info["p_mutation"];
-        const double p_genes = info["p_genes"];
-        const double penaltyGrWin = info["penaltyGrWin"];
-        const double penaltyTeachWin = info["penaltyTeachWin"];
-        const double penaltyLateSc = info["penaltyLateSc"];
-        const double penaltyEqSc = info["penaltyEqSc"];
-        const double penaltySameTimesSc = info["penaltySameTimesSc"];
-        const double p_elitism = info["p_elitism"];
-        const double penaltySameRecSc = info["penaltySameRecSc"];
-        string type_select = data["type_select"];
-        type_select = "ranging";
+
+        const int max_day = data["max_day"];
+        const int max_pair = data["max_pair"];
+
+        const json evolution_values = data["evolution_values"];
+        const int population_size = evolution_values["population_size"];
+        const int max_generations = evolution_values["max_generations"];
+        const double p_crossover = evolution_values["p_crossover"];
+        const double p_mutation = evolution_values["p_mutation"];
+        const double p_genes = evolution_values["p_genes"];
+        const double p_elitism = evolution_values["p_elitism"];
+
+        const json general_values = data["general_values"];
+        const double penaltySameRecSc = general_values["penaltySameRecSc"];
+        const double penaltyGrWin = general_values["penaltyGrWin"];
+        const double penaltyTeachWin = general_values["penaltyTeachWin"];
+        const double penaltyLateSc = general_values["penaltyLateSc"];
+        const double penaltyEqSc = general_values["penaltyEqSc"];
+        const double penaltySameTimesSc = general_values["penaltySameTimesSc"];
         const int num_elit = population_size * p_elitism;
 
         vector <clas> classes = vector <clas>();
         for (json cl : data["classes"]) {
-            clas new_cl(cl);
-            classes.push_back(cl);
-        }
-        vector <recommended_schedule>  recommended_schedules = vector <recommended_schedule>();
-        for (json rc : data["recommended_schedules"]) {
-            recommended_schedule new_rc(rc);
-            recommended_schedules.push_back(new_rc);
-        }
-        vector <group> groups = vector < group>();
-        for (json gr : data["groups"]) {
-            group new_gr(gr);
-            groups.push_back(gr);
+            classes.push_back(clas(cl));
         }
 
         vector<audience> audiences = vector<audience>();
@@ -74,28 +62,14 @@ int main(int argc, const char* argv[])
             audience new_aud(aud);
             audiences.push_back(new_aud);
         }
-        vector <teacher> teachers = vector <teacher>();
-        for (json teach : data["teachers"]) {
-            teacher new_teach(teach);
-            teachers.push_back(new_teach);
-        }
 
-        json base_schedule = NULL;
-        vector <individ> populations = vector <individ>(population_size);
+        base_schedule bs = base_schedule(data["base_schedule"]["schedule_group"],data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
+
         thread_pool worker_pool;
         timer Timer;
         Timer.start();
         cout << "Init starts" << endl;
-        for (int i = 0; i < population_size; i++) {
-          
-            worker_pool.push_task([&classes, &max_day, &max_pair, &audiences, &base_schedule, &populations,i]()
-                {
-                   
-                    populations[i] = Init(classes, max_day, max_pair, audiences, base_schedule);
-                    
-                });
-        }
-        worker_pool.wait_for_tasks();
+        vector <individ> populations = Init(classes, max_day, max_pair,population_size, audiences, bs);
         cout << "Init ends" << endl;
         Timer.stop();
         cout << "The elapsed time was " << Timer.ms() << " ms.\n";
