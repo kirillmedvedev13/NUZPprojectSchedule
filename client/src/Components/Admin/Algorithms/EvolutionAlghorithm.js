@@ -7,7 +7,8 @@ import ButtonRunEACpp from "./ButtonRunEACpp.js";
 
 export default class EvolutionAlgorithm extends React.Component {
   render() {
-    let { id_cathedra, refetch, evolution_values, handleChangeState } = this.props;
+    let { id_cathedra, refetch, evolution_values, handleChangeState } =
+      this.props;
     return (
       <div className="d-flex justify-content-center mx-5">
         <Card className="my-2">
@@ -24,9 +25,7 @@ export default class EvolutionAlgorithm extends React.Component {
                     type="number"
                     min={0}
                     onChange={(e) => {
-                      evolution_values.population_size = Number(
-                        e.target.value
-                      );
+                      evolution_values.population_size = Number(e.target.value);
                       handleChangeState("evolution_values", evolution_values);
                     }}
                   />
@@ -42,9 +41,7 @@ export default class EvolutionAlgorithm extends React.Component {
                     type="number"
                     min={0}
                     onChange={(e) => {
-                      evolution_values.max_generations = Number(
-                        e.target.value
-                      );
+                      evolution_values.max_generations = Number(e.target.value);
                       handleChangeState("evolution_values", evolution_values);
                     }}
                   />
@@ -63,10 +60,7 @@ export default class EvolutionAlgorithm extends React.Component {
                     step={0.05}
                     onChange={(e) => {
                       evolution_values.p_crossover = Number(e.target.value);
-                      this.handleChangeState(
-                        "evolution_values",
-                        evolution_values
-                      );
+                      handleChangeState("evolution_values", evolution_values);
                     }}
                   />
                 </Col>
@@ -82,10 +76,7 @@ export default class EvolutionAlgorithm extends React.Component {
                     step={0.05}
                     onChange={(e) => {
                       evolution_values.p_mutation = Number(e.target.value);
-                      this.handleChangeState(
-                        "evolution_values",
-                        evolution_values
-                      );
+                      handleChangeState("evolution_values", evolution_values);
                     }}
                   />
                 </Col>
@@ -103,10 +94,7 @@ export default class EvolutionAlgorithm extends React.Component {
                     step={0.001}
                     onChange={(e) => {
                       evolution_values.p_genes = Number(e.target.value);
-                      this.handleChangeState(
-                        "evolution_values",
-                        evolution_values
-                      );
+                      handleChangeState("evolution_values", evolution_values);
                     }}
                   />
                 </Col>
