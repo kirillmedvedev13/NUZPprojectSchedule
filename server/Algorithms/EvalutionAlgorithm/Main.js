@@ -19,28 +19,26 @@ export const RUN_EA = {
     id_cathedra: { type: GraphQLInt },
   },
   async resolve(parent, { id_cathedra }) {
-    const {
+    let {
       max_day,
       max_pair,
-      population_size,
-      max_generations,
-      p_crossover,
-      p_mutation,
-      p_genes,
-      penaltyGrWin,
-      penaltyTeachWin,
-      penaltyLateSc,
-      penaltyEqSc,
-      penaltySameTimesSc,
-      p_elitism,
-      penaltySameRecSc,
       classes,
       recommended_schedules,
       audiences,
       groups,
       teachers,
+      evolution_values,
+      general_values,
+      results,
     } = await GetDataFromDB(id_cathedra);
-
+    let {
+      population_size,
+      max_generations,
+      p_crossover,
+      p_mutation,
+      p_genes,
+      p_elitism,
+    } = evolution_values;
     let base_schedule = null;
     GetBaseSchedule(base_schedule, id_cathedra);
 
@@ -53,6 +51,8 @@ export const RUN_EA = {
       maxWorkers: numCPUs,
     });
 
+    let newResults = [];
+    let start_time = new Date().getTime();
     // Инициализация
     let populations = Init(
       classes,
@@ -138,10 +138,7 @@ export const RUN_EA = {
             JSON.stringify(individ, replacer),
             recommended_schedules,
             max_day,
-            penaltySameRecSc,
-            penaltyGrWin,
-            penaltySameTimesSc,
-            penaltyTeachWin,
+            general_values,
             true,
           ])
         );
@@ -229,7 +226,10 @@ export const RUN_EA = {
       console.timeEnd("Select");
       // Лучшая популяция
       bestPopulation = MinFitnessValue(populations, bestPopulation);
-
+      newResults.push([
+        new Date().getTime() - start_time,
+        bestPopulation.fitnessValue,
+      ]);
       if (bestPopulation.fitnessValue == 0) break;
 
       console.log(
@@ -240,7 +240,14 @@ export const RUN_EA = {
           MeanFitnessValue(populations)
       );
     }
+
     //Вставка в бд
+
+    results.evolution_algorithm = newResults;
+    results = JSON.stringify(results);
+
+    await db.info.update({ results }, { where: { id: 1 } });
+
     let arrClass = new Set();
     for (let value of bestPopulation.scheduleForGroups.values()) {
       value.forEach((schedule) => {

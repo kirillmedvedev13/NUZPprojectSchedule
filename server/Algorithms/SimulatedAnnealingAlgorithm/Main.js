@@ -4,7 +4,7 @@ import MessageType from "../../Schema/TypeDefs/MessageType.js";
 import { GraphQLInt } from "graphql";
 import db from "../../database.js";
 import Init from "./Init.js";
-import cloneDeep from "lodash.clonedeep"
+import cloneDeep from "lodash.clonedeep";
 import GetRndInteger from "../Service/GetRndInteger.js";
 import Mutation from "./Mutation.js";
 import Fitness from "../Service/Fitness.js";
@@ -23,7 +23,7 @@ export const RUN_SIMULATED_ANNEALING = {
       audiences,
       simulated_annealing,
       general_values,
-      results
+      results,
     } = await GetDataFromDB(id_cathedra);
     let { temperature, alpha } = simulated_annealing;
     // Получения расписания для груп учителей если они есть  в других кафедрах
@@ -55,8 +55,8 @@ export const RUN_SIMULATED_ANNEALING = {
           r === 1
             ? newSchedule.scheduleForGroups
             : r === 2
-              ? newSchedule.scheduleForTeachers
-              : newSchedule.scheduleForAudiences;
+            ? newSchedule.scheduleForTeachers
+            : newSchedule.scheduleForAudiences;
         sc = Array.from(sc.values());
         // Выбор случайной сущности
         if (sc.length) {
@@ -99,7 +99,10 @@ export const RUN_SIMULATED_ANNEALING = {
         console.log(
           `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
         );
-        newResults.push([new Date().getTime() - start_time, currentFitness.fitnessValue])
+        newResults.push([
+          new Date().getTime() - start_time,
+          currentFitness.fitnessValue,
+        ]);
       }
       i += 1;
     }
@@ -108,18 +111,20 @@ export const RUN_SIMULATED_ANNEALING = {
     );
     results.simulated_annealing = newResults;
     results = JSON.stringify(results);
-    await db.info.update({ results }, { where: { id: 1 } })
+    await db.info.update({ results }, { where: { id: 1 } });
     let arrClass = new Set();
     let arrGroup = Array.from(currentSchedule.scheduleForGroups.values());
     for (const sc_group of arrGroup) {
       for (const sc of sc_group) {
-        arrClass.add(JSON.stringify({
-          day_week: sc.day_week,
-          number_pair: sc.number_pair,
-          pair_type: sc.pair_type,
-          id_class: sc.clas.id,
-          id_audience: sc.id_audience
-        }))
+        arrClass.add(
+          JSON.stringify({
+            day_week: sc.day_week,
+            number_pair: sc.number_pair,
+            pair_type: sc.pair_type,
+            id_class: sc.clas.id,
+            id_audience: sc.id_audience,
+          })
+        );
       }
     }
     let arr = [];

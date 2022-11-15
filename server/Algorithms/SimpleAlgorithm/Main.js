@@ -5,6 +5,7 @@ import { GraphQLInt } from "graphql";
 import db from "../../database.js";
 import AddClassToScheduleNew from "./AddClassToScheduleNew.js";
 import AddClassToScheduleOld from "./AddClassToScheduleOld.js";
+import GetFitness from "./GetFitness.js";
 
 export const RUN_SA = {
   type: MessageType,
@@ -12,8 +13,15 @@ export const RUN_SA = {
     id_cathedra: { type: GraphQLInt },
   },
   async resolve(parent, { id_cathedra }) {
-    let { max_day, max_pair, classes, recommended_schedules, audiences } =
-      await GetDataFromDB(id_cathedra);
+    let {
+      max_day,
+      max_pair,
+      classes,
+      recommended_schedules,
+      audiences,
+      general_values,
+      results,
+    } = await GetDataFromDB(id_cathedra);
     let scheduleForGroups = new Map();
     let scheduleForTeachers = new Map();
     let scheduleForAudiences = new Map();
@@ -23,6 +31,10 @@ export const RUN_SA = {
       scheduleForAudiences,
     };
     // Получения расписания для груп учителей если они есть  в других кафедрах
+    let newResults = [];
+    let start_time = new Date().getTime();
+    newResults.push([0, 0]);
+
     let db_schedule = await ParseScheduleFromDB(id_cathedra);
     if (db_schedule) {
       AddClassToScheduleOld(schedule, db_schedule, max_day, max_pair);
@@ -51,13 +63,27 @@ export const RUN_SA = {
         }
       }
     }
+    let fitnessValue = GetFitness(
+      schedule,
+      max_day,
+      max_pair,
+      recommended_schedules,
+      general_values
+    );
+    newResults.push([
+      new Date().getTime() - start_time,
+      fitnessValue.fitnessValue,
+    ]);
+    results.simple_algorithm = newResults;
+    results = JSON.stringify(results);
+    await db.info.update({ results }, { where: { id: 1 } });
     let arr = [];
     arrClass.forEach((sched) => arr.push(JSON.parse(sched)));
     let isBulk = await db.schedule.bulkCreate(arr);
     if (isBulk)
       return {
         successful: true,
-        message: `Success`,
+        message: `Total fitness: ${fitnessValue.fitnessValue}`,
       };
     else return { successful: false, message: `Some error` };
   },
