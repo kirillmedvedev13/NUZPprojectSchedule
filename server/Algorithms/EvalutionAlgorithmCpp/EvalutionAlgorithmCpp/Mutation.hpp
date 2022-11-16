@@ -31,7 +31,7 @@ void Mutation(individ* mutant,const int &index, const double& p_genes, const int
                         // Замена ссылки для аудитории
                         if (old_id_audience != new_id_audience){
                             cl.schedules[index][i].id_audience = new_id_audience;
-                            auto &ref = cl.schedules[index][i];
+                            auto ref = &cl.schedules[index][i];
                             auto it = find(mutant->scheduleForAudiences.at(old_id_audience).begin(), mutant->scheduleForAudiences.at(old_id_audience).end(), ref);
                             mutant->scheduleForAudiences.at(old_id_audience).erase(it);
                             mutant->scheduleForAudiences.at(new_id_audience).emplace(mutant->scheduleForAudiences.at(new_id_audience).begin(), ref);

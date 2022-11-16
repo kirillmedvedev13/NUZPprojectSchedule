@@ -22,16 +22,17 @@ using namespace std;
 using namespace nlohmann;
 using namespace BS;
 
+#include <mutex>
+
+mutex mtx;
+
 int main()
 {
     try
     {
         json data = json();
-
         ifstream fileData("data.json");
         data = json::parse(fileData);
-        cout << "Test!!" << endl;
-        cout << "Test!!" << endl;
 
         const int max_day = data["max_day"];
         const int max_pair = data["max_pair"];
@@ -59,14 +60,14 @@ int main()
         }
 
         vector<audience> audiences = vector<audience>();
-        for (json aud : data["audiences"]) {
+        for (json &aud : data["audiences"]) {
             audience new_aud(aud);
             audiences.push_back(new_aud);
         }
 
         base_schedule bs = base_schedule(data["base_schedule"]["schedule_group"],data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
-        thread_pool worker_pool;
+        thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();
         timer TimerRes;
@@ -98,13 +99,16 @@ int main()
                         r1 = GetRndInteger(0, population_size - 1);
                         r2 = GetRndInteger(0, population_size - 1);
                     }
-                    auto ind1 = &populations[r1];
-                    auto ind2 = &populations[r2];
-                    worker_pool.push_task([&ind1, &ind2, &classes, &r1, &r2](){
-                        Crossing(ind1, ind2, classes, r1, r2);
+                    auto ind1 = populations[r1];
+                    auto ind2 = populations[r2];
+                    worker_pool.push_task([ind1, ind2, &classes, &r1, &r2](){
+                       // lock_guard<mutex> lg(mtx);
+                        auto cl = classes;
+                        Crossing(ind1, ind2, cl, r1, r2);
                     });
                 }
             }
+
             worker_pool.wait_for_tasks();
             cout << "Crossing ends" << endl;
             Timer.stop();

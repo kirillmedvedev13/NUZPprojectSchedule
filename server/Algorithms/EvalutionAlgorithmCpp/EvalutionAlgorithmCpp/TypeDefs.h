@@ -40,7 +40,7 @@ struct fitness {
 struct teacher{
     int id;
     teacher();
-    teacher(json &teacher);
+    teacher(int id_teacher);
 };
 
 struct group{

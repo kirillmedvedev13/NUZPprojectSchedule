@@ -65,14 +65,14 @@ vector <individ> Init(vector <clas>& classes, const int& max_day,const int &popu
                 classes[i].schedules[k].push_back(schedule(number_pair,day_week,info[j],id_audience, clas));
                 auto &ref = classes[i].schedules[k][j];
                 for (auto gr : classes[i].assigned_groups){
-                    auto &ref_gr = populations[k].scheduleForGroups.at(gr.id);
+                    auto &ref_gr = populations[k].scheduleForGroups[gr.id];
                     ref_gr.push_back(&ref);
                 }
                 for (auto teach : classes[i].assigned_teachers){
-                    auto &ref_teach = populations[k].scheduleForTeachers.at(teach.id);
+                    auto &ref_teach = populations[k].scheduleForTeachers[teach.id];
                     ref_teach.push_back(&ref);
                 }
-                auto &ref_aud = populations[k].scheduleForAudiences.at(id_audience);
+                auto &ref_aud = populations[k].scheduleForAudiences[id_audience];
                 ref_aud.push_back(&ref);
             }
         }

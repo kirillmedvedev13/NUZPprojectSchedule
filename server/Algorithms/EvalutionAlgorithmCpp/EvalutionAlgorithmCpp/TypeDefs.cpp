@@ -1,13 +1,13 @@
-#include "TypeDefs.h"
+﻿#include "TypeDefs.h"
 
 teacher::teacher()
 {
     id=-1;
 }
 
-teacher::teacher(json &teacher)
+teacher::teacher(int id_teacher)
 {
-    id = (int)teacher["id"];
+    id = id_teacher;
 
 }
 
@@ -161,6 +161,13 @@ bestIndivid::bestIndivid()
     this->fitnessValue = fitness();
 }
 
+individ::individ()
+{
+    this->scheduleForGroups = map<int,vector<schedule*>>();
+    this->scheduleForTeachers = map<int,vector<schedule*>>();
+    this->scheduleForAudiences = map<int,vector<schedule*>>();
+}
+
 
 recommended_audience::recommended_audience(json &ra)
 {
@@ -255,7 +262,7 @@ clas::clas(json &clas, const int &population_size)
         assigned_groups.push_back(group(ag["group"]));
     }
     for (json &at : clas["assigned_teachers"]) {
-        assigned_teachers.push_back(teacher(at["teacher"]));
+        assigned_teachers.push_back(teacher(at["id_teacher"]));
     }
     for (json &ra : clas["recommended_audiences"]) {
         recommended_audiences.push_back(recommended_audience(ra));
