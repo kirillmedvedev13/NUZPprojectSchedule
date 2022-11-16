@@ -4,13 +4,14 @@
 #include "Fitness.h"
 #include "Crossing.h"
 #include "Mutation.h"
-#include "SortPopulations.h"
+#include "SortPopulations.hpp"
 #include "SelectRanging.h"
 #include "GetRndDouble.h"
 #include "GetRndInteger.h"
-#include "MinFitnessValue.h"
+#include "MinFitnessValue.hpp"
 #include "MeanFitnessValue.h"
 #include "BS_thread_pool.hpp"
+#include "InitIndivid.hpp"
 #include "TypeDefs.h"
 #include <fstream>
 #include <vector>
@@ -54,7 +55,7 @@ int main()
 
         vector <clas> classes = vector <clas>();
         for (json cl : data["classes"]) {
-            classes.push_back(clas(cl));
+            classes.push_back(clas(cl, population_size));
         }
 
         vector<audience> audiences = vector<audience>();
@@ -68,38 +69,43 @@ int main()
         thread_pool worker_pool;
         timer Timer;
         Timer.start();
+        timer TimerRes;
         cout << "Init starts" << endl;
-        vector <individ> populations = Init(classes, max_day, max_pair,population_size, audiences, bs);
+        // В каждом классе хранится массив занятий для индивида, на который ссылаются индивиды, то есть изменение расписания влечет изменение данных у всех
+        auto populations = Init(classes, max_day, max_pair,population_size, audiences, bs);
         cout << "Init ends" << endl;
         Timer.stop();
         cout << "The elapsed time was " << Timer.ms() << " ms.\n";
         int countIter = 0;
         individ bestPopulation = individ();
         map<string, double> temp;
-        bestPopulation.fitnessValue = fitness(INT_MAX, temp, temp, temp, 0);
-
+        vector<pair<int, int>> result = vector<pair<int, int>>();
+        result.push_back(make_pair(0,0));
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
         {
+            TimerRes.start();
             Timer.start();
             cout << "Crossing starts" << endl;
-            multi_future<void> multiFutureCros = worker_pool.parallelize_loop(0, population_size, [&populations, &classes, &p_crossover](const int a, const int b)
+
+            for (int i = 0; i < population_size; i++)
+            {
+                if (GetRndDouble() < p_crossover)
                 {
-                    for (int i = a; i < b; i++)
+                    int r1 = GetRndInteger(0, population_size - 1);
+                    int r2 = GetRndInteger(0, population_size - 1);
+                    while (r1 == r2)
                     {
-                        if (GetRndDouble() < p_crossover)
-                        {
-                            int r1 = GetRndInteger(a, b - 1);
-                            int r2 = GetRndInteger(a, b - 1);
-                            while (r1 == r2)
-                            {
-                                r1 = GetRndInteger(a, b - 1);
-                                r2 = GetRndInteger(a, b - 1);
-                            }
-                            Crossing(populations[r1], populations[r2], classes);
-                        }
+                        r1 = GetRndInteger(0, population_size - 1);
+                        r2 = GetRndInteger(0, population_size - 1);
                     }
-                });
-            multiFutureCros.get();
+                    auto ind1 = &populations[r1];
+                    auto ind2 = &populations[r2];
+                    worker_pool.push_task([&ind1, &ind2, &classes, &r1, &r2](){
+                        Crossing(ind1, ind2, classes, r1, r2);
+                    });
+                }
+            }
+            worker_pool.wait_for_tasks();
             cout << "Crossing ends" << endl;
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
@@ -107,17 +113,17 @@ int main()
 
             Timer.start();
             cout << "Mutation starts" << endl;
-            multi_future<void> multiFutureMuta = worker_pool.parallelize_loop(0, population_size, [&populations, &p_genes, &max_day, &max_pair, &audiences, &classes, &p_mutation](const int a, const int b)
+            for (int i = 0; i < population_size; i++)
+            {
+                if (GetRndDouble() < p_mutation)
                 {
-                    for (int i = a; i < b; i++)
-                    {
-                        if (GetRndDouble() < p_mutation)
-                        {
-                            Mutation(populations[i], p_genes, max_day, max_pair, audiences, classes);
-                        }
-                    }
-                });
-            multiFutureMuta.get();
+                    auto mutant = &populations[i];
+                    worker_pool.push_task([&mutant, &p_genes, &max_day, &max_pair, &audiences, &classes, &i](){
+                        Mutation(mutant, i,p_genes, max_day, max_pair, audiences, classes);
+                    });
+                }
+            }
+            worker_pool.wait_for_tasks();
             cout << "Mutation ends" << endl;
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
@@ -125,14 +131,14 @@ int main()
 
             Timer.start();
             cout << "Fitness starts" << endl;
-            multi_future<void> multiFutureFitness = worker_pool.parallelize_loop(0, population_size, [&populations, &recommended_schedules, &max_day, &penaltySameRecSc, &penaltyGrWin, &penaltySameTimesSc, &penaltyTeachWin](const int a, const int b)
-                {
-                    for (int i = a; i < b; i++)
-                    {
-                        Fitness(populations[i], recommended_schedules, max_day, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
-                    }
+            for (int i = 0; i < population_size; i++)
+            {
+                auto ind = &populations[i];
+                worker_pool.push_task([&ind, &max_day, &penaltySameRecSc, &penaltyGrWin, &penaltySameTimesSc, &penaltyTeachWin, &i, &classes](){
+                    Fitness(ind, max_day, classes, i, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
                 });
-            multiFutureFitness.get();
+            }
+            worker_pool.wait_for_tasks();
             cout << "Fitness ends" << endl;
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
@@ -140,91 +146,60 @@ int main()
 
             Timer.start();
             cout << "Selection starts" << endl;
+
+            auto temp_schedules = vector<vector<vector<schedule>>>();
+            for (auto cl : classes){
+                temp_schedules.push_back(cl.schedules);
+            }
+
             SortPopulations(populations);
-            vector<individ> elite;
+            vector<individ> new_population;
             for (int i = 0; i < num_elit; i++)
             {
-                elite.push_back(populations[i]);
+                auto ind = individ();
+                InitIndivid(ind,classes,i, new_population.size(), temp_schedules);
+                new_population.push_back(ind);
             }
-            multi_future<vector<individ>> multiFutureSelect = worker_pool.parallelize_loop(0, population_size, [&type_select, &populations](const int a, const int b)
-                {
-                    vector<individ> new_pops;
-                    int length = b - a;
-                    if (type_select == "ranging")
-                    {
-                        vector<double> p_populations;
-                        double p_cur = 0;
-                        for (int i = 0; i < length; i++)
-                        {
-                            double a1 = GetRndDouble() + 1;
-                            double b1 = 2 - a;
-                            p_populations.push_back(p_cur);
-                            p_cur = p_cur + (1.0 / length) * (a1 - (a1 - b1) * (i / (length - 1.0)));
-                        }
-                        p_populations.push_back(1.001);
-                        for (int i = 0; i < length; i++)
-                        {
-                            int index = SelectRanging(p_populations) + a;
-                            new_pops.push_back(populations[index]);
-                        }
-                    }
-                    else if (type_select == "tournament")
-                    {
 
-                    }
-                    return new_pops;
+            // Выборка ранжированием
+            auto p_populations = vector<double>(population_size);
+            double p_cur = 0;
+            for (int i = 0; i < population_size; i++) {
+              double a = GetRndDouble() + 1;
+              double b = 2 - a;
+              p_populations[i] = p_cur;
+              p_cur = p_cur + (1 / population_size) * (a - (a - b) * (i / (population_size - 1)));
+            }
+            p_populations.push_back(1.001);
+            auto individ_indexes = vector<int>();
+            for (int i = 0; i < population_size - num_elit; i++) {
+                worker_pool.push_task([&p_populations, &individ_indexes](){
+                    SelectRanging(p_populations, individ_indexes);
                 });
-            auto arrFuture = multiFutureSelect.get();
-            vector<individ> new_pops;
+             }
+            worker_pool.wait_for_tasks();
 
-            int i = 0;
-            while (new_pops.size() < population_size) {
-                if (i < elite.size())
-                    new_pops.push_back(elite[i]);
-
-                int j = arrFuture.size() - 1;
-                while (j >= 0) {
-                    if (new_pops.size() >= population_size)
-                        break;
-                    if (i < arrFuture[j].size())
-                        new_pops.push_back(arrFuture[j][i]);
-                    j--;
-                }
-                i++;
+            for (auto index : individ_indexes){
+                auto ind = individ();
+                InitIndivid(ind,classes,index, new_population.size(), temp_schedules);
+                new_population.push_back(ind);
             }
-            populations = new_pops;
+            populations = new_population;
             cout << "Selection ends" << endl;
             Timer.stop();
             cout << "The elapsed time was " << Timer.ms() << " ms.\n";
 
-            multi_future<individ> multiFutureMin = worker_pool.parallelize_loop(0, population_size, [&populations](const int a, const int b)
-                {
-                    return MinFitnessValue(populations, a, b);
-                });
-            vector<individ> temp;
-            for (individ t : multiFutureMin.get())
-            {
-                temp.push_back(t);
-            }
-            temp.push_back(bestPopulation);
-            bestPopulation = MinFitnessValue(temp, 0, temp.size());
+            MinFitnessValue(populations, classes, bestPopulation);
 
-            multi_future<double> multiFutureMean = worker_pool.parallelize_loop(0, population_size, [&populations](const int a, const int b)
-                {
-                    return MeanFitnessValue(populations, a, b);
-                });
-            double mean = 0;
-            auto arrMean = multiFutureMean.get();
-            for (double t : arrMean) {
-                mean += t;
-            }
 
             cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << mean / arrMean.size() << endl;
+            TimerRes.stop();
+            //result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
             countIter++;
+
 
         }
         cout << setw(4) << bestPopulation.to_json() << endl;;
-
 
     }
     catch (json::parse_error& ex)

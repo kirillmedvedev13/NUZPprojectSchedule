@@ -1,6 +1,7 @@
 #include "SelectRanging.h"
 #include "GetRndDouble.h"
-int SelectRanging(const vector<double>& p_populations)
+
+void SelectRanging(const vector<double>& p_populations, vector<int> &indexes)
 {
 	int left = 0;
 	int right = p_populations.size()-1;
@@ -16,6 +17,5 @@ int SelectRanging(const vector<double>& p_populations)
 		else if (rand >= p_populations[middle + 1])
 			left = middle + 1;
 	}
-	return middle;
-
+    indexes.push_back(middle);
 }

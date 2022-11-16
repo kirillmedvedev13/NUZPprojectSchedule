@@ -1,7 +1,5 @@
-debug/AddClassToSchedule.o
 debug/Crossing.o
 debug/Fitness.o
-debug/GetIdAudienceForClass.o
 debug/GetPairTypeForClass.o
 debug/GetRndDouble.o
 debug/GetRndInteger.o
@@ -11,7 +9,5 @@ debug/MinFitnessValue.o
 debug/Mutation.o
 debug/SelectRanging.o
 debug/SortPopulations.o
-debug/SortSchedule.o
 debug/TypeDefs.o
 debug/main.o
-debug/threadpool.o

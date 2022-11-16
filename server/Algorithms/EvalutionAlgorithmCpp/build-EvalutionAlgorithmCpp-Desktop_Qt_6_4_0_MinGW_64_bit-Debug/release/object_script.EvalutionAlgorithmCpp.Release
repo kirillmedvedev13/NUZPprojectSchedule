@@ -1,7 +1,5 @@
-release/AddClassToSchedule.o
 release/Crossing.o
 release/Fitness.o
-release/GetIdAudienceForClass.o
 release/GetPairTypeForClass.o
 release/GetRndDouble.o
 release/GetRndInteger.o
@@ -11,7 +9,5 @@ release/MinFitnessValue.o
 release/Mutation.o
 release/SelectRanging.o
 release/SortPopulations.o
-release/SortSchedule.o
 release/TypeDefs.o
 release/main.o
-release/threadpool.o

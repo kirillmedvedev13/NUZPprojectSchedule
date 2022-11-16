@@ -4,46 +4,37 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        AddClassToSchedule.cpp \
         Crossing.cpp \
         Fitness.cpp \
-        GetIdAudienceForClass.cpp \
         GetPairTypeForClass.cpp \
         GetRndDouble.cpp \
         GetRndInteger.cpp \
         Init.cpp \
         MeanFitnessValue.cpp \
-        MinFitnessValue.cpp \
         Mutation.cpp \
         SelectRanging.cpp \
         SortPopulations.cpp \
-        SortSchedule.cpp \
         TypeDefs.cpp \
-        main.cpp \
-        threadpool.cpp
+        main.cpp
 
 DISTFILES += \
-    EvalutionAlgorithmCpp.pro.user \
-    Main.js \
-    SpawnChild.js
+    EvalutionAlgorithmCpp.pro.user
 
 HEADERS += \
-    AddClassToSchedule.h \
     BS_thread_pool.hpp \
     Crossing.h \
-    Filter.h \
     Fitness.h \
-    GetIdAudienceForClass.h \
+    GetIdAudienceForClass.hpp \
     GetPairTypeForClass.h \
     GetRndDouble.h \
     GetRndInteger.h \
-    Init.h \
+    Init.hpp \
+    InitIndivid.hpp \
     MeanFitnessValue.h \
-    MinFitnessValue.h \
+    MinFitnessValue.hpp \
     Mutation.h \
     SelectRanging.h \
-    SortPopulations.h \
-    SortSchedule.h \
+    SortPopulations.hpp \
+    SortSchedule.hpp \
     TypeDefs.h \
-    json.hpp \
-    threadpool.h
+    json.hpp

@@ -1,5 +1,5 @@
 #pragma once
 #include <vector>
 using namespace std;
-int SelectRanging(const vector<double> &p_populations);
+void SelectRanging(const vector<double>& p_populations, vector<int> &indexes);
 

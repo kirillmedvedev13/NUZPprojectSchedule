@@ -4,6 +4,6 @@
 #include <vector>
 using namespace std;
 
-individ Init(const vector <clas> &classes,const int &max_day,const int &max_pair,const vector<audience> &audiences,const json &base_schedule);
+vector <individ> Init(vector <clas>& classes, const int& max_day,const int &population_size, const int& max_pair, vector<audience>& audiences,  base_schedule  &bs);
 
 #endif // INIT_H
