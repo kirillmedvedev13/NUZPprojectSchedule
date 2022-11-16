@@ -1,6 +1,12 @@
 #ifndef GETRNDDOUBLE_H
 #define GETRNDDOUBLE_H
 
-double GetRndDouble();
+#include <cstdlib>
+
+double GetRndDouble()
+{
+    return (double)rand() / RAND_MAX;
+}
+
 
 #endif // GETRNDDOUBLE_H

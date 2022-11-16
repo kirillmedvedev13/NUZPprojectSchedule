@@ -4,16 +4,6 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        Crossing.cpp \
-        Fitness.cpp \
-        GetPairTypeForClass.cpp \
-        GetRndDouble.cpp \
-        GetRndInteger.cpp \
-        Init.cpp \
-        MeanFitnessValue.cpp \
-        Mutation.cpp \
-        SelectRanging.cpp \
-        SortPopulations.cpp \
         TypeDefs.cpp \
         main.cpp
 
@@ -22,18 +12,18 @@ DISTFILES += \
 
 HEADERS += \
     BS_thread_pool.hpp \
-    Crossing.h \
-    Fitness.h \
+    Crossing.hpp \
+    Fitness.hpp \
     GetIdAudienceForClass.hpp \
-    GetPairTypeForClass.h \
-    GetRndDouble.h \
-    GetRndInteger.h \
+    GetPairTypeForClass.hpp \
+    GetRndDouble.hpp \
+    GetRndInteger.hpp \
     Init.hpp \
     InitIndivid.hpp \
-    MeanFitnessValue.h \
+    MeanFitnessValue.hpp \
     MinFitnessValue.hpp \
-    Mutation.h \
-    SelectRanging.h \
+    Mutation.hpp \
+    SelectRanging.hpp \
     SortPopulations.hpp \
     SortSchedule.hpp \
     TypeDefs.h \

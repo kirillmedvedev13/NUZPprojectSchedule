@@ -1,15 +1,15 @@
 ﻿#include <iostream>
 #include "json.hpp"
-#include "Init.h"
-#include "Fitness.h"
-#include "Crossing.h"
-#include "Mutation.h"
+#include "Init.hpp"
+#include "Fitness.hpp"
+#include "Crossing.hpp"
+#include "Mutation.hpp"
 #include "SortPopulations.hpp"
-#include "SelectRanging.h"
-#include "GetRndDouble.h"
-#include "GetRndInteger.h"
+#include "SelectRanging.hpp"
+#include "GetRndDouble.hpp"
+#include "GetRndInteger.hpp"
 #include "MinFitnessValue.hpp"
-#include "MeanFitnessValue.h"
+#include "MeanFitnessValue.hpp"
 #include "BS_thread_pool.hpp"
 #include "InitIndivid.hpp"
 #include "TypeDefs.h"
@@ -77,7 +77,7 @@ int main()
         Timer.stop();
         cout << "The elapsed time was " << Timer.ms() << " ms.\n";
         int countIter = 0;
-        individ bestPopulation = individ();
+        auto bestPopulation = bestIndivid();
         map<string, double> temp;
         vector<pair<int, int>> result = vector<pair<int, int>>();
         result.push_back(make_pair(0,0));
@@ -157,7 +157,7 @@ int main()
             for (int i = 0; i < num_elit; i++)
             {
                 auto ind = individ();
-                InitIndivid(ind,classes,i, new_population.size(), temp_schedules);
+                InitIndivid(ind,classes,i, new_population.size(), temp_schedules, bs);
                 new_population.push_back(ind);
             }
 
@@ -181,7 +181,7 @@ int main()
 
             for (auto index : individ_indexes){
                 auto ind = individ();
-                InitIndivid(ind,classes,index, new_population.size(), temp_schedules);
+                InitIndivid(ind,classes,index, new_population.size(), temp_schedules, bs);
                 new_population.push_back(ind);
             }
             populations = new_population;
@@ -191,13 +191,10 @@ int main()
 
             MinFitnessValue(populations, classes, bestPopulation);
 
-
-            cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << mean / arrMean.size() << endl;
+            cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
             TimerRes.stop();
             //result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
             countIter++;
-
-
         }
         cout << setw(4) << bestPopulation.to_json() << endl;;
 

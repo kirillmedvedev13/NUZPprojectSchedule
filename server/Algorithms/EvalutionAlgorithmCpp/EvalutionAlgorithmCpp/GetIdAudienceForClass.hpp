@@ -1,7 +1,7 @@
 #ifndef GETIDAUDIENCEFORCLASS_H
 #define GETIDAUDIENCEFORCLASS_H
 
-#include "GetRndInteger.h"
+#include "GetRndInteger.hpp"
 #include <iostream>
 #include "TypeDefs.h"
 #include <vector>

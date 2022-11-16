@@ -16,6 +16,7 @@ void MinFitnessValue(const vector<individ>& populations, vector<clas> &classes, 
     }
     if(min_index != -1){
         bi.arr_schedule.clear();
+        bi.fitnessValue = populations[min_index].fitnessValue;
         for (auto &cl : classes){
             for (auto &sc : cl.schedules[min_index]){
                 bi.arr_schedule.push_back(schedule(sc.number_pair,sc.day_week,sc.pair_type,sc.id_audience,sc.clas->id));

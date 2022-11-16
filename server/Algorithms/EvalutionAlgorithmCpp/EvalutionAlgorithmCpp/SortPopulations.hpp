@@ -1,5 +1,10 @@
-#pragma once
+#ifndef SORTPOPULATIONS_H
+#define SORTPOPULATIONS_H
+
 #include "TypeDefs.h"
 #include <vector>
-void SortPopulations(vector<individ> &populations);
+void SortPopulations(vector<individ> &populations){
 
+}
+
+#endif
