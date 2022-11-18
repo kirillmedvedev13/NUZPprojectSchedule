@@ -1,4 +1,5 @@
 import { spawn, exec } from "child_process";
+import { resolve } from "path";
 
 export default async function SpawnChild(fileName) {
   try {
@@ -9,13 +10,11 @@ export default async function SpawnChild(fileName) {
 
     for await (const chunk of child.stderr) {
       console.log("ERROR: " + chunk.toString());
-      return false;
+      return 1;
     }
-
-    const exitCode = await new Promise((resolve, reject) => {
-      child.on("close", resolve);
+    сhild.on("close", (code) => {
+      return code;
     });
-    if (exitCode) return exitCode;
   } catch (err) {
     console.log(err);
   }

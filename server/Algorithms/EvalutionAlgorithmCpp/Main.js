@@ -45,7 +45,9 @@ export const RUN_EACPP = {
       if (err) console.log(err);
     });
 
-    let code = await SpawnChild(fileName);
-    console.log(code);
+    const promise = SpawnChild(fileName);
+    promise.then((code) => {
+      console.log(code);
+    })
   },
 };
