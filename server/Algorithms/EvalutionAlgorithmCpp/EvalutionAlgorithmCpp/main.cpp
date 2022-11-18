@@ -16,6 +16,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <mutex>
+#include <filesystem>
 using namespace std;
 using namespace nlohmann;
 using namespace BS;
@@ -27,7 +28,8 @@ int main()
     try
     {
         json data = json();
-        ifstream fileData("data.json");
+
+        ifstream fileData(filesystem::current_path().string()+"\\data.json");
         data = json::parse(fileData);
 
         const int max_day = data["max_day"];
