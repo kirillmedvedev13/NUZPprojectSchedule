@@ -62,9 +62,6 @@ vector <individ> Init(vector <clas>& classes, const int& max_day, const int& max
                 }
 
                 int id_audience = GetIdAudienceForClass(clas, audiences);
-                if ( id_audience < 0 ||  id_audience > 10000){
-                    cout << "123";
-                }
                 classes[i].schedules[k].push_back(schedule(number_pair,day_week,info[j],id_audience, clas.id));
             }
         }
