@@ -13,7 +13,7 @@
 
 using namespace std;
 
-vector <individ> Init(vector <clas>& classes, const int& max_day,const int &population_size, const int& max_pair, vector<audience>& audiences, base_schedule  &bs)
+vector <individ> Init(vector <clas>& classes, const int& max_day, const int& max_pair,const int &population_size,const vector<audience>& audiences, base_schedule  &bs)
 {
     vector <individ> populations = vector <individ>(population_size);
 
@@ -40,8 +40,9 @@ vector <individ> Init(vector <clas>& classes, const int& max_day,const int &popu
             }
         }
     }
+    // Расстановка расписания
     for (size_t i = 0; i < classes.size(); i++){
-        clas clas = classes[i];
+        clas &clas = classes[i];
         vector<int> info = GetPairTypeForClass(clas);
         for (size_t j = 0; j < info.size(); j++)
         {
@@ -61,19 +62,29 @@ vector <individ> Init(vector <clas>& classes, const int& max_day,const int &popu
                 }
 
                 int id_audience = GetIdAudienceForClass(clas, audiences);
-
-                classes[i].schedules[k].push_back(schedule(number_pair,day_week,info[j],id_audience, clas));
-                auto &ref = classes[i].schedules[k][j];
+                if ( id_audience < 0 ||  id_audience > 10000){
+                    cout << "123";
+                }
+                classes[i].schedules[k].push_back(schedule(number_pair,day_week,info[j],id_audience, clas.id));
+            }
+        }
+    }
+    // Расстановка ссылок на расписание
+    for (int k = 0; k < population_size; k++){
+        for (size_t i = 0; i < classes.size(); i++){
+            clas &clas = classes[i];
+            for (size_t j = 0; j < clas.schedules[k].size(); j++) {
+                auto ref = &clas.schedules[k][j];
                 for (auto gr : classes[i].assigned_groups){
                     auto &ref_gr = populations[k].scheduleForGroups[gr.id];
-                    ref_gr.push_back(&ref);
+                    ref_gr.push_back(ref);
                 }
                 for (auto teach : classes[i].assigned_teachers){
                     auto &ref_teach = populations[k].scheduleForTeachers[teach.id];
-                    ref_teach.push_back(&ref);
+                    ref_teach.push_back(ref);
                 }
-                auto &ref_aud = populations[k].scheduleForAudiences[id_audience];
-                ref_aud.push_back(&ref);
+                auto &ref_aud = populations[k].scheduleForAudiences[clas.schedules[k][j].id_audience];
+                ref_aud.push_back(ref);
             }
         }
     }

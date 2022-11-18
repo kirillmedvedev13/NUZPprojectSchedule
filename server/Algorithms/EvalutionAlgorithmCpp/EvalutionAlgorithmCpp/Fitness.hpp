@@ -9,18 +9,18 @@
 #include "TypeDefs.h"
 using namespace std;
 
-double FitnessWindows(vector<schedule*> i_schedule,const int &max_day,const double &penaltyWin);
-double FitnessSameTimes(vector<schedule*> i_schedule,const double &penaltySameTimesSc);
+double FitnessWindows(vector<schedule*> &i_schedule,const int &max_day,const double &penaltyWin);
+double FitnessSameTimes(vector<schedule*> &i_schedule,const double &penaltySameTimesSc);
 double FitnessSameSchedules(const vector<recommended_schedule> &rs, const vector<schedule> &sc, const double &penaltySameRecSc);
 
-void Fitness(individ *i_schedule, const int& max_day, const vector<clas> &classes, const int &index,  const double& penaltySameRecSc, const double& penaltyGrWin, const double& penaltySameTimesSc, const double& penaltyTeachWin){
-    for (auto &sc_gr : i_schedule->scheduleForGroups){
+void Fitness(individ &i_schedule, const int& max_day, const vector<clas> &classes, const int &index,  const double& penaltySameRecSc, const double& penaltyGrWin, const double& penaltySameTimesSc, const double& penaltyTeachWin){
+    for (auto &sc_gr : i_schedule.scheduleForGroups){
         SortSchedule(sc_gr.second);
     }
-    for (auto &sc_teach : i_schedule->scheduleForGroups){
+    for (auto &sc_teach : i_schedule.scheduleForGroups){
         SortSchedule(sc_teach.second);
     }
-    for (auto &sc_aud : i_schedule->scheduleForGroups){
+    for (auto &sc_aud : i_schedule.scheduleForGroups){
         SortSchedule(sc_aud.second);
     }
     double fitnessValue = 0;
@@ -30,15 +30,18 @@ void Fitness(individ *i_schedule, const int& max_day, const vector<clas> &classe
     double fitnessSameTimeTeach = 0;
     double fitnessSameTimeAud = 0;
     double fitnessSameRecSc = 0;
-    for (auto &sc_gr : i_schedule->scheduleForGroups){
+    for (auto &sc_gr : i_schedule.scheduleForGroups){
+        if (sc_gr.first == 28){
+            cout << "123";
+        }
         fitnessGrWin += FitnessWindows(sc_gr.second, max_day, penaltyGrWin);
         fitnessSameTimeGr += FitnessSameTimes(sc_gr.second, penaltySameTimesSc);
     }
-    for (auto &sc_teach : i_schedule->scheduleForTeachers){
+    for (auto &sc_teach : i_schedule.scheduleForTeachers){
         fitnessTeachWin += FitnessWindows(sc_teach.second, max_day, penaltySameTimesSc);
         fitnessSameTimeTeach += FitnessSameTimes(sc_teach.second, penaltySameTimesSc);
     }
-    for (auto &sc_aud : i_schedule->scheduleForAudiences){
+    for (auto &sc_aud : i_schedule.scheduleForAudiences){
         fitnessSameTimeAud += FitnessSameTimes(sc_aud.second, penaltySameTimesSc);
     }
     for (auto &cl : classes){
@@ -47,36 +50,40 @@ void Fitness(individ *i_schedule, const int& max_day, const vector<clas> &classe
         }
     }
     fitnessValue = fitnessGrWin + fitnessSameTimeGr + fitnessTeachWin + fitnessSameTimeTeach + fitnessSameTimeAud + fitnessSameRecSc;
-    i_schedule->fitnessValue = fitness(fitnessValue,fitnessGrWin,fitnessSameTimeGr,fitnessTeachWin,fitnessSameTimeTeach,fitnessSameTimeAud, fitnessSameRecSc);
+    i_schedule.fitnessValue = fitness(fitnessValue,fitnessGrWin,fitnessSameTimeGr,fitnessTeachWin,fitnessSameTimeTeach,fitnessSameTimeAud, fitnessSameRecSc);
 }
 
 
 
-double FitnessWindows(vector<schedule*> i_schedule, const int& max_day, const double& penaltyWin){
+double FitnessWindows(vector<schedule*> &i_schedule, const int& max_day, const double& penaltyWin){
     double fitnessWindows = 0;
     for(int current_day = 1; current_day <=max_day;current_day++){
-        vector<schedule*> schedule_top;
-        vector<schedule*> schedule_bot;
-        copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_top), [current_day](schedule *p){
+        auto schedule_top = vector<schedule*>();
+        auto schedule_bot = vector<schedule*>();
+        copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_top), [&current_day](schedule *p){
             return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3));
         });
-        copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_bot), [current_day](schedule *p){
+        copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_bot), [&current_day](schedule *p){
             return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3));
         });
         auto array = vector<pair<schedule*,schedule*>>();
         // Числитель и Общие
-        for (size_t i =0; i < schedule_top.size()-1; i++){
-            if(schedule_top[i+1]->number_pair - schedule_top[i+1]->number_pair > 1){
-                fitnessWindows += (schedule_top[i + 1]->number_pair - schedule_top[i]->number_pair - 1) * penaltyWin;
+        int s = schedule_top.size()- 1;
+        for (int i =0; i < s; i++){
+            auto diff = (schedule_top[i+1]->number_pair - schedule_top[i]->number_pair);
+            if(diff > 1){
+                fitnessWindows += diff * penaltyWin;
             }
-            // Запомнить окно между общими парами что в знаменателе их не повторять
+            // Запомнить окно между общими парами что бы в знаменателе их не повторять
             if (schedule_top[i + 1]->pair_type == 3 && schedule_top[i]->pair_type == 3) {
                 array.push_back(make_pair(schedule_top[i], schedule_top[i + 1]));
             }
         }
         // Знаменатель
-        for (size_t i =0; i < schedule_bot.size()-1; i++){
-            if(schedule_bot[i+1]->number_pair - schedule_bot[i+1]->number_pair > 1){
+         s = schedule_bot.size()-1;
+        for (int i =0; i < s; i++){
+            auto diff = (schedule_top[i+1]->number_pair - schedule_top[i]->number_pair);
+            if(diff > 1){
                 if(schedule_bot[i + 1]->pair_type == 3 && schedule_bot[i]->pair_type == 3){
                     auto res = find_if(array.begin(), array.end(), [&i, &schedule_bot](const pair<schedule*,schedule*> &p){
                         return (p.first == schedule_bot[i] && p.second == schedule_bot[i+1]);
@@ -102,13 +109,14 @@ double FitnessSameSchedules(const vector<recommended_schedule> &rs, const vector
 
 }
 
-double FitnessSameTimes(vector<schedule*> i_schedule, const double& penaltySameTimesSc){
+double FitnessSameTimes(vector<schedule*> &i_schedule, const double& penaltySameTimesSc){
     double fitnessSameTimes = 0;
     schedule* lastTop=nullptr;
     schedule* lastBot=nullptr;
     schedule* lastTotal=nullptr;
     int cur_day = -1;
-    for(size_t i=-1;i<i_schedule.size()-1;i++){
+    int s = i_schedule.size()-1;
+    for(int i=-1; i < s;i++){
         if(i_schedule[i+1]->day_week != cur_day){
             cur_day = i_schedule[i+1]->day_week;
             lastTop=nullptr;

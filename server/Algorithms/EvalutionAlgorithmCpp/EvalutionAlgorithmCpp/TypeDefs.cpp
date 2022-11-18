@@ -66,18 +66,7 @@ schedule::schedule(int number_pair, int day_week, int pair_type, int id_audience
     this->day_week = day_week;
     this->pair_type = pair_type;
     this->id_audience = id_audience;
-    this->clas = nullptr;
     this->id_class = id_class;
-}
-
-schedule::schedule(int number_pair, int day_week, int pair_type, int id_audience,struct clas &clas)
-{
-    this->number_pair = number_pair;
-    this->day_week = day_week;
-    this->pair_type = pair_type;
-    this->id_audience = id_audience;
-    this->clas = &clas;
-    this->id_class = -1;
 }
 
 schedule::schedule()
@@ -86,7 +75,6 @@ schedule::schedule()
     this->day_week = -1;
     this->pair_type = -1;
     this->id_audience = -1;
-    this->clas = nullptr;
     this->id_class = -1;
 }
 
@@ -97,7 +85,7 @@ json schedule::to_json()
     schedule["day_week"] = day_week;
     schedule["pair_type"] = pair_type;
     schedule["id_audience"] = id_audience;
-    schedule["id_class"] = clas->id;
+    schedule["id_class"] = id_class;
     return schedule;
 }
 

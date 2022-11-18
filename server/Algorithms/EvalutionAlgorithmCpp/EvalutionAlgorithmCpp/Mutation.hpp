@@ -7,7 +7,7 @@
 #include "GetIdAudienceForClass.hpp"
 #include "GetRndInteger.hpp"
 
-void Mutation(individ* mutant,const int &index, const double& p_genes, const int& max_day, const int& max_pair, const vector<audience>& audiences, vector<clas>& classes)
+void Mutation(individ* mutant,const int &index, const double& p_genes, const int& max_day, const int& max_pair, vector<audience>& audiences, vector<clas>& classes)
 {
     for (auto &cl : classes){
         if (GetRndDouble() <= p_genes){
@@ -32,9 +32,9 @@ void Mutation(individ* mutant,const int &index, const double& p_genes, const int
                         if (old_id_audience != new_id_audience){
                             cl.schedules[index][i].id_audience = new_id_audience;
                             auto ref = &cl.schedules[index][i];
-                            auto it = find(mutant->scheduleForAudiences.at(old_id_audience).begin(), mutant->scheduleForAudiences.at(old_id_audience).end(), ref);
+                            auto it = find(mutant->scheduleForAudiences[old_id_audience].begin(), mutant->scheduleForAudiences[old_id_audience].end(), ref);
                             mutant->scheduleForAudiences.at(old_id_audience).erase(it);
-                            mutant->scheduleForAudiences.at(new_id_audience).emplace(mutant->scheduleForAudiences.at(new_id_audience).begin(), ref);
+                            mutant->scheduleForAudiences[new_id_audience].emplace(mutant->scheduleForAudiences[new_id_audience].begin(), ref);
                         }
                     }
                 }

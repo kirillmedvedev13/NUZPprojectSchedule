@@ -22,8 +22,6 @@ using namespace std;
 using namespace nlohmann;
 using namespace BS;
 
-#include <mutex>
-
 mutex mtx;
 
 int main()
@@ -82,41 +80,29 @@ int main()
         map<string, double> temp;
         vector<pair<int, int>> result = vector<pair<int, int>>();
         result.push_back(make_pair(0,0));
+
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
         {
             TimerRes.start();
             Timer.start();
-            cout << "Crossing starts" << endl;
 
-            for (int i = 0; i < population_size; i++)
+            for (int i = 0; i < population_size; i+=2)
             {
                 if (GetRndDouble() < p_crossover)
                 {
-                    int r1 = GetRndInteger(0, population_size - 1);
-                    int r2 = GetRndInteger(0, population_size - 1);
-                    while (r1 == r2)
-                    {
-                        r1 = GetRndInteger(0, population_size - 1);
-                        r2 = GetRndInteger(0, population_size - 1);
-                    }
-                    auto ind1 = populations[r1];
-                    auto ind2 = populations[r2];
-                    worker_pool.push_task([ind1, ind2, &classes, &r1, &r2](){
-                       // lock_guard<mutex> lg(mtx);
-                        auto cl = classes;
-                        Crossing(ind1, ind2, cl, r1, r2);
+                    auto &ind1 = populations[i];
+                    auto &ind2 = populations[i+1];
+                    worker_pool.push_task([&ind1, &ind2, &classes, i](){
+                        Crossing(ind1, ind2, classes, i, i+1);
                     });
                 }
             }
 
             worker_pool.wait_for_tasks();
-            cout << "Crossing ends" << endl;
             Timer.stop();
-            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
-
+            cout << "Crossing " << Timer.ms() << "ms" << endl;
 
             Timer.start();
-            cout << "Mutation starts" << endl;
             for (int i = 0; i < population_size; i++)
             {
                 if (GetRndDouble() < p_mutation)
@@ -128,28 +114,22 @@ int main()
                 }
             }
             worker_pool.wait_for_tasks();
-            cout << "Mutation ends" << endl;
             Timer.stop();
-            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
-
+            cout << "Mutation " << Timer.ms() << "ms" << endl;;
 
             Timer.start();
-            cout << "Fitness starts" << endl;
             for (int i = 0; i < population_size; i++)
             {
-                auto ind = &populations[i];
+                auto &ind = populations[i];
                 worker_pool.push_task([&ind, &max_day, &penaltySameRecSc, &penaltyGrWin, &penaltySameTimesSc, &penaltyTeachWin, &i, &classes](){
                     Fitness(ind, max_day, classes, i, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
                 });
             }
             worker_pool.wait_for_tasks();
-            cout << "Fitness ends" << endl;
             Timer.stop();
-            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
-
+            cout << "Fitness " << Timer.ms() << "ms" << endl;
 
             Timer.start();
-            cout << "Selection starts" << endl;
 
             auto temp_schedules = vector<vector<vector<schedule>>>();
             for (auto cl : classes){
@@ -169,10 +149,10 @@ int main()
             auto p_populations = vector<double>(population_size);
             double p_cur = 0;
             for (int i = 0; i < population_size; i++) {
-              double a = GetRndDouble() + 1;
-              double b = 2 - a;
-              p_populations[i] = p_cur;
-              p_cur = p_cur + (1 / population_size) * (a - (a - b) * (i / (population_size - 1)));
+                double a = GetRndDouble() + 1;
+                double b = 2 - a;
+                p_populations[i] = p_cur;
+                p_cur = p_cur + (1 / population_size) * (a - (a - b) * (i / (population_size - 1)));
             }
             p_populations.push_back(1.001);
             auto individ_indexes = vector<int>();
@@ -180,7 +160,7 @@ int main()
                 worker_pool.push_task([&p_populations, &individ_indexes](){
                     SelectRanging(p_populations, individ_indexes);
                 });
-             }
+            }
             worker_pool.wait_for_tasks();
 
             for (auto index : individ_indexes){
@@ -189,9 +169,8 @@ int main()
                 new_population.push_back(ind);
             }
             populations = new_population;
-            cout << "Selection ends" << endl;
             Timer.stop();
-            cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+            cout << "Selection " << Timer.ms() << "ms" << endl;
 
             MinFitnessValue(populations, classes, bestPopulation);
 
@@ -203,12 +182,14 @@ int main()
         cout << setw(4) << bestPopulation.to_json() << endl;;
 
     }
-    catch (json::parse_error& ex)
+    catch (exception &ex)
     {
-        std::cerr << "parse error at byte " << ex.byte << std::endl;
+        cout << ex.what() << endl;
 
     }
-
+    catch(...){
+        cout << "any mistake" << endl;
+    }
 
     return 0;
 }

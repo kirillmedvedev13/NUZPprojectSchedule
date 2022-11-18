@@ -19,7 +19,7 @@ void MinFitnessValue(const vector<individ>& populations, vector<clas> &classes, 
         bi.fitnessValue = populations[min_index].fitnessValue;
         for (auto &cl : classes){
             for (auto &sc : cl.schedules[min_index]){
-                bi.arr_schedule.push_back(schedule(sc.number_pair,sc.day_week,sc.pair_type,sc.id_audience,sc.clas->id));
+                bi.arr_schedule.push_back(schedule(sc.number_pair,sc.day_week,sc.pair_type,sc.id_audience,sc.id_class));
             }
         }
     }

@@ -86,8 +86,6 @@ struct schedule {
     int pair_type;
     int id_audience;
     int id_class;
-    clas *clas;
-    schedule(int number_pair, int day_week, int pair_type, int id_audience,struct clas &clas);
     schedule(int number_pair, int day_week, int pair_type, int id_audience,int id_class);
     schedule();
     json to_json();
