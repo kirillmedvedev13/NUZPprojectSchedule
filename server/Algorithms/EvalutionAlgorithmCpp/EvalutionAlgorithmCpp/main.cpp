@@ -40,7 +40,6 @@ int main()
         const int max_generations = evolution_values["max_generations"];
         const double p_crossover = evolution_values["p_crossover"];
         const double p_mutation = evolution_values["p_mutation"];
-        const double p_genes = evolution_values["p_genes"];
         const double p_elitism = evolution_values["p_elitism"];
 
         const json general_values = data["general_values"];
@@ -102,9 +101,9 @@ int main()
                 }
                 if (GetRndDouble() <= p_mutation)
                 {
-                    worker_pool.push_task([&populations, &p_genes, &max_day, &max_pair, &audiences, &classes, i](){
+                    worker_pool.push_task([&populations, &max_day, &max_pair, &audiences, &classes, i](){
 
-                        Mutation(populations, i,p_genes, max_day, max_pair, audiences, classes);
+                        Mutation(populations, i, max_day, max_pair, audiences, classes);
                     });
                 }
             }
@@ -188,19 +187,6 @@ int main()
             cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
             //result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
             countIter++;
-
-            for (int i =0; i < populations.size(); i++){
-                for (auto &cl : classes){
-
-                    for (auto &sc : cl.schedules[i]){
-                        auto ref = &sc;
-                        auto it = find(populations[i].scheduleForAudiences[sc.id_audience].begin(), populations[i].scheduleForAudiences[sc.id_audience].end(), ref);
-                        if (it == populations[i].scheduleForAudiences[sc.id_audience].end()){
-                            cout << "123";
-                        }
-                    }
-                }
-            }
         }
         cout << setw(4) << bestPopulation.to_json() << endl;;
 
