@@ -52,7 +52,7 @@ void SortPopulations(vector<individ> &populations, vector<clas> &classes){
                 // Поменять ссылки для аудиторий
                 if(new_id_audience != old_id_audience){
                     auto ref = &classes[i].schedules[j][k];
-                    auto it = find(populations[j].scheduleForAudiences[old_id_audience].begin(), populations[i].scheduleForAudiences[old_id_audience].end(), ref);
+                    auto it = find(populations[j].scheduleForAudiences[old_id_audience].begin(), populations[j].scheduleForAudiences[old_id_audience].end(), ref);
                     populations[j].scheduleForAudiences[old_id_audience].erase(it);
                     populations[j].scheduleForAudiences[new_id_audience].emplace(populations[j].scheduleForAudiences[new_id_audience].begin(), ref);
                 }
