@@ -7,15 +7,16 @@
 #include "GetIdAudienceForClass.hpp"
 #include "GetRndInteger.hpp"
 
-void Mutation(individ* mutant,const int &index, const double& p_genes, const int& max_day, const int& max_pair, vector<audience>& audiences, vector<clas>& classes)
+void Mutation(vector<individ> &populations,const int &index, const double& p_genes, const int& max_day, const int& max_pair, vector<audience>& audiences, vector<clas>& classes)
 {
     for (auto &cl : classes){
-        if (GetRndDouble() <= p_genes){
-            for(size_t i =0; i < cl.schedules[index].size(); i++){
+        if (GetRndDouble() <= 1){
+            for(int i =0; i < cl.schedules[index].size(); i++){
                 // С шансом 50 = будет менятся каждая пара в занятие
                 if(GetRndDouble() <= 0.5){
                     // если нету рекомендуемое время, то пару не менять
-                    if(i > cl.recommended_schedules.size()-1){
+                    int s =cl.recommended_schedules.size()-1;
+                    if(i > s){
                         int day_week = GetRndInteger(1, max_day);
                         int number_pair = GetRndInteger(1,max_pair);
                         int new_id_audience = GetIdAudienceForClass(cl, audiences);
@@ -32,9 +33,9 @@ void Mutation(individ* mutant,const int &index, const double& p_genes, const int
                         if (old_id_audience != new_id_audience){
                             cl.schedules[index][i].id_audience = new_id_audience;
                             auto ref = &cl.schedules[index][i];
-                            auto it = find(mutant->scheduleForAudiences[old_id_audience].begin(), mutant->scheduleForAudiences[old_id_audience].end(), ref);
-                            mutant->scheduleForAudiences.at(old_id_audience).erase(it);
-                            mutant->scheduleForAudiences[new_id_audience].emplace(mutant->scheduleForAudiences[new_id_audience].begin(), ref);
+                            auto it = find(populations[index].scheduleForAudiences[old_id_audience].begin(), populations[index].scheduleForAudiences[old_id_audience].end(), ref);
+                            populations[index].scheduleForAudiences[old_id_audience].erase(it);
+                            populations[index].scheduleForAudiences[new_id_audience].emplace(populations[index].scheduleForAudiences[new_id_audience].begin(), ref);
                         }
                     }
                 }

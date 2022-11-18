@@ -77,18 +77,13 @@ int main()
         auto bestPopulation = bestIndivid();
         map<string, double> temp;
         vector<pair<int, int>> result = vector<pair<int, int>>();
-        result.push_back(make_pair(0,0));
 
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0) {
             Timer.start();
-            for (int i = 0; i < population_size; i+=2)
-            {
-                if (GetRndDouble() < p_crossover)
-                {
-                    auto &ind1 = populations[i];
-                    auto &ind2 = populations[i+1];
-                    worker_pool.push_task([&ind1, &ind2, &classes, i](){
-                        Crossing(ind1, ind2, classes, i, i+1);
+            for (int i = 0; i < population_size; i+=2){
+                if (GetRndDouble() < p_crossover){
+                    worker_pool.push_task([&populations, &classes, i](){
+                        Crossing(populations, classes, i, i+1);
                     });
                 }
             }
@@ -100,16 +95,16 @@ int main()
             Timer.start();
             for (int i = 0; i < population_size; i++)
             {
-                if (GetRndDouble() < p_mutation)
+                if (GetRndDouble() <= 1)
                 {
-                    auto mutant = &populations[i];
-                    worker_pool.push_task([&mutant, &p_genes, &max_day, &max_pair, &audiences, &classes, &i](){
-                        Mutation(mutant, i,p_genes, max_day, max_pair, audiences, classes);
-                    });
+//                    worker_pool.push_task([&populations, &p_genes, &max_day, &max_pair, &audiences, &classes, &i](){
+                        Mutation(populations, i,p_genes, max_day, max_pair, audiences, classes);
+//                    });
                 }
             }
             worker_pool.wait_for_tasks();
             Timer.stop();
+
             cout << "Mutation " << Timer.ms() << "ms" << endl;;
 
             Timer.start();
@@ -128,17 +123,11 @@ int main()
 
             auto temp_schedules = vector<vector<vector<schedule>>>();
 
+
             SortPopulations(populations, classes);
 
             for (const auto &cl : classes){
                 temp_schedules.push_back(cl.schedules);
-            }
-
-            vector<individ> new_population;
-            // Выборка лучших элитных особей, не требует изменения ссылок
-            for (int i = 0; i < num_elit; i++)
-            {
-                new_population.push_back(populations[i]);
             }
 
             // Выборка турнирная
@@ -163,17 +152,27 @@ int main()
             }
 
 
-            for (auto old_index : individ_indexes){
+
+            for (int i = num_elit; i < population_size; i++){
                 // Ссылки ссылаются на занятия, остается поменять значение занятйи на новые
-                auto ind = populations[old_index];
-                int new_index = new_population.size();
-                for (size_t i =0; i < classes.size(); i++){
-                    classes[i].schedules[new_index] = temp_schedules[i][old_index];
+                int old_index = individ_indexes[i - num_elit];
+                for (size_t j =0; j < classes.size(); j++){
+                    for (size_t k =0; k < temp_schedules[i][old_index].size(); k++){
+                        auto sc = temp_schedules[j][old_index][k];
+                        int old_id_audience = classes[j].schedules[i][k].id_audience;
+                        int new_id_audience = sc.id_audience;
+                        // Если ид аудитории поменлся, то нужно поменять ссылку на неё
+                        if(new_id_audience != old_id_audience){
+                            auto ref = &classes[j].schedules[i][k];
+                            auto it = find(populations[i].scheduleForAudiences[old_id_audience].begin(), populations[i].scheduleForAudiences[old_id_audience].end(), ref);
+                            populations[i].scheduleForAudiences[old_id_audience].erase(it);
+                            populations[i].scheduleForAudiences[new_id_audience].emplace(populations[i].scheduleForAudiences[new_id_audience].begin(), ref);
+                        }
+                        classes[j].schedules[i][k] = sc;
+                    }
                 }
-                new_population.push_back(ind);
             }
 
-            populations = new_population;
             Timer.stop();
 
             cout << "Selection " << Timer.ms() << "ms" << endl;
@@ -183,6 +182,19 @@ int main()
             cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
             //result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
             countIter++;
+
+            for (int i =0; i < populations.size(); i++){
+                for (auto &cl : classes){
+
+                    for (auto &sc : cl.schedules[i]){
+                        auto ref = &sc;
+                        auto it = find(populations[i].scheduleForAudiences[sc.id_audience].begin(), populations[i].scheduleForAudiences[sc.id_audience].end(), ref);
+                        if (it == populations[i].scheduleForAudiences[sc.id_audience].end()){
+                            cout << "123";
+                        }
+                    }
+                }
+            }
         }
         cout << setw(4) << bestPopulation.to_json() << endl;;
 
