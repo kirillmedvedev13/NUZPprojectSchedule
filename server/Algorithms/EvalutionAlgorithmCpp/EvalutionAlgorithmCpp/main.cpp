@@ -155,10 +155,10 @@ int main()
 
             for (int i = num_elit; i < population_size; i++){
                 // Ссылки ссылаются на занятия, остается поменять значение занятйи на новые
-                int old_index = individ_indexes[i - num_elit];
+                int new_index = individ_indexes[i - num_elit];
                 for (size_t j =0; j < classes.size(); j++){
-                    for (size_t k =0; k < temp_schedules[i][old_index].size(); k++){
-                        auto sc = temp_schedules[j][old_index][k];
+                    for (size_t k =0; k < temp_schedules[j][i].size(); k++){
+                        auto sc = temp_schedules[j][new_index][k];
                         int old_id_audience = classes[j].schedules[i][k].id_audience;
                         int new_id_audience = sc.id_audience;
                         // Если ид аудитории поменлся, то нужно поменять ссылку на неё
