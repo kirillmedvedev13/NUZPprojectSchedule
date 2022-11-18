@@ -3,15 +3,14 @@
 
 #include "TypeDefs.h"
 #include "GetRndDouble.hpp"
-#include "GetPairTypeForClass.hpp"
 #include "GetIdAudienceForClass.hpp"
 #include "GetRndInteger.hpp"
 
 void Mutation(vector<individ> &populations,const int &index, const double& p_genes, const int& max_day, const int& max_pair, vector<audience>& audiences, vector<clas>& classes)
 {
     for (auto &cl : classes){
-        if (GetRndDouble() <= 1){
-            for(int i =0; i < cl.schedules[index].size(); i++){
+        if (GetRndDouble() <= p_genes){
+            for(int i =0; i < (int)cl.schedules[index].size(); i++){
                 // С шансом 50 = будет менятся каждая пара в занятие
                 if(GetRndDouble() <= 0.5){
                     // если нету рекомендуемое время, то пару не менять

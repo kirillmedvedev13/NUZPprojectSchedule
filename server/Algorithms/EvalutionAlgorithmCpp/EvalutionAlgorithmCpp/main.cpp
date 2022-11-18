@@ -95,11 +95,15 @@ int main()
             Timer.start();
             for (int i = 0; i < population_size; i++)
             {
-                if (GetRndDouble() <= 1)
+                if(i>299){
+                    cout<<"123"<<endl;
+                }
+                if (GetRndDouble() <= p_mutation)
                 {
-//                    worker_pool.push_task([&populations, &p_genes, &max_day, &max_pair, &audiences, &classes, &i](){
+                    worker_pool.push_task([&populations, &p_genes, &max_day, &max_pair, &audiences, &classes, i](){
+
                         Mutation(populations, i,p_genes, max_day, max_pair, audiences, classes);
-//                    });
+                    });
                 }
             }
             worker_pool.wait_for_tasks();
