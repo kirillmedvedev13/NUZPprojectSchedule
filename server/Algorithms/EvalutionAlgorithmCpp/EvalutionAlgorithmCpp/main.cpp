@@ -5,13 +5,11 @@
 #include "Crossing.hpp"
 #include "Mutation.hpp"
 #include "SortPopulations.hpp"
-#include "SelectRanging.hpp"
 #include "GetRndDouble.hpp"
 #include "GetRndInteger.hpp"
 #include "MinFitnessValue.hpp"
 #include "MeanFitnessValue.hpp"
 #include "BS_thread_pool.hpp"
-#include "InitIndivid.hpp"
 #include "TypeDefs.h"
 #include <fstream>
 #include <vector>
@@ -81,11 +79,8 @@ int main()
         vector<pair<int, int>> result = vector<pair<int, int>>();
         result.push_back(make_pair(0,0));
 
-        while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
-        {
-            TimerRes.start();
+        while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0) {
             Timer.start();
-
             for (int i = 0; i < population_size; i+=2)
             {
                 if (GetRndDouble() < p_crossover)
@@ -132,50 +127,60 @@ int main()
             Timer.start();
 
             auto temp_schedules = vector<vector<vector<schedule>>>();
-            for (auto cl : classes){
+
+            SortPopulations(populations, classes);
+
+            for (const auto &cl : classes){
                 temp_schedules.push_back(cl.schedules);
             }
 
-            SortPopulations(populations);
             vector<individ> new_population;
+            // Выборка лучших элитных особей, не требует изменения ссылок
             for (int i = 0; i < num_elit; i++)
             {
-                auto ind = individ();
-                InitIndivid(ind,classes,i, new_population.size(), temp_schedules, bs);
-                new_population.push_back(ind);
+                new_population.push_back(populations[i]);
             }
 
-            // Выборка ранжированием
-            auto p_populations = vector<double>(population_size);
-            double p_cur = 0;
-            for (int i = 0; i < population_size; i++) {
-                double a = GetRndDouble() + 1;
-                double b = 2 - a;
-                p_populations[i] = p_cur;
-                p_cur = p_cur + (1 / population_size) * (a - (a - b) * (i / (population_size - 1)));
-            }
-            p_populations.push_back(1.001);
+            // Выборка турнирная
             auto individ_indexes = vector<int>();
-            for (int i = 0; i < population_size - num_elit; i++) {
-                worker_pool.push_task([&p_populations, &individ_indexes](){
-                    SelectRanging(p_populations, individ_indexes);
-                });
+            for (int i = 0; i < population_size-num_elit; i++){
+                int i1 = 0;
+                int i2 = 0;
+                int i3 = 0;
+                while(i1 == i2 || i2 == i3 || i1 == i3){
+                    i1 = GetRndInteger(0, populations.size()-1);
+                    i2 = GetRndInteger(0, populations.size()-1);
+                    i3 = GetRndInteger(0, populations.size()-1);
+                }
+                int winIndex;
+                if (populations[i1].fitnessValue.fitnessValue < populations[i2].fitnessValue.fitnessValue && populations[i1].fitnessValue.fitnessValue < populations[i3].fitnessValue.fitnessValue)
+                    winIndex = i1;
+                else if (populations[i2].fitnessValue.fitnessValue < populations[i1].fitnessValue.fitnessValue && populations[i2].fitnessValue.fitnessValue < populations[i3].fitnessValue.fitnessValue)
+                    winIndex = i2;
+                else
+                    winIndex = i3;
+                individ_indexes.push_back(winIndex);
             }
-            worker_pool.wait_for_tasks();
 
-            for (auto index : individ_indexes){
-                auto ind = individ();
-                InitIndivid(ind,classes,index, new_population.size(), temp_schedules, bs);
+
+            for (auto old_index : individ_indexes){
+                // Ссылки ссылаются на занятия, остается поменять значение занятйи на новые
+                auto ind = populations[old_index];
+                int new_index = new_population.size();
+                for (size_t i =0; i < classes.size(); i++){
+                    classes[i].schedules[new_index] = temp_schedules[i][old_index];
+                }
                 new_population.push_back(ind);
             }
+
             populations = new_population;
             Timer.stop();
+
             cout << "Selection " << Timer.ms() << "ms" << endl;
 
             MinFitnessValue(populations, classes, bestPopulation);
 
             cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
-            TimerRes.stop();
             //result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
             countIter++;
         }

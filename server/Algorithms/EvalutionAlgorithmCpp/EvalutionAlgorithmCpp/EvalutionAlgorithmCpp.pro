@@ -19,11 +19,9 @@ HEADERS += \
     GetRndDouble.hpp \
     GetRndInteger.hpp \
     Init.hpp \
-    InitIndivid.hpp \
     MeanFitnessValue.hpp \
     MinFitnessValue.hpp \
     Mutation.hpp \
-    SelectRanging.hpp \
     SortPopulations.hpp \
     SortSchedule.hpp \
     TypeDefs.h \

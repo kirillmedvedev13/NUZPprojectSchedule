@@ -31,9 +31,6 @@ void Fitness(individ &i_schedule, const int& max_day, const vector<clas> &classe
     double fitnessSameTimeAud = 0;
     double fitnessSameRecSc = 0;
     for (auto &sc_gr : i_schedule.scheduleForGroups){
-        if (sc_gr.first == 28){
-            cout << "123";
-        }
         fitnessGrWin += FitnessWindows(sc_gr.second, max_day, penaltyGrWin);
         fitnessSameTimeGr += FitnessSameTimes(sc_gr.second, penaltySameTimesSc);
     }
@@ -58,13 +55,13 @@ void Fitness(individ &i_schedule, const int& max_day, const vector<clas> &classe
 double FitnessWindows(vector<schedule*> &i_schedule, const int& max_day, const double& penaltyWin){
     double fitnessWindows = 0;
     for(int current_day = 1; current_day <=max_day;current_day++){
-        auto schedule_top = vector<schedule*>();
+         auto schedule_top = vector<schedule*>();
         auto schedule_bot = vector<schedule*>();
         copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_top), [&current_day](schedule *p){
             return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3));
         });
         copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_bot), [&current_day](schedule *p){
-            return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3));
+            return (p->day_week == current_day && (p->pair_type == 2 || p->pair_type == 3));
         });
         auto array = vector<pair<schedule*,schedule*>>();
         // Числитель и Общие
@@ -82,7 +79,7 @@ double FitnessWindows(vector<schedule*> &i_schedule, const int& max_day, const d
         // Знаменатель
          s = schedule_bot.size()-1;
         for (int i =0; i < s; i++){
-            auto diff = (schedule_top[i+1]->number_pair - schedule_top[i]->number_pair);
+            auto diff = (schedule_bot[i+1]->number_pair - schedule_bot[i]->number_pair);
             if(diff > 1){
                 if(schedule_bot[i + 1]->pair_type == 3 && schedule_bot[i]->pair_type == 3){
                     auto res = find_if(array.begin(), array.end(), [&i, &schedule_bot](const pair<schedule*,schedule*> &p){

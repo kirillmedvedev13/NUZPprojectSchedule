@@ -12,6 +12,7 @@ void MinFitnessValue(const vector<individ>& populations, vector<clas> &classes, 
         if(populations[i].fitnessValue.fitnessValue<min)
         {
             min_index = i;
+            min = populations[i].fitnessValue.fitnessValue;
         }
     }
     if(min_index != -1){

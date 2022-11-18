@@ -63,11 +63,9 @@ DIST          = EvalutionAlgorithmCpp.pro.user BS_thread_pool.hpp \
 		GetRndDouble.hpp \
 		GetRndInteger.hpp \
 		Init.hpp \
-		InitIndivid.hpp \
 		MeanFitnessValue.hpp \
 		MinFitnessValue.hpp \
 		Mutation.hpp \
-		SelectRanging.hpp \
 		SortPopulations.hpp \
 		SortSchedule.hpp \
 		TypeDefs.h \
@@ -136,11 +134,9 @@ debug/main.o: ../EvalutionAlgorithmCpp/main.cpp ../EvalutionAlgorithmCpp/json.hp
 		../EvalutionAlgorithmCpp/Crossing.hpp \
 		../EvalutionAlgorithmCpp/Mutation.hpp \
 		../EvalutionAlgorithmCpp/SortPopulations.hpp \
-		../EvalutionAlgorithmCpp/SelectRanging.hpp \
 		../EvalutionAlgorithmCpp/MinFitnessValue.hpp \
 		../EvalutionAlgorithmCpp/MeanFitnessValue.hpp \
-		../EvalutionAlgorithmCpp/BS_thread_pool.hpp \
-		../EvalutionAlgorithmCpp/InitIndivid.hpp
+		../EvalutionAlgorithmCpp/BS_thread_pool.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\EvalutionAlgorithmCpp\main.cpp
 
 ####### Install
