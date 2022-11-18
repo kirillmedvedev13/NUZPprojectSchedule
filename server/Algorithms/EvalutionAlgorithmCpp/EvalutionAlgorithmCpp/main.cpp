@@ -28,8 +28,7 @@ int main()
     try
     {
         json data = json();
-
-        ifstream fileData(filesystem::current_path().string()+"\\data.json");
+        ifstream fileData(filesystem::current_path().string()+"\\Algorithms\\EvalutionAlgorithmCpp\\data.json");
         data = json::parse(fileData);
 
         const int max_day = data["max_day"];
@@ -77,7 +76,7 @@ int main()
         int countIter = 0;
         auto bestPopulation = bestIndivid();
         map<string, double> temp;
-        vector<pair<int, int>> result = vector<pair<int, int>>();
+        auto result = vector<pair<double, int>>();
 
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0) {
             Timer.start();
