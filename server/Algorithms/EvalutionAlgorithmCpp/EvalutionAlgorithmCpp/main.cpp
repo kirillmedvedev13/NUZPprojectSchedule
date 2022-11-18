@@ -15,6 +15,7 @@
 #include <vector>
 #include <cstring>
 #include <cstdlib>
+#include <chrono>
 #include <mutex>
 #include <filesystem>
 using namespace std;
@@ -67,7 +68,7 @@ int main()
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();
-        timer TimerRes;
+
         cout << "Init starts" << endl;
         // В каждом классе хранится массив занятий для индивида, на который ссылаются индивиды, то есть изменение расписания влечет изменение данных у всех
         auto populations = Init(classes, max_day, max_pair,population_size, audiences, bs);
@@ -77,8 +78,8 @@ int main()
         int countIter = 0;
         auto bestPopulation = bestIndivid();
         map<string, double> temp;
-        vector<pair<int, int>> result = vector<pair<int, int>>();
-
+        vector<pair<double,int> > result = vector<pair<double,int> >();
+        auto StartTime = chrono::system_clock::now();
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0) {
             Timer.start();
             for (int i = 0; i < population_size; i+=2){
@@ -187,8 +188,16 @@ int main()
             cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
             //result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
             countIter++;
+            auto EndTime = std::chrono::system_clock::now();
+
+            result.push_back(make_pair(bestPopulation.fitnessValue.fitnessValue,(int)(EndTime - StartTime).count()));
         }
-        cout << setw(4) << bestPopulation.to_json() << endl;;
+        cout << setw(4) << bestPopulation.to_json() << endl;
+        json resultJson = json();
+        resultJson["bestPopulation"]=bestPopulation.to_json();
+        resultJson["evolution_algorithmCPP"] = result;
+        cout<<123;
+
 
     }
     catch (exception &ex)
