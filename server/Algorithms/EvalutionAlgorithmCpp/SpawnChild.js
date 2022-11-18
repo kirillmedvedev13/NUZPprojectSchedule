@@ -5,7 +5,6 @@ export default async function SpawnChild(fileName) {
     const child = spawn(fileName);
     for await (const chunk of child.stdout) {
       console.log(chunk.toString());
-      data.push(chunk.toString());
     }
 
     for await (const chunk of child.stderr) {

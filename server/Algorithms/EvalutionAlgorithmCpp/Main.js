@@ -38,8 +38,8 @@ export const RUN_EACPP = {
     });
 
     let fileName = path.resolve("./Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_0_MinGW_64_bit-Debug/debug/EvalutionAlgorithmCpp.exe");
-    let fileData = path.resolve("./Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_0_MinGW_64_bit-Debug")
-    fs.writeFileSync(fileData + "/data.json", jsonData, "utf-8", (err) => {
+    let fileData = path.resolve("./Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_0_MinGW_64_bit-Debug/debug")
+    fs.writeFileSync(fileData + "/data.json", jsonData, "utf8", (err) => {
       if (err)
         console.log(err)
     })
