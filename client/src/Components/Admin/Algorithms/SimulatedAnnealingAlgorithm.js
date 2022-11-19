@@ -1,7 +1,5 @@
 import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
-import { useQuery } from "@apollo/client";
-import { GET_INFO } from "../queries.js";
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
 import ButtonRunSimulatedAnnealingAlgorithm from "./ButtonRunSimulatedAnnealingAlgorithm.js";
 
@@ -54,7 +52,7 @@ export default class SimulatedAnnealingAlgorithm extends React.Component {
             <Card.Footer>
               <Form.Group as={Row} className="my-2 mx-2">
                 <ButtonRunSimulatedAnnealingAlgorithm
-                  id_cathedra={id_cathedra}
+                  id_cathedra={id_cathedra} refetch={refetch}
                 ></ButtonRunSimulatedAnnealingAlgorithm>
               </Form.Group>
             </Card.Footer>

@@ -24,16 +24,20 @@ using namespace BS;
 
 mutex mtx;
 
-int main()
+int main(int argc,char* argv[])
 {
     try
     {
+        string path;
+        if (argc == 2){
+            path = argv[1];
+        }
+        else {
+            path = filesystem::current_path().string();
+        }
         json data = json();
-        string path = filesystem::current_path().string();
-        cout<<path<<endl;
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
-
         const int max_day = data["max_day"];
         const int max_pair = data["max_pair"];
 
@@ -43,6 +47,7 @@ int main()
         const double p_crossover = evolution_values["p_crossover"];
         const double p_mutation = evolution_values["p_mutation"];
         const double p_elitism = evolution_values["p_elitism"];
+        const double p_genes = evolution_values["p_genes"];
 
         const json general_values = data["general_values"];
         const double penaltySameRecSc = general_values["penaltySameRecSc"];
@@ -80,8 +85,9 @@ int main()
         cout << "The elapsed time was " << Timer.ms() << " ms.\n";
         int countIter = 0;
         auto bestPopulation = bestIndivid();
-        map<string, double> temp;
-        vector<pair<double, int>> result = vector<pair<double, int>>();
+
+        auto result = vector<pair<int, double>>();
+
         auto StartTime = chrono::high_resolution_clock::now();
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
         {
@@ -91,7 +97,7 @@ int main()
                 if (GetRndDouble() < p_crossover)
                 {
                     worker_pool.push_task([&populations, &classes, i]()
-                                          { Crossing(populations, classes, i, i + 1); });
+                    { Crossing(populations, classes, i, i + 1); });
                 }
             }
 
@@ -109,7 +115,7 @@ int main()
                 if (GetRndDouble() <= p_mutation)
                 {
                     worker_pool.push_task([&populations, &max_day, &max_pair, &audiences, &classes, i]()
-                                          { Mutation(populations, i, max_day, max_pair, audiences, classes); });
+                    { Mutation(populations, i, max_day, max_pair, audiences, classes); });
                 }
             }
             worker_pool.wait_for_tasks();
@@ -123,7 +129,7 @@ int main()
             {
                 auto &ind = populations[i];
                 worker_pool.push_task([&ind, &max_day, &penaltySameRecSc, &penaltyGrWin, &penaltySameTimesSc, &penaltyTeachWin, &i, &classes]()
-                                      { Fitness(ind, max_day, classes, i, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin); });
+                { Fitness(ind, max_day, classes, i, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin); });
             }
             worker_pool.wait_for_tasks();
             Timer.stop();
@@ -198,17 +204,15 @@ int main()
             countIter++;
             auto EndTime = chrono::high_resolution_clock::now();
             chrono::duration<float,std::milli> duration = EndTime - StartTime;
-            result.push_back(make_pair(bestPopulation.fitnessValue.fitnessValue, duration.count()));
+            result.push_back(make_pair(duration.count(), bestPopulation.fitnessValue.fitnessValue));
         }
-        cout << setw(4) << bestPopulation.to_json() << endl;
         json resultJson = json();
         resultJson["bestPopulation"] = bestPopulation.to_json();
         resultJson["evolution_algorithmCPP"] = result;
         ofstream fileResult(path+"\\result.json");
         if(fileResult.is_open()){
-            fileResult<<setw(4)<<resultJson<<endl;
+            fileResult<<resultJson<<endl;
         }
-
     }
     catch (exception &ex)
     {

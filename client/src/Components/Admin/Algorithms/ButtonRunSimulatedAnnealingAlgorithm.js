@@ -3,7 +3,7 @@ import { Container, Button } from "react-bootstrap";
 import { CreateNotification } from "../../Alert";
 import { RUN_SIMULATED_ANNEALING } from "../mutations";
 
-export default function ButtonRunSA({ id_cathedra }) {
+export default function ButtonRunSA({ id_cathedra, refetch }) {
   const [RunSA, { loading, error }] = useMutation(RUN_SIMULATED_ANNEALING, {
     variables: { id_cathedra },
   });
@@ -17,6 +17,7 @@ export default function ButtonRunSA({ id_cathedra }) {
         onClick={() => {
           RunSA().then((res) => {
             CreateNotification(res.data.RunSimulatedAnnealingAlgorithm);
+            refetch = { refetch };
           });
         }}
       >

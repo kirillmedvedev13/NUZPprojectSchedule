@@ -3,7 +3,7 @@ import { Container, Button } from "react-bootstrap";
 import { CreateNotification } from "../../Alert";
 import { RUN_EA } from "../mutations";
 
-export default function ButtonRunEA({ id_cathedra }) {
+export default function ButtonRunEA({ id_cathedra, refetch }) {
   const [RunEA, { loading, error }] = useMutation(RUN_EA, {
     variables: { id_cathedra },
   });
@@ -17,6 +17,7 @@ export default function ButtonRunEA({ id_cathedra }) {
         onClick={() => {
           RunEA().then((res) => {
             CreateNotification(res.data.RunEA);
+            refetch();
           });
         }}
       >

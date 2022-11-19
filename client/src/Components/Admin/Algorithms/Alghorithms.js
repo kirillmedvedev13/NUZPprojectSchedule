@@ -8,7 +8,6 @@ import SimulatedAnnealingAlgorithm from "./SimulatedAnnealingAlgorithm.js";
 import SelectAlgoritm from "./SelectAlgorithm.js";
 import { GET_INFO } from "../queries";
 import { useQuery } from "@apollo/client";
-import { FragmentsOnCompositeTypesRule } from "graphql";
 import MultiCharts from "./MultiCharts.js";
 
 function GetAlgorithmForm({ state, handleChangeState }) {

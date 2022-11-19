@@ -1,8 +1,8 @@
 import { spawn } from "child_process";
 
-export default async function SpawnChild(fileName) {
+export default async function SpawnChild(fileName, fileData) {
   try {
-    const child = spawn(fileName);
+    const child = spawn(fileName, [fileData]);
     for await (const chunk of child.stdout) {
       console.log(chunk.toString());
     }

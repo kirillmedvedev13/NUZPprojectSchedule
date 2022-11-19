@@ -1,5 +1,3 @@
-import GetLabelForAlgoritms from "./GetLabelForAlgoritms";
-import { Container } from "react-bootstrap";
 import React from "react";
 import {
   LineChart,
@@ -10,7 +8,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
 
 function GetDataForCharts(results) {
@@ -18,7 +15,7 @@ function GetDataForCharts(results) {
   let dataFromInfo = JSON.parse(results);
   for (let algorithm in dataFromInfo) {
     let data = {};
-    data["name"] = GetLabelForAlgoritms(algorithm).label;
+    data["name"] = algorithm;
     let arr = [];
     for (let elem of dataFromInfo[algorithm]) {
       let temp = {};
@@ -35,10 +32,10 @@ function GetDataForCharts(results) {
 export default class MultiCharts extends React.Component {
   render() {
     let { results } = this.props;
-    let colors = ["red", "green", "blue"];
+    let colors = ["red", "green", "blue", "brown"];
     let dataForCharts = GetDataForCharts(results);
     return (
-      <LineChart width={500} height={300}>
+      <LineChart width={0.8 * window.screen.width} height={0.5 * window.screen.height}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="time" type="number" allowDuplicatedCategory={false}>
           <Label

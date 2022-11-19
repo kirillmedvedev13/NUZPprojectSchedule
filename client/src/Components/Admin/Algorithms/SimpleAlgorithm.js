@@ -4,7 +4,7 @@ import ButtonRunSA from "./ButtonRunSA.js";
 
 export default class SimpleAlgorithm extends React.Component {
   render() {
-    let { id_cathedra } = this.props;
+    let { id_cathedra, refetch } = this.props;
     return (
       <>
         <div className="d-flex justify-content-center mx-5">
@@ -16,7 +16,7 @@ export default class SimpleAlgorithm extends React.Component {
               <Form.Group as={Row} className="my-2 mx-2">
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <ButtonRunSA id_cathedra={id_cathedra}></ButtonRunSA>
+                <ButtonRunSA id_cathedra={id_cathedra} refetch={refetch}></ButtonRunSA>
               </Form.Group>
             </Card.Footer>
           </Card>

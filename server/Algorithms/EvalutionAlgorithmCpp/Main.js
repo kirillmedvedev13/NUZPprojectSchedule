@@ -6,6 +6,7 @@ import SpawnChild from "./SpawnChild.js";
 import path from "path";
 import GetDataFromDB from "../Service/GetDataFromDB.js";
 import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
+import db from "../../database.js";
 
 export const RUN_EACPP = {
   type: MessageType,
@@ -46,16 +47,25 @@ export const RUN_EACPP = {
         if (err) console.log(err);
       });
 
-      const promise = SpawnChild(fileName);
-      promise.then((code) => {
-        if (code === 0) {
-          let res = readFileSync("./Algorithms/EvalutionAlgorithmCpp/result.json");
-          res = JSON.parse(res);
-          let bestPopulation = res.bestPopulation;
-          let result = res.evolution_algorithmCPP;
+      const code = await SpawnChild(fileName, fileData);
+      if (code === 0) {
+        let res = readFileSync("./Algorithms/EvalutionAlgorithmCpp/result.json");
+        res = JSON.parse(res);
+        let bestPopulation = res.bestPopulation;
+        let evolution_algorithmCPP = res.evolution_algorithmCPP;
+        await db.schedule.bulkCreate(bestPopulation);
+        results.evolution_algorithmCPP = evolution_algorithmCPP;
+        results = JSON.stringify(results);
+        await db.info.update({ results }, { where: { id: 1 } });
+        let isBulk = await db.schedule.bulkCreate(bestPopulation);
+        if (isBulk)
+          return {
+            successful: true,
+            message: `Total fitness: ${evolution_algorithmCPP[evolution_algorithmCPP.length - 1]}`,
+          };
+        else return { successful: false, message: `Some error` };
+      }
 
-        }
-      })
     }
     catch (err) {
       console.log(err);

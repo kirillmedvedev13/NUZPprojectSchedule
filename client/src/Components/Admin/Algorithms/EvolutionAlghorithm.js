@@ -125,8 +125,8 @@ export default class EvolutionAlgorithm extends React.Component {
           </Card.Body>
           <Card.Footer>
             <Form.Group as={Row} className="my-2 mx-2">
-              <ButtonRunEA id_cathedra={id_cathedra}></ButtonRunEA>
-              <ButtonRunEACpp id_cathedra={id_cathedra}></ButtonRunEACpp>
+              <ButtonRunEA id_cathedra={id_cathedra} refetch={refetch}></ButtonRunEA>
+              <ButtonRunEACpp id_cathedra={id_cathedra} refetch={refetch}></ButtonRunEACpp>
             </Form.Group>
           </Card.Footer>
         </Card>
