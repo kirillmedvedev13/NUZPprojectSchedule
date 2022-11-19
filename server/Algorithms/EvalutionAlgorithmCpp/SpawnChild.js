@@ -12,9 +12,8 @@ export default async function SpawnChild(fileName) {
       return 1;
     }
     return await new Promise((resolve) => {
-      child.on('close', resolve)
-    })
-
+      child.on("close", resolve);
+    });
   } catch (err) {
     console.log(err);
   }
