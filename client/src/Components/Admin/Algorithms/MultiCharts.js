@@ -9,13 +9,14 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import GetLabelForAlgoritms from "./GetLabelForAlgoritms";
 
 function GetDataForCharts(results) {
   const dataForCharts = [];
   let dataFromInfo = JSON.parse(results);
   for (let algorithm in dataFromInfo) {
     let data = {};
-    data["name"] = algorithm;
+    data["name"] = GetLabelForAlgoritms(algorithm).label;
     let arr = [];
     for (let elem of dataFromInfo[algorithm]) {
       let temp = {};
@@ -35,7 +36,10 @@ export default class MultiCharts extends React.Component {
     let colors = ["red", "green", "blue", "brown"];
     let dataForCharts = GetDataForCharts(results);
     return (
-      <LineChart width={0.8 * window.screen.width} height={0.5 * window.screen.height}>
+      <LineChart
+        width={0.8 * window.screen.width}
+        height={0.5 * window.screen.height}
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="time" type="number" allowDuplicatedCategory={false}>
           <Label

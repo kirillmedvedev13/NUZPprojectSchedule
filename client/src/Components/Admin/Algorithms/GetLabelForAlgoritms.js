@@ -3,6 +3,7 @@ export default function GetLabelForAlgoritms(value = null) {
     { label: "Алгоритм простого перебору", value: "simple_algorithm" },
     { value: "simulated_annealing", label: "Алгоритм імітації отжига" },
     { value: "evolution_algorithm", label: "Генетичний алгоритм" },
+    { value: "evolution_algorithmCPP", label: "Генетичний алгоритм на С++" },
   ];
   if (!value) return options;
   let object = options.find((obj) => obj.value === value);
