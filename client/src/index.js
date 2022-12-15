@@ -19,8 +19,7 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       <AuthProvider>
         <BrowserRouter>
-          <App>
-          </App>
+          <App></App>
         </BrowserRouter>
       </AuthProvider>
     </ApolloProvider>

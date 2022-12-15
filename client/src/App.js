@@ -19,7 +19,7 @@ import GeneralValues from "./Components/Admin/GeneralValues/GeneralValues";
 import ScheduleData from "./Components/Admin/ScheduleData/ScheduleData";
 import SubmitDataSheet from "./Components/Admin/SubmitDataSheet/SubmitDataSheet";
 import DeleteData from "./Components/Admin/DeleteData/DeleteData";
-import Algorithms from "./Components/Admin/Algorithms/Alghorithms"
+import Algorithms from "./Components/Admin/Algorithms/Alghorithms";
 
 class App extends React.Component {
   state = {
@@ -99,11 +99,26 @@ class App extends React.Component {
               <Route path="/classes" element={<Class></Class>} />
               <Route path="/groups" element={<Group></Group>} />
               <Route path="/teachers" element={<Teacher></Teacher>} />
-              <Route path="/admin/general_values" element={<GeneralValues></GeneralValues>} />
-              <Route path="/admin/delete_data" element={<DeleteData></DeleteData>} />
-              <Route path="/admin/submit_data_sheet" element={<SubmitDataSheet></SubmitDataSheet>} />
-              <Route path="/admin/schedule_data" element={<ScheduleData></ScheduleData>} />
-              <Route path="/admin/algorithms" element={<Algorithms></Algorithms>} />
+              <Route
+                path="/admin/general_values"
+                element={<GeneralValues></GeneralValues>}
+              />
+              <Route
+                path="/admin/delete_data"
+                element={<DeleteData></DeleteData>}
+              />
+              <Route
+                path="/admin/submit_data_sheet"
+                element={<SubmitDataSheet></SubmitDataSheet>}
+              />
+              <Route
+                path="/admin/schedule_data"
+                element={<ScheduleData></ScheduleData>}
+              />
+              <Route
+                path="/admin/algorithms"
+                element={<Algorithms></Algorithms>}
+              />
             </Fragment>
           )}
           <Route path="*" element={<Error></Error>} />
