@@ -8,16 +8,14 @@ export const CREATE_GROUP = {
     name: { type: GraphQLString },
     number_students: { type: GraphQLInt },
     id_specialty: { type: GraphQLInt },
-    semester: { type: GraphQLInt },
-    capacity: { type: GraphQLInt }
+    semester: { type: GraphQLInt }
   },
-  async resolve(parent, { name, number_students, id_specialty, semester, capacity }) {
+  async resolve(parent, { name, number_students, id_specialty, semester }) {
     let res = await db.group.create({
       name,
       number_students,
       id_specialty,
       semester,
-      capacity,
     });
     return res
       ? { successful: true, message: "Запис групи успішно створено" }
@@ -48,7 +46,6 @@ export const UPDATE_GROUP = {
     id: { type: GraphQLID },
     number_students: { type: GraphQLInt },
     name: { type: GraphQLString },
-    capacity: { type: GraphQLInt },
     id_specialty: { type: GraphQLInt },
     semester: { type: GraphQLInt }
   },

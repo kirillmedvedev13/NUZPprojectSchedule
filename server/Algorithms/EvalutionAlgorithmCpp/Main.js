@@ -53,7 +53,6 @@ export const RUN_EACPP = {
         res = JSON.parse(res);
         let bestPopulation = res.bestPopulation;
         let evolution_algorithmCPP = res.evolution_algorithmCPP;
-        await db.schedule.bulkCreate(bestPopulation);
         results.evolution_algorithmCPP = evolution_algorithmCPP;
         results = JSON.stringify(results);
         await db.info.update({ results }, { where: { id: 1 } });
@@ -61,7 +60,7 @@ export const RUN_EACPP = {
         if (isBulk)
           return {
             successful: true,
-            message: `Total fitness: ${evolution_algorithmCPP[evolution_algorithmCPP.length - 1]}`,
+            message: `Total fitness: ${bestPopulation[bestPopulation.length - 1]}`,
           };
         else return { successful: false, message: `Some error` };
       }

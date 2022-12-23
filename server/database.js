@@ -48,17 +48,17 @@ const Connection = new Sequelize(
   config.DB_PASS,
   {
     dialect: "mysql",
-    dialectOptions: {
-      ssl: {
-        key: fs.readFile(
-          "./config/DigiCertGlobalRootCA.crt.pem",
-          "utf8",
-          function (err, contents) {
-            console.log("Sertificate connected");
-          }
-        ),
-      },
-    },
+    // dialectOptions: {
+    //   ssl: {
+    //     key: fs.readFile(
+    //       "./config/DigiCertGlobalRootCA.crt.pem",
+    //       "utf8",
+    //       function (err, contents) {
+    //         console.log("Sertificate connected");
+    //       }
+    //     ),
+    //   },
+    // },
     host: config.HOST,
     define: { timestamps: false },
   }

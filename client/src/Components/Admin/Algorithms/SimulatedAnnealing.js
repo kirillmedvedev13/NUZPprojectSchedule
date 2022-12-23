@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
-import ButtonRunSimulatedAnnealingAlgorithm from "./ButtonRunSimulatedAnnealingAlgorithm.js";
+import ButtonRunSimulatedAnnealing from "./ButtonRunSimulatedAnnealing";
 
-export default class SimulatedAnnealingAlgorithm extends React.Component {
+export default class SimulatedAnnealing extends React.Component {
   render() {
     let { id_cathedra, refetch, handleChangeState, simulated_annealing } = this.props;
     return (
@@ -51,9 +51,9 @@ export default class SimulatedAnnealingAlgorithm extends React.Component {
             </Card.Body>
             <Card.Footer>
               <Form.Group as={Row} className="my-2 mx-2">
-                <ButtonRunSimulatedAnnealingAlgorithm
+                <ButtonRunSimulatedAnnealing
                   id_cathedra={id_cathedra} refetch={refetch}
-                ></ButtonRunSimulatedAnnealingAlgorithm>
+                ></ButtonRunSimulatedAnnealing>
               </Form.Group>
             </Card.Footer>
           </Card>

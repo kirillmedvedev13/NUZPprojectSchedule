@@ -114,12 +114,12 @@ const Mutation = new GraphQLObjectType({
     CreateSpecialty: CREATE_SPECIALTY,
     DeleteSpecialty: DELETE_SPECIALTY,
     UpdateSpecialty: UPDATE_SPECIALTY,
-    AddDisciplineToSpecialty: ADD_DISCIPLINE_TO_SPECIALTY,
-    DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
 
     CreateDiscipline: CREATE_DISCIPLINE,
     UpdateDiscipline: UPDATE_DISCIPLINE,
     DeleteDiscipline: DELETE_DISCIPLINE,
+    AddDisciplineToSpecialty: ADD_DISCIPLINE_TO_SPECIALTY,
+    DeleteDisciplineFromSpecialty: DELETE_DISCIPLINE_FROM_SPECIALTY,
 
     CreateClass: CREATE_CLASS,
     UpdateClass: UPDATE_CLASS,

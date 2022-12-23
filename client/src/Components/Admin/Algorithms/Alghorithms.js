@@ -4,7 +4,7 @@ import SelectCathedra from "../SelectCathedra.js";
 import NaviBarAdmin from "../NaviBarAdmin.js";
 import EvolutionAlgorithm from "./EvolutionAlghorithm.js";
 import SimpleAlgorithm from "./SimpleAlgorithm.js";
-import SimulatedAnnealingAlgorithm from "./SimulatedAnnealingAlgorithm.js";
+import SimulatedAnnealing from "./SimulatedAnnealing.js";
 import SelectAlgoritm from "./SelectAlgorithm.js";
 import { GET_INFO } from "../queries";
 import { useQuery } from "@apollo/client";
@@ -15,7 +15,7 @@ function GetAlgorithmForm({ state, handleChangeState }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-
+  let alg;
   switch (algorithm) {
     case "evolution_algorithm":
       if (evolution_values === null) {
@@ -24,21 +24,17 @@ function GetAlgorithmForm({ state, handleChangeState }) {
       if (!evolution_values) {
         evolution_values = {};
       }
-      return (
-        <>
-          <div className="d-flex justify-content-center">
-            <EvolutionAlgorithm
-              id_cathedra={id_cathedra}
-              evolution_values={evolution_values}
-              refetch={refetch}
-              handleChangeState={handleChangeState}
-            ></EvolutionAlgorithm>
-          </div>
-          <div className="d-flex justify-content-center">
-            <MultiCharts results={data.GetInfo.results}></MultiCharts>
-          </div>
-        </>
+      alg = (
+        <div className="d-flex justify-content-center">
+          <EvolutionAlgorithm
+            id_cathedra={id_cathedra}
+            evolution_values={evolution_values}
+            refetch={refetch}
+            handleChangeState={handleChangeState}
+          ></EvolutionAlgorithm>
+        </div>
       );
+      break;
     case "simulated_annealing":
       if (simulated_annealing === null) {
         simulated_annealing = JSON.parse(data.GetInfo.simulated_annealing);
@@ -46,33 +42,30 @@ function GetAlgorithmForm({ state, handleChangeState }) {
       if (!simulated_annealing) {
         simulated_annealing = {};
       }
-      return (
-        <>
-          <div className="d-flex justify-content-center">
-            <SimulatedAnnealingAlgorithm
-              id_cathedra={id_cathedra}
-              simulated_annealing={simulated_annealing}
-              refetch={refetch}
-              handleChangeState={handleChangeState}
-            ></SimulatedAnnealingAlgorithm>
-          </div>
-          <div className="d-flex justify-content-center">
-            <MultiCharts results={data.GetInfo.results}></MultiCharts>
-          </div>
-        </>
+      alg = (
+        <div className="d-flex justify-content-center">
+          <SimulatedAnnealing
+            id_cathedra={id_cathedra}
+            simulated_annealing={simulated_annealing}
+            refetch={refetch}
+            handleChangeState={handleChangeState}
+          ></SimulatedAnnealing>
+        </div>
       );
+      break;
     default:
-      return (
-        <>
-          <div className="d-flex justify-content-center">
-            <SimpleAlgorithm id_cathedra={id_cathedra}></SimpleAlgorithm>
-          </div>
-          <div className="d-flex justify-content-center">
-            <MultiCharts results={data.GetInfo.results}></MultiCharts>
-          </div>
-        </>
-      );
+      <div className="d-flex justify-content-center">
+        <SimpleAlgorithm id_cathedra={id_cathedra}></SimpleAlgorithm>
+      </div>
   }
+  alg = (<>
+    ${alg} +
+    <div className="d-flex justify-content-center">
+      <MultiCharts results={data.GetInfo.results}></MultiCharts>
+    </div>
+  </>
+  )
+  return alg;
 }
 
 export default class Algorithms extends React.Component {
