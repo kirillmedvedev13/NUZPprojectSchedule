@@ -41,28 +41,21 @@ const models = [
   Info,
   Recommended_schedule,
 ];
-
-const Connection = new Sequelize(
-  config.DB_NAME,
-  config.DB_USER,
-  config.DB_PASS,
-  {
+let Connection;
+try {
+  Connection = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASS, {
     dialect: "mysql",
-    // dialectOptions: {
-    //   ssl: {
-    //     key: fs.readFile(
-    //       "./config/DigiCertGlobalRootCA.crt.pem",
-    //       "utf8",
-    //       function (err, contents) {
-    //         console.log("Sertificate connected");
-    //       }
-    //     ),
-    //   },
-    // },
     host: config.HOST,
     define: { timestamps: false },
-  }
-);
+  });
+  await Connection.sync({});
+} catch {
+  Connection = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASS, {
+    dialect: "mysql",
+    host: config.RESHOST,
+    define: { timestamps: false },
+  });
+}
 
 models.forEach((model) => {
   const seqModel = model(Connection, Sequelize);
