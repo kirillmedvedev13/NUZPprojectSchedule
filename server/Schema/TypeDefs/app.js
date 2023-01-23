@@ -66,10 +66,8 @@ import { GET_INFO } from "../Queries/Info.js";
 import { UPDATE_INFO } from "../Mutations/Info.js";
 import { CALC_FITNESS } from "../Mutations/Fitness.js";
 import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
-import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
-import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
-import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
-import { RUN_EACPP } from "../../Algorithms/EvalutionAlgorithmCpp/Main.js";
+import { GET_ALL_ALGORITHM } from "../Queries/Algorithm.js";
+import { RUN_ALGORITHM, UPDATE_ALGORITHM } from "../Mutations/Algorithm.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -87,6 +85,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
     GetAllAssignedDisciplines: GET_ALL_ASSIGNED_DISCIPLINES,
     GetInfo: GET_INFO,
+    GetAllAlgorithm: GET_ALL_ALGORITHM,
   },
 });
 
@@ -139,11 +138,10 @@ const Mutation = new GraphQLObjectType({
     SetClasses: SET_CLASSES,
     DeleteAllData: DELETE_ALL_DATA,
     UpdateInfo: UPDATE_INFO,
-    RunEA: RUN_EA,
-    RunSA: RUN_SA,
-    RunSimulatedAnnealing: RUN_SIMULATED_ANNEALING,
-    RunEACpp: RUN_EACPP,
     CalcFitness: CALC_FITNESS,
+
+    UpdateAlgorithm: UPDATE_ALGORITHM,
+    RunAlgorithm: RUN_ALGORITHM,
   },
 });
 
