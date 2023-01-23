@@ -1,4 +1,4 @@
-import { GraphQLString } from "graphql";
+import { GraphQLInt, GraphQLString } from "graphql";
 import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_EACPP } from "../../Algorithms/EvalutionAlgorithmCpp/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
@@ -37,6 +37,7 @@ export const RUN_ALGORITHM = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
+    id_cathedra: { type: GraphQLInt },
   },
   async resolve(parent, { name, id_cathedra }) {
     let result;
