@@ -49,6 +49,7 @@ try {
     host: config.HOST,
     define: { timestamps: false },
   });
+  await Connection.sync({});
 } catch {
   Connection = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASS, {
     dialect: "mysql",
@@ -58,7 +59,7 @@ try {
 
   console.log("Using db on REHOST");
 }
-await Connection.sync({});
+
 models.forEach((model) => {
   const seqModel = model(Connection, Sequelize);
   console.log(seqModel.name);

@@ -10,7 +10,7 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
     params: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.STRING(1000),
     },
     results: {
       type: DataTypes.TEXT("long"),
