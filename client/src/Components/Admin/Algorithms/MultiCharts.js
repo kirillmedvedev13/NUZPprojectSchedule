@@ -9,16 +9,14 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import GetLabelForAlgoritms from "./GetLabelForAlgoritms";
 
 function GetDataForCharts(results) {
   const dataForCharts = [];
-  let dataFromInfo = JSON.parse(results);
-  for (let algorithm in dataFromInfo) {
+  for (let algorithm of results) {
     let data = {};
-    data["name"] = GetLabelForAlgoritms(algorithm).label;
+    data["name"] = algorithm.label;
     let arr = [];
-    for (let elem of dataFromInfo[algorithm]) {
+    for (let elem of JSON.parse(algorithm.results)) {
       let temp = {};
       temp["time"] = +elem[0] / 1000;
       temp["fitness"] = elem[1];

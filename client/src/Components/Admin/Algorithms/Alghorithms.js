@@ -52,46 +52,47 @@ function AlgorithmFormAndChart({ state, handleChangeState, refetch }) {
   return (
     <>
       {state.nameAlgorithm ? (
-        <div className="d-flex justify-content-center mx-5">
-          <Card className="my-2">
-            <Card.Header className="text-center">
-              {"Складання розклад за допомогою " + state.label}
-            </Card.Header>
-            <Card.Body>
-              {params.map((param) => (
-                <Form.Group as={Row} className="my-2 mx-2">
-                  <Form.Label className="col-5">{param.label}</Form.Label>
-                  <Col>
-                    <Form.Control
-                      value={param.value}
-                      type={param.type}
-                      min={param.min}
-                      max={param.max}
-                      step={param.step}
-                      onChange={(e) => {
-                        param.value = Number(e.target.value);
-                        handleChangeState("params", params);
-                      }}
-                    />
-                  </Col>
-                </Form.Group>
-              ))}
-            </Card.Body>
+        <>
+          <div className="d-flex justify-content-center mx-5">
+            <Card className="my-2">
+              <Card.Header className="text-center">
+                {"Складання розклад за допомогою " + state.label}
+              </Card.Header>
+              <Card.Body>
+                {params.map((param) => (
+                  <Form.Group as={Row} className="my-2 mx-2">
+                    <Form.Label className="col-5">{param.label}</Form.Label>
+                    <Col>
+                      <Form.Control
+                        value={param.value}
+                        type={param.type}
+                        min={param.min}
+                        max={param.max}
+                        step={param.step}
+                        onChange={(e) => {
+                          param.value = Number(e.target.value);
+                          handleChangeState("params", params);
+                        }}
+                      />
+                    </Col>
+                  </Form.Group>
+                ))}
+              </Card.Body>
 
-            <Card.Footer>
-              <ButtonUpdateAlgorithm
-                name={state.nameAlgorithm}
-                params={JSON.stringify(state.params)}
-                refetch={refetch}
-              />
-            </Card.Footer>
-          </Card>
-        </div>
+              <Card.Footer>
+                <ButtonUpdateAlgorithm
+                  name={state.nameAlgorithm}
+                  params={JSON.stringify(state.params)}
+                  refetch={refetch}
+                />
+              </Card.Footer>
+            </Card>
+          </div>
+          <div className="d-flex justify-content-center">
+            {<MultiCharts results={state.results}></MultiCharts>}
+          </div>
+        </>
       ) : null}
-
-      <div className="d-flex justify-content-center">
-        {<MultiCharts results={state.results}></MultiCharts>}
-      </div>
     </>
   );
 }

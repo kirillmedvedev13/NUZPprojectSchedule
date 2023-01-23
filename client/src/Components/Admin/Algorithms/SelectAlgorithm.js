@@ -17,7 +17,7 @@ export default function SelectAlgoritm({ data, handleChangeState }) {
           data.find((obj) => obj.name === e.value).params
         );
         let results = data.map((obj) => {
-          return obj.results;
+          return { name: obj.name, label: obj.label, results: obj.results };
         });
         handleChangeState("nameAlgorithm", e.value);
         handleChangeState("label", e.label);
