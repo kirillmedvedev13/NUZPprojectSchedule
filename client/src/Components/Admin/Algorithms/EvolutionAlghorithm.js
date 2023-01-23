@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
 
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
-import ButtonRunEA from "./ButtonRunEA.js";
+import ButtonRunEA from "./ButtonRunAlgorithm.js";
 import ButtonRunEACpp from "./ButtonRunEACpp.js";
 
 export default class EvolutionAlgorithm extends React.Component {
@@ -125,8 +125,14 @@ export default class EvolutionAlgorithm extends React.Component {
           </Card.Body>
           <Card.Footer>
             <Form.Group as={Row} className="my-2 mx-2">
-              <ButtonRunEA id_cathedra={id_cathedra} refetch={refetch}></ButtonRunEA>
-              <ButtonRunEACpp id_cathedra={id_cathedra} refetch={refetch}></ButtonRunEACpp>
+              <ButtonRunEA
+                id_cathedra={id_cathedra}
+                refetch={refetch}
+              ></ButtonRunEA>
+              <ButtonRunEACpp
+                id_cathedra={id_cathedra}
+                refetch={refetch}
+              ></ButtonRunEACpp>
             </Form.Group>
           </Card.Footer>
         </Card>

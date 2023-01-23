@@ -1,11 +1,11 @@
 import { useMutation } from "@apollo/client";
 import { Container, Button } from "react-bootstrap";
 import { CreateNotification } from "../../Alert";
-import { RUN_SIMULATED_ANNEALING } from "../mutations";
+import { RUN_ALGORITHM } from "../mutations";
 
-export default function ButtonRunSimulatedAnnealing({ id_cathedra, refetch }) {
-  const [RunSA, { loading, error }] = useMutation(RUN_SIMULATED_ANNEALING, {
-    variables: { id_cathedra },
+export default function ButtonRunAlgorithm({ name, id_cathedra, refetch }) {
+  const [RunAlgorithm, { loading, error }] = useMutation(RUN_ALGORITHM, {
+    variables: { name, id_cathedra },
   });
 
   if (loading) return "Submitting...";
@@ -13,11 +13,11 @@ export default function ButtonRunSimulatedAnnealing({ id_cathedra, refetch }) {
   return (
     <Container>
       <Button
-        className="col-12"
+        className="col-12 my-2"
         onClick={() => {
-          RunSA().then((res) => {
-            CreateNotification(res.data.RunSimulatedAnnealingAlgorithm);
-            refetch = { refetch };
+          RunAlgorithm().then((res) => {
+            CreateNotification(res.data.RunAlgorithm);
+            refetch();
           });
         }}
       >

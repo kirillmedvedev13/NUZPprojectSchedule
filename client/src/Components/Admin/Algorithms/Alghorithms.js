@@ -6,29 +6,56 @@ import EvolutionAlgorithm from "./EvolutionAlghorithm.js";
 import SimpleAlgorithm from "./SimpleAlgorithm.js";
 import SimulatedAnnealing from "./SimulatedAnnealing.js";
 import SelectAlgoritm from "./SelectAlgorithm.js";
-import { GET_INFO } from "../queries";
+import { GET_ALL_ALGORITHM, GET_INFO } from "../queries";
 import { useQuery } from "@apollo/client";
 import MultiCharts from "./MultiCharts.js";
+import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
 
-function GetAlgorithmForm({ state, handleChangeState }) {
-  let { id_cathedra, algorithm, evolution_values, simulated_annealing } = state;
-  const { loading, error, data, refetch } = useQuery(GET_INFO);
+function CardAlgorithm({ state, handleChangeState }) {
+  const { loading, error, data, refetch } = useQuery(GET_ALL_ALGORITHM);
   if (loading) return null;
   if (error) return `Error! ${error}`;
+
+  return;
+  <>
+    <div className="d-flex justify-content-center">
+      <Card className="my-2">
+        <Card.Header className="text-center">Вибір алгоритму</Card.Header>
+        <Card.Footer>
+          <Form.Group as={Row} className="my-2 mx-2">
+            <SelectAlgoritm
+              data={data}
+              handleChangeState={handleChangeState}
+            ></SelectAlgoritm>
+          </Form.Group>
+          <Form.Group as={Row} className="my-2 mx-2">
+            <ButtonRunAlgorithm
+              name={state.nameAlgorithm}
+              id_cathedra={state.id_cathedra}
+            ></ButtonRunAlgorithm>
+          </Form.Group>
+        </Card.Footer>
+      </Card>
+    </div>
+
+    <GetAlgorithmForm
+      state={state}
+      handleChangeState={handleChangeState}
+      refetch={refetch}
+    ></GetAlgorithmForm>
+  </>;
+}
+
+function GetAlgorithmForm({ state, handleChangeState }) {
   let alg;
-  switch (algorithm) {
+
+  switch (state.nameAlgorithm) {
     case "evolution_algorithm":
-      if (evolution_values === null) {
-        evolution_values = JSON.parse(data.GetInfo.evolution_values);
-      }
-      if (!evolution_values) {
-        evolution_values = {};
-      }
       alg = (
         <div className="d-flex justify-content-center">
           <EvolutionAlgorithm
             id_cathedra={id_cathedra}
-            evolution_values={evolution_values}
+            params={evolution_values}
             refetch={refetch}
             handleChangeState={handleChangeState}
           ></EvolutionAlgorithm>
@@ -56,15 +83,16 @@ function GetAlgorithmForm({ state, handleChangeState }) {
     default:
       <div className="d-flex justify-content-center">
         <SimpleAlgorithm id_cathedra={id_cathedra}></SimpleAlgorithm>
-      </div>
+      </div>;
   }
-  alg = (<>
-    ${alg} +
-    <div className="d-flex justify-content-center">
-      <MultiCharts results={data.GetInfo.results}></MultiCharts>
-    </div>
-  </>
-  )
+  alg = (
+    <>
+      ${alg} +
+      <div className="d-flex justify-content-center">
+        <MultiCharts results={data.GetInfo.results}></MultiCharts>
+      </div>
+    </>
+  );
   return alg;
 }
 
@@ -73,9 +101,8 @@ export default class Algorithms extends React.Component {
     super(args);
     this.state = {
       id_cathedra: null,
-      algorithm: null,
-      evolution_values: null,
-      simulated_annealing: null,
+      nameAlgorithm: null,
+      params: null,
     };
   }
 
@@ -98,23 +125,12 @@ export default class Algorithms extends React.Component {
                 ></SelectCathedra>
               </Form.Group>
             </Card.Footer>
-            <Card.Header className="text-center">Вибір алгоритму</Card.Header>
-            <Card.Footer>
-              <Form.Group as={Row} className="my-2 mx-2">
-                <SelectAlgoritm
-                  handleChangeState={this.handleChangeState}
-                ></SelectAlgoritm>
-              </Form.Group>
-            </Card.Footer>
           </Card>
         </div>
-
-        <GetAlgorithmForm
+        <CardAlgorithm
           state={this.state}
           handleChangeState={this.handleChangeState}
-        ></GetAlgorithmForm>
-
-        <div className="d-flex justify-content-center"></div>
+        />
       </>
     );
   }

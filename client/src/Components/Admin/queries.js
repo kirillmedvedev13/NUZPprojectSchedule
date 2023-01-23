@@ -11,11 +11,11 @@ export const GET_INFO = gql`
 `;
 export const GET_ALL_ALGORITHM = gql`
   query {
-    GetInfo {
-      max_day
-      max_pair
-      fitness_value
-      general_values
+    GetAllAlgorithm {
+      name
+      label
+      params
+      results
     }
   }
 `;

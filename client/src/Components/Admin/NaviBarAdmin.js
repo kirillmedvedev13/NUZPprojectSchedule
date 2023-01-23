@@ -34,7 +34,7 @@ export default class NaviBarAdmin extends React.Component {
             href="/admin_algorithms"
             to="/admin_algorithms"
           >
-            Алогритми
+            Алгоритми
           </Nav.Link>
           <Nav.Link
             as={Link}

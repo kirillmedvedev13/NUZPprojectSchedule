@@ -54,6 +54,7 @@ export const RUN_ALGORITHM = {
         result = await RUN_SIMULATED_ANNEALING(id_cathedra);
         break;
     }
-    
+
     return result;
+  },
 };
