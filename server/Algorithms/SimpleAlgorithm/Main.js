@@ -76,7 +76,10 @@ export const RUN_SA = {
     ]);
     results.simple_algorithm = newResults;
     results = JSON.stringify(results);
-    await db.info.update({ results }, { where: { id: 1 } });
+    await db.algorithm.update(
+      { results },
+      { where: { name: "simple_algorithm" } }
+    );
     let arr = [];
     arrClass.forEach((sched) => arr.push(JSON.parse(sched)));
     let isBulk = await db.schedule.bulkCreate(arr);

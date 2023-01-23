@@ -49,25 +49,30 @@ export const RUN_EACPP = {
 
       const code = await SpawnChild(fileName, fileData);
       if (code === 0) {
-        let res = readFileSync("./Algorithms/EvalutionAlgorithmCpp/result.json");
+        let res = readFileSync(
+          "./Algorithms/EvalutionAlgorithmCpp/result.json"
+        );
         res = JSON.parse(res);
         let bestPopulation = res.bestPopulation;
         let evolution_algorithmCPP = res.evolution_algorithmCPP;
         results.evolution_algorithmCPP = evolution_algorithmCPP;
         results = JSON.stringify(results);
-        await db.info.update({ results }, { where: { id: 1 } });
+        await db.algorithm.update(
+          { results },
+          { where: { name: "evalution_algorithmCPP" } }
+        );
         let isBulk = await db.schedule.bulkCreate(bestPopulation);
         if (isBulk)
           return {
             successful: true,
-            message: `Total fitness: ${bestPopulation[bestPopulation.length - 1]}`,
+            message: `Total fitness: ${
+              bestPopulation[bestPopulation.length - 1]
+            }`,
           };
         else return { successful: false, message: `Some error` };
       }
-
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
-  }
+  },
 };

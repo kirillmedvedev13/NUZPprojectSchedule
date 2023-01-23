@@ -246,7 +246,10 @@ export const RUN_EA = {
     results.evolution_algorithm = newResults;
     results = JSON.stringify(results);
 
-    await db.info.update({ results }, { where: { id: 1 } });
+    await db.algorithm.update(
+      { results },
+      { where: { name: "evalution_algorithm" } }
+    );
 
     let arrClass = new Set();
     for (let value of bestPopulation.scheduleForGroups.values()) {

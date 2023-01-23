@@ -111,7 +111,10 @@ export const RUN_SIMULATED_ANNEALING = {
     );
     results.simulated_annealing = newResults;
     results = JSON.stringify(results);
-    await db.info.update({ results }, { where: { id: 1 } });
+    await db.algorithm.update(
+      { results },
+      { where: { name: "simulated_annealing_algorithm" } }
+    );
     let arrClass = new Set();
     let arrGroup = Array.from(currentSchedule.scheduleForGroups.values());
     for (const sc_group of arrGroup) {
