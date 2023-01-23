@@ -23,7 +23,7 @@ export default async function InitRecords(db) {
           type: "number",
           min: 1,
           max: null,
-          step: 1,
+          step: 50,
           value: 300,
         },
         {
@@ -32,7 +32,7 @@ export default async function InitRecords(db) {
           type: "number",
           min: 1,
           max: null,
-          step: 1,
+          step: 50,
           value: 300,
         },
         {

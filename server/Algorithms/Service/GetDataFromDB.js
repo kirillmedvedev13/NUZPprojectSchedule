@@ -1,7 +1,7 @@
 import db from "../../database.js";
 import { Op } from "sequelize";
 
-export default async function GetDataFromDB(id_cathedra = null) {
+export default async function GetDataFromDB(id_cathedra = null, name_algorithm) {
   const info = await db.info.findOne();
   const max_day = info.dataValues.max_day;
   const max_pair = info.dataValues.max_pair;
@@ -58,10 +58,22 @@ export default async function GetDataFromDB(id_cathedra = null) {
   groups = groups.map((g) => g.toJSON());
   audiences = audiences.map((a) => a.toJSON());
   classes = classes.map((c) => c.toJSON());
-  let results = JSON.parse(info.dataValues.results);
-  if (!results) {
-    results = {};
+
+  let algorithm = await db.algorithm.findOne({
+    where: {
+      name: name_algorithm
+    }
+  })
+
+  if (!algorithm) {
+    throw {
+      successful: true,
+      message: "Не знайдено алгоритм",
+    }
   }
+
+  let params = JSON.parse(algorithm.params);
+
   return {
     max_day,
     max_pair,
@@ -70,9 +82,7 @@ export default async function GetDataFromDB(id_cathedra = null) {
     audiences,
     groups,
     teachers,
-    evolution_values: JSON.parse(info.dataValues.evolution_values),
-    simulated_annealing: JSON.parse(info.dataValues.simulated_annealing),
     general_values: JSON.parse(info.dataValues.general_values),
-    results
+    params
   };
 }

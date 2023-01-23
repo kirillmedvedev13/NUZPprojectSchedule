@@ -23,13 +23,13 @@ export const UPDATE_ALGORITHM = {
     );
     return res[0]
       ? {
-          successful: true,
-          message: "Запис успішно оновлено",
-        }
+        successful: true,
+        message: "Запис успішно оновлено",
+      }
       : {
-          successful: false,
-          message: "Помилка при оновленні запису",
-        };
+        successful: false,
+        message: "Помилка при оновленні запису",
+      };
   },
 };
 
@@ -43,16 +43,16 @@ export const RUN_ALGORITHM = {
     let result;
     switch (name) {
       case "evolution_algorithm":
-        result = await RUN_EA(id_cathedra);
+        result = await RUN_EA(id_cathedra, name);
         break;
       case "evolution_algorithmCPP":
-        result = await RUN_EACPP(id_cathedra);
+        result = await RUN_EACPP(id_cathedra, name);
         break;
       case "simple_algorithm":
-        result = await RUN_SA(id_cathedra);
+        result = await RUN_SA(id_cathedra, name);
         break;
       case "simulated_annealing_algorithm":
-        result = await RUN_SIMULATED_ANNEALING(id_cathedra);
+        result = await RUN_SIMULATED_ANNEALING(id_cathedra, name);
         break;
     }
 

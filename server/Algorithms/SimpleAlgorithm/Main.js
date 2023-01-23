@@ -5,7 +5,7 @@ import AddClassToScheduleNew from "./AddClassToScheduleNew.js";
 import AddClassToScheduleOld from "./AddClassToScheduleOld.js";
 import GetFitness from "./GetFitness.js";
 
-export const RUN_SA = async (id_cathedra) => {
+export const RUN_SA = async (id_cathedra, name_algorithm) => {
   let {
     max_day,
     max_pair,
@@ -13,8 +13,7 @@ export const RUN_SA = async (id_cathedra) => {
     recommended_schedules,
     audiences,
     general_values,
-    results,
-  } = await GetDataFromDB(id_cathedra);
+  } = await GetDataFromDB(id_cathedra, name_algorithm);
   let scheduleForGroups = new Map();
   let scheduleForTeachers = new Map();
   let scheduleForAudiences = new Map();
@@ -24,9 +23,8 @@ export const RUN_SA = async (id_cathedra) => {
     scheduleForAudiences,
   };
   // Получения расписания для груп учителей если они есть  в других кафедрах
-  let newResults = [];
+  let results = [];
   let start_time = new Date().getTime();
-  newResults.push([0, 0]);
 
   let db_schedule = await ParseScheduleFromDB(id_cathedra);
   if (db_schedule) {
@@ -63,15 +61,14 @@ export const RUN_SA = async (id_cathedra) => {
     recommended_schedules,
     general_values
   );
-  newResults.push([
+  results.push([
     new Date().getTime() - start_time,
     fitnessValue.fitnessValue,
   ]);
-  results.simple_algorithm = newResults;
   results = JSON.stringify(results);
   await db.algorithm.update(
     { results },
-    { where: { name: "simple_algorithm" } }
+    { where: { name: name_algorithm } }
   );
   let arr = [];
   arrClass.forEach((sched) => arr.push(JSON.parse(sched)));

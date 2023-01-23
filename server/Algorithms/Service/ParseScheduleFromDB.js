@@ -2,7 +2,7 @@ import db from "../../database.js";
 
 //получаем из бд данные расписания занятий для других кафедр
 export default async function ParseScheduleFromDB(id_cathedra) {
-  //Получение расписания с для выбранной кафедры
+  //Получение расписания для выбранной кафедры
   if (id_cathedra) {
     let classes = await db.class.findAll({
       include: [

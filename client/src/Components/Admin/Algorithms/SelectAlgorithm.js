@@ -2,7 +2,7 @@ import React from "react";
 import Select from "react-select";
 
 export default function SelectAlgoritm({ data, handleChangeState }) {
-  data = data.GetAllAlgorithm;
+
   let options = data.map((obj) => {
     return { value: obj.name, label: obj.label };
   });
@@ -16,13 +16,10 @@ export default function SelectAlgoritm({ data, handleChangeState }) {
         let params = JSON.parse(
           data.find((obj) => obj.name === e.value).params
         );
-        let results = data.map((obj) => {
-          return { name: obj.name, label: obj.label, results: obj.results };
-        });
         handleChangeState("nameAlgorithm", e.value);
         handleChangeState("label", e.label);
         handleChangeState("params", params);
-        handleChangeState("results", results);
+
       }}
     />
   );

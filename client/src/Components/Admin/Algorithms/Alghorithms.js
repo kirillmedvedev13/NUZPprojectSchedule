@@ -14,6 +14,10 @@ function ChooseAlgorithm({ state, handleChangeState }) {
   const { loading, error, data, refetch } = useQuery(GET_ALL_ALGORITHM);
   if (loading) return null;
   if (error) return `Error! ${error}`;
+  let arr = data.GetAllAlgorithm;
+  let results = arr.map((obj) => {
+    return { name: obj.name, label: obj.label, results: obj.results };
+  });
 
   return (
     <>
@@ -23,7 +27,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
           <Card.Footer>
             <Form.Group as={Row} className="my-2 mx-2">
               <SelectAlgoritm
-                data={data}
+                data={arr}
                 handleChangeState={handleChangeState}
               ></SelectAlgoritm>
             </Form.Group>
@@ -38,20 +42,24 @@ function ChooseAlgorithm({ state, handleChangeState }) {
         </Card>
       </div>
 
-      <AlgorithmFormAndChart
+      <AlgorithmForm
         state={state}
         handleChangeState={handleChangeState}
         refetch={refetch}
-      ></AlgorithmFormAndChart>
+      ></AlgorithmForm>
+
+      <div className="d-flex justify-content-center">
+        {<MultiCharts results={results}></MultiCharts>}
+      </div>
     </>
   );
 }
 
-function AlgorithmFormAndChart({ state, handleChangeState, refetch }) {
+function AlgorithmForm({ state, handleChangeState, refetch }) {
   let params = state.params;
   return (
     <>
-      {state.nameAlgorithm ? (
+      {state.nameAlgorithm && params.length ? (
         <>
           <div className="d-flex justify-content-center mx-5">
             <Card className="my-2">
@@ -70,7 +78,7 @@ function AlgorithmFormAndChart({ state, handleChangeState, refetch }) {
                         max={param.max}
                         step={param.step}
                         onChange={(e) => {
-                          param.value = Number(e.target.value);
+                          param.value = +e.target.value;
                           handleChangeState("params", params);
                         }}
                       />
@@ -88,14 +96,12 @@ function AlgorithmFormAndChart({ state, handleChangeState, refetch }) {
               </Card.Footer>
             </Card>
           </div>
-          <div className="d-flex justify-content-center">
-            {<MultiCharts results={state.results}></MultiCharts>}
-          </div>
         </>
       ) : null}
     </>
   );
 }
+
 
 export default class Algorithms extends React.Component {
   constructor(args) {
@@ -105,7 +111,6 @@ export default class Algorithms extends React.Component {
       nameAlgorithm: null,
       label: null,
       params: null,
-      results: null,
     };
   }
 

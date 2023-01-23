@@ -9,18 +9,18 @@ import GetRndInteger from "../Service/GetRndInteger.js";
 import Mutation from "./Mutation.js";
 import Fitness from "../Service/Fitness.js";
 
-export const RUN_SIMULATED_ANNEALING = async (id_cathedra) => {
+export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
   let {
     max_day,
     max_pair,
     classes,
     recommended_schedules,
     audiences,
-    simulated_annealing,
     general_values,
-    results,
-  } = await GetDataFromDB(id_cathedra);
-  let { temperature, alpha } = simulated_annealing;
+    params
+  } = await GetDataFromDB(id_cathedra, name_algorithm);
+  let { temperature, alpha } = params;
+  let results = [];
   // Получения расписания для груп учителей если они есть  в других кафедрах
   let db_schedule = await ParseScheduleFromDB(id_cathedra);
   let currentSchedule = Init(
@@ -37,7 +37,6 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra) => {
     max_day,
     general_values
   );
-  let newResults = [];
   let start_time = new Date().getTime();
   while (currentFitness.fitnessValue > 0) {
     let newSchedule = cloneDeep(currentSchedule);
@@ -50,8 +49,8 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra) => {
         r === 1
           ? newSchedule.scheduleForGroups
           : r === 2
-          ? newSchedule.scheduleForTeachers
-          : newSchedule.scheduleForAudiences;
+            ? newSchedule.scheduleForTeachers
+            : newSchedule.scheduleForAudiences;
       sc = Array.from(sc.values());
       // Выбор случайной сущности
       if (sc.length) {
@@ -94,7 +93,7 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra) => {
       console.log(
         `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
       );
-      newResults.push([
+      results.push([
         new Date().getTime() - start_time,
         currentFitness.fitnessValue,
       ]);
@@ -104,11 +103,10 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra) => {
   console.log(
     `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
   );
-  results.simulated_annealing = newResults;
   results = JSON.stringify(results);
   await db.algorithm.update(
     { results },
-    { where: { name: "simulated_annealing_algorithm" } }
+    { where: { name: name_algorithm } }
   );
   let arrClass = new Set();
   let arrGroup = Array.from(currentSchedule.scheduleForGroups.values());

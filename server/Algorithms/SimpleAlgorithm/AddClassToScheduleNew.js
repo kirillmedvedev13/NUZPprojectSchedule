@@ -179,7 +179,6 @@ export default function AddClassToScheduleNew(
       // Если не найдена ни одна свободная пара
       if (!intersectionAudGroupTeach.length) {
         if (setWindows === max_pair) {
-          console.log("!!!");
           isRunning = false;
         }
         setWindows++;

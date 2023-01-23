@@ -11,7 +11,7 @@ import GetDataFromDB from "../Service/GetDataFromDB.js";
 import GetRndInteger from "../Service/GetRndInteger.js";
 import GetBaseSchedule from "./GetBaseSchedule.js";
 
-export const RUN_EA = async (id_cathedra) => {
+export const RUN_EA = async (id_cathedra, name_algorithm) => {
   let {
     max_day,
     max_pair,
@@ -20,10 +20,9 @@ export const RUN_EA = async (id_cathedra) => {
     audiences,
     groups,
     teachers,
-    evolution_values,
+    params,
     general_values,
-    results,
-  } = await GetDataFromDB(id_cathedra);
+  } = await GetDataFromDB(id_cathedra, name_algorithm);
   let {
     population_size,
     max_generations,
@@ -31,7 +30,7 @@ export const RUN_EA = async (id_cathedra) => {
     p_mutation,
     p_genes,
     p_elitism,
-  } = evolution_values;
+  } = params;
   let base_schedule = null;
   GetBaseSchedule(base_schedule, id_cathedra);
 
@@ -44,7 +43,7 @@ export const RUN_EA = async (id_cathedra) => {
     maxWorkers: numCPUs,
   });
 
-  let newResults = [];
+  let results = [];
   let start_time = new Date().getTime();
   // Инициализация
   let populations = Init(
@@ -219,7 +218,7 @@ export const RUN_EA = async (id_cathedra) => {
     console.timeEnd("Select");
     // Лучшая популяция
     bestPopulation = MinFitnessValue(populations, bestPopulation);
-    newResults.push([
+    results.push([
       new Date().getTime() - start_time,
       bestPopulation.fitnessValue,
     ]);
@@ -227,21 +226,18 @@ export const RUN_EA = async (id_cathedra) => {
 
     console.log(
       generationCount +
-        " " +
-        bestPopulation.fitnessValue +
-        " Mean " +
-        MeanFitnessValue(populations)
+      " " +
+      bestPopulation.fitnessValue +
+      " Mean " +
+      MeanFitnessValue(populations)
     );
   }
 
   //Вставка в бд
-
-  results.evolution_algorithm = newResults;
   results = JSON.stringify(results);
-
   await db.algorithm.update(
     { results },
-    { where: { name: "evalution_algorithm" } }
+    { where: { name: name_algorithm } }
   );
 
   let arrClass = new Set();
