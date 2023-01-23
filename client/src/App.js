@@ -100,23 +100,23 @@ class App extends React.Component {
               <Route path="/groups" element={<Group></Group>} />
               <Route path="/teachers" element={<Teacher></Teacher>} />
               <Route
-                path="/admin/general_values"
+                path="/admin_general_values"
                 element={<GeneralValues></GeneralValues>}
               />
               <Route
-                path="/admin/delete_data"
+                path="/admin_delete_data"
                 element={<DeleteData></DeleteData>}
               />
               <Route
-                path="/admin/submit_data_sheet"
+                path="/admin_submit_data_sheet"
                 element={<SubmitDataSheet></SubmitDataSheet>}
               />
               <Route
-                path="/admin/schedule_data"
+                path="/admin_schedule_data"
                 element={<ScheduleData></ScheduleData>}
               />
               <Route
-                path="/admin/algorithms"
+                path="/admin_algorithms"
                 element={<Algorithms></Algorithms>}
               />
             </Fragment>
