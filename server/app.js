@@ -5,6 +5,7 @@ import Schema from "./Schema/TypeDefs/app.js";
 import { graphqlHTTP } from "express-graphql";
 import config from "./config/config.js";
 import bodyParser from "body-parser";
+import InitRecords from "./InitRecords.js";
 
 const main = async () => {
   const app = express();
@@ -16,7 +17,10 @@ const main = async () => {
   app.use(cors(corsOptions));
 
   await db.Connection.sync({})
-    .then((result) => console.log("Connected to DB"))
+    .then(async (result) => {
+      await InitRecords(db);
+      console.log("Connected to DB");
+    })
     .catch((err) => console.log(err));
 
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,7 +38,6 @@ const main = async () => {
     console.log("Server is running");
   });
 };
-
 
 main().catch((err) => {
   console.log(err);

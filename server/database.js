@@ -16,7 +16,7 @@ import Recommended_schedule from "./Models/Recommended_schedule.js";
 import Assigned_teacher from "./Models/Assigned_teacher.js";
 import Schedule from "./Models/Schedule.js";
 import User from "./Models/User.js";
-
+import Algorithm from "./Models/Algorithm.js";
 import Assigned_group from "./Models/Assigned_group.js";
 import Info from "./Models/Info.js";
 
@@ -40,6 +40,7 @@ const models = [
   User,
   Info,
   Recommended_schedule,
+  Algorithm,
 ];
 let Connection;
 try {
@@ -48,15 +49,16 @@ try {
     host: config.HOST,
     define: { timestamps: false },
   });
-  await Connection.sync({});
 } catch {
   Connection = new Sequelize(config.DB_NAME, config.DB_USER, config.DB_PASS, {
     dialect: "mysql",
     host: config.RESHOST,
     define: { timestamps: false },
   });
-}
 
+  console.log("Using db on REHOST");
+}
+await Connection.sync({});
 models.forEach((model) => {
   const seqModel = model(Connection, Sequelize);
   console.log(seqModel.name);

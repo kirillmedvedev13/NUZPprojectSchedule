@@ -24,10 +24,7 @@ function DataForm() {
       <Form.Group as={Row} className="my-2 mx-2">
         <Form.Label className="col-5">Фітнес рек. час</Form.Label>
         <Col>
-          <Form.Control
-            value={fitnessValue?.fitnessSameRecSc}
-            readOnly
-          />
+          <Form.Control value={fitnessValue?.fitnessSameRecSc} readOnly />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
@@ -104,13 +101,12 @@ function DataForm() {
       </Form.Group>
 
       <Form.Group as={Row} className="my-2 mx-2">
-        <ButtonCalcFitness refetch={refetch} ></ButtonCalcFitness>
+        <ButtonCalcFitness refetch={refetch}></ButtonCalcFitness>
       </Form.Group>
     </>
   );
 }
 export default class ScheduleData extends React.Component {
-
   render() {
     return (
       <>
@@ -121,7 +117,7 @@ export default class ScheduleData extends React.Component {
               Дані про поточний розклад
             </Card.Header>
             <Card.Body>
-              <DataForm handleChangeState={this.handleChangeState} ></DataForm>
+              <DataForm handleChangeState={this.handleChangeState}></DataForm>
             </Card.Body>
           </Card>
         </div>
