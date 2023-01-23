@@ -34,6 +34,15 @@ export const RUN_ALGORITHM = gql`
   }
 `;
 
+export const UPDATE_ALGORITHM = gql`
+  mutation ($name: String!, $params: String!) {
+    UpdateAlgorithm(name: $name, params: $params) {
+      message
+      successful
+    }
+  }
+`;
+
 export const CALC_FITNESS = gql`
   mutation {
     CalcFitness {

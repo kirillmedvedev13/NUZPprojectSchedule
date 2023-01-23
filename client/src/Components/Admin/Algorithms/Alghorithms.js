@@ -3,10 +3,12 @@ import { Form, Row, Card, Col } from "react-bootstrap";
 import SelectCathedra from "../SelectCathedra.js";
 import NaviBarAdmin from "../NaviBarAdmin.js";
 import SelectAlgoritm from "./SelectAlgorithm.js";
-import { GET_ALL_ALGORITHM, GET_INFO } from "../queries";
+import { GET_ALL_ALGORITHM } from "../queries";
 import { useQuery } from "@apollo/client";
+import MultiCharts from "./MultiCharts.js";
 
 import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
+import ButtonUpdateAlgorithm from "./ButtonUpdateAlgorithm.js";
 
 function ChooseAlgorithm({ state, handleChangeState }) {
   const { loading, error, data, refetch } = useQuery(GET_ALL_ALGORITHM);
@@ -29,6 +31,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
               <ButtonRunAlgorithm
                 name={state.nameAlgorithm}
                 id_cathedra={state.id_cathedra}
+                refetch={refetch}
               ></ButtonRunAlgorithm>
             </Form.Group>
           </Card.Footer>
@@ -44,7 +47,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
   );
 }
 
-function AlgorithmFormAndChart({ state, handleChangeState }) {
+function AlgorithmFormAndChart({ state, handleChangeState, refetch }) {
   let params = state.params;
   return (
     <>
@@ -75,13 +78,19 @@ function AlgorithmFormAndChart({ state, handleChangeState }) {
               ))}
             </Card.Body>
 
-            <Card.Footer></Card.Footer>
+            <Card.Footer>
+              <ButtonUpdateAlgorithm
+                name={state.nameAlgorithm}
+                params={JSON.stringify(state.params)}
+                refetch={refetch}
+              />
+            </Card.Footer>
           </Card>
         </div>
       ) : null}
 
       <div className="d-flex justify-content-center">
-        {"<MultiCharts results={state.results}></MultiCharts>"}
+        {<MultiCharts results={state.results}></MultiCharts>}
       </div>
     </>
   );
