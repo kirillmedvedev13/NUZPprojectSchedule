@@ -17,9 +17,13 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
     recommended_schedules,
     audiences,
     general_values,
-    params
+    params,
   } = await GetDataFromDB(id_cathedra, name_algorithm);
-  let { temperature, alpha } = params;
+  let temperature, alpha;
+  params.forEach((obj) => {
+    if (obj.name === "temperature") temperature = +obj.value;
+    else alpha = +obj.value;
+  });
   let results = [];
   // Получения расписания для груп учителей если они есть  в других кафедрах
   let db_schedule = await ParseScheduleFromDB(id_cathedra);
@@ -49,8 +53,8 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
         r === 1
           ? newSchedule.scheduleForGroups
           : r === 2
-            ? newSchedule.scheduleForTeachers
-            : newSchedule.scheduleForAudiences;
+          ? newSchedule.scheduleForTeachers
+          : newSchedule.scheduleForAudiences;
       sc = Array.from(sc.values());
       // Выбор случайной сущности
       if (sc.length) {
@@ -104,10 +108,7 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
     `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
   );
   results = JSON.stringify(results);
-  await db.algorithm.update(
-    { results },
-    { where: { name: name_algorithm } }
-  );
+  await db.algorithm.update({ results }, { where: { name: name_algorithm } });
   let arrClass = new Set();
   let arrGroup = Array.from(currentSchedule.scheduleForGroups.values());
   for (const sc_group of arrGroup) {

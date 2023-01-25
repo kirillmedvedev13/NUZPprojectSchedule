@@ -152,13 +152,60 @@ export default async function InitRecords(db) {
   });
 
   await db.algorithm.findOrCreate({
+    where: { name: "tabu_search_algorithm" },
+    defaults: {
+      name: "tabu_search_algorithm",
+      label: "Алгоритм Табу-пошуку",
+      params: JSON.stringify([
+        {
+          name: "tabu_tenure",
+          label: "Кількість ітерації дії Табу",
+          min: 0,
+          max: null,
+          type: "number",
+          step: 1,
+          value: 10,
+        },
+        {
+          name: "s_neighbors",
+          label: "Кількість сусідніх розв’язків на 1 ітерації",
+          min: 1,
+          max: null,
+          type: "number",
+          step: 1,
+          value: 10,
+        },
+        {
+          name: "n_iteration",
+          label: "Кількість ітерації",
+          min: 1,
+          max: null,
+          type: "number",
+          step: 1,
+          value: 10000,
+        },
+        {
+          name: "tabu_list_len",
+          label: "Довжина списку Табу",
+          min: 1,
+          max: null,
+          type: "number",
+          step: 1,
+          value: 50,
+        },
+      ]),
+      results: JSON.stringify([]),
+    },
+  });
+
+  await db.algorithm.findOrCreate({
     where: { name: "simulated_annealing_algorithm" },
     defaults: {
       name: "simulated_annealing_algorithm",
       label: "Алгоритм імітації відпалу",
       params: JSON.stringify([
         {
-          name: "temparature",
+          name: "temperature",
           label: "Початкова температура",
           min: 0,
           max: null,

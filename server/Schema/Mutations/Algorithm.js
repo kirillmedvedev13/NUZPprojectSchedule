@@ -3,6 +3,7 @@ import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_EACPP } from "../../Algorithms/EvalutionAlgorithmCpp/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
 import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
+import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
@@ -23,13 +24,13 @@ export const UPDATE_ALGORITHM = {
     );
     return res[0]
       ? {
-        successful: true,
-        message: "Запис успішно оновлено",
-      }
+          successful: true,
+          message: "Запис успішно оновлено",
+        }
       : {
-        successful: false,
-        message: "Помилка при оновленні запису",
-      };
+          successful: false,
+          message: "Помилка при оновленні запису",
+        };
   },
 };
 
@@ -53,6 +54,9 @@ export const RUN_ALGORITHM = {
         break;
       case "simulated_annealing_algorithm":
         result = await RUN_SIMULATED_ANNEALING(id_cathedra, name);
+        break;
+      case "tabu_search_algorithm":
+        result = await RUN_TS(id_cathedra, name);
         break;
     }
 

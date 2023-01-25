@@ -23,14 +23,20 @@ export const RUN_EA = async (id_cathedra, name_algorithm) => {
     params,
     general_values,
   } = await GetDataFromDB(id_cathedra, name_algorithm);
-  let {
-    population_size,
+  let population_size,
     max_generations,
     p_crossover,
     p_mutation,
     p_genes,
-    p_elitism,
-  } = params;
+    p_elitism;
+  params.forEach((obj) => {
+    if (obj.name === "population_size") population_size = +obj.value;
+    else if (obj.name === "max_generations") max_generations = +obj.value;
+    else if (obj.name === "p_crossover") p_crossover = +obj.value;
+    else if (obj.name === "p_mutation") p_mutation = +obj.value;
+    else if (obj.name === "p_genes") p_genes = +obj.value;
+    else p_elitism = +obj.value;
+  });
   let base_schedule = null;
   GetBaseSchedule(base_schedule, id_cathedra);
 
@@ -226,19 +232,16 @@ export const RUN_EA = async (id_cathedra, name_algorithm) => {
 
     console.log(
       generationCount +
-      " " +
-      bestPopulation.fitnessValue +
-      " Mean " +
-      MeanFitnessValue(populations)
+        " " +
+        bestPopulation.fitnessValue +
+        " Mean " +
+        MeanFitnessValue(populations)
     );
   }
 
   //Вставка в бд
   results = JSON.stringify(results);
-  await db.algorithm.update(
-    { results },
-    { where: { name: name_algorithm } }
-  );
+  await db.algorithm.update({ results }, { where: { name: name_algorithm } });
 
   let arrClass = new Set();
   for (let value of bestPopulation.scheduleForGroups.values()) {
