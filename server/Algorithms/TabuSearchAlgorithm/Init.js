@@ -1,4 +1,4 @@
-import AddClassToSchedule from "../SimulatedAnnealingAlgorithm/AddClassToSchedule.js";
+import AddClassToSchedule from "./AddClassToSchedule.js";
 import GetIdsAudienceForClass from "../Service/GetIdsAudienceForClass.js";
 import GetRndInteger from "../Service/GetRndInteger.js";
 import GetPairTypeForClass from "../Service/GetPairTypeForClass.js";
@@ -8,6 +8,7 @@ export default function (classes, max_day, max_pair, audiences, base_schedule) {
   let scheduleForGroups = new Map();
   let scheduleForTeachers = new Map();
   let scheduleForAudiences = new Map();
+  let tabuList = new Map();
   let schedule = {
     scheduleForGroups,
     scheduleForTeachers,
@@ -77,10 +78,11 @@ export default function (classes, max_day, max_pair, audiences, base_schedule) {
         number_pair,
         info[j],
         id_audience,
-        last_id_schedule
+        last_id_schedule,
+        tabuList
       );
     }
   });
 
-  return schedule;
+  return { schedule, tabuList };
 }

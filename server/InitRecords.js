@@ -167,6 +167,15 @@ export default async function InitRecords(db) {
           value: 10,
         },
         {
+          name: "p_class",
+          label: "Ймовірність мутації заняття",
+          min: 0,
+          max: 1,
+          type: "number",
+          step: 0.001,
+          value: 0.01,
+        },
+        {
           name: "s_neighbors",
           label: "Кількість сусідніх розв’язків на 1 ітерації",
           min: 1,
