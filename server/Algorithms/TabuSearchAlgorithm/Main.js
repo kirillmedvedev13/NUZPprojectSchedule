@@ -55,19 +55,28 @@ function tabuListRemoveFirst(tabuList, tabu_list_len) {
 function setTabuList(ntabuList, tabuList) {
   for (let [classId, sched1] of ntabuList) {
     let sched2 = tabuList.get(+classId);
+    if (!sched2) sched2 = new Array();
     sched2.push(sched1);
   }
 }
 
-function chooseCandidate(sNeighborhood, tabuList) {
+function chooseCandidate(sNeighborhood, tabuList, aspiration) {
   let bestCandidate = sNeighborhood[0];
   for (let i = 0; i < sNeighborhood.length; i++) {
-    if (
-      bestCandidate.nfitness.fitnessValue >
-        sNeighborhood[i].nfitness.fitnessValue &&
-      !tabuListContains(sNeighborhood[i].ntabuList, tabuList)
-    )
-      bestCandidate = sNeighborhood[i];
+    if (!aspiration) {
+      if (
+        bestCandidate.nfitness.fitnessValue >
+          sNeighborhood[i].nfitness.fitnessValue &&
+        !tabuListContains(sNeighborhood[i].ntabuList, tabuList)
+      )
+        bestCandidate = sNeighborhood[i];
+    } else {
+      if (
+        bestCandidate.nfitness.fitnessValue >
+        sNeighborhood[i].nfitness.fitnessValue
+      )
+        bestCandidate = sNeighborhood[i];
+    }
   }
   return bestCandidate;
 }
@@ -94,6 +103,7 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
   let results = [];
   // Получения расписания для груп учителей если они есть  в других кафедрах
   let db_schedule = await ParseScheduleFromDB(id_cathedra);
+  let i = 0;
   let { schedule, tabuList } = Init(
     classes,
     max_day,
@@ -102,14 +112,16 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
     db_schedule
   );
   let bestSchedule = schedule;
-  let i = 0;
+
   let bestFitness = Fitness(
     bestSchedule,
     recommended_schedules,
     max_day,
     general_values
   );
+  let aspiration = false;
   let start_time = new Date().getTime();
+  let j = 0;
   while (bestFitness > 0 || i < n_iteration) {
     let sNeighborhood = [];
     for (let j = 0; j < s_neighbors; j++) {
@@ -132,16 +144,21 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
       );
       sNeighborhood.push({ neighbor, ntabuList, nfitness });
     }
-    let bestCandidate = chooseCandidate(sNeighborhood, tabuList);
+    if (j >= 300) aspiration = true;
+    let bestCandidate = chooseCandidate(sNeighborhood, tabuList, aspiration);
     if (bestFitness.fitnessValue > bestCandidate.nfitness.fitnessValue) {
       bestSchedule = bestCandidate.neighbor;
       bestFitness = bestCandidate.nfitness;
       setTabuList(bestCandidate.ntabuList, tabuList);
+      aspiration = false;
+      j = 0;
     }
     tabuListRemoveFirst(tabuList, tabu_list_len);
     console.log(`iteration: ${i} | fitness: ${bestFitness.fitnessValue}`);
     results.push([new Date().getTime() - start_time, bestFitness.fitnessValue]);
+
     i++;
+    j++;
   }
   results = JSON.stringify(results);
   await db.algorithm.update({ results }, { where: { name: name_algorithm } });
