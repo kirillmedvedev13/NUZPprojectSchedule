@@ -35,6 +35,7 @@ function chooseSchedule(schedule) {
   return mutation_sched;
 }
 function tabuListContains(ntabuList, tabuList) {
+  //проверка если расписание находится в списке запретов
   for (let [classId, sched1] of ntabuList) {
     let sched2 = tabuList.get(+classId);
     if (sched2)
@@ -48,6 +49,7 @@ function tabuListContains(ntabuList, tabuList) {
   return false;
 }
 function tabuListUpdate(tabuList, tabu_list_len, tabuListTime, tabu_tenure) {
+  //обновления списка запретов (если прошел термин действия или достигнут макс длина списка)
   for (let [key, arr] of tabuListTime) {
     let arr2 = tabuList.get(key);
     for (let i = 0; i < arr.length; i++) {
@@ -78,9 +80,11 @@ function setTabuList(ntabuList, tabuList, tabuListTime) {
 }
 
 function chooseCandidate(sNeighborhood, tabuList, aspiration) {
+  //выбор кандидата
   let bestCandidate = sNeighborhood[0];
   for (let i = 0; i < sNeighborhood.length; i++) {
     if (!aspiration) {
+      //лучший фитнес и не табу
       if (
         bestCandidate.nfitness.fitnessValue >
           sNeighborhood[i].nfitness.fitnessValue &&
