@@ -40,23 +40,40 @@ function tabuListContains(ntabuList, tabuList) {
     if (sched2)
       for (let sch of sched1) {
         if (sched2.includes(sch)) {
-          console.log(true);
+          console.log("Schedule is in Tabu-list");
           return true;
         }
       }
   }
   return false;
 }
-function tabuListRemoveFirst(tabuList, tabu_list_len) {
-  for (let [key, arr] of tabuList) {
-    if (arr.length > tabu_list_len) arr.shift();
+function tabuListUpdate(tabuList, tabu_list_len, tabuListTime, tabu_tenure) {
+  for (let [key, arr] of tabuListTime) {
+    let arr2 = tabuList.get(key);
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] += 1;
+      if (arr[i] > tabu_tenure) {
+        arr.splice(i, 1);
+        arr2.splice(i, 1);
+      }
+    }
+    if (arr.length > tabu_list_len) {
+      arr.shift();
+      arr2.shift();
+    }
   }
 }
-function setTabuList(ntabuList, tabuList) {
+function setTabuList(ntabuList, tabuList, tabuListTime) {
   for (let [classId, sched1] of ntabuList) {
     let sched2 = tabuList.get(+classId);
     if (!sched2) sched2 = new Array();
     sched2.push(sched1);
+    tabuList.set(+classId, sched2);
+
+    sched2 = tabuListTime.get(+classId);
+    if (!sched2) sched2 = new Array();
+    sched2.push(0);
+    tabuListTime.set(+classId, sched2);
   }
 }
 
@@ -100,6 +117,7 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
     else tabu_list_len = +obj.value;
   });
 
+  n_iteration = n_iteration == 0 ? Number.MAX_VALUE : n_iteration;
   let results = [];
   // Получения расписания для груп учителей если они есть  в других кафедрах
   let db_schedule = await ParseScheduleFromDB(id_cathedra);
@@ -113,6 +131,14 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
   );
   let bestSchedule = schedule;
 
+  let tabuListTime = new Map();
+
+  for (let [classId, sched1] of tabuList) {
+    let temp = [];
+    for (let sch of sched1) temp.push(0);
+    tabuListTime.set(classId, temp);
+  }
+
   let bestFitness = Fitness(
     bestSchedule,
     recommended_schedules,
@@ -120,6 +146,7 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
     general_values
   );
   let aspiration = false;
+  let numberMut = 1;
   let start_time = new Date().getTime();
   let j = 0;
   while (bestFitness > 0 || i < n_iteration) {
@@ -127,15 +154,17 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
     for (let j = 0; j < s_neighbors; j++) {
       let neighbor = cloneDeep(bestSchedule);
       let ntabuList = new Map();
-      let mutation_sched = chooseSchedule(neighbor);
-      Mutation(
-        neighbor,
-        max_day,
-        max_pair,
-        audiences,
-        mutation_sched,
-        ntabuList
-      );
+      for (let k = 0; k < numberMut; k++) {
+        let mutation_sched = chooseSchedule(neighbor);
+        Mutation(
+          neighbor,
+          max_day,
+          max_pair,
+          audiences,
+          mutation_sched,
+          ntabuList
+        );
+      }
       let nfitness = Fitness(
         neighbor,
         recommended_schedules,
@@ -144,21 +173,24 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
       );
       sNeighborhood.push({ neighbor, ntabuList, nfitness });
     }
-    if (j >= 300) aspiration = true;
+    /*if (j >= 300) {
+      aspiration = true;
+      j = 0;
+    }*/
     let bestCandidate = chooseCandidate(sNeighborhood, tabuList, aspiration);
     if (bestFitness.fitnessValue > bestCandidate.nfitness.fitnessValue) {
       bestSchedule = bestCandidate.neighbor;
       bestFitness = bestCandidate.nfitness;
-      setTabuList(bestCandidate.ntabuList, tabuList);
+      setTabuList(bestCandidate.ntabuList, tabuList, tabuListTime);
       aspiration = false;
-      j = 0;
+      //j = 0;
     }
-    tabuListRemoveFirst(tabuList, tabu_list_len);
+    tabuListUpdate(tabuList, tabu_list_len, tabuListTime, tabu_tenure, i);
     console.log(`iteration: ${i} | fitness: ${bestFitness.fitnessValue}`);
     results.push([new Date().getTime() - start_time, bestFitness.fitnessValue]);
 
     i++;
-    j++;
+    //j++;
   }
   results = JSON.stringify(results);
   await db.algorithm.update({ results }, { where: { name: name_algorithm } });
