@@ -17,7 +17,6 @@ function getAxisYDomain(from, to, ref, offset, initialData) {
     return { name: obj.name, data: obj.data.slice(from - 1, to) };
   });
 
-  debugger;
   let topArr = [];
   let bottomArr = [];
   refData.forEach((obj) => {
@@ -30,7 +29,6 @@ function getAxisYDomain(from, to, ref, offset, initialData) {
     topArr.push((top | 0) + offset);
     bottomArr.push((bottom | 0) - offset);
   });
-  console.log(topArr);
   return { topArr, bottomArr };
 }
 
@@ -53,15 +51,30 @@ function GetDataForCharts(results) {
   return dataForCharts;
 }
 
+const getMaxRightTop = (initialData) => {
+  let maxLen = 0;
+  let data;
+  initialData.forEach((obj) => {
+    if (maxLen < obj.data.length) data = obj.data;
+  });
+  let maxTop = 0,
+    maxRight = 0;
+  data.forEach((obj) => {
+    if (maxTop < obj.fitness) maxTop = obj.fitness;
+    if (maxRight < obj.time) maxRight = obj.time;
+  });
+  return { maxRight, maxTop };
+};
 const initialState = (initialData) => {
+  const { maxRight, maxTop } = getMaxRightTop(initialData);
   return {
     data: initialData,
-    left: "dataMin",
-    right: "dataMax",
+    left: 0,
+    right: maxRight,
     refAreaLeft: "",
     refAreaRight: "",
-    topArr: "dataMax+1",
-    bottomArr: "dataMin-1",
+    topArr: maxTop,
+    bottomArr: 0,
     animation: true,
   };
 };
@@ -110,15 +123,15 @@ export default class MultiCharts extends React.Component {
 
   zoomOut = () => {
     const { data } = this.state;
-    console.log(data);
+    const { maxRight, maxTop } = getMaxRightTop(data);
     this.setState(() => ({
       data: data,
       refAreaLeft: "",
       refAreaRight: "",
-      left: "dataMin",
-      right: "dataMax",
-      topArr: "dataMax+1",
-      bottomArr: "dataMin",
+      left: 0,
+      right: maxRight,
+      topArr: maxTop,
+      bottomArr: 0,
     }));
   };
 
@@ -129,10 +142,10 @@ export default class MultiCharts extends React.Component {
     let initialData = GetDataForCharts(this.props.results);
     return (
       <>
-        <div className="d-flex justify-content-end my-2">
+        <div className="d-flex justify-content-end mx-5 my-2">
           <Button onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
         </div>
-        <Container>
+        <div className="d-flex justify-content-center mx-5">
           <LineChart
             width={0.8 * window.screen.width}
             height={0.5 * window.screen.height}
@@ -165,7 +178,19 @@ export default class MultiCharts extends React.Component {
               allowDataOverflow
               dataKey="fitness"
               type="number"
-              domain={[left, right]}
+              domain={() => {
+                let top = Number.MIN_VALUE;
+                let bottom = Number.MAX_VALUE;
+                if (topArr?.length) {
+                  topArr.map((elem, i) => {
+                    if (top < elem) top = elem;
+                    if (bottom > bottomArr[i]) bottom = bottomArr[i];
+                  });
+                } else {
+                  return [bottomArr, topArr];
+                }
+                return [bottom, top];
+              }}
             >
               <Label
                 style={{
@@ -178,14 +203,7 @@ export default class MultiCharts extends React.Component {
               />
             </YAxis>
             <Tooltip />
-            {refAreaLeft && refAreaRight ? (
-              <ReferenceArea
-                yAxisId="1"
-                x1={refAreaLeft}
-                x2={refAreaRight}
-                strokeOpacity={0.3}
-              />
-            ) : null}
+
             <Legend align="center" />
             {this.state.data.map((algorithm, i) =>
               algorithm.data.length ? (
@@ -203,8 +221,15 @@ export default class MultiCharts extends React.Component {
                 />
               ) : null
             )}
+            {refAreaLeft && refAreaRight ? (
+              <ReferenceArea
+                x1={refAreaLeft}
+                x2={refAreaRight}
+                strokeOpacity={0.3}
+              />
+            ) : null}
           </LineChart>
-        </Container>
+        </div>
       </>
     );
   }

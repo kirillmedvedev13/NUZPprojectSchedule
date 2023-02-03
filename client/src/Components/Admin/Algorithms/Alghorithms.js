@@ -48,9 +48,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
         refetch={refetch}
       ></AlgorithmForm>
 
-      <div className="d-flex justify-content-center">
-        {<MultiCharts results={results}></MultiCharts>}
-      </div>
+      {<MultiCharts results={results}></MultiCharts>}
     </>
   );
 }
@@ -101,7 +99,6 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
     </>
   );
 }
-
 
 export default class Algorithms extends React.Component {
   constructor(args) {
