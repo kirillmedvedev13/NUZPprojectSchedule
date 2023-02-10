@@ -72,7 +72,7 @@ export default async function InitRecords(db) {
           value: 0.1,
         },
       ]),
-      results: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
     },
   });
 
@@ -137,7 +137,7 @@ export default async function InitRecords(db) {
           value: 0.1,
         },
       ]),
-      results: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
     },
   });
 
@@ -147,7 +147,7 @@ export default async function InitRecords(db) {
       name: "simple_algorithm",
       label: "Алгоритм простого перебору",
       params: JSON.stringify([]),
-      results: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
     },
   });
 
@@ -195,7 +195,7 @@ export default async function InitRecords(db) {
           value: 50,
         },
       ]),
-      results: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
     },
   });
 
@@ -224,7 +224,7 @@ export default async function InitRecords(db) {
           value: 0.99,
         },
       ]),
-      results: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
     },
   });
 
