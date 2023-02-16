@@ -8,9 +8,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AuthProvider from "./Components/Authorization/AuthProvider";
 import "react-notifications/lib/notifications.css";
 import "./App.css";
+import config from "./config.js";
 
 const client = new ApolloClient({
-  uri: "http://localhost:3002/graphql",
+  uri: `http://${config.HOST}:${config.PORT}/graphql`,
   cache: new InMemoryCache(),
 });
 
