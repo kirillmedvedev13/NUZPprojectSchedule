@@ -250,12 +250,12 @@ export default async function InitRecords(db) {
         fitnessSameRecSc: 0,
       }),
       general_values: JSON.stringify({
-        penaltyGrWin: 0,
-        penaltyTeachWin: 0,
-        penaltyLateSc: 0,
-        penaltyEqSc: 0,
-        penaltySameTimesSc: 0,
-        penaltySameRecSc: 0,
+        penaltyGrWin: 1,
+        penaltyTeachWin: 1,
+        penaltyLateSc: 2,
+        penaltyEqSc: 2,
+        penaltySameTimesSc: 5,
+        penaltySameRecSc: 5,
       }),
     },
   });

@@ -61,15 +61,9 @@ export const RUN_SA = async (id_cathedra, name_algorithm) => {
     recommended_schedules,
     general_values
   );
-  results.push([
-    new Date().getTime() - start_time,
-    fitnessValue.fitnessValue,
-  ]);
+  results.push([new Date().getTime() - start_time, fitnessValue.fitnessValue]);
   results = JSON.stringify(results);
-  await db.algorithm.update(
-    { results },
-    { where: { name: name_algorithm } }
-  );
+  await db.algorithm.update({ results }, { where: { name: name_algorithm } });
   let arr = [];
   arrClass.forEach((sched) => arr.push(JSON.parse(sched)));
   let isBulk = await db.schedule.bulkCreate(arr);
