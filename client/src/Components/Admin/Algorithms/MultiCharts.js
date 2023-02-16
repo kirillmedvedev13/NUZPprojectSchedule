@@ -83,7 +83,10 @@ const initialState = (initialData) => {
 export default class MultiCharts extends React.Component {
   constructor(props) {
     super(props);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 767cd813116b9221eadc67d790505ce34fcdbe5a
     this.state = initialState(GetDataForCharts(this.props.results));
   }
 

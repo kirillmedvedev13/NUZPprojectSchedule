@@ -51,19 +51,23 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       let bestPopulation = res.bestPopulation;
       let result = res.result;
       result = JSON.stringify(result);
-      await db.algorithm.update(
-        { results },
-        { where: { name: name_algorithm } }
-      );
-
+      let params_value = JSON.stringify(params_obj);
+      let resdb = await db.results_algorithm.findOne({ where: { params_value, name_algorithm } });
+      if (resdb)
+        await db.results_algorithm.update({ result }, { where: { params_value } });
+      else
+        await db.results_algorithm.create({
+          params_value,
+          name_algorithm,
+          result,
+        });
       let isBulk = await db.schedule.bulkCreate(bestPopulation);
       if (isBulk)
         return {
           successful: true,
-          message: `Total fitness: ${bestPopulation[bestPopulation.length - 1]
-            }`,
+          message: `Фітнес - ${bestPopulation[bestPopulation.length - 1]}`,
         };
-      else return { successful: false, message: `Some error` };
+      else return { successful: false, message: `Помилка` };
     }
   } catch (err) {
     console.log(err);
