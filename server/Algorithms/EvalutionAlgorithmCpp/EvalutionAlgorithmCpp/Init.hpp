@@ -16,7 +16,7 @@ using namespace std;
 vector <individ> Init(vector <clas>& classes, const int& max_day, const int& max_pair,const int &population_size,const vector<audience>& audiences, base_schedule  &bs)
 {
     vector <individ> populations = vector <individ>(population_size);
-
+    // Заполнение базового расписания
     for (int k = 0; k < population_size; k++){
         for (auto & gr: bs.base_schedule_group){
             auto id = gr.first;
@@ -40,7 +40,8 @@ vector <individ> Init(vector <clas>& classes, const int& max_day, const int& max
             }
         }
     }
-    // Расстановка расписания
+    // Расстановка расписания для кафедры
+    // В начальном варианте у всех индиводов расписание разное но одинаковое количество пар
     for (size_t i = 0; i < classes.size(); i++){
         clas &clas = classes[i];
         vector<int> info = GetPairTypeForClass(clas);

@@ -1,4 +1,4 @@
-import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
+import ParseScheduleFromDB from "../Service/GetBaseSchedule.js";
 import AddClassToSchedule from "./AddClassToSchedule.js";
 export default async function GetBaseSchedule(base_schedule, id_cathedra) {
   let scheduleForGroups = new Map();

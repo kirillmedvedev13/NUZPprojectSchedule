@@ -1,5 +1,5 @@
 import GetDataFromDB from "../Service/GetDataFromDB.js";
-import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
+import ParseScheduleFromDB from "../Service/GetBaseSchedule.js";
 import db from "../../database.js";
 import AddClassToScheduleNew from "./AddClassToScheduleNew.js";
 import AddClassToScheduleOld from "./AddClassToScheduleOld.js";
