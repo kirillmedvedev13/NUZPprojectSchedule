@@ -7,6 +7,7 @@ import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
+import ButtonGetDataFile from "./ButtonGetDataFile";
 
 function GetSchedules(schedule) {
   let arrSched = [];
@@ -38,8 +39,9 @@ function getDescription(schedule) {
       teacher.teacher.patronymic;
   });
   const desciption = `
-   ${schedule.class.type_class.name} ${schedule.class.assigned_discipline.discipline.name
-    } 
+   ${schedule.class.type_class.name} ${
+    schedule.class.assigned_discipline.discipline.name
+  } 
    ${GetGroupsName(schedule.class.assigned_groups)} 
    ${teachers}
  
@@ -103,12 +105,12 @@ class ScheduleTableAudience extends React.Component {
 
     return (
       <>
-        <ButtonGetTableExcel
+        <ButtonGetDataFile
           refTable={this.refTable}
           nameTable="scheduleTableAudience"
           wb={this.state.workBook}
           setWorkBook={this.setWorkBook}
-        ></ButtonGetTableExcel>
+        ></ButtonGetDataFile>
         <Table
           striped
           ref={this.refTable}

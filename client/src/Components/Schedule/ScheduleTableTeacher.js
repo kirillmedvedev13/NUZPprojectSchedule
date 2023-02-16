@@ -7,6 +7,7 @@ import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
+import ButtonGetDataFile from "./ButtonGetDataFile";
 
 function GetSchedules(schedule) {
   let arrSched = [];
@@ -105,12 +106,12 @@ class ScheduleTableTeacher extends React.Component {
     const { filters } = this.props;
     return (
       <>
-        <ButtonGetTableExcel
+        <ButtonGetDataFile
           refTable={this.refTable}
           nameTable="scheduleTableTeacher"
           wb={this.state.workBook}
           setWorkBook={this.setWorkBook}
-        ></ButtonGetTableExcel>
+        ></ButtonGetDataFile>
         <Table
           striped
           ref={this.refTable}

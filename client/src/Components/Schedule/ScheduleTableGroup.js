@@ -6,6 +6,7 @@ import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
 import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
+import ButtonGetDataFile from "./ButtonGetDataFile";
 
 function getSchedulesForGroup(group) {
   let arrSched = [];
@@ -30,10 +31,13 @@ function getSchedulesForGroup(group) {
 
 function getDescription(schedule) {
   const desciption = `
-  ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${schedule.class.assigned_discipline.discipline.name
-    } ${schedule.class.assigned_teachers.map(({ teacher }) => {
-      return ` ${teacher.surname} ${teacher.name?.at(0)}.${teacher.patronymic?.at(0)}.`;
-    })}
+  ${schedule.class.type_class.name} ауд.${schedule.audience.name} ${
+    schedule.class.assigned_discipline.discipline.name
+  } ${schedule.class.assigned_teachers.map(({ teacher }) => {
+    return ` ${teacher.surname} ${teacher.name?.at(0)}.${teacher.patronymic?.at(
+      0
+    )}.`;
+  })}
 `;
   return desciption;
 }
@@ -54,7 +58,10 @@ function DataTable({ filters, info }) {
   let MapGroup = new Map();
   for (const group of data.GetAllScheduleGroups) {
     MapGroup.set(
-      { id: group.id, name: `${group.specialty.cathedra.short_name}-${group.name}` },
+      {
+        id: group.id,
+        name: `${group.specialty.cathedra.short_name}-${group.name}`,
+      },
       group.assigned_groups.length === 0 ? [] : getSchedulesForGroup(group)
     );
   }
@@ -94,12 +101,13 @@ class ScheduleTableGroup extends React.Component {
     const { filters, info } = this.props;
     return (
       <>
-        <ButtonGetTableExcel
+        <ButtonGetDataFile
+          info={info}
           refTable={this.refTable}
-          nameTable="Розклад груп"
+          nameTable="scheduleTableGroup"
           wb={this.state.workBook}
           setWorkBook={this.setWorkBook}
-        ></ButtonGetTableExcel>
+        ></ButtonGetDataFile>
         <Table
           striped
           bordered

@@ -122,15 +122,15 @@ function GetBgColor(arrMerges, cell, value) {
         if (Number.isInteger(+value)) {
           return value % 2 === 0
             ? {
-              type: "pattern",
-              patternType: "solid",
-              fgColor: { rgb: "D6D6D6" },
-            }
+                type: "pattern",
+                patternType: "solid",
+                fgColor: { rgb: "D6D6D6" },
+              }
             : {
-              type: "pattern",
-              patternType: "solid",
-              fgColor: { rgb: "FFFFFF" },
-            };
+                type: "pattern",
+                patternType: "solid",
+                fgColor: { rgb: "FFFFFF" },
+              };
         }
 
         if (value.split(":").length > 1)
