@@ -21,11 +21,14 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
     let results = [];
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
-
+    let params_obj = {};
+    for (let p of params) {
+      params_obj[p.name] = p.value;
+    }
     let jsonData = JSON.stringify({
       max_day,
       max_pair,
-      params,
+      params: params_obj,
       base_schedule,
       recommended_schedules,
       classes,
@@ -46,13 +49,13 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       let res = readFileSync("./Algorithms/EvalutionAlgorithmCpp/result.json");
       res = JSON.parse(res);
       let bestPopulation = res.bestPopulation;
-      let evolution_algorithmCPP = res.evolution_algorithmCPP;
-      results = evolution_algorithmCPP;
-      results = JSON.stringify(results);
+      let result = res.result;
+      result = JSON.stringify(result);
       await db.algorithm.update(
         { results },
         { where: { name: name_algorithm } }
       );
+
       let isBulk = await db.schedule.bulkCreate(bestPopulation);
       if (isBulk)
         return {

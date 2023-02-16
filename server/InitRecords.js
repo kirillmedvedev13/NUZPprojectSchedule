@@ -1,16 +1,19 @@
 export default async function InitRecords(db) {
+
   await db.type_class.findOrCreate({
     where: { id: 1 },
     defaults: {
       name: "Лекція",
     },
   });
+
   await db.type_class.findOrCreate({
     where: { id: 2 },
     defaults: {
       name: "Практика",
     },
   });
+
   await db.algorithm.findOrCreate({
     where: { name: "evolution_algorithm" },
     defaults: {
@@ -56,16 +59,6 @@ export default async function InitRecords(db) {
           type: "number",
           step: 0.05,
           value: 0.5,
-        },
-        {
-          name: "p_genes",
-          label: "Ймовірність мутації гена",
-          short: "мут.ген.",
-          min: 0,
-          max: 1,
-          type: "number",
-          step: 0.001,
-          value: 0.01,
         },
         {
           name: "p_elitism",
@@ -126,16 +119,6 @@ export default async function InitRecords(db) {
           type: "number",
           step: 0.05,
           value: 0.5,
-        },
-        {
-          name: "p_genes",
-          label: "Ймовірність мутації гена",
-          short: "мут.ген.",
-          min: 0,
-          max: 1,
-          type: "number",
-          step: 0.001,
-          value: 0.01,
         },
         {
           name: "p_elitism",
