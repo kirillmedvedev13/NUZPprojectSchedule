@@ -241,7 +241,23 @@ export const RUN_EA = async (id_cathedra, name_algorithm) => {
 
   //Вставка в бд
   results = JSON.stringify(results);
-  await db.algorithm.update({ results }, { where: { name: name_algorithm } });
+  let params_value = JSON.stringify({
+    population_size,
+    max_generation,
+    p_crossover,
+    p_mutation,
+    p_genes,
+    p_elitism,
+  });
+  let res = await db.results_algorithm.findOne({ where: { params_value } });
+  if (res)
+    await db.results_algorithm.update({ results }, { where: { params_value } });
+  else
+    await db.results_algorithm.create({
+      params_value,
+      name_algorithm,
+      results,
+    });
 
   let arrClass = new Set();
   for (let value of bestPopulation.scheduleForGroups.values()) {

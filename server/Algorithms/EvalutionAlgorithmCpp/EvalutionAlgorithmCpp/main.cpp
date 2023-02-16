@@ -41,7 +41,7 @@ int main(int argc,char* argv[])
         const int max_day = data["max_day"];
         const int max_pair = data["max_pair"];
 
-        const json evolution_values = data["evolution_values"];
+        const json evolution_values = data["params"];
         const int population_size = evolution_values["population_size"];
         const int max_generations = evolution_values["max_generations"];
         const double p_crossover = evolution_values["p_crossover"];

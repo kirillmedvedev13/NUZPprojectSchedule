@@ -108,7 +108,16 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
     `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
   );
   results = JSON.stringify(results);
-  await db.algorithm.update({ results }, { where: { name: name_algorithm } });
+  let params_value = JSON.stringify({ temperature, alpha });
+  let res = await db.results_algorithm.findOne({ where: { params_value } });
+  if (res)
+    await db.results_algorithm.update({ results }, { where: { params_value } });
+  else
+    await db.results_algorithm.create({
+      params_value,
+      name_algorithm,
+      results,
+    });
   let arrClass = new Set();
   let arrGroup = Array.from(currentSchedule.scheduleForGroups.values());
   for (const sc_group of arrGroup) {

@@ -25,7 +25,7 @@ export default (Sequelize, DataTypes) => {
   });
   Group.associate = (models) => {
     Group.belongsTo(models.specialty, { foreignKey: "id_specialty" });
-    Group.hasMany(models.assigned_group, { foreignKey: "id_group", });
+    Group.hasMany(models.assigned_group, { foreignKey: "id_group" });
     Group.belongsToMany(models.class, {
       foreignKey: "id_group",
       through: models.assigned_group,

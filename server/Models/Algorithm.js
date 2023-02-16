@@ -12,9 +12,11 @@ export default (Sequelize, DataTypes) => {
     params: {
       type: DataTypes.STRING(1000),
     },
-    results: {
-      type: DataTypes.TEXT("long"),
-    },
   });
+  Algorithm.associate = (models) => {
+    Algorithm.hasMany(models.results_algorithm, {
+      foreignKey: "name_algorithm",
+    });
+  };
   return Algorithm;
 };

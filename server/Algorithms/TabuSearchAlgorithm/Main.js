@@ -197,7 +197,21 @@ export const RUN_TS = async (id_cathedra, name_algorithm) => {
     //j++;
   }
   results = JSON.stringify(results);
-  await db.algorithm.update({ results }, { where: { name: name_algorithm } });
+  let params_value = JSON.stringify({
+    tabu_tenure,
+    s_neighbors,
+    n_iteration,
+    tabu_list_len,
+  });
+  let res = await db.results_algorithm.findOne({ where: { params_value } });
+  if (res)
+    await db.results_algorithm.update({ results }, { where: { params_value } });
+  else
+    await db.results_algorithm.create({
+      params_value,
+      name_algorithm,
+      results,
+    });
   let arrClass = new Set();
   let arrGroup = Array.from(bestSchedule.scheduleForGroups.values());
   for (const sc_group of arrGroup) {

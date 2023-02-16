@@ -20,6 +20,7 @@ export default async function InitRecords(db) {
         {
           name: "population_size",
           label: "Розмір популяції",
+          short: "Роз.поп.",
           type: "number",
           min: 1,
           max: null,
@@ -29,6 +30,7 @@ export default async function InitRecords(db) {
         {
           name: "max_generations",
           label: "Максимальна кiлькiсть iтерацiй",
+          short: "ітер.",
           type: "number",
           min: 1,
           max: null,
@@ -38,6 +40,7 @@ export default async function InitRecords(db) {
         {
           name: "p_crossover",
           label: "Ймовірність схрещування",
+          short: "схрещ.",
           type: "number",
           min: 0,
           max: 1,
@@ -47,6 +50,7 @@ export default async function InitRecords(db) {
         {
           name: "p_mutation",
           label: "Ймовірність мутації",
+          short: "мут.",
           min: 0,
           max: 1,
           type: "number",
@@ -56,6 +60,7 @@ export default async function InitRecords(db) {
         {
           name: "p_genes",
           label: "Ймовірність мутації гена",
+          short: "мут.ген.",
           min: 0,
           max: 1,
           type: "number",
@@ -65,6 +70,7 @@ export default async function InitRecords(db) {
         {
           name: "p_elitism",
           label: "Елітизм",
+          short: "еліт.",
           min: 0,
           max: 0.5,
           type: "number",
@@ -72,7 +78,6 @@ export default async function InitRecords(db) {
           value: 0.1,
         },
       ]),
-      results: JSON.stringify([[0, 0]]),
     },
   });
 
@@ -85,24 +90,27 @@ export default async function InitRecords(db) {
         {
           name: "population_size",
           label: "Розмір популяції",
+          short: "Роз.поп.",
           type: "number",
           min: 1,
           max: null,
-          step: 1,
+          step: 50,
           value: 300,
         },
         {
           name: "max_generations",
           label: "Максимальна кiлькiсть iтерацiй",
+          short: "ітер.",
           type: "number",
           min: 1,
           max: null,
-          step: 1,
+          step: 50,
           value: 300,
         },
         {
           name: "p_crossover",
           label: "Ймовірність схрещування",
+          short: "схрещ.",
           type: "number",
           min: 0,
           max: 1,
@@ -112,6 +120,7 @@ export default async function InitRecords(db) {
         {
           name: "p_mutation",
           label: "Ймовірність мутації",
+          short: "мут.",
           min: 0,
           max: 1,
           type: "number",
@@ -121,6 +130,7 @@ export default async function InitRecords(db) {
         {
           name: "p_genes",
           label: "Ймовірність мутації гена",
+          short: "мут.ген.",
           min: 0,
           max: 1,
           type: "number",
@@ -130,6 +140,7 @@ export default async function InitRecords(db) {
         {
           name: "p_elitism",
           label: "Елітизм",
+          short: "еліт.",
           min: 0,
           max: 0.5,
           type: "number",
@@ -160,6 +171,7 @@ export default async function InitRecords(db) {
         {
           name: "tabu_tenure",
           label: "Кількість ітерації дії Табу",
+          short: "дія т.",
           min: 0,
           max: null,
           type: "number",
@@ -170,6 +182,7 @@ export default async function InitRecords(db) {
         {
           name: "s_neighbors",
           label: "Кількість сусідніх розв’язків на 1 ітерації",
+          short: "сусід.",
           min: 1,
           max: null,
           type: "number",
@@ -179,6 +192,7 @@ export default async function InitRecords(db) {
         {
           name: "n_iteration",
           label: "Кількість ітерації",
+          short: "ітер.",
           min: 1,
           max: null,
           type: "number",
@@ -188,6 +202,7 @@ export default async function InitRecords(db) {
         {
           name: "tabu_list_len",
           label: "Довжина списку Табу",
+          short: "довж.т.",
           min: 1,
           max: null,
           type: "number",
@@ -208,6 +223,7 @@ export default async function InitRecords(db) {
         {
           name: "temperature",
           label: "Початкова температура",
+          short: "темп.",
           min: 0,
           max: null,
           step: 0.1,
@@ -217,6 +233,7 @@ export default async function InitRecords(db) {
         {
           name: "alpha",
           label: "Коефіцієнт alpha",
+          short: "alpha",
           min: 0,
           max: 1,
           step: 0.01,

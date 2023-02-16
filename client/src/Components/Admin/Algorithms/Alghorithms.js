@@ -15,8 +15,17 @@ function ChooseAlgorithm({ state, handleChangeState }) {
   if (loading) return null;
   if (error) return `Error! ${error}`;
   let arr = data.GetAllAlgorithm;
-  let results = arr.map((obj) => {
-    return { name: obj.name, label: obj.label, results: obj.results };
+  let results_algorithms = [];
+  arr.forEach((obj) => {
+    if (obj.name === state.nameAlgorithm) {
+      obj.results_algorithms.forEach((res) => {
+        results_algorithms.push({
+          name: res.params_value,
+          label: res.params_value,
+          results: res.results,
+        });
+      });
+    }
   });
 
   return (
@@ -45,16 +54,21 @@ function ChooseAlgorithm({ state, handleChangeState }) {
       <AlgorithmForm
         state={state}
         handleChangeState={handleChangeState}
+        results_algorithms={results_algorithms}
         refetch={refetch}
       ></AlgorithmForm>
-
-      {<MultiCharts results={results}></MultiCharts>}
     </>
   );
 }
 
-function AlgorithmForm({ state, handleChangeState, refetch }) {
+function AlgorithmForm({
+  state,
+  handleChangeState,
+  results_algorithms,
+  refetch,
+}) {
   let params = state.params;
+  console.log(results_algorithms);
   return (
     <>
       {state.nameAlgorithm && params.length ? (
@@ -94,6 +108,9 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
               </Card.Footer>
             </Card>
           </div>
+          {results_algorithms.length ? (
+            <MultiCharts results={results_algorithms}></MultiCharts>
+          ) : null}
         </>
       ) : null}
     </>
