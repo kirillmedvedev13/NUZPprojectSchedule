@@ -1,5 +1,5 @@
 import GetDataFromDB from "../Service/GetDataFromDB.js";
-import ParseScheduleFromDB from "../Service/GetBaseSchedule.js";
+import GetBaseSchedule from "../Service/GetBaseSchedule.js";
 import MessageType from "../../Schema/TypeDefs/MessageType.js";
 import { GraphQLInt } from "graphql";
 import db from "../../database.js";
@@ -26,7 +26,7 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
   });
   let results = [];
   // Получения расписания для груп учителей если они есть  в других кафедрах
-  let db_schedule = await ParseScheduleFromDB(id_cathedra);
+  let db_schedule = await GetBaseSchedule(id_cathedra);
   let currentSchedule = Init(
     classes,
     max_day,

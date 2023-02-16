@@ -1,4 +1,5 @@
 import db from "../../database.js";
+import { Op } from "sequelize";
 
 //получаем из бд данные расписания занятий для других кафедр
 export default async function GetBaseSchedule(id_cathedra) {
@@ -18,13 +19,17 @@ export default async function GetBaseSchedule(id_cathedra) {
         model: db.recommended_audience,
       },
       {
-        model: db.recommended_schedules,
+        model: db.recommended_schedule,
       },
       {
         model: db.assigned_discipline,
         include: {
           model: db.specialty,
-          where: { id_cathedra },
+          where: {
+            id_cathedra: {
+              [Op.eq]: id_cathedra,
+            }
+          }
         },
       },
     ],
