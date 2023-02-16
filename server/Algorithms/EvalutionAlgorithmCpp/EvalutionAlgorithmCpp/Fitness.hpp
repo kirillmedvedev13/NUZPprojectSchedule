@@ -17,10 +17,10 @@ void Fitness(individ &i_schedule, const int& max_day, const vector<clas> &classe
     for (auto &sc_gr : i_schedule.scheduleForGroups){
         SortSchedule(sc_gr.second);
     }
-    for (auto &sc_teach : i_schedule.scheduleForGroups){
+    for (auto &sc_teach : i_schedule.scheduleForTeachers){
         SortSchedule(sc_teach.second);
     }
-    for (auto &sc_aud : i_schedule.scheduleForGroups){
+    for (auto &sc_aud : i_schedule.scheduleForAudiences){
         SortSchedule(sc_aud.second);
     }
     double fitnessValue = 0;

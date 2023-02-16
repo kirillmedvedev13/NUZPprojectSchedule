@@ -49,23 +49,23 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       let res = readFileSync("./Algorithms/EvalutionAlgorithmCpp/result.json");
       res = JSON.parse(res);
       let bestPopulation = res.bestPopulation;
-      let result = res.result;
-      result = JSON.stringify(result);
+      let results = res.result;
+      let results_value = JSON.stringify(results);
       let params_value = JSON.stringify(params_obj);
       let resdb = await db.results_algorithm.findOne({ where: { params_value, name_algorithm } });
       if (resdb)
-        await db.results_algorithm.update({ result }, { where: { params_value } });
+        await db.results_algorithm.update({ results: results_value }, { where: { params_value } });
       else
         await db.results_algorithm.create({
           params_value,
           name_algorithm,
-          result,
+          results: results_value,
         });
       let isBulk = await db.schedule.bulkCreate(bestPopulation);
       if (isBulk)
         return {
           successful: true,
-          message: `Фітнес - ${bestPopulation[bestPopulation.length - 1]}`,
+          message: `Фітнес - ${results[results.length - 1][1]}`,
         };
       else return { successful: false, message: `Помилка` };
     }

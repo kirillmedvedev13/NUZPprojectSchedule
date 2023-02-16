@@ -16,6 +16,7 @@ export default (Sequelize, DataTypes) => {
     },
     results: {
       type: DataTypes.TEXT("long"),
+      allowNull: false,
     },
   });
   Results_algorithm.associate = (models) => {
