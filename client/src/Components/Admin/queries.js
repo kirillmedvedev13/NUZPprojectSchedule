@@ -15,7 +15,10 @@ export const GET_ALL_ALGORITHM = gql`
       name
       label
       params
-      results
+      results_algorithms {
+        params_value
+        results
+      }
     }
   }
 `;

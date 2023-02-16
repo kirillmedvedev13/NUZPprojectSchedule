@@ -33,11 +33,13 @@ function getAxisYDomain(from, to, ref, offset, initialData) {
 }
 
 function GetDataForCharts(results) {
+  debugger;
   const dataForCharts = [];
   for (let algorithm of results) {
     let data = {};
     data["name"] = algorithm.label;
     let arr = [];
+
     for (let elem of JSON.parse(algorithm.results)) {
       let temp = {};
       temp["time"] = +elem[0] / 1000;

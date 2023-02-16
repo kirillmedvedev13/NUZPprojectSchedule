@@ -19,6 +19,7 @@ import User from "./Models/User.js";
 import Algorithm from "./Models/Algorithm.js";
 import Assigned_group from "./Models/Assigned_group.js";
 import Info from "./Models/Info.js";
+import Results_algorithm from "./Models/Results_algorithm.js";
 
 const db = {};
 
@@ -41,6 +42,7 @@ const models = [
   Info,
   Recommended_schedule,
   Algorithm,
+  Results_algorithm,
 ];
 let Connection;
 try {

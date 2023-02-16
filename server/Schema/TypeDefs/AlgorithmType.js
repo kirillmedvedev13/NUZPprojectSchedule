@@ -1,4 +1,5 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
+import Results_algorithmType from "../TypeDefs/Results_algorithmType.js";
 
 export default new GraphQLObjectType({
   name: "Algorithm",
@@ -6,6 +7,6 @@ export default new GraphQLObjectType({
     name: { type: GraphQLString },
     label: { type: GraphQLString },
     params: { type: GraphQLString },
-    results: { type: GraphQLString },
+    results_algorithms: { type: new GraphQLList(Results_algorithmType) },
   }),
 });

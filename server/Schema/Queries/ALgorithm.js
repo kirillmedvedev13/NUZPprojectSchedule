@@ -5,7 +5,9 @@ import { GraphQLList } from "graphql";
 export const GET_ALL_ALGORITHM = {
   type: new GraphQLList(AlgorithmType),
   async resolve(parent) {
-    const res = await db.algorithm.findAll();
+    const res = await db.algorithm.findAll({
+      include: { model: db.results_algorithm },
+    });
     return res;
   },
 };
