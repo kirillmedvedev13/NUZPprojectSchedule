@@ -26,6 +26,27 @@ function GetLabelForResults(params, params_value) {
   return label;
 }
 
+function GetBestResults(algorithms) {
+  debugger;
+  let best_results = [];
+  algorithms.forEach((obj) => {
+    if (obj.results_algorithms.length) {
+      let best_res = JSON.parse(obj.results_algorithms[0].results);
+      for (let i = 0; i < obj.results_algorithms.length; i++) {
+        let temp = JSON.parse(obj.results_algorithms[i].results);
+        if (best_res[best_res.length - 1][1] > temp[temp.length - 1][1])
+          best_res = temp;
+      }
+      best_results.push({
+        name: obj.name,
+        label: obj.label,
+        results: JSON.stringify(best_res),
+      });
+    }
+  });
+  return best_results;
+}
+
 function ChooseAlgorithm({ state, handleChangeState }) {
   const { loading, error, data, refetch } = useQuery(GET_ALL_ALGORITHM);
   if (loading) return null;
@@ -43,6 +64,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
       });
     }
   });
+  let best_results = GetBestResults(arr);
 
   return (
     <>
@@ -73,6 +95,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
         results_algorithms={results_algorithms}
         refetch={refetch}
       ></AlgorithmForm>
+      <MultiCharts results={best_results}></MultiCharts>
     </>
   );
 }
