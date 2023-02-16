@@ -33,7 +33,6 @@ function getAxisYDomain(from, to, ref, offset, initialData) {
 }
 
 function GetDataForCharts(results) {
-  debugger;
   const dataForCharts = [];
   for (let algorithm of results) {
     let data = {};
@@ -84,6 +83,7 @@ const initialState = (initialData) => {
 export default class MultiCharts extends React.Component {
   constructor(props) {
     super(props);
+    debugger;
     this.state = initialState(GetDataForCharts(this.props.results));
   }
 
@@ -173,7 +173,7 @@ export default class MultiCharts extends React.Component {
                 }}
                 offset={-5}
                 position="insideBottom"
-                value={"Час"}
+                value={"Час, c"}
               />
             </XAxis>
             <YAxis

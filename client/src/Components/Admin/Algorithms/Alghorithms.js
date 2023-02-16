@@ -10,6 +10,22 @@ import MultiCharts from "./MultiCharts.js";
 import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
 import ButtonUpdateAlgorithm from "./ButtonUpdateAlgorithm.js";
 
+function GetLabelForResults(params, params_value) {
+  let label = "";
+  params = JSON.parse(params);
+  params_value = JSON.parse(params_value);
+
+  for (let i = 0; i < params.length - 1; i++) {
+    label += `${params[i].short}: ${params_value[params[i].name]}, `;
+  }
+  if (params.length)
+    label += `${params[params.length - 1].short}: ${
+      params_value[params[params.length - 1].name]
+    }, `;
+  else label = "Без параметрів";
+  return label;
+}
+
 function ChooseAlgorithm({ state, handleChangeState }) {
   const { loading, error, data, refetch } = useQuery(GET_ALL_ALGORITHM);
   if (loading) return null;
@@ -21,7 +37,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
       obj.results_algorithms.forEach((res) => {
         results_algorithms.push({
           name: res.params_value,
-          label: res.params_value,
+          label: GetLabelForResults(obj.params, res.params_value),
           results: res.results,
         });
       });
@@ -68,7 +84,6 @@ function AlgorithmForm({
   refetch,
 }) {
   let params = state.params;
-  console.log(results_algorithms);
   return (
     <>
       {state.nameAlgorithm && params.length ? (
@@ -108,10 +123,10 @@ function AlgorithmForm({
               </Card.Footer>
             </Card>
           </div>
-          {results_algorithms.length ? (
-            <MultiCharts results={results_algorithms}></MultiCharts>
-          ) : null}
         </>
+      ) : null}
+      {results_algorithms.length ? (
+        <MultiCharts results={results_algorithms}></MultiCharts>
       ) : null}
     </>
   );
