@@ -27,7 +27,6 @@ function GetLabelForResults(params, params_value) {
 }
 
 function GetBestResults(algorithms) {
-  debugger;
   let best_results = [];
   algorithms.forEach((obj) => {
     if (obj.results_algorithms.length) {
@@ -65,6 +64,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
     }
   });
   let best_results = GetBestResults(arr);
+  console.log(best_results);
 
   return (
     <>
@@ -95,6 +95,9 @@ function ChooseAlgorithm({ state, handleChangeState }) {
         results_algorithms={results_algorithms}
         refetch={refetch}
       ></AlgorithmForm>
+      {results_algorithms.length ? (
+        <MultiCharts results={results_algorithms}></MultiCharts>
+      ) : null}
       <MultiCharts results={best_results}></MultiCharts>
     </>
   );
@@ -147,9 +150,6 @@ function AlgorithmForm({
             </Card>
           </div>
         </>
-      ) : null}
-      {results_algorithms.length ? (
-        <MultiCharts results={results_algorithms}></MultiCharts>
       ) : null}
     </>
   );

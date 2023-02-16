@@ -54,15 +54,13 @@ function GetDataForCharts(results) {
 
 const getMaxRightTop = (initialData) => {
   let maxLen = 0;
-  let data;
-  initialData.forEach((obj) => {
-    if (maxLen < obj.data.length) data = obj.data;
-  });
   let maxTop = 0,
     maxRight = 0;
-  data.forEach((obj) => {
-    if (maxTop < obj.fitness) maxTop = obj.fitness;
-    if (maxRight < obj.time) maxRight = obj.time;
+  initialData.forEach((obj) => {
+    obj.data.forEach((point) => {
+      if (maxTop < point.fitness) maxTop = point.fitness;
+      if (maxRight < point.time) maxRight = point.time;
+    });
   });
   return { maxRight, maxTop };
 };
