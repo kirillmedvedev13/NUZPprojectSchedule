@@ -1,6 +1,6 @@
 import Fitness from "../Service/Fitness.js";
 import GetDataFromDB from "../Service/GetDataFromDB.js";
-import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
+import ParseScheduleFromDB from "../Service/GetBaseSchedule.js";
 import Init from "./Init.js";
 import cloneDeep from "lodash.clonedeep";
 import Mutation from "./Mutation.js";
@@ -17,8 +17,8 @@ function chooseSchedule(schedule) {
       r === 1
         ? schedule.scheduleForGroups
         : r === 2
-        ? schedule.scheduleForTeachers
-        : schedule.scheduleForAudiences;
+          ? schedule.scheduleForTeachers
+          : schedule.scheduleForAudiences;
     sc = Array.from(sc.values());
     // Выбор случайной сущности
     if (sc.length) {
@@ -87,7 +87,7 @@ function chooseCandidate(sNeighborhood, tabuList, aspiration) {
       //лучший фитнес и не табу
       if (
         bestCandidate.nfitness.fitnessValue >
-          sNeighborhood[i].nfitness.fitnessValue &&
+        sNeighborhood[i].nfitness.fitnessValue &&
         !tabuListContains(sNeighborhood[i].ntabuList, tabuList)
       )
         bestCandidate = sNeighborhood[i];

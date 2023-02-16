@@ -4,7 +4,7 @@ import { __DirectiveLocation } from "graphql";
 import SpawnChild from "./SpawnChild.js";
 import path from "path";
 import GetDataFromDB from "../Service/GetDataFromDB.js";
-import ParseScheduleFromDB from "../Service/ParseScheduleFromDB.js";
+import GetBaseSchedule from "../Service/GetBaseSchedule.js";
 import db from "../../database.js";
 
 export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
@@ -20,7 +20,7 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
     } = await GetDataFromDB(id_cathedra, name_algorithm);
     let results = [];
 
-    let base_schedule = await ParseScheduleFromDB(id_cathedra);
+    let base_schedule = await GetBaseSchedule(id_cathedra);
 
     let jsonData = JSON.stringify({
       max_day,

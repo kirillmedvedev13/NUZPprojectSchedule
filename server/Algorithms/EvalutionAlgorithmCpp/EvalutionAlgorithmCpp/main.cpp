@@ -38,6 +38,7 @@ int main(int argc,char* argv[])
         json data = json();
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
+        // Инициализация
         const int max_day = data["max_day"];
         const int max_pair = data["max_pair"];
 
@@ -47,14 +48,11 @@ int main(int argc,char* argv[])
         const double p_crossover = evolution_values["p_crossover"];
         const double p_mutation = evolution_values["p_mutation"];
         const double p_elitism = evolution_values["p_elitism"];
-        const double p_genes = evolution_values["p_genes"];
 
         const json general_values = data["general_values"];
         const double penaltySameRecSc = general_values["penaltySameRecSc"];
         const double penaltyGrWin = general_values["penaltyGrWin"];
         const double penaltyTeachWin = general_values["penaltyTeachWin"];
-        const double penaltyLateSc = general_values["penaltyLateSc"];
-        const double penaltyEqSc = general_values["penaltyEqSc"];
         const double penaltySameTimesSc = general_values["penaltySameTimesSc"];
         const int num_elit = population_size * p_elitism;
 
@@ -72,20 +70,18 @@ int main(int argc,char* argv[])
         }
 
         base_schedule bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
-
+        // Потоки
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();
 
-        cout << "Init starts" << endl;
         // В каждом классе хранится массив занятий для индивида, на который ссылаются индивиды, то есть изменение расписания влечет изменение данных у всех
         auto populations = Init(classes, max_day, max_pair, population_size, audiences, bs);
-        cout << "Init ends" << endl;
         Timer.stop();
-        cout << "The elapsed time was " << Timer.ms() << " ms.\n";
+        cout << "Init " << Timer.ms() << " ms.\n";
         int countIter = 0;
         auto bestPopulation = bestIndivid();
-
+        // Значение фитнесса и время
         auto result = vector<pair<int, double>>();
 
         auto StartTime = chrono::high_resolution_clock::now();
@@ -97,7 +93,9 @@ int main(int argc,char* argv[])
                 if (GetRndDouble() < p_crossover)
                 {
                     worker_pool.push_task([&populations, &classes, i]()
-                    { Crossing(populations, classes, i, i + 1); });
+                    {
+                        Crossing(populations, classes, i, i + 1);
+                    });
                 }
             }
 
@@ -108,28 +106,26 @@ int main(int argc,char* argv[])
             Timer.start();
             for (int i = 0; i < population_size; i++)
             {
-                if (i > 299)
-                {
-                    cout << "123" << endl;
-                }
                 if (GetRndDouble() <= p_mutation)
                 {
                     worker_pool.push_task([&populations, &max_day, &max_pair, &audiences, &classes, i]()
-                    { Mutation(populations, i, max_day, max_pair, audiences, classes); });
+                    {
+                        Mutation(populations, i, max_day, max_pair, audiences, classes);
+                    });
                 }
             }
             worker_pool.wait_for_tasks();
             Timer.stop();
-
             cout << "Mutation " << Timer.ms() << "ms" << endl;
-            ;
 
             Timer.start();
             for (int i = 0; i < population_size; i++)
             {
                 auto &ind = populations[i];
                 worker_pool.push_task([&ind, &max_day, &penaltySameRecSc, &penaltyGrWin, &penaltySameTimesSc, &penaltyTeachWin, &i, &classes]()
-                { Fitness(ind, max_day, classes, i, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin); });
+                {
+                    Fitness(ind, max_day, classes, i, penaltySameRecSc, penaltyGrWin, penaltySameTimesSc, penaltyTeachWin);
+                });
             }
             worker_pool.wait_for_tasks();
             Timer.stop();
@@ -137,14 +133,7 @@ int main(int argc,char* argv[])
 
             Timer.start();
 
-            auto temp_schedules = vector<vector<vector<schedule>>>();
-
             SortPopulations(populations, classes);
-
-            for (const auto &cl : classes)
-            {
-                temp_schedules.push_back(cl.schedules);
-            }
 
             // Выборка турнирная
             auto individ_indexes = vector<int>();
@@ -169,18 +158,31 @@ int main(int argc,char* argv[])
                 individ_indexes.push_back(winIndex);
             }
 
+
+            // Запомнить расписание для его расстоновки по сортировке
+            auto temp_classes = vector<vector<vector<schedule>>>(classes.size());
+            for (size_t i =0; i < classes.size(); i++){
+                temp_classes[i] = vector<vector<schedule>>(classes[i].schedules.size());
+                for (size_t j = 0; j < classes[i].schedules.size(); j++){
+                    temp_classes[i][j] = vector<schedule>(classes[i].schedules[j].size());
+                    for(size_t k = 0; k < classes[i].schedules[j].size(); k++){
+                        temp_classes[i][j][k] = classes[i].schedules[j][k];
+                    }
+                }
+            }
+
             for (int i = num_elit; i < population_size; i++)
             {
-                // Ссылки ссылаются на занятия, остается поменять значение занятйи на новые
+                // Ссылки ссылаются на занятия, остается поменять значение занятий на новые
                 int new_index = individ_indexes[i - num_elit];
                 for (size_t j = 0; j < classes.size(); j++)
                 {
-                    for (size_t k = 0; k < temp_schedules[j][i].size(); k++)
+                    for (size_t k = 0; k < classes[j].schedules[i].size(); k++)
                     {
-                        auto sc = temp_schedules[j][new_index][k];
+                        auto sc = temp_classes[j][new_index][k];
                         int old_id_audience = classes[j].schedules[i][k].id_audience;
                         int new_id_audience = sc.id_audience;
-                        // Если ид аудитории поменлся, то нужно поменять ссылку на неё
+                        // Если ид аудитории поменялся, то нужно поменять ссылку на неё
                         if (new_id_audience != old_id_audience)
                         {
                             auto ref = &classes[j].schedules[i][k];
@@ -188,30 +190,28 @@ int main(int argc,char* argv[])
                             populations[i].scheduleForAudiences[old_id_audience].erase(it);
                             populations[i].scheduleForAudiences[new_id_audience].emplace(populations[i].scheduleForAudiences[new_id_audience].begin(), ref);
                         }
+                        // Поменять значение пары
                         classes[j].schedules[i][k] = sc;
                     }
                 }
             }
 
             Timer.stop();
-
             cout << "Selection " << Timer.ms() << "ms" << endl;
 
             MinFitnessValue(populations, classes, bestPopulation);
 
-            cout << "Iter: " << countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
-            // result.push_back(make_pair(result[countIter] + (int)TimerRes.ms(), bestPopulation.fitnessValue.fitnessValue));
-            countIter++;
+            cout << "Iter: " << ++countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << MeanFitnessValue(populations) << endl;
             auto EndTime = chrono::high_resolution_clock::now();
             chrono::duration<float,std::milli> duration = EndTime - StartTime;
             result.push_back(make_pair(duration.count(), bestPopulation.fitnessValue.fitnessValue));
         }
         json resultJson = json();
         resultJson["bestPopulation"] = bestPopulation.to_json();
-        resultJson["evolution_algorithmCPP"] = result;
+        resultJson["result"] = result;
         ofstream fileResult(path+"\\result.json");
-        if(fileResult.is_open()){
-            fileResult<<resultJson<<endl;
+        if (fileResult.is_open()){
+            fileResult << resultJson << endl;
         }
     }
     catch (exception &ex)

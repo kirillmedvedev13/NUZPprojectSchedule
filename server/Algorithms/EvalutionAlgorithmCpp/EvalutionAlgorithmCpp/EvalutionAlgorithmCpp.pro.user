@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
+<<<<<<< HEAD
 <!-- Written by QtCreator 8.0.2, 2023-02-16T17:36:46. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
   <value type="QByteArray">{cfe1a51d-a71e-4a76-b672-3588715672f5}</value>
+=======
+<!-- Written by QtCreator 9.0.1, 2023-02-16T18:01:23. -->
+<qtcreator>
+ <data>
+  <variable>EnvironmentId</variable>
+  <value type="QByteArray">{91f54153-6996-49e3-a5b5-df19b16a9d42}</value>
+>>>>>>> c6d5ba61ffeeef7fb16efedae0c287337c27f140
  </data>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -54,6 +62,7 @@
    <value type="QString" key="EditorConfiguration.ignoreFileTypes">*.md, *.MD, Makefile</value>
    <value type="bool" key="EditorConfiguration.inEntireDocument">false</value>
    <value type="bool" key="EditorConfiguration.skipTrailingWhitespace">true</value>
+   <value type="bool" key="EditorConfiguration.tintMarginArea">true</value>
   </valuemap>
  </data>
  <data>
@@ -94,8 +103,13 @@
    <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
     <value type="int" key="EnableQmlDebugging">0</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">D:\PROJECT SCHEDULE\Project\NUZPprojectSchedule\server\Algorithms\EvalutionAlgorithmCpp\build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Debug</value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">D:/PROJECT SCHEDULE/Project/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Debug</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Projects\Schedule\NUZPprojectSchedule\server\Algorithms\EvalutionAlgorithmCpp\EvalutionAlgorithmCpp\..\build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Debug</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">C:/Projects/Schedule/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Debug</value>
+>>>>>>> c6d5ba61ffeeef7fb16efedae0c287337c27f140
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -133,8 +147,13 @@
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">D:\PROJECT SCHEDULE\Project\NUZPprojectSchedule\server\Algorithms\EvalutionAlgorithmCpp\build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Release</value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">D:/PROJECT SCHEDULE/Project/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Release</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Projects\Schedule\NUZPprojectSchedule\server\Algorithms\EvalutionAlgorithmCpp\EvalutionAlgorithmCpp\..\build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">C:/Projects/Schedule/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Release</value>
+>>>>>>> c6d5ba61ffeeef7fb16efedae0c287337c27f140
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -174,8 +193,13 @@
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.2">
     <value type="int" key="EnableQmlDebugging">0</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">D:\PROJECT SCHEDULE\Project\NUZPprojectSchedule\server\Algorithms\EvalutionAlgorithmCpp\build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Profile</value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">D:/PROJECT SCHEDULE/Project/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Profile</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Projects\Schedule\NUZPprojectSchedule\server\Algorithms\EvalutionAlgorithmCpp\EvalutionAlgorithmCpp\..\build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Profile</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">C:/Projects/Schedule/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Profile</value>
+>>>>>>> c6d5ba61ffeeef7fb16efedae0c287337c27f140
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -242,7 +266,11 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+<<<<<<< HEAD
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/PROJECT SCHEDULE/Project/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Debug</value>
+=======
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Projects/Schedule/NUZPprojectSchedule/server/Algorithms/EvalutionAlgorithmCpp/build-EvalutionAlgorithmCpp-Desktop_Qt_6_4_1_MinGW_64_bit-Debug</value>
+>>>>>>> c6d5ba61ffeeef7fb16efedae0c287337c27f140
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
