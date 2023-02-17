@@ -10,22 +10,6 @@ import MultiCharts from "./MultiCharts.js";
 import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
 import ButtonUpdateAlgorithm from "./ButtonUpdateAlgorithm.js";
 
-function GetLabelForResults(params, params_value) {
-  let label = "";
-  params = JSON.parse(params);
-  params_value = JSON.parse(params_value);
-
-  for (let i = 0; i < params.length - 1; i++) {
-    label += `${params[i].short}: ${params_value[params[i].name]}, `;
-  }
-  if (params.length)
-    label += `${params[params.length - 1].short}: ${
-      params_value[params[params.length - 1].name]
-    }, `;
-  else label = "Без параметрів";
-  return label;
-}
-
 function GetBestResults(algorithms) {
   let best_results = [];
   algorithms.forEach((obj) => {
@@ -50,20 +34,8 @@ function ChooseAlgorithm({ state, handleChangeState }) {
   const { loading, error, data, refetch } = useQuery(GET_ALL_ALGORITHM);
   if (loading) return null;
   if (error) return `Error! ${error}`;
-  let arr = data.GetAllAlgorithm;
-  let results_algorithms = [];
-  arr.forEach((obj) => {
-    if (obj.name === state.nameAlgorithm) {
-      obj.results_algorithms.forEach((res) => {
-        results_algorithms.push({
-          name: res.params_value,
-          label: GetLabelForResults(obj.params, res.params_value),
-          results: res.results,
-        });
-      });
-    }
-  });
-  let best_results = GetBestResults(arr);
+  let arrAlgorithm = data.GetAllAlgorithm;
+  let best_results = GetBestResults(arrAlgorithm);
 
   return (
     <>
@@ -73,8 +45,8 @@ function ChooseAlgorithm({ state, handleChangeState }) {
           <Card.Footer>
             <Form.Group as={Row} className="my-2 mx-2">
               <SelectAlgoritm
-                data={arr}
                 handleChangeState={handleChangeState}
+                arrAlgorithm={arrAlgorithm}
               ></SelectAlgoritm>
             </Form.Group>
             <Form.Group as={Row} className="my-2 mx-2">
@@ -91,14 +63,12 @@ function ChooseAlgorithm({ state, handleChangeState }) {
       <AlgorithmForm
         state={state}
         handleChangeState={handleChangeState}
-        results_algorithms={results_algorithms}
-        best_results={best_results}
         refetch={refetch}
       ></AlgorithmForm>
 
-      {results_algorithms.length ? (
+      {state.results_algorithms?.length ? (
         <MultiCharts
-          results={results_algorithms}
+          results={state.results_algorithms}
           nameAlgorithm={state.nameAlgorithm}
         ></MultiCharts>
       ) : null}
@@ -111,10 +81,10 @@ function ChooseAlgorithm({ state, handleChangeState }) {
 }
 
 function AlgorithmForm({ state, handleChangeState, refetch }) {
-  let params = state.params;
+  let { nameAlgorithm, params } = { ...state };
   return (
     <>
-      {state.nameAlgorithm && params.length ? (
+      {nameAlgorithm && params.length ? (
         <>
           <div className="d-flex justify-content-center mx-5">
             <Card className="my-2">
@@ -144,8 +114,8 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
 
               <Card.Footer>
                 <ButtonUpdateAlgorithm
-                  name={state.nameAlgorithm}
-                  params={JSON.stringify(state.params)}
+                  name={nameAlgorithm}
+                  params={JSON.stringify(params)}
                   refetch={refetch}
                 />
               </Card.Footer>
@@ -165,6 +135,7 @@ export default class Algorithms extends React.Component {
       nameAlgorithm: null,
       label: null,
       params: null,
+      results_algorithms: null,
     };
   }
 
