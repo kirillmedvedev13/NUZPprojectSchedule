@@ -68,6 +68,7 @@ import { CALC_FITNESS } from "../Mutations/Fitness.js";
 import { GET_ALL_ASSIGNED_DISCIPLINES } from "../Queries/Assigned_Discipline.js";
 import { GET_ALL_ALGORITHM } from "../Queries/Algorithm.js";
 import { RUN_ALGORITHM, UPDATE_ALGORITHM } from "../Mutations/Algorithm.js";
+import { DELETE_RESULTS } from "../Mutations/Results_algorithm.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "Queries",
@@ -142,6 +143,8 @@ const Mutation = new GraphQLObjectType({
 
     UpdateAlgorithm: UPDATE_ALGORITHM,
     RunAlgorithm: RUN_ALGORITHM,
+
+    DeleteResults: DELETE_RESULTS,
   },
 });
 

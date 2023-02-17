@@ -8,6 +8,14 @@ export const UPDATE_INFO = gql`
     }
   }
 `;
+export const DELETE_RESULTS = gql`
+  mutation ($name_algorithm: String!) {
+    DeleteResults(name_algorithm: $name_algorithm) {
+      message
+      successful
+    }
+  }
+`;
 
 export const SET_CLASSES = gql`
   mutation ($data: String!, $id_cathedra: Int!) {

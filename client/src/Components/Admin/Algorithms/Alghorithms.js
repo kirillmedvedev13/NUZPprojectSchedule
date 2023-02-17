@@ -9,6 +9,7 @@ import MultiCharts from "./MultiCharts.js";
 
 import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
 import ButtonUpdateAlgorithm from "./ButtonUpdateAlgorithm.js";
+import ButtonDeleteResults from "./ButtonDeleteResults.js";
 
 function GetBestResults(algorithms) {
   let best_results = [];
@@ -118,6 +119,10 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
                   params={JSON.stringify(params)}
                   refetch={refetch}
                 />
+                <ButtonDeleteResults
+                  name_algorithm={nameAlgorithm}
+                  refetch={refetch}
+                ></ButtonDeleteResults>
               </Card.Footer>
             </Card>
           </div>
