@@ -67,8 +67,12 @@ export const RUN_SA = async (id_cathedra, name_algorithm) => {
   if (res) {
     let resultsArr = JSON.parse(res.results);
     if (resultsArr.length == 10) resultsArr.shift();
-    resultsArr.push(results);
-    results = JSON.stringify(resultsArr);
+    resultsArr.push(...results);
+    results = JSON.stringify(
+      resultsArr.sort((a, b) => {
+        return a[0] > b[0];
+      })
+    );
 
     await db.results_algorithm.update({ results }, { where: { params_value } });
   } else {
