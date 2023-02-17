@@ -64,7 +64,6 @@ function ChooseAlgorithm({ state, handleChangeState }) {
     }
   });
   let best_results = GetBestResults(arr);
-  console.log(best_results);
 
   return (
     <>
@@ -93,22 +92,25 @@ function ChooseAlgorithm({ state, handleChangeState }) {
         state={state}
         handleChangeState={handleChangeState}
         results_algorithms={results_algorithms}
+        best_results={best_results}
         refetch={refetch}
       ></AlgorithmForm>
+
       {results_algorithms.length ? (
-        <MultiCharts results={results_algorithms}></MultiCharts>
+        <MultiCharts
+          results={results_algorithms}
+          nameAlgorithm={state.nameAlgorithm}
+        ></MultiCharts>
       ) : null}
-      <MultiCharts results={best_results}></MultiCharts>
+      <MultiCharts
+        results={best_results}
+        nameAlgorithm={"allResults"}
+      ></MultiCharts>
     </>
   );
 }
 
-function AlgorithmForm({
-  state,
-  handleChangeState,
-  results_algorithms,
-  refetch,
-}) {
+function AlgorithmForm({ state, handleChangeState, refetch }) {
   let params = state.params;
   return (
     <>

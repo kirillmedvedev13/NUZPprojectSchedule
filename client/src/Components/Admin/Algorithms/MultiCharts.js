@@ -14,7 +14,11 @@ import {
 
 function getAxisYDomain(from, to, ref, offset, initialData) {
   const refData = initialData.map((obj) => {
-    return { name: obj.name, data: obj.data.slice(from - 1, to) };
+    let data = obj.data.filter((point) => {
+      console.log();
+      return point.time >= from && point.time <= to;
+    });
+    return { name: obj.name, data };
   });
 
   let topArr = [];
@@ -137,15 +141,26 @@ export default class MultiCharts extends React.Component {
   render() {
     const { data, left, right, refAreaLeft, refAreaRight, topArr, bottomArr } =
       this.state;
+    const nameAlgorithm = this.props.nameAlgorithm;
+
     let colors = ["red", "green", "blue", "brown"];
     let initialData = GetDataForCharts(this.props.results);
+    console.log(initialData);
+
     return (
       <>
-        <div className="d-flex justify-content-end mx-5 my-2">
+        <div
+          className="d-flex justify-content-end mx-5 my-2"
+          id={`button ${nameAlgorithm} ${JSON.stringify(data)}`}
+        >
           <Button onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
         </div>
-        <div className="d-flex justify-content-center mx-5">
+        <div
+          className="d-flex justify-content-center mx-5"
+          id={`form ${nameAlgorithm} ${JSON.stringify(data)}`}
+        >
           <LineChart
+            key={`LineChart ${nameAlgorithm} ${JSON.stringify(data)}`}
             width={0.8 * window.screen.width}
             height={0.5 * window.screen.height}
             onMouseDown={(e) => this.setState({ refAreaLeft: e.activeLabel })}
@@ -155,8 +170,12 @@ export default class MultiCharts extends React.Component {
             }
             onMouseUp={this.zoom.bind(this, initialData)}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid
+              key={`grid ${nameAlgorithm} ${JSON.stringify(data)}`}
+              strokeDasharray="3 3"
+            />
             <XAxis
+              key={`xaxis ${nameAlgorithm} ${JSON.stringify(data)}`}
               allowDataOverflow
               dataKey="time"
               type="number"
@@ -174,6 +193,7 @@ export default class MultiCharts extends React.Component {
               />
             </XAxis>
             <YAxis
+              key={`yaxis ${nameAlgorithm} ${JSON.stringify(data)}`}
               allowDataOverflow
               dataKey="fitness"
               type="number"
@@ -201,10 +221,13 @@ export default class MultiCharts extends React.Component {
                 value={"Фітнес"}
               />
             </YAxis>
-            <Tooltip />
+            <Tooltip id={`tooltip ${nameAlgorithm} ${JSON.stringify(data)}`} />
 
-            <Legend align="center" />
-            {this.state.data.map((algorithm, i) =>
+            <Legend
+              align="center"
+              key={`leg ${nameAlgorithm} ${JSON.stringify(data)}`}
+            />
+            {data.map((algorithm, i) =>
               algorithm.data.length ? (
                 <Line
                   dot={false}
@@ -222,6 +245,7 @@ export default class MultiCharts extends React.Component {
             )}
             {refAreaLeft && refAreaRight ? (
               <ReferenceArea
+                key={`ReferenceArea ${nameAlgorithm} ${JSON.stringify(data)}`}
                 x1={refAreaLeft}
                 x2={refAreaRight}
                 strokeOpacity={0.3}
