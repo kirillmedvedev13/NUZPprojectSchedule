@@ -53,8 +53,8 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
         r === 1
           ? newSchedule.scheduleForGroups
           : r === 2
-            ? newSchedule.scheduleForTeachers
-            : newSchedule.scheduleForAudiences;
+          ? newSchedule.scheduleForTeachers
+          : newSchedule.scheduleForAudiences;
       sc = Array.from(sc.values());
       // Выбор случайной сущности
       if (sc.length) {

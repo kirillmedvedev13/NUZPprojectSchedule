@@ -15,6 +15,22 @@ export default function ButtonRunAlgorithm({ name, id_cathedra, refetch }) {
       <Button
         className="col-12 my-2"
         onClick={() => {
+          if (!id_cathedra) {
+            CreateNotification({
+              message: "Помилка! Виберіть кафедру!",
+              successful: false,
+            });
+            return;
+          }
+
+          if (!name) {
+            CreateNotification({
+              message: "Помилка! Виберіть алгоритм!",
+              successful: false,
+            });
+            return;
+          }
+
           RunAlgorithm().then((res) => {
             CreateNotification(res.data.RunAlgorithm);
             refetch();
