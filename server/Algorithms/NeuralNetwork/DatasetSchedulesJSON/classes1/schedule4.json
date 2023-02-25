@@ -1,0 +1,1493 @@
+[
+  {
+    "day_week": 1,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 2,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 5,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 1,
+    "id_audience": 8
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 5,
+    "id_audience": 9
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 5,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 16,
+    "id_audience": 11
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 28,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 22,
+    "id_audience": 12
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 16,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 17,
+    "id_audience": 7
+  },
+  {
+    "day_week": 5,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 23,
+    "id_audience": 8
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 11,
+    "id_audience": 8
+  },
+  {
+    "day_week": 5,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 25,
+    "id_audience": 12
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 3,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 6,
+    "id_audience": 9
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 6,
+    "id_audience": 9
+  },
+  {
+    "day_week": 1,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 7,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 4,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 7,
+    "id_audience": 9
+  },
+  {
+    "day_week": 1,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 27,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 12,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 18,
+    "id_audience": 12
+  },
+  {
+    "day_week": 4,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 24,
+    "id_audience": 12
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 19,
+    "id_audience": 12
+  },
+  {
+    "day_week": 4,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 13,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 14,
+    "id_audience": 11
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 29,
+    "id_audience": 13
+  },
+  {
+    "day_week": 3,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 20,
+    "id_audience": 12
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 20,
+    "id_audience": 12
+  },
+  {
+    "day_week": 6,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 26,
+    "id_audience": 12
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 15,
+    "id_audience": 11
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 21,
+    "id_audience": 12
+  },
+  {
+    "day_week": 1,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 64,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 68,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 67,
+    "id_audience": 7
+  },
+  {
+    "day_week": 2,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 56,
+    "id_audience": 7
+  },
+  {
+    "day_week": 2,
+    "number_pair": 5,
+    "pair_type": 2,
+    "id_class": 63,
+    "id_audience": 8
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 57,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 40,
+    "id_audience": 7
+  },
+  {
+    "day_week": 3,
+    "number_pair": 5,
+    "pair_type": 2,
+    "id_class": 48,
+    "id_audience": 8
+  },
+  {
+    "day_week": 3,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 52,
+    "id_audience": 7
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 49,
+    "id_audience": 12
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 53,
+    "id_audience": 13
+  },
+  {
+    "day_week": 4,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 44,
+    "id_audience": 8
+  },
+  {
+    "day_week": 5,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 68,
+    "id_audience": 13
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 41,
+    "id_audience": 12
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 49,
+    "id_audience": 12
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 45,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 58,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 69,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 50,
+    "id_audience": 12
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 69,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 42,
+    "id_audience": 12
+  },
+  {
+    "day_week": 2,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 46,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 54,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 65,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 50,
+    "id_audience": 12
+  },
+  {
+    "day_week": 1,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 51,
+    "id_audience": 12
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 51,
+    "id_audience": 12
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 70,
+    "id_audience": 13
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 55,
+    "id_audience": 13
+  },
+  {
+    "day_week": 4,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 70,
+    "id_audience": 13
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 51,
+    "id_audience": 12
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 59,
+    "id_audience": 9
+  },
+  {
+    "day_week": 6,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 70,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 66,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 43,
+    "id_audience": 12
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 47,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 125,
+    "id_audience": 9
+  },
+  {
+    "day_week": 1,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 125,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 96,
+    "id_audience": 7
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 178,
+    "id_audience": 7
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 124,
+    "id_audience": 8
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 179,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 106,
+    "id_audience": 7
+  },
+  {
+    "day_week": 4,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 90,
+    "id_audience": 12
+  },
+  {
+    "day_week": 4,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 114,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 107,
+    "id_audience": 11
+  },
+  {
+    "day_week": 5,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 97,
+    "id_audience": 11
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 179,
+    "id_audience": 11
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 117,
+    "id_audience": 8
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 118,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 118,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 89,
+    "id_audience": 7
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 113,
+    "id_audience": 8
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 180,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 108,
+    "id_audience": 11
+  },
+  {
+    "day_week": 2,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 91,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 119,
+    "id_audience": 13
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 180,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 115,
+    "id_audience": 9
+  },
+  {
+    "day_week": 6,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 98,
+    "id_audience": 11
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 126,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 105,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 102,
+    "id_audience": 8
+  },
+  {
+    "day_week": 1,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 181,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 92,
+    "id_audience": 9
+  },
+  {
+    "day_week": 4,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 99,
+    "id_audience": 11
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 120,
+    "id_audience": 13
+  },
+  {
+    "day_week": 5,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 116,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 127,
+    "id_audience": 9
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 109,
+    "id_audience": 11
+  },
+  {
+    "day_week": 2,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 103,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 135,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 132,
+    "id_audience": 12
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 122,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 110,
+    "id_audience": 7
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 128,
+    "id_audience": 8
+  },
+  {
+    "day_week": 2,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 100,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 134,
+    "id_audience": 7
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 131,
+    "id_audience": 8
+  },
+  {
+    "day_week": 4,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 93,
+    "id_audience": 7
+  },
+  {
+    "day_week": 5,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 94,
+    "id_audience": 12
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 129,
+    "id_audience": 14
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 182,
+    "id_audience": 7
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 121,
+    "id_audience": 7
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 2,
+    "id_class": 111,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 133,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 183,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 136,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 123,
+    "id_audience": 13
+  },
+  {
+    "day_week": 4,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 133,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 112,
+    "id_audience": 13
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 95,
+    "id_audience": 12
+  },
+  {
+    "day_week": 5,
+    "number_pair": 4,
+    "pair_type": 3,
+    "id_class": 130,
+    "id_audience": 14
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 101,
+    "id_audience": 11
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 104,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 104,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 157,
+    "id_audience": 14
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 161,
+    "id_audience": 11
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 149,
+    "id_audience": 10
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 146,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 137,
+    "id_audience": 8
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 141,
+    "id_audience": 10
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 150,
+    "id_audience": 9
+  },
+  {
+    "day_week": 4,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 142,
+    "id_audience": 14
+  },
+  {
+    "day_week": 4,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 159,
+    "id_audience": 14
+  },
+  {
+    "day_week": 4,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 158,
+    "id_audience": 14
+  },
+  {
+    "day_week": 5,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 145,
+    "id_audience": 7
+  },
+  {
+    "day_week": 6,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 160,
+    "id_audience": 10
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 138,
+    "id_audience": 9
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 143,
+    "id_audience": 14
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 155,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 148,
+    "id_audience": 14
+  },
+  {
+    "day_week": 3,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 155,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 152,
+    "id_audience": 7
+  },
+  {
+    "day_week": 4,
+    "number_pair": 5,
+    "pair_type": 2,
+    "id_class": 147,
+    "id_audience": 8
+  },
+  {
+    "day_week": 5,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 139,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 162,
+    "id_audience": 11
+  },
+  {
+    "day_week": 6,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 153,
+    "id_audience": 14
+  },
+  {
+    "day_week": 6,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 151,
+    "id_audience": 9
+  },
+  {
+    "day_week": 1,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 154,
+    "id_audience": 14
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 164,
+    "id_audience": 15
+  },
+  {
+    "day_week": 2,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 140,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 168,
+    "id_audience": 8
+  },
+  {
+    "day_week": 3,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 163,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 163,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 156,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 169,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 165,
+    "id_audience": 14
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 165,
+    "id_audience": 14
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 144,
+    "id_audience": 14
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 166,
+    "id_audience": 7
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 167,
+    "id_audience": 14
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 170,
+    "id_audience": 8
+  },
+  {
+    "day_week": 5,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 171,
+    "id_audience": 14
+  },
+  {
+    "day_week": 3,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 9,
+    "id_audience": 11
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 8,
+    "id_audience": 10
+  },
+  {
+    "day_week": 3,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 10,
+    "id_audience": 11
+  },
+  {
+    "day_week": 1,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 36,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 37,
+    "id_audience": 7
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 37,
+    "id_audience": 7
+  },
+  {
+    "day_week": 3,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 30,
+    "id_audience": 8
+  },
+  {
+    "day_week": 4,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 39,
+    "id_audience": 11
+  },
+  {
+    "day_week": 4,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 36,
+    "id_audience": 13
+  },
+  {
+    "day_week": 5,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 32,
+    "id_audience": 12
+  },
+  {
+    "day_week": 5,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 33,
+    "id_audience": 7
+  },
+  {
+    "day_week": 6,
+    "number_pair": 5,
+    "pair_type": 2,
+    "id_class": 30,
+    "id_audience": 8
+  },
+  {
+    "day_week": 4,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 31,
+    "id_audience": 12
+  },
+  {
+    "day_week": 5,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 34,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 38,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 35,
+    "id_audience": 13
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 35,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 2,
+    "pair_type": 1,
+    "id_class": 81,
+    "id_audience": 13
+  },
+  {
+    "day_week": 1,
+    "number_pair": 5,
+    "pair_type": 2,
+    "id_class": 60,
+    "id_audience": 7
+  },
+  {
+    "day_week": 2,
+    "number_pair": 1,
+    "pair_type": 1,
+    "id_class": 81,
+    "id_audience": 13
+  },
+  {
+    "day_week": 2,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 80,
+    "id_audience": 8
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 87,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 75,
+    "id_audience": 11
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 83,
+    "id_audience": 8
+  },
+  {
+    "day_week": 3,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 84,
+    "id_audience": 12
+  },
+  {
+    "day_week": 3,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 77,
+    "id_audience": 7
+  },
+  {
+    "day_week": 4,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 61,
+    "id_audience": 12
+  },
+  {
+    "day_week": 4,
+    "number_pair": 2,
+    "pair_type": 3,
+    "id_class": 72,
+    "id_audience": 14
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 78,
+    "id_audience": 9
+  },
+  {
+    "day_week": 5,
+    "number_pair": 1,
+    "pair_type": 2,
+    "id_class": 74,
+    "id_audience": 7
+  },
+  {
+    "day_week": 5,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 86,
+    "id_audience": 7
+  },
+  {
+    "day_week": 6,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 84,
+    "id_audience": 12
+  },
+  {
+    "day_week": 6,
+    "number_pair": 6,
+    "pair_type": 1,
+    "id_class": 71,
+    "id_audience": 7
+  },
+  {
+    "day_week": 1,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 62,
+    "id_audience": 12
+  },
+  {
+    "day_week": 2,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 73,
+    "id_audience": 14
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 3,
+    "id_class": 85,
+    "id_audience": 12
+  },
+  {
+    "day_week": 2,
+    "number_pair": 4,
+    "pair_type": 1,
+    "id_class": 79,
+    "id_audience": 9
+  },
+  {
+    "day_week": 3,
+    "number_pair": 6,
+    "pair_type": 2,
+    "id_class": 88,
+    "id_audience": 9
+  },
+  {
+    "day_week": 4,
+    "number_pair": 5,
+    "pair_type": 3,
+    "id_class": 82,
+    "id_audience": 13
+  },
+  {
+    "day_week": 4,
+    "number_pair": 6,
+    "pair_type": 3,
+    "id_class": 76,
+    "id_audience": 11
+  },
+  {
+    "day_week": 6,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 79,
+    "id_audience": 9
+  },
+  {
+    "day_week": 2,
+    "number_pair": 2,
+    "pair_type": 2,
+    "id_class": 175,
+    "id_audience": 15
+  },
+  {
+    "day_week": 2,
+    "number_pair": 3,
+    "pair_type": 2,
+    "id_class": 174,
+    "id_audience": 15
+  },
+  {
+    "day_week": 4,
+    "number_pair": 3,
+    "pair_type": 1,
+    "id_class": 173,
+    "id_audience": 15
+  },
+  {
+    "day_week": 6,
+    "number_pair": 4,
+    "pair_type": 2,
+    "id_class": 172,
+    "id_audience": 15
+  },
+  {
+    "day_week": 5,
+    "number_pair": 5,
+    "pair_type": 1,
+    "id_class": 176,
+    "id_audience": 15
+  },
+  {
+    "day_week": 6,
+    "number_pair": 1,
+    "pair_type": 3,
+    "id_class": 177,
+    "id_audience": 16
+  }
+]
