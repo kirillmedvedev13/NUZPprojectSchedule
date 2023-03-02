@@ -1,6 +1,6 @@
 const config = {
-  //HOST: "134.249.58.4",
-  HOST: "localhost",
+  HOST: "26.159.44.130",
+  //HOST: "localhost",
   PORT: "3002",
 };
 
