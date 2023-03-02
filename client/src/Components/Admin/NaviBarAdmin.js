@@ -39,10 +39,10 @@ export default class NaviBarAdmin extends React.Component {
           <Nav.Link
             as={Link}
             className="mx-1 text-white-50 bg-dark"
-            href="/admin_delete_data"
-            to="/admin_delete_data"
+            href="/admin_management_data"
+            to="/admin_management_data"
           >
-            Видалення даних
+            Керування даними
           </Nav.Link>
           <Nav.Link
             as={Link}

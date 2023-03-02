@@ -45,6 +45,7 @@ import {
   GET_ALL_SCHEDULE_GROUPS,
   GET_ALL_SCHEDULE_AUDIENCES,
   GET_ALL_SCHEDULE_TEACHERS,
+  GET_ALL_SCHEDULE
 } from "../Queries/Schedule.js";
 import {
   CREATE_CLASS,
@@ -84,6 +85,7 @@ const RootQuery = new GraphQLObjectType({
     GetAllScheduleGroups: GET_ALL_SCHEDULE_GROUPS,
     GetAllScheduleAudiences: GET_ALL_SCHEDULE_AUDIENCES,
     GetAllScheduleTeachers: GET_ALL_SCHEDULE_TEACHERS,
+    GetAllSchedule: GET_ALL_SCHEDULE,
     GetAllAssignedDisciplines: GET_ALL_ASSIGNED_DISCIPLINES,
     GetInfo: GET_INFO,
     GetAllAlgorithm: GET_ALL_ALGORITHM,

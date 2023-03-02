@@ -2,7 +2,6 @@ import React from "react";
 import { Form, Row, Card } from "react-bootstrap";
 import ButtonDeleteAllData from "./ButtonDeleteAllData.js"
 import SelectCathedra from "../SelectCathedra.js";
-import NaviBarAdmin from "../NaviBarAdmin.js"
 
 export default class DeleteData extends React.Component {
     constructor(args) {
@@ -18,11 +17,9 @@ export default class DeleteData extends React.Component {
 
     render() {
         return (
-            <>
-                <NaviBarAdmin></NaviBarAdmin>
-                <div className="d-flex justify-content-center">
-                    <Card className="my-2 w-50">
-                        <Card.Header className="text-center">
+            <div className="m-2">
+                    <Card>
+                        <Card.Header className="d-flex justify-content-center m-2">
                             Видалення даних
                         </Card.Header>
                         <Card.Body>
@@ -41,8 +38,7 @@ export default class DeleteData extends React.Component {
                             </Form.Group>
                         </Card.Footer>
                     </Card>
-                </div>
-            </>
+            </div>
         );
     }
 }

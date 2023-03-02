@@ -22,3 +22,43 @@ export const GET_ALL_ALGORITHM = gql`
     }
   }
 `;
+export const GET_ALL_SCHEDULE = gql`
+  query {
+    GetAllSchedule {
+      id
+      number_pair
+      day_week
+      pair_type
+      audience {
+        id
+      }
+      class {
+        id
+        type_class {
+          id
+        }
+        times_per_week
+        recommended_schedules {
+          number_pair
+          day_week
+        }
+        assigned_groups {
+          group {
+            id
+            number_students
+          }
+        }
+        assigned_teachers {
+          teacher {
+            id
+          }
+        }
+        recommended_audiences {
+          audience {
+            id
+          }
+        }
+      }
+    }
+  }
+`;

@@ -20,24 +20,20 @@ export const GET_ALL_SCHEDULE_GROUPS = {
     // Если указана конкретная группа, то сортировка по группе
     const FilterGroup = id_group ? { id: id_group } : {};
     // Если указаан специаность группы, то сортировка по ней
-    let FilterSpecialty = {}, FilterCathedra = {};
+    let FilterSpecialty = {},
+      FilterCathedra = {};
     if (id_specialty) {
       FilterSpecialty = { id_specialty };
-    }
-    else if (id_cathedra) {
-      FilterCathedra = { id_cathedra }
+    } else if (id_cathedra) {
+      FilterCathedra = { id_cathedra };
     }
     const res = await db.group.findAll({
       order: [
         ["semester", "ASC"],
-        ["name", "ASC"]
+        ["name", "ASC"],
       ],
       where: {
-        [Op.and]: [
-          FilterSemester,
-          FilterGroup,
-          FilterSpecialty
-        ]
+        [Op.and]: [FilterSemester, FilterGroup, FilterSpecialty],
       },
       include: [
         {
@@ -55,8 +51,8 @@ export const GET_ALL_SCHEDULE_GROUPS = {
               {
                 model: db.schedule,
                 include: {
-                  model: db.audience
-                }
+                  model: db.audience,
+                },
               },
               {
                 model: db.type_class,
@@ -75,8 +71,8 @@ export const GET_ALL_SCHEDULE_GROUPS = {
               },
             ],
           },
-        }
-      ]
+        },
+      ],
     });
     return res;
   },
@@ -238,6 +234,49 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
       ],
     });
 
+    return res;
+  },
+};
+
+export const GET_ALL_SCHEDULE = {
+  type: new GraphQLList(ScheduleType),
+  async resolve(parent) {
+    const res = await db.schedule.findAll({
+      include: [
+        {
+          model: db.class,
+          include: [
+            {
+              model: db.type_class,
+            },
+            {
+              model: db.assigned_teacher,
+              include: {
+                model: db.teacher,
+              },
+            },
+            {
+              model: db.recommended_audience,
+              include: {
+                model: db.audience,
+              },
+            },
+            {
+              model: db.assigned_group,
+              include: {
+                model: db.group,
+              },
+            },
+            {
+              model: db.recommended_schedule,
+            },
+          ],
+        },
+        {
+          model: db.audience,
+        },
+      ],
+    });
     return res;
   },
 };

@@ -18,7 +18,7 @@ import { Routes, Route } from "react-router-dom";
 import GeneralValues from "./Components/Admin/GeneralValues/GeneralValues";
 import ScheduleData from "./Components/Admin/ScheduleData/ScheduleData";
 import SubmitDataSheet from "./Components/Admin/SubmitDataSheet/SubmitDataSheet";
-import DeleteData from "./Components/Admin/DeleteData/DeleteData";
+import ManagementData from "./Components/Admin/ManagementData/ManagementData";
 import Algorithms from "./Components/Admin/Algorithms/Alghorithms";
 
 class App extends React.Component {
@@ -104,8 +104,8 @@ class App extends React.Component {
                 element={<GeneralValues></GeneralValues>}
               />
               <Route
-                path="/admin_delete_data"
-                element={<DeleteData></DeleteData>}
+                path="/admin_management_data"
+                element={<ManagementData></ManagementData>}
               />
               <Route
                 path="/admin_submit_data_sheet"
