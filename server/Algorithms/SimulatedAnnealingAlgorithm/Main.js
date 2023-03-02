@@ -20,10 +20,12 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
     params,
   } = await GetDataFromDB(id_cathedra, name_algorithm);
   let temperature, alpha;
+
   params.forEach((obj) => {
     if (obj.name === "temperature") temperature = +obj.value;
     else alpha = +obj.value;
   });
+  let start_temp = temperature;
   let results = [];
   // Получения расписания для груп учителей если они есть  в других кафедрах
   let db_schedule = await GetBaseSchedule(id_cathedra);
@@ -108,7 +110,7 @@ export const RUN_SIMULATED_ANNEALING = async (id_cathedra, name_algorithm) => {
     `iteration: ${i} | temp: ${temperature} | fitness: ${currentFitness.fitnessValue}`
   );
   results = JSON.stringify(results);
-  let params_value = JSON.stringify({ temperature, alpha });
+  let params_value = JSON.stringify({ temperature: start_temp, alpha });
   let res = await db.results_algorithm.findOne({ where: { params_value } });
   if (res)
     await db.results_algorithm.update({ results }, { where: { params_value } });
