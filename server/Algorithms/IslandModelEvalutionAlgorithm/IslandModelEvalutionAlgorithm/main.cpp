@@ -45,27 +45,54 @@ int main(int argc,char* argv[])
 
         Timer.stop();
         cout << "Init " << Timer.ms() << "ms" << endl;
-
+        auto StartTime = chrono::high_resolution_clock::now();
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
         {
             Timer.start();
             for(int i =0;i<number_island;i++){
-                worker_pool.push_task([&islands,i](){
-                    islands[i].CrossingLoop();
-                });
+               islands[i].CrossingLoop(worker_pool);
             }
-            worker_pool.wait_for_tasks();
             Timer.stop();
             cout << "Crossing " << Timer.ms() << "ms" << endl;
-            cout << "Iter: " << ++countIter << endl;
+
+            Timer.start();
+            for(int i =0;i<number_island;i++){
+               islands[i].MutationLoop(worker_pool);
+            }
+            Timer.stop();
+            cout << "Mutation " << Timer.ms() << "ms" << endl;
+            Timer.start();
+            for(int i =0;i<number_island;i++){
+                islands[i].FitnessLoop(worker_pool);
+            }
+            Timer.stop();
+            cout << "Fitness " << Timer.ms() << "ms" << endl;
+
+            Timer.start();
+            for(auto &island: islands){
+                worker_pool.push_task([&island](){
+                    island.Selection();
+                    island.MinFitnessValue();
+
+                });
+            }
+
+            Timer.stop();
+            cout << "Selection " << Timer.ms() << "ms" << endl;
+
+            for(auto &island: islands){
+                auto bestInIsland = island.GetBestPopulation();
+                if(bestPopulation.fitnessValue.fitnessValue>bestInIsland.fitnessValue.fitnessValue){
+                    bestPopulation = bestInIsland;
+                }
+            }
+
+            cout << "Iter: " << ++countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << endl;
+            auto EndTime = chrono::high_resolution_clock::now();
+            chrono::duration<float,std::milli> duration = EndTime - StartTime;
+            result.push_back(make_pair(duration.count(), bestPopulation.fitnessValue.fitnessValue));
+
         }
-
-
-
-
-
-
-
 
     }
     catch (exception &ex)

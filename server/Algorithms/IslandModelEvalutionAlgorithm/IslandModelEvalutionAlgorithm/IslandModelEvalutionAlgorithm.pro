@@ -8,6 +8,8 @@ SOURCES += \
         CrossingLoop.cpp \
         EvalutionAlgorithm.cpp \
         Fitness.cpp \
+        FitnessLoop.cpp \
+        GetBestPopulation.cpp \
         GetIdAudienceForClass.cpp \
         GetPairTypeForClass.cpp \
         GetRndDouble.cpp \
@@ -16,6 +18,8 @@ SOURCES += \
         MeanFitnessValue.cpp \
         MinFitnessValue.cpp \
         Mutation.cpp \
+        MutationLoop.cpp \
+        Selection.cpp \
         SortPopulations.cpp \
         SortSchedule.cpp \
         TypeDefs.cpp \

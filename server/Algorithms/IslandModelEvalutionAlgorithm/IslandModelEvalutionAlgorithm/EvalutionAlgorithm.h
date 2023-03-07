@@ -33,11 +33,15 @@ public:
     double GetRndDouble();
     int GetIdAudienceForClass(const clas& clas);
     void Fitness(individ &i_schedule,const int &index);
+    void FitnessLoop(thread_pool &worker_pool);
     void SortSchedule(vector<schedule*>& i_schedule);
     void Crossing(const int &index1,const int &index2);
-    void CrossingLoop();
+    void CrossingLoop(thread_pool &worker_pool);
     void Mutation(const int &index);
+    void MutationLoop(thread_pool &worker_pool);
+    void Selection();
     double MeanFitnessValue();
     void MinFitnessValue();
     void SortPopulations();
+    bestIndivid GetBestPopulation();
 };

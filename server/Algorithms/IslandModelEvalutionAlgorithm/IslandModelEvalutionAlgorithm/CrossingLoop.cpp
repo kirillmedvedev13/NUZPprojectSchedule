@@ -1,7 +1,6 @@
 #include "EvalutionAlgorithm.h"
 
-void EvalutionAlgorithm::CrossingLoop(){
-    thread_pool worker_pool(thread::hardware_concurrency());
+void EvalutionAlgorithm::CrossingLoop(thread_pool &worker_pool){
     for (int i = 0; i < population_size; i += 2)
     {
         if (GetRndDouble() < p_crossover)
