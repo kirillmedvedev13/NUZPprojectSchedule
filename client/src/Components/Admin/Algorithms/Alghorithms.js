@@ -85,7 +85,7 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
   let { nameAlgorithm, params } = { ...state };
   return (
     <>
-      {nameAlgorithm && params.length ? (
+      {nameAlgorithm ? (
         <>
           <div className="d-flex justify-content-center mx-5">
             <Card className="my-2">
@@ -114,11 +114,13 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
               </Card.Body>
 
               <Card.Footer>
-                <ButtonUpdateAlgorithm
-                  name={nameAlgorithm}
-                  params={JSON.stringify(params)}
-                  refetch={refetch}
-                />
+                {params.length ? (
+                  <ButtonUpdateAlgorithm
+                    name={nameAlgorithm}
+                    params={JSON.stringify(params)}
+                    refetch={refetch}
+                  />
+                ) : null}
                 <ButtonDeleteResults
                   name_algorithm={nameAlgorithm}
                   refetch={refetch}
