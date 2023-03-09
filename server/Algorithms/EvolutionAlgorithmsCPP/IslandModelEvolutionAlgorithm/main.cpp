@@ -5,7 +5,7 @@
 #include "../Libraries/json.hpp"
 #include <chrono>
 #include <mutex>
-#include "../EvolutionAlgorithmClass/EvolutionAlgorithm.hpp"
+#include "../Libraries/EvolutionAlgorithm.hpp"
 
 using namespace std;
 using namespace nlohmann;
@@ -28,37 +28,54 @@ int main(int argc,char* argv[])
         int number_island = data["params"]["number_islands"];
         double step =  data["params"]["step"];
         const int max_generations = data["params"]["max_generations"];
+        auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();
 
+        double base_p_crossover = (double)data["params"]["p_crossover"];
+        double base_p_mutation = (double)data["params"]["p_mutation"];
+        double base_p_elitism = (double)data["params"]["p_elitism"];
+
+        // Создание островов и их инициализация
         vector<EvolutionAlgorithm> islands;
-        for (int i =0;i< number_island;i++){
-            worker_pool.push_task([&islands,&data](){
-                islands.push_back(EvolutionAlgorithm(data));
+        for (int i =0; i< number_island; i++){
+            if(i != 0) {
+                // Каждый остров будет иметь разные параметры
+                double value_p_crossover = (i * step * base_p_crossover) / 100;
+                double value_p_mutation = (i * step * base_p_mutation) / 100;
+                double value_p_elitism = (i  * step * base_p_elitism) / 100;
+                data["params"]["p_crossover"] = base_p_crossover + value_p_crossover;
+                data["params"]["p_mutation"] = base_p_mutation + value_p_mutation;
+                data["params"]["p_elitism"] = base_p_elitism + value_p_elitism;
+            }
+            worker_pool.push_task([&islands, &data, &bs](){
+                islands.push_back(EvolutionAlgorithm(data, bs));
             });
         }
         worker_pool.wait_for_tasks();
+
         int countIter = 0;
         auto bestPopulation = bestIndivid();
         auto result = vector<pair<int, double>>();
-
         Timer.stop();
         cout << "Init " << Timer.ms() << "ms" << endl;
+
         auto StartTime = chrono::high_resolution_clock::now();
+
         while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
         {
             Timer.start();
             for(int i =0;i<number_island;i++){
-               islands[i].CrossingLoop(worker_pool);
+                islands[i].CrossingLoop(worker_pool);
             }
             Timer.stop();
             cout << "Crossing " << Timer.ms() << "ms" << endl;
 
             Timer.start();
             for(int i =0;i<number_island;i++){
-               islands[i].MutationLoop(worker_pool);
+                islands[i].MutationLoop(worker_pool);
             }
             Timer.stop();
             cout << "Mutation " << Timer.ms() << "ms" << endl;
@@ -82,7 +99,7 @@ int main(int argc,char* argv[])
             cout << "Selection " << Timer.ms() << "ms" << endl;
 
             for(auto &island: islands){
-                auto bestInIsland = island.GetBestPopulation();
+                auto bestInIsland = island.GetBestIndivid();
                 if(bestPopulation.fitnessValue.fitnessValue>bestInIsland.fitnessValue.fitnessValue){
                     bestPopulation = bestInIsland;
                 }
