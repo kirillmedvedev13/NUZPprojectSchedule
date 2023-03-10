@@ -13,7 +13,10 @@ export const CREATE_SPECIALTY = {
     let res = await db.specialty.create({ name, id_cathedra, code });
     return res
       ? { successful: true, message: "Запис спеціальності успішно створено" }
-      : { successful: false, message: "Помилка при створенні запису спеціальності" };
+      : {
+          successful: false,
+          message: "Помилка при створенні запису спеціальності",
+        };
   },
 };
 
@@ -30,7 +33,10 @@ export const DELETE_SPECIALTY = {
     });
     return res
       ? { successful: true, message: "Запис спеціальності успішно видалено" }
-      : { successful: false, message: "Помилка при видаленні запису спеціальності" };
+      : {
+          successful: false,
+          message: "Помилка при видаленні запису спеціальності",
+        };
   },
 };
 
@@ -42,7 +48,7 @@ export const UPDATE_SPECIALTY = {
     id_cathedra: { type: GraphQLInt },
     code: { type: GraphQLInt },
   },
-  async resolve(parent, { id,name, id_cathedra, code }) {
+  async resolve(parent, { id, name, id_cathedra, code }) {
     let res = await db.specialty.update(
       { name, id_cathedra, code },
       {
@@ -53,6 +59,9 @@ export const UPDATE_SPECIALTY = {
     );
     return res[0]
       ? { successful: true, message: "Запис спеціальності успішно оновлено" }
-      : { successful: false, message: "Помилка при оновленні запису спеціальності" };
+      : {
+          successful: false,
+          message: "Помилка при оновленні запису спеціальності",
+        };
   },
 };

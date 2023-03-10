@@ -770,6 +770,27 @@ public:
     {
         return this->bestIndiv;
     }
+
+    vector <individ*> GetBestIndivids(const int &len_migration){
+        vector<individ*> bestIndivids = vector<individ*>();
+
+        for(int i =0; i<len_migration;i++){
+            bestIndivids.push_back(&this->populations[i]);
+        }
+        return bestIndivids;
+
+    }
+
+    void ChangeWorstIndivids(vector <individ*> bestIndivids){
+        for(size_t i=0;i<bestIndivids.size();i++){
+            int indexWorst = this->population_size-1-i;
+            for(auto &clas: this->classes){
+                for(int j = 0;j<clas.schedules[indexWorst].size();j++){
+
+                }
+            }
+        }
+    }
 };
 
 #endif

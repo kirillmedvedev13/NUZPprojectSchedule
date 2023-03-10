@@ -10,7 +10,7 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
     },
     params: {
-      type: DataTypes.STRING(1000),
+      type: DataTypes.STRING(10000),
     },
   });
   Algorithm.associate = (models) => {
