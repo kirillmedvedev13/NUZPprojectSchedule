@@ -9,6 +9,8 @@
 # testing
 /coverage
 
+PredictSchedule.exe
+
 # production
 **/build**
 

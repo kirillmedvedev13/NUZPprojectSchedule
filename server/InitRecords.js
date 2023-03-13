@@ -76,6 +76,16 @@ export default async function InitRecords(db) {
   });
 
   await db.algorithm.findOrCreate({
+    where: { name: "model_lstm" },
+    defaults: {
+      name: "model_lstm",
+      label: "Модель на основі LSTM",
+      params: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
+    },
+  });
+
+  await db.algorithm.findOrCreate({
     where: { name: "evolution_algorithmCPP" },
     defaults: {
       name: "evolution_algorithmCPP",

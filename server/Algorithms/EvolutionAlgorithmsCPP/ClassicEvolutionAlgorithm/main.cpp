@@ -3,7 +3,7 @@
 
 #include "../Libraries/BS_thread_pool.hpp"
 #include "../Libraries/TypeDefs.hpp"
-#include "../EvolutionAlgorithmClass/EvolutionAlgorithm.hpp"
+#include "../Libraries/EvolutionAlgorithm.hpp"
 #include <fstream>
 #include <vector>
 #include <cstring>
@@ -36,8 +36,9 @@ int main(int argc,char* argv[])
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();
+        auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
-        EvolutionAlgorithm mainAlgorithm(data);
+        EvolutionAlgorithm mainAlgorithm(data, bs);
 
         Timer.stop();
         cout << "Init " << Timer.ms() << " ms.\n";
@@ -84,7 +85,7 @@ int main(int argc,char* argv[])
 
             mainAlgorithm.MinFitnessValue();
 
-            bestPopulation = mainAlgorithm.GetBestPopulation();
+            bestPopulation = mainAlgorithm.GetBestIndivid();
 
             cout << "Iter: " << ++countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << ", Mean fitness: " << mainAlgorithm.MeanFitnessValue() << endl;
             auto EndTime = chrono::high_resolution_clock::now();

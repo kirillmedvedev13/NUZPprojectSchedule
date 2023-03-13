@@ -1,0 +1,10 @@
+{
+  "activation_output": "softmax",
+  "loss": "categorical_crossentropy",
+  "optimizer": "adam",
+  "metrics": ["accuracy"],
+  "batch_size": 1,
+  "verbose": 2,
+  "epochs": 500,
+  "test_size": 0.2
+}

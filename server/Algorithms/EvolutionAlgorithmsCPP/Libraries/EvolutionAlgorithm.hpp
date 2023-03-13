@@ -447,11 +447,11 @@ public:
         {
             this->SortSchedule(sc_gr.second);
         }
-        for (auto &sc_teach : i_schedule.scheduleForGroups)
+        for (auto &sc_teach : i_schedule.scheduleForTeachers)
         {
             this->SortSchedule(sc_teach.second);
         }
-        for (auto &sc_aud : i_schedule.scheduleForGroups)
+        for (auto &sc_aud : i_schedule.scheduleForAudiences)
         {
             this->SortSchedule(sc_aud.second);
         }

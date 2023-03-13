@@ -1,7 +1,7 @@
 import { exec, execFile, spawnSync } from "child_process";
 import fs, { readFileSync } from "fs";
 import { __DirectiveLocation } from "graphql";
-import SpawnChild from "./SpawnChild.js";
+import SpawnChild from "../Service/SpawnChild.js";
 import path from "path";
 import GetDataFromDB from "../Service/GetDataFromDB.js";
 import GetBaseSchedule from "../Service/GetBaseSchedule.js";
