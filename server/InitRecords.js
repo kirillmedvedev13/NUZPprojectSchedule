@@ -76,6 +76,16 @@ export default async function InitRecords(db) {
   });
 
   await db.algorithm.findOrCreate({
+    where: { name: "model_lstm" },
+    defaults: {
+      name: "model_lstm",
+      label: "Модель на основі LSTM",
+      params: JSON.stringify([]),
+      results: JSON.stringify([[0, 0]]),
+    },
+  });
+
+  await db.algorithm.findOrCreate({
     where: { name: "evolution_algorithmCPP" },
     defaults: {
       name: "evolution_algorithmCPP",
@@ -159,6 +169,26 @@ export default async function InitRecords(db) {
           type: "number",
           step: 0.5,
           value: 2,
+        },
+        {
+          name: "iter_migration",
+          label: "Період міграції (кількість ітерацій)",
+          short: "пер.мігр.",
+          min: 1,
+          max: null,
+          type: "number",
+          step: 1,
+          value: 10,
+        },
+        {
+          name: "n_migration",
+          label: "Кількість участі в міграції",
+          short: "кільк.мігр.",
+          min: 0,
+          max: 1,
+          type: "number",
+          step: 0.01,
+          value: 0.2,
         },
       ]),
       results: JSON.stringify([[0, 0]]),

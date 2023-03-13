@@ -1,6 +1,7 @@
 import { GraphQLInt, GraphQLString } from "graphql";
 import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_EACPP } from "../../Algorithms/EvolutionAlgorithmsCpp/Main.js";
+import { RUN_LSTM } from "../../Algorithms/NeuralNetwork/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
 import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
 import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
@@ -60,6 +61,9 @@ export const RUN_ALGORITHM = {
         break;
       case "tabu_search_algorithm":
         result = await RUN_TS(id_cathedra, name);
+        break;
+      case "model_lstm":
+        result = await RUN_LSTM(id_cathedra, name);
         break;
     }
 

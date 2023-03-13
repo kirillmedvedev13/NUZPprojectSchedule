@@ -28,6 +28,10 @@ int main(int argc,char* argv[])
         int number_island = data["params"]["number_islands"];
         double step =  data["params"]["step"];
         const int max_generations = data["params"]["max_generations"];
+        const int population_size = data["params"]["population_size"];
+        const double n_migration = data["params"]["n_migration"];
+        const int len_migration = population_size*n_migration;
+        const int iter_migration = data["params"]["iter_migration"];
         auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
         thread_pool worker_pool(thread::hardware_concurrency());
@@ -97,6 +101,37 @@ int main(int argc,char* argv[])
 
             Timer.stop();
             cout << "Selection " << Timer.ms() << "ms" << endl;
+
+            if(countIter+1 % iter_migration == 0){
+                Timer.start();
+                vector<vector <individ*>> bestIndivids;
+
+                for(auto &island:islands){
+                    bestIndivids.push_back(island.GetBestIndivids(len_migration));
+                }
+
+                int index;
+                int sum = INT_MAX;
+
+                for(size_t i =0; i<bestIndivids.size();i++){
+                    int tempSum = 0;
+                    for(individ *ind: bestIndivids[i]){
+                        tempSum+=ind->fitnessValue.fitnessValue;
+                    }
+                    if(sum>tempSum){
+                        index = i;
+                        sum = tempSum;
+                    }
+                }
+
+                for(size_t i =0; i<bestIndivids.size();i++){
+                    //if(i!=index)
+                       // islands[i].ChangeWorstIndivids(bestIndivids[index]);
+
+                }
+                Timer.stop();
+                cout << "Migration " << Timer.ms() << "ms" << endl;
+            }
 
             for(auto &island: islands){
                 auto bestInIsland = island.GetBestIndivid();
