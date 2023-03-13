@@ -1,19 +1,23 @@
-import sys
-import os
-import numpy as np
-from keras.models import load_model
-import pandas as pd
+from sys import argv
+from os.path import join, isfile
+from os import environ
+from numpy import array
+from tensorflow.keras.models import load_model
+from pandas import DataFrame
 from copy import copy
-import json
+from json import loads, dump, dumps
 from DefineModel import DefineModel
 from TrainAndTestModel import TrainAndTestModel
-from DataProcessing import DataProcessing, labelDecode, labelEncode, decodeData
+from DataProcessing import DataProcessing, labelEncode, decodeData
+
+environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+environ['AUTOGRAPH_VERBOSITY'] = '1'
 
 
 def GetDataFromJSON(inputFile):
     schedules = []
     with open(inputFile, 'r') as f:
-        data = json.loads(f.read())
+        data = loads(f.read())
         max_day = data["max_day"]
         max_pair = data["max_pair"]
         for sched in data["classes"]:
@@ -31,12 +35,12 @@ def GetDataFromJSON(inputFile):
                     copySched["id_group"] = group["id_group"]
                     schedules.append(copySched)
 
-    return [max_day, max_pair, pd.DataFrame.from_records(schedules)]
+    return [max_day, max_pair, DataFrame.from_records(schedules)]
 
 
 def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, modelParamsPath):
     with open(modelParamsPath, 'r') as f:
-        data = json.loads(f.read())
+        data = loads(f.read())
         activation_output = data["activation_output"]
         loss = data["loss"]
         optimizer = data["optimizer"]
@@ -56,28 +60,31 @@ def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, 
     model.save(fileModel)
 
 
-rootDir = sys.argv[1]
-inputFile = os.path.join(rootDir, "data.json")
-dataSetDir = os.path.join(rootDir, "DatasetSchedulesCSV")
-fileModel = os.path.join(rootDir, "modelForSchedulePredict.h5")
-modelParamsPath = os.path.join(rootDir, "modelParams.json")
+rootDir = argv[1]
+inputFile = join(rootDir, "data.json")
+dataSetDir = join(rootDir, "DatasetSchedulesCSV")
+fileModel = join(rootDir, "modelForSchedulePredict.h5")
+modelParamsPath = join(rootDir, "modelParams.json")
 
-resultFile = os.path.join(rootDir, "result.json")
+resultFile = join(rootDir, "result.json")
 
-
+print("Load data from json")
 max_day, max_pair, classes = GetDataFromJSON(inputFile)
 n_featuresX = len(classes.columns)
 verbose = 1
 
 
-if (not os.path.isfile(fileModel)):
+if (not isfile(fileModel)):
+    print("Create new model")
     GetFinishedModel(dataSetDir, fileModel, max_day,
                      max_pair, n_featuresX, modelParamsPath)
 
+print("Load model")
 model = load_model(fileModel)
 dataX = labelEncode(classes)[0]
 
-predictedSchedule = model.predict(np.array([dataX]))
+print("Predict schedule")
+predictedSchedule = model.predict(array([dataX]))
 schedule = decodeData(predictedSchedule[0], max_day, max_pair)
 
 schedules = set()
@@ -90,8 +97,9 @@ for i in range(len(schedule)):
     sched = {'day_week': int(day_week), 'number_pair': int(number_pair),
              'id_class': int(id_class),  'id_audience': int(id_audience), 'pair_type':
              int(pair_type)}
-    schedules.add(json.dumps(sched))
-schedules = list(map(lambda x: json.loads(x), schedules))
+    schedules.add(dumps(sched))
+schedules = list(map(lambda x: loads(x), schedules))
 
+print("Write result in file")
 with open(resultFile, 'w') as f:
-    json.dump({"schedules": schedules}, f)
+    dump({"schedules": schedules}, f)

@@ -2,17 +2,17 @@ from keras.utils import pad_sequences
 from os import listdir
 from os.path import join
 from sklearn.preprocessing import LabelEncoder
-import numpy as np
-import pandas as pd
+from numpy import where, zeros
+from pandas import options, read_csv
 
-pd.options.mode.chained_assignment = None
+options.mode.chained_assignment = None
 
 
 def decodeData(schedule, day_week, number_pair):
     newData = []
     for clas in schedule:
         maxEl = max(clas)
-        index = np.where(maxEl == clas)[0][0]
+        index = where(maxEl == clas)[0][0]
         dw = index // day_week+1
         npair = index % day_week+1
         newData.append([dw, npair])
@@ -22,7 +22,7 @@ def decodeData(schedule, day_week, number_pair):
 def encodeData(data, day_week, number_pair):
     newData = []
     for [day, number] in data.values:
-        tempArr = np.zeros((day_week*number_pair))
+        tempArr = zeros((day_week*number_pair))
         tempArr[(day-1)*number_pair + number-1] = 1
         newData.append(tempArr)
     return newData
@@ -52,7 +52,7 @@ def LoadData(dataPath, day_week, number_pair):
     dataX = []
     dataY = []
     for file in listdir(dataPath):
-        fileData = pd.read_csv(join(dataPath, file))
+        fileData = read_csv(join(dataPath, file))
         fileDataX = fileData[["pair_type", "id_class",
                               "id_type_class", "id_audience", "id_teacher", "id_group"]]
         fileDataY = fileData[["day_week", "number_pair"]]

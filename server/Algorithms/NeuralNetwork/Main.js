@@ -2,8 +2,10 @@ import GetIdAudienceForClass from "../Service/GetIdAudienceForClass.js";
 import GetPairTypeForClass from "../Service/GetPairTypeForClass.js";
 import GetDataFromDB from "../Service/GetDataFromDB.js";
 import SpawnChild from "../Service/SpawnChild.js";
+import GetBaseSchedule from "../Service/GetBaseSchedule.js";
 import fs, { readFileSync } from "fs";
 import path from "path";
+import db from "../../database.js";
 
 export const RUN_LSTM = async (id_cathedra, name_algorithm) => {
   try {
@@ -23,6 +25,7 @@ export const RUN_LSTM = async (id_cathedra, name_algorithm) => {
         newClasses.push(newClass);
       }
     }
+    await GetBaseSchedule(id_cathedra);
     let jsonData = JSON.stringify({ max_day, max_pair, classes: newClasses });
     let fileName = path.resolve(
       "./Algorithms/NeuralNetwork/PredictSchedule.exe"
