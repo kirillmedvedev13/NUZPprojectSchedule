@@ -60,8 +60,7 @@ def GetFinishedModel(dataSetDir, jsonDir, fileModel, day_week, number_pair, n_fe
     model.save(fileModel)
 
 
-# rootDir = argv[1]
-rootDir = 'D:\\PROJECT SCHEDULE\\Project\\NUZPprojectSchedule\\server\\Algorithms\\NeuralNetwork\\'
+rootDir = argv[1]
 inputFile = join(rootDir, "data.json")
 dataSetDir = join(rootDir, "DatasetSchedulesCSV")
 jsonDir = join(rootDir, "DatasetSchedulesJSON")
@@ -83,23 +82,25 @@ if (not isfile(fileModel)):
 
 print("Load model")
 model = load_model(fileModel)
-dataX = labelEncode(classes)[0]
+copyClasses = copy(classes)
+dataX = labelEncode(copyClasses)[0]
 
 print("Predict schedule")
 predictedSchedule = model.predict(array([dataX]))
 schedule = decodeData(predictedSchedule[0], max_day, max_pair)
 
 schedules = set()
-for i in range(len(schedule)):
+for i, clas in classes.iterrows():
     day_week = schedule[i][0]
     number_pair = schedule[i][1]
-    id_class = classes["id_class"][i]
-    id_audience = classes["id_audience"][i]
-    pair_type = classes["pair_type"][i]
+    id_class = clas["id_class"]
+    id_audience = clas["id_audience"]
+    pair_type = clas["pair_type"]
     sched = {'day_week': int(day_week), 'number_pair': int(number_pair),
              'id_class': int(id_class),  'id_audience': int(id_audience), 'pair_type':
              int(pair_type)}
     schedules.add(dumps(sched))
+
 schedules = list(map(lambda x: loads(x), schedules))
 
 print("Write result in file")
