@@ -9,9 +9,7 @@ from json import loads, dump, dumps
 from DefineModel import DefineModel
 from TrainAndTestModel import TrainAndTestModel
 from DataProcessing import DataProcessing, labelEncode, decodeData
-
-environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-environ['AUTOGRAPH_VERBOSITY'] = '1'
+from ConvertJSONtoCSV import ConvertJSONtoCSV
 
 
 def GetDataFromJSON(inputFile):
@@ -38,7 +36,7 @@ def GetDataFromJSON(inputFile):
     return [max_day, max_pair, DataFrame.from_records(schedules)]
 
 
-def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, modelParamsPath):
+def GetFinishedModel(dataSetDir, jsonDir, fileModel, day_week, number_pair, n_featuresX, modelParamsPath):
     with open(modelParamsPath, 'r') as f:
         data = loads(f.read())
         activation_output = data["activation_output"]
@@ -52,7 +50,9 @@ def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, 
     print("Define LSTM model")
     model = DefineModel(day_week, number_pair, n_featuresX,
                         activation_output, loss, optimizer, metrics)
+    ConvertJSONtoCSV(jsonDir, dataSetDir)
     print("Data Processing")
+
     dataX, dataY = DataProcessing(dataSetDir, day_week, number_pair)
     print("Train And Test Model")
     TrainAndTestModel(model, dataX, dataY, test_size,
@@ -60,9 +60,11 @@ def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, 
     model.save(fileModel)
 
 
-rootDir = argv[1]
+# rootDir = argv[1]
+rootDir = 'D:\\PROJECT SCHEDULE\\Project\\NUZPprojectSchedule\\server\\Algorithms\\NeuralNetwork\\'
 inputFile = join(rootDir, "data.json")
 dataSetDir = join(rootDir, "DatasetSchedulesCSV")
+jsonDir = join(rootDir, "DatasetSchedulesJSON")
 fileModel = join(rootDir, "modelForSchedulePredict.h5")
 modelParamsPath = join(rootDir, "modelParams.json")
 
@@ -76,7 +78,7 @@ verbose = 1
 
 if (not isfile(fileModel)):
     print("Create new model")
-    GetFinishedModel(dataSetDir, fileModel, max_day,
+    GetFinishedModel(dataSetDir, jsonDir, fileModel, max_day,
                      max_pair, n_featuresX, modelParamsPath)
 
 print("Load model")
