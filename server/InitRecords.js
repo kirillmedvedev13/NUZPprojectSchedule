@@ -52,6 +52,11 @@ export default async function InitRecords(db) {
     },
   ];
 
+  let selection_options = [
+    { value: "rank_selection", label: "Відбір за ранком" },
+    { value: "roulette_selection", label: "Відбір за рулектою" },
+  ];
+
   await db.type_class.findOrCreate({
     where: { id: 1 },
     defaults: {
@@ -159,6 +164,14 @@ export default async function InitRecords(db) {
           type: "number",
           step: 1,
           value: 5,
+        },
+        {
+          name: "selection_type",
+          label: "Тип відбору індивідів",
+          short: "тип відб.",
+          type: "select",
+          value: selection_options[0].value,
+          options: selection_options,
         },
         {
           name: "step",

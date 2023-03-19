@@ -6,6 +6,7 @@ import SelectAlgoritm from "./SelectAlgorithm.js";
 import { GET_ALL_ALGORITHM } from "../queries";
 import { useQuery } from "@apollo/client";
 import MultiCharts from "./MultiCharts.js";
+import Select from "react-select";
 
 import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
 import ButtonUpdateAlgorithm from "./ButtonUpdateAlgorithm.js";
@@ -97,17 +98,34 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
                   <Form.Group as={Row} className="my-2 mx-2">
                     <Form.Label className="col-5">{param.label}</Form.Label>
                     <Col>
-                      <Form.Control
-                        value={param.value}
-                        type={param.type}
-                        min={param.min}
-                        max={param.max}
-                        step={param.step}
-                        onChange={(e) => {
-                          param.value = +e.target.value;
-                          handleChangeState("params", params);
-                        }}
-                      />
+                      {param.type == "select" ? (
+                        <Select
+                          value={{
+                            value: param.value,
+                            label: param.options.find(
+                              (opt) => opt.value === param.value
+                            ).label,
+                          }}
+                          options={param.options}
+                          onChange={(e) => {
+                            debugger;
+                            param.value = e.value;
+                            handleChangeState("params", params);
+                          }}
+                        ></Select>
+                      ) : (
+                        <Form.Control
+                          value={param.value}
+                          type={param.type}
+                          min={param.min}
+                          max={param.max}
+                          step={param.step}
+                          onChange={(e) => {
+                            param.value = +e.target.value;
+                            handleChangeState("params", params);
+                          }}
+                        />
+                      )}
                     </Col>
                   </Form.Group>
                 ))}
