@@ -1,6 +1,6 @@
 const config = {
-  HOST: "localhost",
-  PORT: "3002",
+  HOST: "91.219.54.59",
+  PORT: "3001",
 };
 
 export default config;

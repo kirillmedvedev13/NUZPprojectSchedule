@@ -35,7 +35,7 @@ const main = async () => {
   );
 
   app.listen(config.PORT, () => {
-    console.log("Server is running");
+    console.log(`Server is running at ${config.PORT}`);
   });
 };
 

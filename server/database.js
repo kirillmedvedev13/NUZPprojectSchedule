@@ -1,6 +1,5 @@
 import Sequelize from "sequelize";
 import config from "./config/config.js";
-import fs from "fs";
 import Teacher from "./Models/Teacher.js";
 import Cathedra from "./Models/Cathedra.js";
 import Audience from "./Models/Audience.js";
