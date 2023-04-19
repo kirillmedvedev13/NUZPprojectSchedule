@@ -1,10 +1,10 @@
 const config = {
   PORT: "3002",
-  HOST: "26.159.44.130",
+  HOST: "localhost",
   RESHOST: "localhost",
   DB_NAME: "scheduledb",
-  DB_USER: "user",
-  DB_PASS: "schedule351973",
+  DB_USER: "admin",
+  DB_PASS: "351973",
   jwtAccessSecret: "bnV6cCBzY2hlZHVsZSBwcm9qZWN0IGkgbG92ZSB0cw==",
   jwtRefreshSecret: "bnV6cCBzY2hlZyfky547uth;r0IGkgbG92ZSB0cw+++",
 };
