@@ -6,9 +6,15 @@ import { graphqlHTTP } from "express-graphql";
 import config from "./config/config.js";
 import bodyParser from "body-parser";
 import InitRecords from "./InitRecords.js";
+import http from "http";
+import https from "https";
+import fs from "fs"
 
 const main = async () => {
+  const privateKey = fs.readFileSync('./config/private.key');
+  const certificate = fs.readFileSync('./config/certificate.crt');
   const app = express();
+
 
   let corsOptions = {
     origin: "*",
@@ -34,8 +40,10 @@ const main = async () => {
     })
   );
 
-  app.listen(config.PORT, () => {
-    console.log(`Server is running at ${config.PORT}`);
+  let httpServer = http.createServer(app);
+
+  httpServer.listen(config.PORT_HTTP, () => {
+    console.log(`Server HTTPS is running at ${config.PORT_HTTPS}`);
   });
 };
 
