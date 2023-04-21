@@ -11,7 +11,7 @@ import "./App.css";
 import config from "./config.js";
 
 const client = new ApolloClient({
-  uri: `http://${config.HOST}:${config.PORT}/graphql`,
+  uri: `https://${config.HOST}:${config.PORT}/graphql`,
   cache: new InMemoryCache(),
 });
 
