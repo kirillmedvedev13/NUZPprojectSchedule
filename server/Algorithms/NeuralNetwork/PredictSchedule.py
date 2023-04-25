@@ -9,9 +9,7 @@ from json import loads, dump, dumps
 from DefineModel import DefineModel
 from TrainAndTestModel import TrainAndTestModel
 from DataProcessing import DataProcessing, labelEncode, decodeData
-
-environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-environ['AUTOGRAPH_VERBOSITY'] = '1'
+from ConvertJSONtoCSV import ConvertJSONtoCSV
 
 
 def GetDataFromJSON(inputFile):
@@ -38,7 +36,7 @@ def GetDataFromJSON(inputFile):
     return [max_day, max_pair, DataFrame.from_records(schedules)]
 
 
-def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, modelParamsPath):
+def GetFinishedModel(dataSetDir, jsonDir, fileModel, day_week, number_pair, n_featuresX, modelParamsPath):
     with open(modelParamsPath, 'r') as f:
         data = loads(f.read())
         activation_output = data["activation_output"]
@@ -52,7 +50,9 @@ def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, 
     print("Define LSTM model")
     model = DefineModel(day_week, number_pair, n_featuresX,
                         activation_output, loss, optimizer, metrics)
+    ConvertJSONtoCSV(jsonDir, dataSetDir)
     print("Data Processing")
+
     dataX, dataY = DataProcessing(dataSetDir, day_week, number_pair)
     print("Train And Test Model")
     TrainAndTestModel(model, dataX, dataY, test_size,
@@ -63,6 +63,7 @@ def GetFinishedModel(dataSetDir, fileModel, day_week, number_pair, n_featuresX, 
 rootDir = argv[1]
 inputFile = join(rootDir, "data.json")
 dataSetDir = join(rootDir, "DatasetSchedulesCSV")
+jsonDir = join(rootDir, "DatasetSchedulesJSON")
 fileModel = join(rootDir, "modelForSchedulePredict.h5")
 modelParamsPath = join(rootDir, "modelParams.json")
 
@@ -76,28 +77,30 @@ verbose = 1
 
 if (not isfile(fileModel)):
     print("Create new model")
-    GetFinishedModel(dataSetDir, fileModel, max_day,
+    GetFinishedModel(dataSetDir, jsonDir, fileModel, max_day,
                      max_pair, n_featuresX, modelParamsPath)
 
 print("Load model")
 model = load_model(fileModel)
-dataX = labelEncode(classes)[0]
+copyClasses = copy(classes)
+dataX = labelEncode(copyClasses)[0]
 
 print("Predict schedule")
 predictedSchedule = model.predict(array([dataX]))
 schedule = decodeData(predictedSchedule[0], max_day, max_pair)
 
 schedules = set()
-for i in range(len(schedule)):
+for i, clas in classes.iterrows():
     day_week = schedule[i][0]
     number_pair = schedule[i][1]
-    id_class = classes["id_class"][i]
-    id_audience = classes["id_audience"][i]
-    pair_type = classes["pair_type"][i]
+    id_class = clas["id_class"]
+    id_audience = clas["id_audience"]
+    pair_type = clas["pair_type"]
     sched = {'day_week': int(day_week), 'number_pair': int(number_pair),
              'id_class': int(id_class),  'id_audience': int(id_audience), 'pair_type':
              int(pair_type)}
     schedules.add(dumps(sched))
+
 schedules = list(map(lambda x: loads(x), schedules))
 
 print("Write result in file")

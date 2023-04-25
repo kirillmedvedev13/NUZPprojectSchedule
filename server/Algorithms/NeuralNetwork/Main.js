@@ -36,9 +36,9 @@ export const RUN_LSTM = async (id_cathedra, name_algorithm) => {
     });
     const code = await SpawnChild(fileName, fileData);
     if (code === 0) {
-      let res = readFileSync("./Algorithms/EvolutionAlgorithmsCpp/result.json");
+      let res = readFileSync("./Algorithms/NeuralNetwork/result.json");
       res = JSON.parse(res);
-      let bestPopulation = res.bestPopulation;
+      let schedules = res.schedules;
       /*let results = res.result;
       let results_value = JSON.stringify(results);
       let params_value = JSON.stringify(params_obj);
@@ -56,7 +56,7 @@ export const RUN_LSTM = async (id_cathedra, name_algorithm) => {
           name_algorithm,
           results: results_value,
         });*/
-      let isBulk = await db.schedule.bulkCreate(bestPopulation);
+      let isBulk = await db.schedule.bulkCreate(schedules);
       if (isBulk)
         return {
           successful: true,

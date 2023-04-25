@@ -9,8 +9,8 @@ def TrainAndTestModel(model, dataX, dataY, test_size, epochs, batch_size, verbos
     model.fit(dataTrainX, dataTrainY, epochs=epochs,
               batch_size=batch_size, verbose=verbose)
 
-    results = model.evaluate(dataTestX, dataTestY,
-                             batch_size=batch_size, verbose=verbose)
+    loss, acc = model.evaluate(dataTestX, dataTestY,
+                               batch_size=batch_size, verbose=verbose)
 
-    print("Test loss: ", results[0], ", Test acc:", results[1])
-    return results
+    print("Test loss: ", loss, ", Test acc:", acc*100)
+    return [loss, acc]

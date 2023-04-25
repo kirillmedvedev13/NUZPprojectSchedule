@@ -6,6 +6,8 @@ import { graphqlHTTP } from "express-graphql";
 import config from "./config/config.js";
 import bodyParser from "body-parser";
 import InitRecords from "./InitRecords.js";
+import https from "https";
+import fs from "fs";
 
 const main = async () => {
   const app = express();
@@ -34,7 +36,11 @@ const main = async () => {
     })
   );
 
-  app.listen(config.PORT, () => {
+  const key = fs.readFileSync('C:/NUZPprojectSchedule/server/config/server.key');
+  const cert = fs.readFileSync('C:/NUZPprojectSchedule/server/config/server.crt');
+
+
+  https.createServer({ key, cert }, app).listen(config.PORT, () => {
     console.log("Server is running");
   });
 };
