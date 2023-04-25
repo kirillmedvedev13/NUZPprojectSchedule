@@ -42,7 +42,7 @@ int main(int argc,char* argv[])
         double base_p_mutation = (double)data["params"]["p_mutation"];
         double base_p_elitism = (double)data["params"]["p_elitism"];
 
-        // Создание островов и их инициализация
+        // Создание островов с разными параметрами и их инициализация
         vector<EvolutionAlgorithm> islands;
         for (int i =0; i< number_island; i++){
             if(i != 0) {
@@ -81,8 +81,9 @@ int main(int argc,char* argv[])
             for(int i =0;i<number_island;i++){
                 islands[i].MutationLoop(worker_pool);
             }
-            Timer.stop();
+            Timer.stop(); 
             cout << "Mutation " << Timer.ms() << "ms" << endl;
+
             Timer.start();
             for(int i =0;i<number_island;i++){
                 islands[i].FitnessLoop(worker_pool);
@@ -93,41 +94,41 @@ int main(int argc,char* argv[])
             Timer.start();
             for(auto &island: islands){
                 worker_pool.push_task([&island](){
-                    island.Selection();
+                    island.SelectionLoop();
                     island.MinFitnessValue();
 
                 });
             }
-
+            worker_pool.wait_for_tasks();
             Timer.stop();
             cout << "Selection " << Timer.ms() << "ms" << endl;
 
-            if(countIter+1 % iter_migration == 0){
+            //Миграция между популяциями
+            if((countIter + 1) % iter_migration == 0){
                 Timer.start();
-                vector<vector <individ*>> bestIndivids;
+                auto islandsBestIndivids = vector<vector<pair<vector<vector<schedule>>,int>>>();
 
-                for(auto &island:islands){
-                    bestIndivids.push_back(island.GetBestIndivids(len_migration));
+                for(auto &island : islands){
+                    islandsBestIndivids.push_back(island.GetBestIndivids(len_migration));
                 }
-
-                int index;
+                //Поиск лучшего острова
+                int best_index = -1;
                 int sum = INT_MAX;
-
-                for(size_t i =0; i<bestIndivids.size();i++){
+                for(auto i = 0; i < number_island; i++){
                     int tempSum = 0;
-                    for(individ *ind: bestIndivids[i]){
-                        tempSum+=ind->fitnessValue.fitnessValue;
+                    for(auto &ind: islandsBestIndivids[i]){
+                        tempSum += ind.second;
                     }
-                    if(sum>tempSum){
-                        index = i;
+                    if(sum > tempSum){
+                        best_index = i;
                         sum = tempSum;
                     }
                 }
 
-                for(size_t i =0; i<bestIndivids.size();i++){
-                    //if(i!=index)
-                       // islands[i].ChangeWorstIndivids(bestIndivids[index]);
-
+                for(auto i = 0; i < number_island; i++){
+                    if(i != best_index) {
+                       islands[i].ChangeWorstIndivids(islandsBestIndivids[best_index]);
+                    }
                 }
                 Timer.stop();
                 cout << "Migration " << Timer.ms() << "ms" << endl;

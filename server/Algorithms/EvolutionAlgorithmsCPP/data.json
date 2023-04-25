@@ -2,11 +2,15 @@
   "max_day": 6,
   "max_pair": 6,
   "params": {
-    "population_size": 500,
-    "max_generations": 8000,
-    "p_crossover": 0.7,
-    "p_mutation": 0.25,
-    "p_elitism": 0.1
+    "population_size": 300,
+    "max_generations": 3000,
+    "p_crossover": 0.5,
+    "p_mutation": 0.5,
+    "p_elitism": 0.15,
+    "number_islands": 5,
+    "step": 2,
+    "iter_migration": 5,
+    "n_migration": 0.15
   },
   "base_schedule": {
     "schedule_group": [],

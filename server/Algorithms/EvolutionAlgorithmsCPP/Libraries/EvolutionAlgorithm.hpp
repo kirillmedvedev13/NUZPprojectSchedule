@@ -503,6 +503,7 @@ public:
         worker_pool.wait_for_tasks();
     }
 
+    //Обмен занятий между индивидами
     void SwapSchedule(const int &index_class, const int &index_pair, const int &index_individ_1, const int &index_individ2){
         // Если аудитории разные, то менять указатели для каждой аудитории
         if (this->classes[index_class].schedules[index_individ_1][index_pair].id_audience != this->classes[index_class].schedules[index_individ2][index_pair].id_audience)
@@ -526,6 +527,22 @@ public:
         auto sc1 = this->classes[index_class].schedules[index_individ_1][index_pair];
         this->classes[index_class].schedules[index_individ_1][index_pair] = this->classes[index_class].schedules[index_individ2][index_pair];
         this->classes[index_class].schedules[index_individ2][index_pair] = sc1;
+    }
+
+    //Замена занятия у индивида на переданное
+    void SwapSchedule(const int &index_class, const int &index_pair, const int &index_individ, const schedule sc){
+        int old_id_audience = this->classes[index_class].schedules[index_individ][index_pair].id_audience;
+        int new_id_audience = sc.id_audience;
+        // Если ид аудитории поменялся, то нужно поменять ссылку на неё
+        if (new_id_audience != old_id_audience)
+        {
+            auto ref = &this->classes[index_class].schedules[index_individ][index_pair];
+            auto it = find(this->populations[index_individ].scheduleForAudiences[old_id_audience].begin(), this->populations[index_individ].scheduleForAudiences[old_id_audience].end(), ref);
+            this->populations[index_individ].scheduleForAudiences[old_id_audience].erase(it);
+            this->populations[index_individ].scheduleForAudiences[new_id_audience].emplace(populations[index_individ].scheduleForAudiences[new_id_audience].begin(), ref);
+        }
+        // Поменять значение пары
+        this->classes[index_class].schedules[index_individ][index_pair] = sc;
     }
 
     //Фнукция кроссинга
@@ -555,12 +572,12 @@ public:
         worker_pool.wait_for_tasks();
     }
 
-    //Функция мутации
-    void Mutation(const int &index)
+    //Функция мутации для индивида
+    void Mutation(const int &index_individ)
     {
         // Случайное изменение пары для занятия
         int index_class = GetRndInteger(0, this->classes.size() - 1);
-        int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index].size() - 1);
+        int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index_individ].size() - 1);
         // если есть рекомендуемоемое время, то пару не менять
         int num_rec = this->classes[index_class].recommended_schedules.size();
         if (index_pair >= num_rec)
@@ -568,25 +585,14 @@ public:
             int day_week = GetRndInteger(1, max_day);
             int number_pair = GetRndInteger(1, max_pair);
             int new_id_audience = GetIdAudienceForClass(this->classes[index_class]);
-            int old_id_audience = this->classes[index_class].schedules[index][index_pair].id_audience;
-            int pair_type = this->classes[index_class].schedules[index][index_pair].pair_type;
+            int pair_type = this->classes[index_class].schedules[index_individ][index_pair].pair_type;
             // С шансом 0.5 менять числитель на знаменатель
             if (pair_type < 3 && GetRndDouble() <= 0.5)
             {
                 pair_type = 3 - pair_type;
             }
-            this->classes[index_class].schedules[index][index_pair].day_week = day_week;
-            this->classes[index_class].schedules[index][index_pair].number_pair = number_pair;
-            this->classes[index_class].schedules[index][index_pair].pair_type = pair_type;
-            // Замена ссылки для аудитории если аудитория поменялась
-            if (old_id_audience != new_id_audience)
-            {
-                this->classes[index_class].schedules[index][index_pair].id_audience = new_id_audience;
-                auto ref = &this->classes[index_class].schedules[index][index_pair];
-                auto it = find(this->populations[index].scheduleForAudiences[old_id_audience].begin(), this->populations[index].scheduleForAudiences[old_id_audience].end(), ref);
-                this->populations[index].scheduleForAudiences[old_id_audience].erase(it);
-                this->populations[index].scheduleForAudiences[new_id_audience].emplace(populations[index].scheduleForAudiences[new_id_audience].begin(), ref);
-            }
+            auto sc = schedule(number_pair, day_week, pair_type, new_id_audience,this->classes[index_class].id);
+            SwapSchedule(index_class,index_pair,index_individ, sc);
         }
     }
 
@@ -605,7 +611,7 @@ public:
     }
 
     //Цикл выборки
-    void Selection()
+    void SelectionLoop()
     {
         this->SortPopulations();
         auto individ_indexes = vector<int>();
@@ -644,27 +650,13 @@ public:
             }
         }
 
-        for (int i = num_elit; i < this->population_size; i++)
-        {
+        for (int index_individ = num_elit; index_individ < this->population_size; index_individ++) {
             // Ссылки ссылаются на занятия, остается поменять значение занятий на новые
-            int new_index = individ_indexes[i - num_elit];
-            for (size_t j = 0; j < classes.size(); j++)
-            {
-                for (size_t k = 0; k < this->classes[j].schedules[i].size(); k++)
-                {
-                    auto sc = temp_classes[j][new_index][k];
-                    int old_id_audience = this->classes[j].schedules[i][k].id_audience;
-                    int new_id_audience = sc.id_audience;
-                    // Если ид аудитории поменялся, то нужно поменять ссылку на неё
-                    if (new_id_audience != old_id_audience)
-                    {
-                        auto ref = &this->classes[j].schedules[i][k];
-                        auto it = find(this->populations[i].scheduleForAudiences[old_id_audience].begin(), this->populations[i].scheduleForAudiences[old_id_audience].end(), ref);
-                        this-> populations[i].scheduleForAudiences[old_id_audience].erase(it);
-                        this->populations[i].scheduleForAudiences[new_id_audience].emplace(populations[i].scheduleForAudiences[new_id_audience].begin(), ref);
-                    }
-                    // Поменять значение пары
-                    this->classes[j].schedules[i][k] = sc;
+            int new_index = individ_indexes[index_individ - num_elit];
+            for (size_t index_class = 0; index_class < classes.size(); index_class++) {
+                for (size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index_individ].size(); index_pair++) {
+                    auto sc = temp_classes[index_class][new_index][index_pair];
+                    SwapSchedule(index_class,index_pair,index_individ,sc);
                 }
             }
         }
@@ -737,24 +729,13 @@ public:
         }
 
         // Переставить занятий у индивидов
-        for (size_t i = 0; i < classes.size(); i++)
+        for (size_t index_class = 0; index_class < this->classes.size(); index_class++)
         {
-            for (size_t j = 0; j < populations.size(); j++)
+            for (size_t index_individ = 0; index_individ < this->populations.size(); index_individ++)
             {
-                for (size_t k = 0; k < classes[i].schedules[j].size(); k++)
+                for (size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index_individ].size(); index_pair++)
                 {
-                    int old_id_audience = tClassses[i][j][k].id_audience;
-                    int new_id_audience = tClassses[i][vec_individs.at(j).index][k].id_audience;
-                    // Поменять ссылки для аудиторий если они разные
-                    if (new_id_audience != old_id_audience)
-                    {
-                        auto ref = &this->classes[i].schedules[j][k];
-                        auto it = find(this->populations[j].scheduleForAudiences[old_id_audience].begin(), this->populations[j].scheduleForAudiences[old_id_audience].end(), ref);
-                        this->populations[j].scheduleForAudiences[old_id_audience].erase(it);
-                        this->populations[j].scheduleForAudiences[new_id_audience].emplace(populations[j].scheduleForAudiences[new_id_audience].begin(), ref);
-                    }
-                    //Поменять значения пары
-                    this->classes[i].schedules[j][k] = tClassses[i][vec_individs[j].index][k];
+                    SwapSchedule(index_class, index_pair, index_individ, tClassses[index_class][vec_individs[index_individ].index][index_pair]);
                 }
             }
         }
@@ -771,26 +752,40 @@ public:
         return this->bestIndiv;
     }
 
-    vector <individ*> GetBestIndivids(const int &len_migration){
-        vector<individ*> bestIndivids = vector<individ*>();
+    // Получить лучших индивидов их расписание (массив индивидов, массив занятий, массив пар) и фитнес
+    vector<pair<vector<vector<schedule>>,int>> GetBestIndivids(const int &len_migration){
+        auto bestIndivids = vector<pair<vector<vector<schedule>>,int>>(len_migration);
 
-        for(int i =0; i<len_migration;i++){
-            bestIndivids.push_back(&this->populations[i]);
+        for(size_t i = 0; i < len_migration; i++){
+            auto index_individ = this->population_size - 1 - i;
+            bestIndivids[i].first = vector<vector<schedule>>(classes.size());
+            bestIndivids[i].second = this->populations[index_individ].fitnessValue.fitnessValue;
+            for (size_t j = 0; j < this->classes.size(); j++){
+                bestIndivids[i].first[j] = vector<schedule>(classes[j].schedules[index_individ].size());
+                for(size_t k = 0; k < this->classes[j].schedules[index_individ].size(); k++){
+                    bestIndivids[i].first[j][k] = this->classes[j].schedules[index_individ][k];
+                }
+            }
         }
         return bestIndivids;
 
     }
 
-    void ChangeWorstIndivids(vector <individ*> bestIndivids){
-        for(size_t i=0;i<bestIndivids.size();i++){
-            int indexWorst = this->population_size-1-i;
-            for(auto &clas: this->classes){
-                for(int j = 0;j<clas.schedules[indexWorst].size();j++){
-
+    //Замена худших индивидов на переданные
+    void ChangeWorstIndivids(vector<pair<vector<vector<schedule>>,int>> bestIndivids){
+        for(size_t i = 0; i < bestIndivids.size(); i++){
+            auto index_individ = this->population_size - 1 - i;
+            this->populations[index_individ].fitnessValue.fitnessValue = bestIndivids[i].second;
+            for (size_t index_class = 0; index_class < bestIndivids[i].first.size(); index_class++){
+                for(size_t index_pair = 0; index_pair < bestIndivids[i].first[index_class].size(); index_pair++){
+                    // Замена занятия
+                    auto sc = bestIndivids[i].first[index_class][index_pair];
+                    SwapSchedule(index_class, index_pair, index_individ, sc);
                 }
             }
         }
     }
+
 };
 
 #endif
