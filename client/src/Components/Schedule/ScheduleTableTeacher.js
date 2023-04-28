@@ -112,14 +112,16 @@ class ScheduleTableTeacher extends React.Component {
           wb={this.state.workBook}
           setWorkBook={this.setWorkBook}
         ></ButtonGetDataFile>
-        <Table
-          striped
-          ref={this.refTable}
-          bordered
-          className="border border-dark"
-        >
-          <TableHead filters={filters}></TableHead>
-        </Table>
+        <div className="table-responsive">
+          <Table
+            striped
+            ref={this.refTable}
+            bordered
+            className="border border-dark"
+          >
+            <TableHead filters={filters}></TableHead>
+          </Table>
+        </div>
       </>
     );
   }

@@ -111,15 +111,17 @@ class ScheduleTableAudience extends React.Component {
           wb={this.state.workBook}
           setWorkBook={this.setWorkBook}
         ></ButtonGetDataFile>
-        <Table
-          striped
-          ref={this.refTable}
-          bordered
-          className="border border-dark"
-        >
-          <TableHead info={info}></TableHead>
-          <DataTable filters={filters} info={info}></DataTable>
-        </Table>
+        <div className="table-responsive">
+          <Table
+            striped
+            ref={this.refTable}
+            bordered
+            className="border border-dark"
+          >
+            <TableHead info={info}></TableHead>
+            <DataTable filters={filters} info={info}></DataTable>
+          </Table>
+        </div>
       </>
     );
   }
