@@ -53,8 +53,13 @@ export default async function InitRecords(db) {
   ];
 
   let selection_options = [
-    { value: "rank_selection", label: "Відбір за ранком" },
-    { value: "roulette_selection", label: "Відбір за рулектою" },
+    { value: "ranging", label: "Відбір ранжуванням" },
+    { value: "roulette", label: "Відбір рулектою" },
+    { value: "tournament", label: "Відбір турнаментом " },
+  ];
+  let bool_options = [
+    { value: false, label: "Не застосовувати" },
+    { value: true, label: "Застосовувати" },
   ];
 
   await db.type_class.findOrCreate({
@@ -166,12 +171,20 @@ export default async function InitRecords(db) {
           value: 5,
         },
         {
-          name: "selection_type",
+          name: "type_selection",
           label: "Тип відбору індивідів",
           short: "тип відб.",
           type: "select",
           value: selection_options[0].value,
           options: selection_options,
+        },
+        {
+          name: "fitness_scaling",
+          label: "Масштабування фітнес значення",
+          short: "масшт.",
+          type: "select",
+          value: bool_options[0].value,
+          options: bool_options,
         },
         {
           name: "step",
