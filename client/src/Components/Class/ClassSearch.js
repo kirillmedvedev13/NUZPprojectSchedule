@@ -11,42 +11,42 @@ class ClassSearch extends React.Component {
 
     return (
       <div className="d-flex justify-content-center">
-        <Form onSubmit={(e) => e.preventDefault()} className="col-8">
+        <Form onSubmit={(e) => e.preventDefault()} className="col-12">
           <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
-            <Form.Label className="col-auto text-end">Спеціальність</Form.Label>
-            <Col className="col-10">
+            <Form.Label className="col-md-2 my-2">Спеціальність</Form.Label>
+            <Col className="col-md-10">
               <SelectSpecialty
                 handleChangeFilters={handleChangeFilters}
               ></SelectSpecialty>
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
-            <Form.Label className="col-auto text-end">Дисципліна</Form.Label>
-            <Col className="col-10">
+            <Form.Label className="col-md-2 my-2">Дисципліна</Form.Label>
+            <Col className="col-md-10">
               <SelectDiscipine
                 handleChangeFilters={handleChangeFilters}
               ></SelectDiscipine>
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
-            <Form.Label className="col-auto text-end">Викладач</Form.Label>
-            <Col className="col-10">
+            <Form.Label className="col-md-2 my-2">Викладач</Form.Label>
+            <Col className="col-md-10">
               <SelectTeacher
                 handleChangeFilters={handleChangeFilters}
               ></SelectTeacher>
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
-            <Form.Label className="col-auto text-end">Група</Form.Label>
-            <Col className="col-10">
+            <Form.Label className="col-md-2 my-2">Група</Form.Label>
+            <Col className="col-md-10">
               <SelectGroup
                 handleChangeFilters={handleChangeFilters}
               ></SelectGroup>
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
-            <Form.Label className="col-auto text-end">Семестр</Form.Label>
-            <Col className="col-10">
+            <Form.Label className="col-md-2 my-2">Семестр</Form.Label>
+            <Col className="col-md-10">
               <Form.Control
                 type="number"
                 min={1}

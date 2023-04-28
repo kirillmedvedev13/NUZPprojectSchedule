@@ -4,7 +4,6 @@ import { Table } from "react-bootstrap";
 import { GET_ALL_SCHEDULE_GROUPS } from "./queries";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
-import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
 import ButtonGetDataFile from "./ButtonGetDataFile";
 

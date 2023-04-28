@@ -9,7 +9,7 @@ class GroupSearch extends React.Component {
 
     return (
       <div className="d-flex justify-content-center">
-        <Form onSubmit={(e) => e.preventDefault()} className="col-8">
+        <Form onSubmit={(e) => e.preventDefault()} className="col-12">
           <Form.Group as={Row} className="my-2 mx-2 ">
             <InputGroup className="my-1">
               <InputGroup.Text>

@@ -5,7 +5,6 @@ import { Table } from "react-bootstrap";
 import { DaysWeek } from "./DaysWeek";
 import TableBody from "./TableBody";
 import GetGroupsName from "./GetGroupsName";
-import ButtonGetTableExcel from "./ButtonGetTableExcel";
 import SortSchedule from "./SortSchedule";
 import ButtonGetDataFile from "./ButtonGetDataFile";
 

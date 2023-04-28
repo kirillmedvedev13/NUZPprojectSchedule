@@ -112,7 +112,7 @@ class CathedraTable extends React.Component {
     const { item, openModal, openDialog } = this.state;
     return (
       <>
-        <div className="d-flex justify-content-end mx-2 my-2">
+        <div className="d-flex justify-content-end mx-3 my-2">
           <Button
             variant="primary"
             className="col-auto"
@@ -121,7 +121,7 @@ class CathedraTable extends React.Component {
             Додати Кафедру
           </Button>
         </div>
-        <div className="container-fluid w-100">
+        <div className="table-responsive w-100">
           <Table striped bordered hover>
             <thead>
               <tr>
