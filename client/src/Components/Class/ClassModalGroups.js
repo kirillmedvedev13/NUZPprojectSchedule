@@ -114,8 +114,8 @@ export function AddGroupToClass({
     // Если открыт селект
     return (
       <Form.Group as={Row} className="my-2 mx-2 px-0">
-        <Form.Label className="col-auto px-1">Виберiть групу</Form.Label>
-        <Col className="px-1">
+        <Form.Label className="col-md-2 my-2">Виберiть групу</Form.Label>
+        <Col className="col-md-7 my-2">
           <Select
             options={options}
             placeholder="Група"
@@ -130,88 +130,88 @@ export function AddGroupToClass({
             ></ValidatedMessage>
           )}
         </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              let groups;
-              if (selectedGroup) {
-                if (selectedGroup.name === "All")
-                  groups = query.data.GetAllGroups.filter(
-                    (gr) =>
-                      +gr.semester === +selectedGroup.semester &&
-                      gr.specialty.cathedra.short_name ===
+
+        <Button
+          className="col-md-3 my-2"
+          onClick={(e) => {
+            let groups;
+            if (selectedGroup) {
+              if (selectedGroup.name === "All")
+                groups = query.data.GetAllGroups.filter(
+                  (gr) =>
+                    +gr.semester === +selectedGroup.semester &&
+                    gr.specialty.cathedra.short_name ===
                       selectedGroup.specialty.cathedra.short_name
-                  );
-                else {
-                  groups = [selectedGroup];
-                }
+                );
+              else {
+                groups = [selectedGroup];
+              }
 
-                //Если полe в селекте не пустое
-                let checkSelectedGroups;
-                for (let gr of groups) {
-                  checkSelectedGroups = item.assigned_groups.find(
-                    (ag) => +ag.group.id === +gr.id
-                  );
-                  if (checkSelectedGroups) break;
-                }
+              //Если полe в селекте не пустое
+              let checkSelectedGroups;
+              for (let gr of groups) {
+                checkSelectedGroups = item.assigned_groups.find(
+                  (ag) => +ag.group.id === +gr.id
+                );
+                if (checkSelectedGroups) break;
+              }
 
-                if (!checkSelectedGroups) {
-                  // Проверка не добавлена ли эта группа уже в массив
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddGroupToClass({
-                      variables: {
-                        id_group: JSON.stringify(groups),
-                        id_class: +item.id,
-                      },
-                    }).then((res) => {
-                      const ag = JSON.parse(res.data.AddGroupToClass.data);
-                      if (res.data.AddGroupToClass.successful) {
-                        handleChangeItem("assigned_groups", [
-                          ...item.assigned_groups,
-                          ...ag.map((assigned_group) => {
-                            return {
-                              id: assigned_group.id,
-                              group: query.data.GetAllGroups.find(
-                                (gr) => +gr.id === +assigned_group.id_group
-                              ),
-                            };
-                          }),
-                        ]);
-                      }
-                      CreateNotification(res.data.AddGroupToClass);
-                    });
-                  } else {
-                    // Создание элемента
-                    let arrAG = item.assigned_groups;
-                    groups.forEach((gr) => {
-                      arrAG.push({
-                        id: counterGroups,
-                        group: gr,
-                      });
-
-                      handleIncCounter("counterGroups");
-                    });
-                    handleChangeItem("assigned_groups", arrAG);
-                  }
-                  handleChangeState("selectedGroup", null);
-                } else {
-                  handleChangeState("validatedSelectedGroup", {
-                    status: false,
-                    message: "Група вже додана!",
+              if (!checkSelectedGroups) {
+                // Проверка не добавлена ли эта группа уже в массив
+                if (item.id) {
+                  // Если редактирование элемента
+                  AddGroupToClass({
+                    variables: {
+                      id_group: JSON.stringify(groups),
+                      id_class: +item.id,
+                    },
+                  }).then((res) => {
+                    const ag = JSON.parse(res.data.AddGroupToClass.data);
+                    if (res.data.AddGroupToClass.successful) {
+                      handleChangeItem("assigned_groups", [
+                        ...item.assigned_groups,
+                        ...ag.map((assigned_group) => {
+                          return {
+                            id: assigned_group.id,
+                            group: query.data.GetAllGroups.find(
+                              (gr) => +gr.id === +assigned_group.id_group
+                            ),
+                          };
+                        }),
+                      ]);
+                    }
+                    CreateNotification(res.data.AddGroupToClass);
                   });
+                } else {
+                  // Создание элемента
+                  let arrAG = item.assigned_groups;
+                  groups.forEach((gr) => {
+                    arrAG.push({
+                      id: counterGroups,
+                      group: gr,
+                    });
+
+                    handleIncCounter("counterGroups");
+                  });
+                  handleChangeItem("assigned_groups", arrAG);
                 }
+                handleChangeState("selectedGroup", null);
               } else {
                 handleChangeState("validatedSelectedGroup", {
                   status: false,
-                  message: "Група не вибрана!",
+                  message: "Група вже додана!",
                 });
               }
-            }}
-          >
-            Зберегти
-          </Button>
-        </Col>
+            } else {
+              handleChangeState("validatedSelectedGroup", {
+                status: false,
+                message: "Група не вибрана!",
+              });
+            }
+          }}
+        >
+          Зберегти
+        </Button>
       </Form.Group>
     );
   } else {

@@ -48,8 +48,8 @@ class DisciplineModal extends React.Component {
           <Modal.Body>
             <Form>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва дисципліни</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Назва дисципліни</Form.Label>
+                <Col className="col-md-10">
                   <Form.Control
                     required
                     placeholder="Дисципліни"
@@ -65,10 +65,10 @@ class DisciplineModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">
+                <Form.Label className="col-md-2">
                   Закріплені спеціальності
                 </Form.Label>
-                <Col>
+                <Col className="col-md-10">
                   <AddSpecialtyToDiscipline
                     item={item}
                     handleChangeItem={handleChangeItem}
@@ -94,14 +94,20 @@ class DisciplineModal extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Закрити
-            </Button>
-            <SaveButton
-              item={item}
-              handleCloseModal={this.handleClose}
-              handleChangeState={this.handleChangeState}
-            ></SaveButton>
+            <Row className="w-100 justify-content-end mx-3">
+              <Button
+                className="col-md-3 mx-2 my-2"
+                variant="secondary"
+                onClick={this.handleClose}
+              >
+                Закрити
+              </Button>
+              <SaveButton
+                item={item}
+                handleCloseModal={this.handleClose}
+                handleChangeState={this.handleChangeState}
+              ></SaveButton>
+            </Row>
           </Modal.Footer>
         </Modal>
       </>

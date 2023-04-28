@@ -42,8 +42,8 @@ class TeacherModal extends React.Component {
           <Modal.Body>
             <Form>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Ім'я</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Ім'я</Form.Label>
+                <Col className="col-md-10">
                   <Form.Control
                     required
                     placeholder="Ім'я"
@@ -59,8 +59,8 @@ class TeacherModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Прізвище</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Прізвище</Form.Label>
+                <Col className="col-md-10">
                   <Form.Control
                     required
                     placeholder="Прізвище"
@@ -76,8 +76,8 @@ class TeacherModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">По-батькові</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">По-батькові</Form.Label>
+                <Col className="col-md-10">
                   <Form.Control
                     required
                     placeholder="По-батькові"
@@ -93,8 +93,8 @@ class TeacherModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва кафедри</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Назва кафедри</Form.Label>
+                <Col className="col-md-10">
                   <SelectCathedras
                     handleChangeItem={handleChangeItem}
                     handleChangeState={this.handleChangeState}
@@ -108,14 +108,20 @@ class TeacherModal extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Закрити
-            </Button>
-            <SaveButton
-              item={item}
-              handleCloseModal={this.handleClose}
-              handleChangeState={this.handleChangeState}
-            ></SaveButton>
+            <Row className="w-100 justify-content-end mx-3">
+              <Button
+                className="col-md-3 mx-2 my-2"
+                variant="secondary"
+                onClick={this.handleClose}
+              >
+                Закрити
+              </Button>
+              <SaveButton
+                item={item}
+                handleCloseModal={this.handleClose}
+                handleChangeState={this.handleChangeState}
+              ></SaveButton>
+            </Row>
           </Modal.Footer>
         </Modal>
       </>

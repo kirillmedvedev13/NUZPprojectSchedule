@@ -5,7 +5,6 @@ import React from "react";
 import ButtonGetTemplate from "./ButtonGetTemplate";
 import XLSX from "xlsx-color";
 import { CreateNotification } from "../../Alert.js";
-import NaviBarAdmin from "../NaviBarAdmin.js"
 
 export default class SubmitDataSheet extends React.Component {
   constructor(args) {
@@ -15,7 +14,7 @@ export default class SubmitDataSheet extends React.Component {
       id_cathedra: null,
       sheets: [],
       sheetIndex: null,
-    }
+    };
     this.setFile = this.setFile.bind(this);
   }
 
@@ -48,10 +47,11 @@ export default class SubmitDataSheet extends React.Component {
   render() {
     return (
       <>
-        <NaviBarAdmin></NaviBarAdmin>
-        <div className="d-flex justify-content-center  ">
+        <div className="col-md-6 offset-md-3">
           <Card className="my-2">
-            <Card.Header className="text-center">Відомість заручень</Card.Header>
+            <Card.Header className="text-center">
+              Відомість заручень
+            </Card.Header>
             <Card.Body>
               <Form.Group controlId="formFileLg" className=" bg-light mb-3">
                 <Form.Control

@@ -90,92 +90,91 @@ export function AddTeacherToClass({
     // Если открыт селект
     return (
       <Form.Group as={Row} className="my-2 mx-2 px-0">
-        <Form.Label className="col-auto px-1">Виберiть викладача</Form.Label>
-        <Col className="px-1">
-          <Select
-            options={options}
-            placeholder="Викладач"
-            defaultValue={() => {
-              if (selectedTeacher) {
-                return {
-                  label: `${selectedTeacher.surname} ${selectedTeacher.name} ${selectedTeacher.patronymic} - ${selectedTeacher.cathedra.short_name}`,
-                  value: +selectedTeacher.id,
-                }
-              }
-            }}
-            onChange={(e) => {
-              handleChangeState(
-                "selectedTeacher",
-                query.data.GetAllTeachers.find((t) => +t.id === +e.value)
+        <Form.Label className="col-md-2 my-2">Виберiть викладача</Form.Label>
+        <Select
+          className="col-md-7 my-2"
+          options={options}
+          placeholder="Викладач"
+          defaultValue={() => {
+            if (selectedTeacher) {
+              return {
+                label: `${selectedTeacher.surname} ${selectedTeacher.name} ${selectedTeacher.patronymic} - ${selectedTeacher.cathedra.short_name}`,
+                value: +selectedTeacher.id,
+              };
+            }
+          }}
+          onChange={(e) => {
+            handleChangeState(
+              "selectedTeacher",
+              query.data.GetAllTeachers.find((t) => +t.id === +e.value)
+            );
+            handleChangeState("validatedSelectedTeacher", {
+              status: true,
+              message: "",
+            });
+          }}
+        ></Select>
+        {!validatedSelectedTeacher.status && (
+          <ValidatedMessage
+            message={validatedSelectedTeacher.message}
+          ></ValidatedMessage>
+        )}
+
+        <Button
+          className="col-md-3 my-2"
+          onClick={(e) => {
+            if (selectedTeacher) {
+              //Если полe в селекте не пустое
+              // Проверка не добавлена ли этот учитель уже в массив
+              const checkSelectedTeachers = item.assigned_teachers.find(
+                (at) => +at.teacher.id === +selectedTeacher.id
               );
-              handleChangeState("validatedSelectedTeacher", {
-                status: true,
-                message: "",
-              });
-            }}
-          ></Select>
-          {!validatedSelectedTeacher.status && (
-            <ValidatedMessage
-              message={validatedSelectedTeacher.message}
-            ></ValidatedMessage>
-          )}
-        </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              if (selectedTeacher) {
-                //Если полe в селекте не пустое
-                // Проверка не добавлена ли этот учитель уже в массив
-                const checkSelectedTeachers = item.assigned_teachers.find(
-                  (at) => +at.teacher.id === +selectedTeacher.id
-                );
-                if (!checkSelectedTeachers) {
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddTeachToClass({
-                      variables: {
-                        id_teacher: +selectedTeacher.id,
-                        id_class: +item.id,
-                      },
-                    }).then((res) => {
-                      const at = JSON.parse(res.data.AddTeacherToClass.data);
-                      if (res.data.AddTeacherToClass.successful) {
-                        handleChangeItem("assigned_teachers", [
-                          ...item.assigned_teachers,
-                          {
-                            id: at.id,
-                            teacher: selectedTeacher,
-                          },
-                        ]);
-                      }
-                      CreateNotification(res.data.AddTeacherToClass);
-                    });
-                  } else {
-                    let arrAT = item.assigned_teachers;
-                    arrAT.push({
-                      id: counterTeachers,
-                      teacher: selectedTeacher,
-                    });
-                    handleChangeItem("assigned_teachers", arrAT);
-                    handleIncCounter("counterTeachers");
-                  }
-                } else {
-                  handleChangeState("validatedSelectedTeacher", {
-                    status: false,
-                    message: "Викладач вже додан!",
+              if (!checkSelectedTeachers) {
+                if (item.id) {
+                  // Если редактирование элемента
+                  AddTeachToClass({
+                    variables: {
+                      id_teacher: +selectedTeacher.id,
+                      id_class: +item.id,
+                    },
+                  }).then((res) => {
+                    const at = JSON.parse(res.data.AddTeacherToClass.data);
+                    if (res.data.AddTeacherToClass.successful) {
+                      handleChangeItem("assigned_teachers", [
+                        ...item.assigned_teachers,
+                        {
+                          id: at.id,
+                          teacher: selectedTeacher,
+                        },
+                      ]);
+                    }
+                    CreateNotification(res.data.AddTeacherToClass);
                   });
+                } else {
+                  let arrAT = item.assigned_teachers;
+                  arrAT.push({
+                    id: counterTeachers,
+                    teacher: selectedTeacher,
+                  });
+                  handleChangeItem("assigned_teachers", arrAT);
+                  handleIncCounter("counterTeachers");
                 }
               } else {
                 handleChangeState("validatedSelectedTeacher", {
                   status: false,
-                  message: "Викладач не вибран!",
+                  message: "Викладач вже додан!",
                 });
               }
-            }}
-          >
-            Зберегти
-          </Button>
-        </Col>
+            } else {
+              handleChangeState("validatedSelectedTeacher", {
+                status: false,
+                message: "Викладач не вибран!",
+              });
+            }
+          }}
+        >
+          Зберегти
+        </Button>
       </Form.Group>
     );
   } else {

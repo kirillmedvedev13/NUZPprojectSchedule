@@ -3,7 +3,6 @@ import React from "react";
 import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "../queries.js";
-import NaviBarAdmin from "../NaviBarAdmin.js";
 
 function DataForm() {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
@@ -16,23 +15,23 @@ function DataForm() {
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Загальний фітнес</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Загальний фітнес</Form.Label>
+        <Col className="col-md-9">
           <Form.Control value={fitnessValue?.fitnessValue} readOnly />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Фітнес рек. час</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Фітнес рек. час</Form.Label>
+        <Col className="col-md-9">
           <Form.Control value={fitnessValue?.fitnessSameRecSc} readOnly />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Фітнес груп:</Form.Label>
+        <Form.Label className="col-md-3">Фітнес груп:</Form.Label>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Загальний</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Загальний</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessGr?.fitnessValue}
             readOnly
@@ -40,8 +39,8 @@ function DataForm() {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вікна</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вікна</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessGr?.fitnessGrWin}
             readOnly
@@ -49,8 +48,8 @@ function DataForm() {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Накладання занять</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Накладання занять</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessGr?.fitnessSameTimesSc}
             readOnly
@@ -58,11 +57,11 @@ function DataForm() {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Фітнес викладачів:</Form.Label>
+        <Form.Label className="col-md-3">Фітнес викладачів:</Form.Label>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Загальний</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Загальний</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessTeach?.fitnessValue}
             readOnly
@@ -70,8 +69,8 @@ function DataForm() {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вікна</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вікна</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessTeach?.fitnessTeachWin}
             readOnly
@@ -79,8 +78,8 @@ function DataForm() {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Накладання занять</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Накладання занять</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessTeach?.fitnessSameTimesSc}
             readOnly
@@ -88,11 +87,11 @@ function DataForm() {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Фітнес аудиторій:</Form.Label>
+        <Form.Label className="col-md-3">Фітнес аудиторій:</Form.Label>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Накладання занять</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Накладання занять</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={fitnessValue?.fitnessAud?.fitnessSameTimesSc}
             readOnly
@@ -110,8 +109,7 @@ export default class ScheduleData extends React.Component {
   render() {
     return (
       <>
-        <NaviBarAdmin></NaviBarAdmin>
-        <div className="d-flex justify-content-center  ">
+        <div className="col-md-6 offset-md-3">
           <Card className="my-2">
             <Card.Header className="text-center">
               Дані про поточний розклад

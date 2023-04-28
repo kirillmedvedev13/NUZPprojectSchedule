@@ -161,7 +161,7 @@ export default class MultiCharts extends React.Component {
           <Button onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
         </div>
         <div
-          className="d-flex justify-content-center mx-5"
+          className="w-100 justify-content-center mx-5 my-2"
           id={`form ${nameAlgorithm} `}
         >
           <LineChart

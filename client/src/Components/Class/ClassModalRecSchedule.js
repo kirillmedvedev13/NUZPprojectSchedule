@@ -97,26 +97,27 @@ export function AddRecScheduleToClass({
     // Если открыт селект
     return (
       <Form.Group as={Row} className="my-2 mx-2 px-0 ">
-        <Form.Label className="col-auto px-1">Виберiть час</Form.Label>
-        <Col className="px-1">
-          <Select
-            options={options}
-            placeholder="День тижня"
-            onChange={(e) => {
-              handleChangeState("selectedRecDayWeek", +e.value);
-              handleChangeState("validatedRecDayWeek", {
-                status: true,
-              });
-              handleChangeState("validatedRecNumberPair", { status: true });
-            }}
-          ></Select>
-          {!validatedRecDayWeek.status && (
-            <ValidatedMessage
-              message={validatedRecDayWeek.message}
-            ></ValidatedMessage>
-          )}
-        </Col>
-        <Col className="px-1">
+        <Form.Label className="col-md-2 my-2">Виберiть час</Form.Label>
+
+        <Select
+          className="col-md-4 my-2"
+          options={options}
+          placeholder="День тижня"
+          onChange={(e) => {
+            handleChangeState("selectedRecDayWeek", +e.value);
+            handleChangeState("validatedRecDayWeek", {
+              status: true,
+            });
+            handleChangeState("validatedRecNumberPair", { status: true });
+          }}
+        ></Select>
+        {!validatedRecDayWeek.status && (
+          <ValidatedMessage
+            message={validatedRecDayWeek.message}
+          ></ValidatedMessage>
+        )}
+
+        <Col className="col-md-4 my-2">
           <Form.Control
             type="number"
             placeholder="Номер пари"
@@ -146,83 +147,80 @@ export function AddRecScheduleToClass({
             ></ValidatedMessage>
           )}
         </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              if (selectedRecDayWeek && selectedRecNumberPair) {
-                //Если полe в селекте не пустое
-                const checkSelectedRecSchedule =
-                  item.recommended_schedules.find(
-                    (obj) =>
-                      +obj.day_week === +selectedRecDayWeek &&
-                      +obj.number_pair === +selectedRecNumberPair
-                  );
-                if (!checkSelectedRecSchedule) {
-                  // Проверка не добавлена ли эта аудитория уже в массив
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddRecScheduleToClass({
-                      variables: {
-                        day_week: +selectedRecDayWeek,
-                        number_pair: +selectedRecNumberPair,
-                        id_class: +item.id,
-                      },
-                    }).then((res) => {
-                      const rs = JSON.parse(
-                        res.data.AddRecScheduleToClass.data
-                      );
-                      if (res.data.AddRecScheduleToClass.successful) {
-                        handleChangeItem("recommended_schedules", [
-                          ...item.recommended_schedules,
-                          {
-                            id: rs.id,
-                            day_week: rs.day_week,
-                            number_pair: rs.number_pair,
-                          },
-                        ]);
-                      }
-                      CreateNotification(res.data.AddRecScheduleToClass);
-                    });
-                  } else {
-                    // Создание элемента
-                    let arrRS = item.recommended_schedules;
-                    arrRS.push({
-                      id: counterRecSchedules,
-                      day_week: selectedRecDayWeek,
-                      number_pair: selectedRecNumberPair,
-                    });
-                    handleChangeItem("recommended_schedules", arrRS);
-                    handleIncCounter("counterRecSchedules");
-                  }
-                  handleChangeState("selectedRecNumberPair", null);
-                  handleChangeState("selectedRecDayWeek", null);
+
+        <Button
+          className="col-md-2 my-2"
+          onClick={(e) => {
+            if (selectedRecDayWeek && selectedRecNumberPair) {
+              //Если полe в селекте не пустое
+              const checkSelectedRecSchedule = item.recommended_schedules.find(
+                (obj) =>
+                  +obj.day_week === +selectedRecDayWeek &&
+                  +obj.number_pair === +selectedRecNumberPair
+              );
+              if (!checkSelectedRecSchedule) {
+                // Проверка не добавлена ли эта аудитория уже в массив
+                if (item.id) {
+                  // Если редактирование элемента
+                  AddRecScheduleToClass({
+                    variables: {
+                      day_week: +selectedRecDayWeek,
+                      number_pair: +selectedRecNumberPair,
+                      id_class: +item.id,
+                    },
+                  }).then((res) => {
+                    const rs = JSON.parse(res.data.AddRecScheduleToClass.data);
+                    if (res.data.AddRecScheduleToClass.successful) {
+                      handleChangeItem("recommended_schedules", [
+                        ...item.recommended_schedules,
+                        {
+                          id: rs.id,
+                          day_week: rs.day_week,
+                          number_pair: rs.number_pair,
+                        },
+                      ]);
+                    }
+                    CreateNotification(res.data.AddRecScheduleToClass);
+                  });
                 } else {
-                  handleChangeState("selectedRecDayWeek", {
-                    status: false,
-                    message: "",
+                  // Создание элемента
+                  let arrRS = item.recommended_schedules;
+                  arrRS.push({
+                    id: counterRecSchedules,
+                    day_week: selectedRecDayWeek,
+                    number_pair: selectedRecNumberPair,
                   });
-                  handleChangeState("validatedRecNumberPair", {
-                    status: false,
-                    message: "Запис вже додано!",
-                  });
+                  handleChangeItem("recommended_schedules", arrRS);
+                  handleIncCounter("counterRecSchedules");
                 }
+                handleChangeState("selectedRecNumberPair", null);
+                handleChangeState("selectedRecDayWeek", null);
               } else {
-                if (!selectedRecDayWeek)
-                  handleChangeState("validatedRecDayWeek", {
-                    status: false,
-                    message: "День тижня не вибраний!",
-                  });
-                if (!selectedRecNumberPair)
-                  handleChangeState("validatedRecNumberPair", {
-                    status: false,
-                    message: "Номер пари не вибраний!",
-                  });
+                handleChangeState("selectedRecDayWeek", {
+                  status: false,
+                  message: "",
+                });
+                handleChangeState("validatedRecNumberPair", {
+                  status: false,
+                  message: "Запис вже додано!",
+                });
               }
-            }}
-          >
-            Зберегти
-          </Button>
-        </Col>
+            } else {
+              if (!selectedRecDayWeek)
+                handleChangeState("validatedRecDayWeek", {
+                  status: false,
+                  message: "День тижня не вибраний!",
+                });
+              if (!selectedRecNumberPair)
+                handleChangeState("validatedRecNumberPair", {
+                  status: false,
+                  message: "Номер пари не вибраний!",
+                });
+            }
+          }}
+        >
+          Зберегти
+        </Button>
       </Form.Group>
     );
   } else {

@@ -15,15 +15,16 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: +item.id,
-        name: item.name,
-        short_name: item.short_name,
-      },
-    }
+        variables: {
+          id: +item.id,
+          name: item.name,
+          short_name: item.short_name,
+        },
+      }
     : { variables: { name: item.name, short_name: item.short_name } };
   return (
     <Button
+      className="col-md-3 mx-2 my-2"
       variant="primary"
       onClick={(e) => {
         if (item.name && item.short_name) {
@@ -33,8 +34,7 @@ export default function SaveButton({
               if (res.data.UpdateCathedra.successful) {
                 handleCloseModal();
               }
-            }
-            else {
+            } else {
               CreateNotification(res.data.CreateCathedra);
               if (res.data.CreateCathedra.successful) {
                 handleCloseModal();

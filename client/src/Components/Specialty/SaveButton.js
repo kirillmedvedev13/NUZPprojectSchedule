@@ -14,22 +14,23 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: +item.id,
-        name: item.name,
-        code: +item.code,
-        id_cathedra: +item.cathedra.id,
-      },
-    }
+        variables: {
+          id: +item.id,
+          name: item.name,
+          code: +item.code,
+          id_cathedra: +item.cathedra.id,
+        },
+      }
     : {
-      variables: {
-        name: item.name,
-        id_cathedra: +item.cathedra.id,
-        code: +item.code,
-      },
-    };
+        variables: {
+          name: item.name,
+          id_cathedra: +item.cathedra.id,
+          code: +item.code,
+        },
+      };
   return (
     <Button
+      className="col-md-3 mx-2 my-2"
       variant="primary"
       onClick={(e) => {
         if (item.name && item.cathedra.id && item.code !== null) {
@@ -39,8 +40,7 @@ export default function SaveButton({
               if (res.data.UpdateSpecialty.successful) {
                 handleCloseModal();
               }
-            }
-            else {
+            } else {
               CreateNotification(res.data.CreateSpecialty);
               if (res.data.CreateSpecialty.successful) {
                 handleCloseModal();

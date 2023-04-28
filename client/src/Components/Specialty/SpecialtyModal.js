@@ -42,8 +42,10 @@ class SpecialtyModal extends React.Component {
           <Modal.Body>
             <Form>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва спеціальності</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">
+                  Назва спеціальності
+                </Form.Label>
+                <Col className="col-md-10">
                   <Form.Control
                     required
                     placeholder="Спеціальність"
@@ -59,8 +61,8 @@ class SpecialtyModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Код спеціальності</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Код спеціальності</Form.Label>
+                <Col className="col-md-10">
                   <Form.Control
                     type="number"
                     required
@@ -77,8 +79,8 @@ class SpecialtyModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва кафедри</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Назва кафедри</Form.Label>
+                <Col className="col-md-10">
                   <SelectCathedras
                     handleChangeItem={handleChangeItem}
                     handleChangeState={this.handleChangeState}
@@ -92,14 +94,20 @@ class SpecialtyModal extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Закрити
-            </Button>
-            <SaveButton
-              item={item}
-              handleCloseModal={this.handleClose}
-              handleChangeState={this.handleChangeState}
-            ></SaveButton>
+            <Row className="w-100 justify-content-end mx-3">
+              <Button
+                className="col-md-3 mx-2 my-2"
+                variant="secondary"
+                onClick={this.handleClose}
+              >
+                Закрити
+              </Button>
+              <SaveButton
+                item={item}
+                handleCloseModal={this.handleClose}
+                handleChangeState={this.handleChangeState}
+              ></SaveButton>
+            </Row>
           </Modal.Footer>
         </Modal>
       </>

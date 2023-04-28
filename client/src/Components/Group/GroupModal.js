@@ -39,8 +39,10 @@ class GroupModal extends React.Component {
           <Modal.Body>
             <Form>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва спеціальності</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2 my-1">
+                  Назва спеціальності
+                </Form.Label>
+                <Col className="col-md-10 my-1">
                   <SelectSpecialties
                     handleChangeState={this.handleChangeState}
                     handleChangeItem={handleChangeItem}
@@ -52,8 +54,8 @@ class GroupModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Назва групи</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2 my-2">Назва групи</Form.Label>
+                <Col className="col-md-10 my-1">
                   <Form.Control
                     required
                     placeholder="Група"
@@ -69,8 +71,10 @@ class GroupModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Кількість студентів</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2 my-1">
+                  Кількість студентів
+                </Form.Label>
+                <Col className="col-md-10 my-1">
                   <Form.Control
                     required
                     placeholder="Кількість студентів"
@@ -86,8 +90,8 @@ class GroupModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Семестр</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2 my-1">Семестр</Form.Label>
+                <Col className="col-md-10 my-1">
                   <Form.Control
                     required
                     placeholder="Семестр"
@@ -105,14 +109,20 @@ class GroupModal extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Закрити
-            </Button>
-            <SaveButton
-              item={item}
-              handleCloseModal={this.handleClose}
-              handleChangeState={this.handleChangeState}
-            ></SaveButton>
+            <Row className="w-100 justify-content-end mx-3">
+              <Button
+                className="col-md-3 mx-2 my-2"
+                variant="secondary"
+                onClick={this.handleClose}
+              >
+                Закрити
+              </Button>
+              <SaveButton
+                item={item}
+                handleCloseModal={this.handleClose}
+                handleChangeState={this.handleChangeState}
+              ></SaveButton>
+            </Row>
           </Modal.Footer>
         </Modal>
       </>

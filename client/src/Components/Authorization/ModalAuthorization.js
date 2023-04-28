@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, } from "react-bootstrap";
+import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { LoginUser } from "./mutations";
 import { useMutation } from "@apollo/client";
 import { CreateNotification } from "../Alert";
-import { Table } from "react-bootstrap";
 
 function ModalAuthorization(props) {
   const [email, setEmail] = useState(null);
@@ -51,44 +50,43 @@ function ModalAuthorization(props) {
           <Modal.Title>Авторизація</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Table borderless>
-              <tbody>
-                <tr>
-                  <td>
-                    <Form.Label className="col-auto">Почта: </Form.Label>
-                  </td>
-                  <td>
-                    <Form.Control
-                      className="col"
-                      type="email"
-                      onChange={handleChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <Form.Label className="col-auto">Пароль: </Form.Label>{" "}
-                  </td>
-                  <td>
-                    <Form.Control
-                      className="col"
-                      type="password"
-                      onChange={handleChange}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </Form>
+          <Form.Group as={Row} className="my-2 mx-2 justify-content-between">
+            <Form.Label className="col-md-2 my-2">Почта: </Form.Label>
+            <Col className="col-md-10 my-1">
+              <Form.Control
+                className="col"
+                type="email"
+                onChange={handleChange}
+              />
+            </Col>
+            <Form.Label className="col-md-2 my-2">Пароль: </Form.Label>{" "}
+            <Col className="col-md-10 my-1">
+              <Form.Control
+                className="col"
+                type="password"
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Закрити
-          </Button>
-          <Button variant="primary" onClick={handleLogin}>
-            Авторизуватися
-          </Button>
+          <Row className="w-100 justify-content-end mx-3">
+            <Button
+              className="col-md-3 mx-2 my-2"
+              variant="secondary"
+              onClick={handleClose}
+            >
+              Закрити
+            </Button>
+
+            <Button
+              className="col-md-3 mx-2 my-2"
+              variant="primary"
+              onClick={handleLogin}
+            >
+              Авторизуватися
+            </Button>
+          </Row>
         </Modal.Footer>
       </Modal>
     </>

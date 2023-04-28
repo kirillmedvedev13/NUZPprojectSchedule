@@ -91,14 +91,17 @@ export function AddRecAudienceToClass({
     // Если открыт селект
     return (
       <Form.Group as={Row} className="my-2 mx-2 px-0">
-        <Form.Label className="col-auto px-1">Виберiть аудиторію</Form.Label>
-        <Col className="px-1">
+        <Form.Label className="col-md-2 my-2">Виберiть аудиторію</Form.Label>
+        <Col className="col-md-7 my-2">
           <Select
             options={options}
             placeholder="Аудиторія"
             defaultValue={() => {
               if (selectedRecAudience) {
-                return { label: selectedRecAudience.name, value: +selectedRecAudience.id }
+                return {
+                  label: selectedRecAudience.name,
+                  value: +selectedRecAudience.id,
+                };
               }
             }}
             onChange={(e) => {
@@ -117,66 +120,63 @@ export function AddRecAudienceToClass({
             ></ValidatedMessage>
           )}
         </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              if (selectedRecAudience) {
-                //Если полe в селекте не пустое
-                const checkSelectedRecAudience =
-                  item.recommended_audiences.find(
-                    (ra) => +ra.audience.id === +selectedRecAudience.id
-                  );
-                if (!checkSelectedRecAudience) {
-                  // Проверка не добавлена ли эта аудитория уже в массив
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddRecAudienceToClass({
-                      variables: {
-                        id_audience: Number(selectedRecAudience.id),
-                        id_class: Number(item.id),
-                      },
-                    }).then((res) => {
-                      const ra = JSON.parse(
-                        res.data.AddRecAudienceToClass.data
-                      );
-                      if (res.data.AddRecAudienceToClass.successful) {
-                        handleChangeItem("recommended_audiences", [
-                          ...item.recommended_audiences,
-                          {
-                            id: ra.id,
-                            audience: selectedRecAudience,
-                          },
-                        ]);
-                      }
-                      CreateNotification(res.data.AddRecAudienceToClass);
-                    });
-                  } else {
-                    // Создание элемента
-                    let arrRA = item.recommended_audiences;
-                    arrRA.push({
-                      id: counterRecAudiences,
-                      audience: selectedRecAudience,
-                    });
-                    handleChangeItem("recommended_audiences", arrRA);
-                    handleIncCounter("counterRecAudience");
-                  }
-                } else {
-                  handleChangeState("validatedSelectedRecAudience", {
-                    status: false,
-                    message: "Аудиторію вже додано!",
+
+        <Button
+          className="col-md-3 my-2"
+          onClick={(e) => {
+            if (selectedRecAudience) {
+              //Если полe в селекте не пустое
+              const checkSelectedRecAudience = item.recommended_audiences.find(
+                (ra) => +ra.audience.id === +selectedRecAudience.id
+              );
+              if (!checkSelectedRecAudience) {
+                // Проверка не добавлена ли эта аудитория уже в массив
+                if (item.id) {
+                  // Если редактирование элемента
+                  AddRecAudienceToClass({
+                    variables: {
+                      id_audience: Number(selectedRecAudience.id),
+                      id_class: Number(item.id),
+                    },
+                  }).then((res) => {
+                    const ra = JSON.parse(res.data.AddRecAudienceToClass.data);
+                    if (res.data.AddRecAudienceToClass.successful) {
+                      handleChangeItem("recommended_audiences", [
+                        ...item.recommended_audiences,
+                        {
+                          id: ra.id,
+                          audience: selectedRecAudience,
+                        },
+                      ]);
+                    }
+                    CreateNotification(res.data.AddRecAudienceToClass);
                   });
+                } else {
+                  // Создание элемента
+                  let arrRA = item.recommended_audiences;
+                  arrRA.push({
+                    id: counterRecAudiences,
+                    audience: selectedRecAudience,
+                  });
+                  handleChangeItem("recommended_audiences", arrRA);
+                  handleIncCounter("counterRecAudience");
                 }
               } else {
                 handleChangeState("validatedSelectedRecAudience", {
                   status: false,
-                  message: "Аудиторія не вибрана!",
+                  message: "Аудиторію вже додано!",
                 });
               }
-            }}
-          >
-            Зберегти
-          </Button>
-        </Col>
+            } else {
+              handleChangeState("validatedSelectedRecAudience", {
+                status: false,
+                message: "Аудиторія не вибрана!",
+              });
+            }
+          }}
+        >
+          Зберегти
+        </Button>
       </Form.Group>
     );
   } else {

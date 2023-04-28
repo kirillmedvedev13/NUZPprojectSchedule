@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Navbar, Container, Nav, Button } from "react-bootstrap";
+import { Navbar, Container, Nav, Button, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 class NaviBar extends React.Component {
@@ -74,13 +74,53 @@ class NaviBar extends React.Component {
                   >
                     Викладачі
                   </Nav.Link>
-                  <Nav.Link
-                    className="text-white-50 bg-dark"
-                    to="/admin_schedule_data"
-                    href="/admin_schedule_data"
-                  >
-                    Адмін
-                  </Nav.Link>
+                  <Dropdown className="text-white-50 bg-dark">
+                    <Dropdown.Toggle as={Nav.Link}>
+                      Адміністратор
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="text-white-50 bg-dark">
+                      <Dropdown.Item
+                        as={Nav.Link}
+                        href="/admin_schedule_data"
+                        to="/admin_schedule_data"
+                        className=" my-1 text-white-50 bg-dark"
+                      >
+                        Дані про поточний розклад
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Nav.Link}
+                        className="my-1 text-white-50 bg-dark"
+                        href="/admin_general_values"
+                        to="/admin_general_values"
+                      >
+                        Загальні дані
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Nav.Link}
+                        className="my-1 text-white-50 bg-dark"
+                        href="/admin_algorithms"
+                        to="/admin_algorithms"
+                      >
+                        Алгоритми
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Nav.Link}
+                        className="my-1 text-white-50 bg-dark"
+                        href="/admin_management_data"
+                        to="/admin_management_data"
+                      >
+                        Керування даними
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Nav.Link}
+                        className="my-1 text-white-50 bg-dark"
+                        href="/admin_submit_data_sheet"
+                        to="/admin_submit_data_sheet"
+                      >
+                        Завантаження відомостей
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </Fragment>
               )}
             </Nav>

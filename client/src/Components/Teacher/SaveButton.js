@@ -14,24 +14,25 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: +item.id,
-        name: item.name,
-        surname: item.surname,
-        patronymic: item.patronymic,
-        id_cathedra: +item.cathedra.id,
-      },
-    }
+        variables: {
+          id: +item.id,
+          name: item.name,
+          surname: item.surname,
+          patronymic: item.patronymic,
+          id_cathedra: +item.cathedra.id,
+        },
+      }
     : {
-      variables: {
-        name: item.name,
-        surname: item.surname,
-        patronymic: item.patronymic,
-        id_cathedra: +item.cathedra.id,
-      },
-    };
+        variables: {
+          name: item.name,
+          surname: item.surname,
+          patronymic: item.patronymic,
+          id_cathedra: +item.cathedra.id,
+        },
+      };
   return (
     <Button
+      className="col-md-3 mx-2 my-2"
       variant="primary"
       onClick={(e) => {
         if (item.name && item.surname && item.patronymic && item.cathedra.id) {

@@ -16,23 +16,24 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: +item.id,
-        name: item.name,
-        capacity: +item.capacity,
-        id_type_class: +item.type_class.id,
-      },
-    }
+        variables: {
+          id: +item.id,
+          name: item.name,
+          capacity: +item.capacity,
+          id_type_class: +item.type_class.id,
+        },
+      }
     : {
-      variables: {
-        name: item.name,
-        capacity: +item.capacity,
-        id_type_class: +item.type_class.id,
-        assigned_cathedras: JSON.stringify(item.assigned_audiences),
-      },
-    };
+        variables: {
+          name: item.name,
+          capacity: +item.capacity,
+          id_type_class: +item.type_class.id,
+          assigned_cathedras: JSON.stringify(item.assigned_audiences),
+        },
+      };
   return (
     <Button
+      className="col-md-3 mx-2 my-2"
       variant="primary"
       onClick={(e) => {
         if (item.name && item.capacity) {
@@ -42,8 +43,7 @@ export default function SaveButton({
               if (res.data.UpdateAudience.successful) {
                 handleCloseModal();
               }
-            }
-            else {
+            } else {
               CreateNotification(res.data.CreateAudience);
               if (res.data.CreateAudience.successful) {
                 handleCloseModal();

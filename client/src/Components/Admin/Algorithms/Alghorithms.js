@@ -1,7 +1,6 @@
 import React from "react";
 import { Form, Row, Card, Col } from "react-bootstrap";
 import SelectCathedra from "../SelectCathedra.js";
-import NaviBarAdmin from "../NaviBarAdmin.js";
 import SelectAlgoritm from "./SelectAlgorithm.js";
 import { GET_ALL_ALGORITHM } from "../queries";
 import { useQuery } from "@apollo/client";
@@ -41,7 +40,7 @@ function ChooseAlgorithm({ state, handleChangeState }) {
 
   return (
     <>
-      <div className="d-flex justify-content-center">
+      <div className="col-md-6 offset-md-3">
         <Card className="my-2">
           <Card.Header className="text-center">Вибір алгоритму</Card.Header>
           <Card.Footer>
@@ -88,7 +87,7 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
     <>
       {nameAlgorithm ? (
         <>
-          <div className="d-flex justify-content-center mx-5">
+          <div className="col-md-6 offset-md-3">
             <Card className="my-2">
               <Card.Header className="text-center">
                 {"Складання розклад за допомогою " + state.label}
@@ -96,8 +95,8 @@ function AlgorithmForm({ state, handleChangeState, refetch }) {
               <Card.Body>
                 {params.map((param) => (
                   <Form.Group as={Row} className="my-2 mx-2">
-                    <Form.Label className="col-5">{param.label}</Form.Label>
-                    <Col>
+                    <Form.Label className=" col-md-4">{param.label}</Form.Label>
+                    <Col className="col-md-8">
                       {param.type == "select" ? (
                         <Select
                           value={{
@@ -171,8 +170,7 @@ export default class Algorithms extends React.Component {
   render() {
     return (
       <>
-        <NaviBarAdmin></NaviBarAdmin>
-        <div className="d-flex justify-content-center">
+        <div className="col-md-6 offset-md-3">
           <Card className="my-2">
             <Card.Header className="text-center">Вибір кафедри</Card.Header>
             <Card.Footer>

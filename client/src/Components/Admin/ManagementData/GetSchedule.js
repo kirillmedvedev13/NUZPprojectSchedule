@@ -10,6 +10,7 @@ function QueryGetAllSchedule() {
   if (error) return `Error! ${error}`;
   return (
     <Button
+      className="w-100"
       onClick={(e) => {
         const blob = new Blob([JSON.stringify(data.GetAllSchedule)], {
           type: "text/plain;charset=utf-8",
@@ -17,17 +18,13 @@ function QueryGetAllSchedule() {
         file_saver.saveAs(blob, "schedule.json");
       }}
     >
-      Завантажити дані розкладу
+      Завантажити дані розкладу в json для алгоритму
     </Button>
   );
 }
 
 export default class GetSchedule extends React.Component {
   render() {
-    return (
-      <div className="d-flex justify-content-center m-2">
-        <QueryGetAllSchedule></QueryGetAllSchedule>
-      </div>
-    );
+    return <QueryGetAllSchedule></QueryGetAllSchedule>;
   }
 }

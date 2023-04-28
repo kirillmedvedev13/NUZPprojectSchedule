@@ -34,35 +34,38 @@ export default function AddSpecialtyToDiscipline({
 
   if (statusAddDisciplineToSpecialty) {
     return (
-      <Form.Group as={Row} className="my-2 mx-2 px-0">
-        <Form.Label className="col-auto px-1">
+      <Form.Group as={Row} className="w-100 my-2 ">
+        <Form.Label className="col-md-2  my-2">
           Виберiть спеціальність
         </Form.Label>
-        <Col className="px-1">
-          <Select
-            options={options}
-            placeholder="Спеціальність"
-            defaultValue={{ label: selectedSpecialtyToAdd?.name, value: +selectedSpecialtyToAdd?.id }}
-            onChange={(e) => {
-              handleChangeState(
-                "selectedSpecialtyToAdd",
-                query.data.GetAllSpecialties.find((s) => +s.id === +e.value)
-              );
-              handleChangeState("validatedSelectedSpecialtyToAdd", {
-                status: true,
-              });
-              handleChangeState("validatedSemesterToAdd", {
-                status: true,
-              });
-            }}
-          ></Select>
-          {!validatedSelectedSpecialtyToAdd.status && (
-            <ValidatedMessage
-              message={validatedSelectedSpecialtyToAdd.message}
-            ></ValidatedMessage>
-          )}
-        </Col>
-        <Col>
+        <Select
+          className="col-md-6  my-2"
+          options={options}
+          placeholder="Спеціальність"
+          defaultValue={{
+            label: selectedSpecialtyToAdd?.name,
+            value: +selectedSpecialtyToAdd?.id,
+          }}
+          onChange={(e) => {
+            handleChangeState(
+              "selectedSpecialtyToAdd",
+              query.data.GetAllSpecialties.find((s) => +s.id === +e.value)
+            );
+            handleChangeState("validatedSelectedSpecialtyToAdd", {
+              status: true,
+            });
+            handleChangeState("validatedSemesterToAdd", {
+              status: true,
+            });
+          }}
+        ></Select>
+        {!validatedSelectedSpecialtyToAdd.status && (
+          <ValidatedMessage
+            message={validatedSelectedSpecialtyToAdd.message}
+          ></ValidatedMessage>
+        )}
+
+        <Col className="col-md-2  my-2">
           <Form.Control
             required
             type="number"
@@ -84,75 +87,75 @@ export default function AddSpecialtyToDiscipline({
             ></ValidatedMessage>
           )}
         </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              if (selectedSpecialtyToAdd && selectedSemesterToAdd) {
-                const checkSelectedSpecialties = item.assigned_disciplines.find((disc) =>
+
+        <Button
+          className="col-md-2 my-2"
+          onClick={(e) => {
+            if (selectedSpecialtyToAdd && selectedSemesterToAdd) {
+              const checkSelectedSpecialties = item.assigned_disciplines.find(
+                (disc) =>
                   +disc.specialty.id === +selectedSpecialtyToAdd.id &&
                   +disc.semester === +selectedSemesterToAdd
-                );
-                if (!checkSelectedSpecialties) {
-                  // Проверка не добавлена ли эта специальность с таким семестром уже в массив
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddDiscToSpecialty({
-                      variables: {
-                        id_specialty: +selectedSpecialtyToAdd.id,
-                        semester: +selectedSemesterToAdd,
-                        id_discipline: +item.id,
+              );
+              if (!checkSelectedSpecialties) {
+                // Проверка не добавлена ли эта специальность с таким семестром уже в массив
+                if (item.id) {
+                  // Если редактирование элемента
+                  AddDiscToSpecialty({
+                    variables: {
+                      id_specialty: +selectedSpecialtyToAdd.id,
+                      semester: +selectedSemesterToAdd,
+                      id_discipline: +item.id,
+                    },
+                  }).then((res) => {
+                    const ad = JSON.parse(
+                      res.data.AddDisciplineToSpecialty.data
+                    );
+                    handleChangeItem("assigned_disciplines", [
+                      ...item.assigned_disciplines,
+                      {
+                        id: ad.id,
+                        specialty: selectedSpecialtyToAdd,
+                        semester: ad.semester,
                       },
-                    }).then((res) => {
-                      const ad = JSON.parse(
-                        res.data.AddDisciplineToSpecialty.data
-                      );
-                      handleChangeItem("assigned_disciplines", [
-                        ...item.assigned_disciplines,
-                        {
-                          id: ad.id,
-                          specialty: selectedSpecialtyToAdd,
-                          semester: ad.semester,
-                        },
-                      ]);
-                      CreateNotification(res.data.AddDisciplineToSpecialty);
-                    });
-                  } else {
-                    // Создание элемента
-                    let arrAD = item.assigned_disciplines;
-                    arrAD.push({
-                      id: counterSpecialties,
-                      semester: selectedSemesterToAdd,
-                      specialty: selectedSpecialtyToAdd,
-                    });
-                    handleChangeItem("assigned_disciplines", arrAD);
-                    handleIncCounter("counterSpecialties");
-                  }
-                } else {
-                  handleChangeState("validatedSelectedSpecialtyToAdd", {
-                    status: false,
-                    message: "Спеціальність з таким семестром вже додана",
+                    ]);
+                    CreateNotification(res.data.AddDisciplineToSpecialty);
                   });
+                } else {
+                  // Создание элемента
+                  let arrAD = item.assigned_disciplines;
+                  arrAD.push({
+                    id: counterSpecialties,
+                    semester: selectedSemesterToAdd,
+                    specialty: selectedSpecialtyToAdd,
+                  });
+                  handleChangeItem("assigned_disciplines", arrAD);
+                  handleIncCounter("counterSpecialties");
                 }
-              }
-              if (!selectedSemesterToAdd) {
-                handleChangeState("validatedSemesterToAdd", {
-                  status: false,
-                  message: "Семестр не вказан",
-                });
-              }
-              if (!selectedSpecialtyToAdd) {
+              } else {
                 handleChangeState("validatedSelectedSpecialtyToAdd", {
                   status: false,
-                  message: "Спеціальність не вибрана",
+                  message: "Спеціальність з таким семестром вже додана",
                 });
               }
             }
+            if (!selectedSemesterToAdd) {
+              handleChangeState("validatedSemesterToAdd", {
+                status: false,
+                message: "Семестр не вказан",
+              });
             }
-          >
-            Зберегти
-          </Button>
-        </Col>
-      </Form.Group >
+            if (!selectedSpecialtyToAdd) {
+              handleChangeState("validatedSelectedSpecialtyToAdd", {
+                status: false,
+                message: "Спеціальність не вибрана",
+              });
+            }
+          }}
+        >
+          Зберегти
+        </Button>
+      </Form.Group>
     );
   } else {
     return (

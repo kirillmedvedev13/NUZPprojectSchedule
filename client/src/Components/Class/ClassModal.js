@@ -76,8 +76,8 @@ class ClassModal extends React.Component {
           <Modal.Body>
             <Form>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Дисципліна</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Дисципліна</Form.Label>
+                <Col className="col-md-10">
                   <SelectAssignedDiscipline
                     item={item}
                     handleChangeState={this.handleChangeState}
@@ -89,10 +89,10 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">
+                <Form.Label className="col-md-2">
                   Кількість занять на тиждень
                 </Form.Label>
-                <Col>
+                <Col className="col-md-10">
                   <Form.Control
                     required
                     placeholder="Кількість занять на тиждень"
@@ -108,8 +108,8 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Тип заняття</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Тип заняття</Form.Label>
+                <Col className="col-md-10">
                   <SelectTypeClass
                     item={item}
                     handleChangeState={this.handleChangeState}
@@ -121,8 +121,10 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Закріплені викладачі</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">
+                  Закріплені викладачі
+                </Form.Label>
+                <Col className="col-md-10">
                   <AddTeacherToClass
                     item={item}
                     handleChangeItem={handleChangeItem}
@@ -142,8 +144,8 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Закріплені групи</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Закріплені групи</Form.Label>
+                <Col className="col-md-10">
                   <AddGroupToClass
                     item={item}
                     handleChangeItem={handleChangeItem}
@@ -161,10 +163,10 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">
+                <Form.Label className="col-md-2">
                   Рекомендовані аудиторії
                 </Form.Label>
-                <Col>
+                <Col className="col-md-10">
                   <AddRecAudienceToClass
                     item={item}
                     handleChangeItem={handleChangeItem}
@@ -186,8 +188,8 @@ class ClassModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-2">Рекомендований час</Form.Label>
-                <Col>
+                <Form.Label className="col-md-2">Рекомендований час</Form.Label>
+                <Col className="col-md-10">
                   <AddRecScheduleToClass
                     item={item}
                     handleChangeItem={handleChangeItem}
@@ -211,14 +213,20 @@ class ClassModal extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Закрити
-            </Button>
-            <SaveButton
-              item={item}
-              handleCloseModal={this.handleClose}
-              handleChangeState={this.handleChangeState}
-            ></SaveButton>
+            <Row className="w-100 justify-content-end mx-3">
+              <Button
+                className="col-md-3 mx-2 my-2"
+                variant="secondary"
+                onClick={this.handleClose}
+              >
+                Закрити
+              </Button>
+              <SaveButton
+                item={item}
+                handleCloseModal={this.handleClose}
+                handleChangeState={this.handleChangeState}
+              ></SaveButton>
+            </Row>
           </Modal.Footer>
         </Modal>
       </>

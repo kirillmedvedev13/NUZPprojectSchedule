@@ -33,86 +33,85 @@ export default function AddCathedraToAudience({
   if (statusAddCathedraToAudience) {
     // Если открыт селект
     return (
-      <Form.Group as={Row} className="my-2 mx-2 px-0">
-        <Form.Label className="col-auto px-1">Виберiть кафедру</Form.Label>
-        <Col className="px-1">
-          <Select
-            options={options}
-            placeholder="Кафедра"
-            defaultValue={{ label: selectedCathedraToAdd?.name, value: +selectedCathedraToAdd?.id }}
-            onChange={(e) => {
-              handleChangeState(
-                "selectedCathedraToAdd",
-                query.data.GetAllCathedras.find((c) => +c.id === +e.value)
+      <Form.Group as={Row} className="w-100 ">
+        <Form.Label className="col-md-2 my-2 ">Виберiть кафедру</Form.Label>
+        <Select
+          className="col-md-8 my-2"
+          options={options}
+          placeholder="Кафедра"
+          defaultValue={{
+            label: selectedCathedraToAdd?.name,
+            value: +selectedCathedraToAdd?.id,
+          }}
+          onChange={(e) => {
+            handleChangeState(
+              "selectedCathedraToAdd",
+              query.data.GetAllCathedras.find((c) => +c.id === +e.value)
+            );
+            handleChangeState("validatedSelectedCathedraToAdd", {
+              status: true,
+              message: "",
+            });
+          }}
+        ></Select>
+        {!validatedSelectedCathedraToAdd.status && (
+          <ValidatedMessage
+            message={validatedSelectedCathedraToAdd.message}
+          ></ValidatedMessage>
+        )}
+        <Button
+          className="col-md-2 my-2"
+          onClick={(e) => {
+            if (selectedCathedraToAdd) {
+              const checkSelectedCathedras = item.assigned_audiences.find(
+                (au) => +au.cathedra.id === +selectedCathedraToAdd.id
               );
-              handleChangeState("validatedSelectedCathedraToAdd", {
-                status: true,
-                message: "",
-              });
-            }}
-          ></Select>
-          {!validatedSelectedCathedraToAdd.status && (
-            <ValidatedMessage
-              message={validatedSelectedCathedraToAdd.message}
-            ></ValidatedMessage>
-          )}
-        </Col>
-        <Col className="col-auto px-1">
-          <Button
-            onClick={(e) => {
-              if (selectedCathedraToAdd) {
-                const checkSelectedCathedras = item.assigned_audiences.find(
-                  (au) => +au.cathedra.id === +selectedCathedraToAdd.id
-                );
-                if (!checkSelectedCathedras) {
-                  // Проверка не добавлена ли эта кафедра уже в массив
-                  if (item.id) {
-                    // Если редактирование элемента
-                    AddCathedraToAudience({
-                      variables: {
-                        id_cathedra: +selectedCathedraToAdd.id,
-                        id_audience: +item.id,
+              if (!checkSelectedCathedras) {
+                // Проверка не добавлена ли эта кафедра уже в массив
+                if (item.id) {
+                  // Если редактирование элемента
+                  AddCathedraToAudience({
+                    variables: {
+                      id_cathedra: +selectedCathedraToAdd.id,
+                      id_audience: +item.id,
+                    },
+                  }).then((res) => {
+                    const au = JSON.parse(res.data.AddCathedraToAudience.data);
+                    handleChangeItem("assigned_audiences", [
+                      ...item.assigned_audiences,
+                      {
+                        id: au.id,
+                        cathedra: selectedCathedraToAdd,
                       },
-                    }).then((res) => {
-                      const au = JSON.parse(
-                        res.data.AddCathedraToAudience.data
-                      );
-                      handleChangeItem("assigned_audiences", [
-                        ...item.assigned_audiences,
-                        {
-                          id: au.id,
-                          cathedra: selectedCathedraToAdd,
-                        },
-                      ]);
-                      CreateNotification(res.data.AddCathedraToAudience);
-                    });
-                  } else {
-                    // Создание элемента
-                    let arrAU = item.assigned_audiences;
-                    arrAU.push({
-                      id: counterCathedras,
-                      cathedra: selectedCathedraToAdd,
-                    });
-                    handleChangeItem("assigned_audiences", arrAU);
-                    handleIncCounter("counterCathedras");
-                  }
-                } else {
-                  handleChangeState("validatedSelectedCathedraToAdd", {
-                    status: false,
-                    message: "Кафедра вже додана",
+                    ]);
+                    CreateNotification(res.data.AddCathedraToAudience);
                   });
+                } else {
+                  // Создание элемента
+                  let arrAU = item.assigned_audiences;
+                  arrAU.push({
+                    id: counterCathedras,
+                    cathedra: selectedCathedraToAdd,
+                  });
+                  handleChangeItem("assigned_audiences", arrAU);
+                  handleIncCounter("counterCathedras");
                 }
               } else {
                 handleChangeState("validatedSelectedCathedraToAdd", {
                   status: false,
-                  message: "Кафедра не вибрана!",
+                  message: "Кафедра вже додана",
                 });
               }
-            }}
-          >
-            Зберегти
-          </Button>
-        </Col>
+            } else {
+              handleChangeState("validatedSelectedCathedraToAdd", {
+                status: false,
+                message: "Кафедра не вибрана!",
+              });
+            }
+          }}
+        >
+          Зберегти
+        </Button>
       </Form.Group>
     );
   } else {

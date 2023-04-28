@@ -15,24 +15,25 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: +item.id,
-        name: item.name,
-        number_students: +item.number_students,
-        semester: +item.semester,
-        id_specialty: +item.specialty.id,
-      },
-    }
+        variables: {
+          id: +item.id,
+          name: item.name,
+          number_students: +item.number_students,
+          semester: +item.semester,
+          id_specialty: +item.specialty.id,
+        },
+      }
     : {
-      variables: {
-        name: item.name,
-        number_students: +item.number_students,
-        semester: +item.semester,
-        id_specialty: +item.specialty.id,
-      },
-    };
+        variables: {
+          name: item.name,
+          number_students: +item.number_students,
+          semester: +item.semester,
+          id_specialty: +item.specialty.id,
+        },
+      };
   return (
     <Button
+      className="col-md-3 mx-2 my-2"
       variant="primary"
       onClick={(e) => {
         if (
@@ -47,8 +48,7 @@ export default function SaveButton({
               if (res.data.UpdateGroup.successful) {
                 handleCloseModal();
               }
-            }
-            else {
+            } else {
               CreateNotification(res.data.CreateGroup);
               if (res.data.CreateGroup.successful) {
                 handleCloseModal();
@@ -66,6 +66,6 @@ export default function SaveButton({
       }}
     >
       {item.id ? "Оновити" : "Додати"}
-    </Button >
+    </Button>
   );
 }

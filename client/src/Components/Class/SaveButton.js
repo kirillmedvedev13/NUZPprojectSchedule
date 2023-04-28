@@ -15,37 +15,38 @@ export default function SaveButton({
   if (error) return `Submission error! ${error.message}`;
   const variables = item.id
     ? {
-      variables: {
-        id: +item.id,
-        id_assigned_discipline: +item.assigned_discipline.id,
-        times_per_week: +item.times_per_week,
-        id_type_class: +item.type_class.id,
-      },
-    }
+        variables: {
+          id: +item.id,
+          id_assigned_discipline: +item.assigned_discipline.id,
+          times_per_week: +item.times_per_week,
+          id_type_class: +item.type_class.id,
+        },
+      }
     : {
-      variables: {
-        id_assigned_discipline: +item.assigned_discipline.id,
-        times_per_week: +item.times_per_week,
-        id_type_class: +item.type_class.id,
-        assigned_teachers: JSON.stringify(
-          item.assigned_teachers.map((item) => {
-            return +item.teacher.id;
-          })
-        ),
-        assigned_groups: JSON.stringify(
-          item.assigned_groups.map((item) => {
-            return +item.group.id;
-          })
-        ),
-        recommended_audiences: JSON.stringify(
-          item.recommended_audiences.map((item) => {
-            return +item.audience.id;
-          })
-        ),
-      },
-    };
+        variables: {
+          id_assigned_discipline: +item.assigned_discipline.id,
+          times_per_week: +item.times_per_week,
+          id_type_class: +item.type_class.id,
+          assigned_teachers: JSON.stringify(
+            item.assigned_teachers.map((item) => {
+              return +item.teacher.id;
+            })
+          ),
+          assigned_groups: JSON.stringify(
+            item.assigned_groups.map((item) => {
+              return +item.group.id;
+            })
+          ),
+          recommended_audiences: JSON.stringify(
+            item.recommended_audiences.map((item) => {
+              return +item.audience.id;
+            })
+          ),
+        },
+      };
   return (
     <Button
+      className="col-md-3 mx-2 my-2"
       variant="primary"
       onClick={(e) => {
         if (
@@ -59,8 +60,7 @@ export default function SaveButton({
               if (res.data.UpdateClass.successful) {
                 handleCloseModal();
               }
-            }
-            else {
+            } else {
               CreateNotification(res.data.CreateClass);
               if (res.data.CreateClass.successful) {
                 handleCloseModal();
@@ -81,6 +81,6 @@ export default function SaveButton({
       }}
     >
       {item.id ? "Оновити" : "Додати"}
-    </Button >
+    </Button>
   );
 }

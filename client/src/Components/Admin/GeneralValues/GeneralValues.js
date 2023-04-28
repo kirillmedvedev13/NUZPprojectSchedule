@@ -3,7 +3,6 @@ import { Form, Row, Col, Card } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import { GET_INFO } from "../queries.js";
 import ButtonUpdateInfo from "../ButtonUpdateInfo.js";
-import NaviBarAdmin from "../NaviBarAdmin.js";
 
 function DataForm({ handleChangeState, info }) {
   const { loading, error, data, refetch } = useQuery(GET_INFO);
@@ -21,8 +20,8 @@ function DataForm({ handleChangeState, info }) {
   return (
     <>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вага: вікна групи</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вага: вікна групи</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={general_values?.penaltyGrWin}
             type="number"
@@ -35,8 +34,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вага: вікна викладачiв</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вага: вікна викладачiв</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={general_values?.penaltyTeachWin}
             type="number"
@@ -49,8 +48,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вага: пізні заняття</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вага: пізні заняття</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={general_values?.penaltyLateSc}
             type="number"
@@ -63,8 +62,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вага: рівномірний розклад</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вага: рівномірний розклад</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={general_values?.penaltyEqSc}
             type="number"
@@ -77,8 +76,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вага: накладання занять</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вага: накладання занять</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={general_values?.penaltySameTimesSc}
             type="number"
@@ -91,8 +90,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Вага: співпадіння занять</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Вага: співпадіння занять</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={general_values?.penaltySameRecSc}
             type="number"
@@ -105,8 +104,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість днів</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Кількість днів</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={max_day}
             type="number"
@@ -118,8 +117,8 @@ function DataForm({ handleChangeState, info }) {
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="my-2 mx-2">
-        <Form.Label className="col-5">Кількість занять</Form.Label>
-        <Col>
+        <Form.Label className="col-md-3">Кількість занять</Form.Label>
+        <Col className="col-md-9">
           <Form.Control
             value={max_pair}
             type="number"
@@ -154,8 +153,7 @@ export default class GeneralValues extends React.Component {
   render() {
     return (
       <>
-        <NaviBarAdmin></NaviBarAdmin>
-        <div className="d-flex justify-content-center  ">
+        <div className="col-md-6 offset-md-3">
           <Card className="my-2">
             <Card.Header className="text-center">
               Загальні дані для алгоритмів
