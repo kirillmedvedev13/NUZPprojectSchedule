@@ -321,7 +321,15 @@ export default async function InitRecords(db) {
   await db.user.findOrCreate({
     where: { id: 1 },
     defaults: {
-      email: "admin@nuzp.com",
+      email: "admin1@nuzp.com",
+      password: "admin",
+    },
+  });
+
+  await db.user.findOrCreate({
+    where: { id: 2 },
+    defaults: {
+      email: "admin2@nuzp.com",
       password: "admin",
     },
   });
