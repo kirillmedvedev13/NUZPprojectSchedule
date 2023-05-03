@@ -4,7 +4,9 @@
 #include "../Libraries/TypeDefs.hpp"
 #include "../Libraries/BS_thread_pool.hpp"
 #include "../Libraries/Service.hpp"
+#include <cfloat>
 #include <vector>
+#include <climits>
 
 using namespace std;
 using namespace BS;
@@ -53,6 +55,10 @@ class EvolutionAlgorithm
     base_schedule &bs;
     vector<individ> populations;
     bestIndivid bestIndiv;
+    string type_selection;
+    bool fitness_scaling;
+    string type_crossing;
+    int num_k_point;
 
     // Получить тип пары для занятия
     vector<int> GetPairTypeForClass(const clas &clas_)
@@ -147,9 +153,9 @@ class EvolutionAlgorithm
             auto schedule_top = vector<schedule *>();
             auto schedule_bot = vector<schedule *>();
             copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_top), [&current_day](schedule *p)
-            { return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3)); });
+                    { return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3)); });
             copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_bot), [&current_day](schedule *p)
-            { return (p->day_week == current_day && (p->pair_type == 2 || p->pair_type == 3)); });
+                    { return (p->day_week == current_day && (p->pair_type == 2 || p->pair_type == 3)); });
             auto array = vector<pair<schedule *, schedule *>>();
             // Числитель и Общие
             int s = schedule_top.size() - 1;
@@ -176,7 +182,7 @@ class EvolutionAlgorithm
                     if (schedule_bot[i + 1]->pair_type == 3 && schedule_bot[i]->pair_type == 3)
                     {
                         auto res = find_if(array.begin(), array.end(), [&i, &schedule_bot](const pair<schedule *, schedule *> &p)
-                        { return (p.first == schedule_bot[i] && p.second == schedule_bot[i + 1]); });
+                                           { return (p.first == schedule_bot[i] && p.second == schedule_bot[i + 1]); });
                         if (res != array.end())
                             continue;
                     }
@@ -413,6 +419,10 @@ public:
         this->p_crossover = evolution_values["p_crossover"];
         this->p_mutation = evolution_values["p_mutation"];
         this->p_elitism = evolution_values["p_elitism"];
+        this->type_selection = evolution_values["type_selection"];
+        this->fitness_scaling = evolution_values["fitness_scaling"];
+        this->type_crossing = evolution_values["type_crpssing"];
+        this->num_k_point = evolution_values["num_k_point"];
 
         const json general_values = data["general_values"];
         this->penaltySameRecSc = general_values["penaltySameRecSc"];
@@ -498,7 +508,7 @@ public:
         {
             auto &ind = this->populations[i];
             worker_pool.push_task([this, &ind, &i]()
-            { this->Fitness(ind, i); });
+                                  { this->Fitness(ind, i); });
         }
         worker_pool.wait_for_tasks();
     }
@@ -551,10 +561,44 @@ public:
         //Замена случайного занятия между двумя индивидами
         if (this->classes.size() > 1)
         {
-            int index_class = GetRndInteger(0, classes.size() - 1);
-            int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index1].size() - 1);
-            // Обмен занятий между индивидами
-            this->SwapSchedule(index_class,index_pair,index1,index2);
+            // замена одного гена
+            if (this->type_crossing == "custom_one_gene"){
+                int index_class = GetRndInteger(0, classes.size() - 1);
+                int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index1].size() - 1);
+                // Обмен занятий между индивидами
+                this->SwapSchedule(index_class,index_pair,index1,index2);
+            }
+            // k-точечное схрещивание
+            else if(this->type_crossing == "k_point"){
+                auto points = vector<int>();
+                // Промежуток точек от 0 до предпоследней
+                int current_max_value = this->classes.size()-2;
+                for (auto i = 0; i < num_k_point; i++){
+                    int r = GetRndInteger(0,current_max_value);
+                    current_max_value--;
+                    for (auto j =0; j < points.size(); j++){
+                        if (r >= points[j]){
+                            r++;
+                        }
+                    }
+                    points.push_back(r);
+                }
+                points.push_back(this->classes.size()-1);
+                //получили массив точек скрещивания для генов у индивидов
+                sort(points.begin(), points.end());
+                // Первый промежуток не скрещиваем
+                bool need_cross = false;
+                for (auto i = 0; i < points.size() - 1; i++){
+                    if (need_cross){
+                        for (auto index_class = i; index_class <= points[i+1]; index_class++){
+                            for (auto index_pair = 0; index_pair < this->classes[index_class].schedules[index1].size(); index_pair++){
+                                this->SwapSchedule(index_class, index_pair, index1, index2);
+                            }
+                        }
+                    }
+                    need_cross = !need_cross;
+                }
+            }
         }
     }
 
@@ -566,9 +610,10 @@ public:
             if (GetRndDouble() < this->p_crossover)
             {
                 worker_pool.push_task([this, i]()
-                { this->Crossing(i, i + 1); });
+                                      { this->Crossing(i, i + 1); });
             }
         }
+
         worker_pool.wait_for_tasks();
     }
 
@@ -604,7 +649,7 @@ public:
             if (GetRndDouble() <= this->p_mutation)
             {
                 worker_pool.push_task([this, i]()
-                { this->Mutation(i); });
+                                      { this->Mutation(i); });
             }
         }
         worker_pool.wait_for_tasks();
@@ -614,26 +659,116 @@ public:
     void SelectionLoop()
     {
         this->SortPopulations();
-        auto individ_indexes = vector<int>();
-        for (int i = 0; i < this->population_size - this->num_elit; i++)
-        {
-            int i1 = 0;
-            int i2 = 0;
-            int i3 = 0;
-            while (i1 == i2 || i2 == i3 || i1 == i3)
-            {
-                i1 = GetRndInteger(0, this->populations.size() - 1);
-                i2 = GetRndInteger(0, this->populations.size() - 1);
-                i3 = GetRndInteger(0, this->populations.size() - 1);
+        // маштабирование приспоосбления от 0 до 100
+        if(this->fitness_scaling){
+            double fitness_min = DBL_MAX;
+            double fitness_max = DBL_MIN;
+            for (auto &ind : this->populations){
+                if (ind.fitnessValue.fitnessValue > fitness_max){
+                    fitness_max = ind.fitnessValue.fitnessValue;
+                }
+                if (ind.fitnessValue.fitnessValue < fitness_min){
+                    fitness_min = ind.fitnessValue.fitnessValue;
+                }
             }
-            int winIndex;
-            if (this->populations[i1].fitnessValue.fitnessValue < this->populations[i2].fitnessValue.fitnessValue && this->populations[i1].fitnessValue.fitnessValue < this->populations[i3].fitnessValue.fitnessValue)
-                winIndex = i1;
-            else if (this->populations[i2].fitnessValue.fitnessValue < this->populations[i1].fitnessValue.fitnessValue && this->populations[i2].fitnessValue.fitnessValue < this->populations[i3].fitnessValue.fitnessValue)
-                winIndex = i2;
-            else
-                winIndex = i3;
-            individ_indexes.push_back(winIndex);
+            double fitness_scale_min = 0;
+            double fitness_scale_max = 100;
+            double a = (fitness_scale_min - fitness_scale_max) / (fitness_min - fitness_max);
+            double b = fitness_scale_min - (a * fitness_min);
+            for (auto &ind : this->populations){
+                ind.fitnessValue.fitnessValue = a * ind.fitnessValue.fitnessValue + b;
+            }
+        }
+        auto individ_indexes = vector<int>();
+        // Тип выборки индивидов
+        if (this->type_selection == "roulette"){
+            double sum_fitness = 0;
+            for (auto &ind : this->populations){
+                sum_fitness += ind.fitnessValue.fitnessValue;
+            }
+            auto part_individs = vector<double>(this->population_size+1);
+            part_individs[0] = 0;
+            double sum_parts = 0;
+            for (auto i = 0; i < this->population_size; i++){
+                sum_parts += (1 - (this->populations[i].fitnessValue.fitnessValue / sum_fitness));
+                part_individs[i + 1] = sum_parts;
+            }
+            for (auto i = 0; i < this->population_size - this->num_elit; i++){
+                int winIndex = -1;
+                double r = GetRndDouble();
+                // бинарный поиск для выбора индивида
+                int index_left = 0;
+                int index_right = this->population_size - 1;
+                while(winIndex == -1){
+                    int mid = floor((index_left + index_right) / 2);
+                    if (r > part_individs[mid]){
+                        index_left = mid;
+                    }
+                    else {
+                        index_right = mid;
+                    }
+                    if(r >= part_individs[index_left] && r < part_individs[index_right]){
+                        winIndex = index_left;
+                    }
+
+                }
+                individ_indexes.push_back(winIndex);
+            }
+        }
+        else if (this->type_selection == "ranging"){
+            double sum_fitness = (this->population_size * (this->population_size + 1) / 2);
+            auto part_individs = vector<double>(this->population_size+1);
+            part_individs[0] = 0;
+            double sum_parts = 0;
+            for (auto i = 0; i < this->population_size; i++){
+                sum_parts += ((this->population_size - i) / sum_fitness);
+                part_individs[i + 1] = sum_parts;
+            }
+            for (int i = 0; i < this->population_size - this->num_elit; i++){
+                int winIndex = -1;
+                double r = GetRndDouble();
+                // бинарный поиск для выбора индивида
+                int index_left = 0;
+                int index_right = this->population_size - 1;
+                while(winIndex == -1){
+                    int mid = floor((index_left + index_right) / 2);
+                    if (r > part_individs[mid]){
+                        index_left = mid;
+                    }
+                    else {
+                        index_right = mid;
+                    }
+                    if(r >= part_individs[index_left] && r < part_individs[index_right]){
+                        winIndex = index_left;
+                    }
+
+                }
+                individ_indexes.push_back(winIndex);
+            }
+        }
+        else if (this->type_selection == "tournament"){
+            for (int i = 0; i < this->population_size - this->num_elit; i++)
+            {
+                // по умолчанию туринр
+                int i1 = 0;
+                int i2 = 0;
+                int i3 = 0;
+                while (i1 == i2 || i2 == i3 || i1 == i3)
+                {
+                    i1 = GetRndInteger(0, this->populations.size() - 1);
+                    i2 = GetRndInteger(0, this->populations.size() - 1);
+                    i3 = GetRndInteger(0, this->populations.size() - 1);
+                }
+                int winIndex;
+                if (this->populations[i1].fitnessValue.fitnessValue < this->populations[i2].fitnessValue.fitnessValue && this->populations[i1].fitnessValue.fitnessValue < this->populations[i3].fitnessValue.fitnessValue)
+                    winIndex = i1;
+                else if (this->populations[i2].fitnessValue.fitnessValue < this->populations[i1].fitnessValue.fitnessValue && this->populations[i2].fitnessValue.fitnessValue < this->populations[i3].fitnessValue.fitnessValue)
+                    winIndex = i2;
+                else
+                    winIndex = i3;
+                individ_indexes.push_back(winIndex);
+            }
+
         }
         // Запомнить расписание для его расстоновки по сортировке
         auto temp_classes = vector<vector<vector<schedule>>>(classes.size());
@@ -756,7 +891,7 @@ public:
     vector<pair<vector<vector<schedule>>,int>> GetBestIndivids(const int &len_migration){
         auto bestIndivids = vector<pair<vector<vector<schedule>>,int>>(len_migration);
 
-        for(size_t i = 0; i < len_migration; i++){
+        for(auto i = 0; i < len_migration; i++){
             auto index_individ = this->population_size - 1 - i;
             bestIndivids[i].first = vector<vector<schedule>>(classes.size());
             bestIndivids[i].second = this->populations[index_individ].fitnessValue.fitnessValue;
