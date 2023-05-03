@@ -77,7 +77,7 @@ int main(int argc,char* argv[])
 
             Timer.start();
 
-            mainAlgorithm.Selection();
+            mainAlgorithm.SelectionLoop();
 
 
             Timer.stop();
