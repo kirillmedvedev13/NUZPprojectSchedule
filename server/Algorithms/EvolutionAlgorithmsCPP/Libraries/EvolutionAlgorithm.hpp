@@ -57,8 +57,7 @@ class EvolutionAlgorithm
     bestIndivid bestIndiv;
     string type_selection;
     bool fitness_scaling;
-    string type_crossing;
-    int num_k_point;
+    int type_crossing;
 
     // Получить тип пары для занятия
     vector<int> GetPairTypeForClass(const clas &clas_)
@@ -422,7 +421,6 @@ public:
         this->type_selection = evolution_values["type_selection"];
         this->fitness_scaling = evolution_values["fitness_scaling"];
         this->type_crossing = evolution_values["type_crpssing"];
-        this->num_k_point = evolution_values["num_k_point"];
 
         const json general_values = data["general_values"];
         this->penaltySameRecSc = general_values["penaltySameRecSc"];
@@ -562,18 +560,18 @@ public:
         if (this->classes.size() > 1)
         {
             // замена одного гена
-            if (this->type_crossing == "custom_one_gene"){
+            if (this->type_crossing == 0){
                 int index_class = GetRndInteger(0, classes.size() - 1);
                 int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index1].size() - 1);
                 // Обмен занятий между индивидами
                 this->SwapSchedule(index_class,index_pair,index1,index2);
             }
             // k-точечное схрещивание
-            else if(this->type_crossing == "k_point"){
+            else if(this->type_crossing > 0){
                 auto points = vector<int>();
                 // Промежуток точек от 0 до предпоследней
                 int current_max_value = this->classes.size()-2;
-                for (auto i = 0; i < num_k_point; i++){
+                for (auto i = 0; i < this->type_crossing; i++){
                     int r = GetRndInteger(0,current_max_value);
                     current_max_value--;
                     for (auto j =0; j < points.size(); j++){
