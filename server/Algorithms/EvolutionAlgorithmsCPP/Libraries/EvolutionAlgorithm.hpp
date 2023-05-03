@@ -420,7 +420,7 @@ public:
         this->p_elitism = evolution_values["p_elitism"];
         this->type_selection = evolution_values["type_selection"];
         this->fitness_scaling = evolution_values["fitness_scaling"];
-        this->type_crossing = evolution_values["type_crpssing"];
+        this->type_crossing = evolution_values["type_crossing"];
 
         const json general_values = data["general_values"];
         this->penaltySameRecSc = general_values["penaltySameRecSc"];
@@ -574,7 +574,7 @@ public:
                 for (auto i = 0; i < this->type_crossing; i++){
                     int r = GetRndInteger(0,current_max_value);
                     current_max_value--;
-                    for (auto j =0; j < points.size(); j++){
+                    for (size_t j = 0; j < points.size(); j++){
                         if (r >= points[j]){
                             r++;
                         }
@@ -586,10 +586,10 @@ public:
                 sort(points.begin(), points.end());
                 // Первый промежуток не скрещиваем
                 bool need_cross = false;
-                for (auto i = 0; i < points.size() - 1; i++){
+                for (size_t i = 0; i < points.size() - 1; i++){
                     if (need_cross){
-                        for (auto index_class = i; index_class <= points[i+1]; index_class++){
-                            for (auto index_pair = 0; index_pair < this->classes[index_class].schedules[index1].size(); index_pair++){
+                        for (size_t index_class = i; index_class <= points[i+1]; index_class++){
+                            for (size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index1].size(); index_pair++){
                                 this->SwapSchedule(index_class, index_pair, index1, index2);
                             }
                         }
@@ -696,19 +696,18 @@ public:
                 double r = GetRndDouble();
                 // бинарный поиск для выбора индивида
                 int index_left = 0;
-                int index_right = this->population_size - 1;
+                int index_right = this->population_size;
                 while(winIndex == -1){
                     int mid = floor((index_left + index_right) / 2);
-                    if (r > part_individs[mid]){
+                    if (r >= part_individs[mid]){
                         index_left = mid;
                     }
-                    else {
+                    else if (r <= part_individs[mid]){
                         index_right = mid;
                     }
-                    if(r >= part_individs[index_left] && r < part_individs[index_right]){
+                    if(r >= part_individs[index_left] && r <= part_individs[index_left+1]){
                         winIndex = index_left;
                     }
-
                 }
                 individ_indexes.push_back(winIndex);
             }
@@ -724,22 +723,21 @@ public:
             }
             for (int i = 0; i < this->population_size - this->num_elit; i++){
                 int winIndex = -1;
-                double r = GetRndDouble();
+                auto r = GetRndDouble();
                 // бинарный поиск для выбора индивида
                 int index_left = 0;
-                int index_right = this->population_size - 1;
+                int index_right = this->population_size;
                 while(winIndex == -1){
                     int mid = floor((index_left + index_right) / 2);
-                    if (r > part_individs[mid]){
+                    if (r >= part_individs[mid]){
                         index_left = mid;
                     }
-                    else {
+                    else if (r <= part_individs[mid]){
                         index_right = mid;
                     }
-                    if(r >= part_individs[index_left] && r < part_individs[index_right]){
+                    if(r >= part_individs[index_left] && r <= part_individs[index_left+1]){
                         winIndex = index_left;
                     }
-
                 }
                 individ_indexes.push_back(winIndex);
             }
