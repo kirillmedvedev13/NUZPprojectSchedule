@@ -1,4 +1,4 @@
-import reviver from "../EvalutionAlgorithm/JSONReviver.js";
+import reviver from "./JSONReviver.js";
 
 export default function Fitness(
   schedule,

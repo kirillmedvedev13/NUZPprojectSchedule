@@ -1,5 +1,29 @@
 export default async function InitRecords(db) {
-  let EAparams = [
+
+  let initialization_options = [
+    { value: "random", label: "Випадкова ініціалізація" },
+    { value: "simple_algorithm", label: "Ініціалізація за допомогою просто перебору" },
+  ];
+  let selection_options = [
+    { value: "ranging", label: "Відбір ранжуванням" },
+    { value: "roulette", label: "Відбір рулектою" },
+    { value: "tournament", label: "Відбір турніром" },
+  ];
+  let bool_options = [
+    { value: false, label: "Не застосовувати" },
+    { value: true, label: "Застосовувати" },
+  ];
+  let crossing_options = [
+    { value: "custom_one_gene", label: "Схрещування одного гену" },
+    { value: "k_point", label: "Схрещування k точок" },
+  ];
+  let mutation_options = [
+    { value: "custom_one_gene", label: "Мутація одного гену" },
+    { value: "all_genes", label: "Мутація всіх генів" },
+  ];
+  
+
+  let EAparamsCPP = [
     {
       name: "population_size",
       label: "Розмір популяції",
@@ -32,8 +56,8 @@ export default async function InitRecords(db) {
     },
     {
       name: "p_mutation",
-      label: "Ймовірність мутації",
-      short: "мут.",
+      label: "Ймовірність мутації індивіда",
+      short: "мут.інд.",
       min: 0,
       max: 1,
       type: "number",
@@ -50,27 +74,14 @@ export default async function InitRecords(db) {
       step: 0.01,
       value: 0.1,
     },
-  ];
-
-  let selection_options = [
-    { value: "ranging", label: "Відбір ранжуванням" },
-    { value: "roulette", label: "Відбір рулектою" },
-    { value: "tournament", label: "Відбір турнаментом " },
-  ];
-  let bool_options = [
-    { value: false, label: "Не застосовувати" },
-    { value: true, label: "Застосовувати" },
-  ];
-  let crossing_options = [{ value: 0, label: "Схрещування 1го гену" }];
-  for (let i = 1; i < 10; i += 2) {
-    crossing_options.push({
-      value: i + 1,
-      label: `${i + 1}-точкове схрещування`,
-    });
-  }
-
-  let EAparamsCPP = [
-    ...EAparams,
+    {
+      name: "type_initialization",
+      label: "Тип ініціалізації індивідів",
+      short: "тип ініц.",
+      type: "select",
+      value: initialization_options[0].value,
+      options: initialization_options,
+    },
     {
       name: "type_selection",
       label: "Тип відбору індивідів",
@@ -81,7 +92,7 @@ export default async function InitRecords(db) {
     },
     {
       name: "fitness_scaling",
-      label: "Масштабування фітнес значення",
+      label: "Масштабування фітнес значення до [30-80]",
       short: "масшт.",
       type: "select",
       value: bool_options[0].value,
@@ -90,12 +101,41 @@ export default async function InitRecords(db) {
     {
       name: "type_crossing",
       label: "Тип схрещування",
-      short: "схрещ.",
+      short: "тип схрещ.",
       type: "select",
       value: crossing_options[0].value,
       options: crossing_options,
     },
+    {
+      name: "num_k_point",
+      label: "Кількість k точок схрещювання (тільки якщо обрано схрещювання k точок)",
+      short: "k.точок",
+      type: "number",
+      value: 2,
+      min: 1,
+      max: 10,
+      step: 1,
+    },
+    {
+      name: "type_mutation",
+      label: "Тип мутації",
+      short: "тип мут.",
+      type: "select",
+      value: mutation_options[0].value,
+      options: mutation_options,
+    },
+    {
+      name: "p_mutation_gene",
+      label: "Ймовірність мутації гена (тільки якщо обрано мутацію - всіх генів)",
+      short: "мут.ген.",
+      type: "number",
+      value: 0.1,
+      min: 0,
+      max: 1,
+      step: 0.05,
+    },
   ];
+
 
   let EAparamsCPPIsland = [
     ...EAparamsCPP,
@@ -111,7 +151,7 @@ export default async function InitRecords(db) {
     },
     {
       name: "step",
-      label: "Крок розбіжності значень y %",
+      label: "Крок розбіжності значень y % (на скільки будуть збільшуватися параметри у наступних отсровах)",
       short: "кр.",
       min: 1,
       max: 100,
@@ -131,7 +171,7 @@ export default async function InitRecords(db) {
     },
     {
       name: "n_migration",
-      label: "Кількість участі в міграції",
+      label: "Кількість індивідів для участі в міграції",
       short: "кільк.мігр.",
       min: 0,
       max: 1,
@@ -152,15 +192,6 @@ export default async function InitRecords(db) {
     where: { id: 2 },
     defaults: {
       name: "Практика",
-    },
-  });
-
-  await db.algorithm.findOrCreate({
-    where: { name: "evolution_algorithm" },
-    defaults: {
-      name: "evolution_algorithm",
-      label: "Генетичний алгоритм",
-      params: JSON.stringify(EAparams),
     },
   });
 

@@ -18,7 +18,6 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       audiences,
       params,
     } = await GetDataFromDB(id_cathedra, name_algorithm);
-    let results = [];
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
     let params_obj = {};

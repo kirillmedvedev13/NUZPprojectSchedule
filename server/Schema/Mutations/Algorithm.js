@@ -1,5 +1,4 @@
 import { GraphQLInt, GraphQLString } from "graphql";
-import { RUN_EA } from "../../Algorithms/EvalutionAlgorithm/Main.js";
 import { RUN_EACPP } from "../../Algorithms/EvolutionAlgorithmsCpp/Main.js";
 import { RUN_LSTM } from "../../Algorithms/NeuralNetwork/Main.js";
 import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
@@ -44,9 +43,6 @@ export const RUN_ALGORITHM = {
   async resolve(parent, { name, id_cathedra }) {
     let result;
     switch (name) {
-      case "evolution_algorithm":
-        result = await RUN_EA(id_cathedra, name);
-        break;
       case "evolution_algorithmCPP":
         result = await RUN_EACPP(id_cathedra, name);
         break;
