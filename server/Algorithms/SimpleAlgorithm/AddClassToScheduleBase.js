@@ -1,7 +1,7 @@
 import InitDataStructure from "./InitDataStructure.js";
 import AddSchedule from "./AddSchedule.js";
 
-export default function AddClassToScheduleOld(schedule, schedule_record, max_day, max_pair) {
+export default function AddClassToScheduleBase(schedule, schedule_record, max_day, max_pair) {
     let { schedule_group, schedule_teacher, schedule_audience } = schedule_record;
     // Вставка занятий для групп
     for (let gr of schedule_group) {

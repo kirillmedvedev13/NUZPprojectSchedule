@@ -2,7 +2,7 @@ import GetDataFromDB from "../Service/GetDataFromDB.js";
 import ParseScheduleFromDB from "../Service/GetBaseSchedule.js";
 import db from "../../database.js";
 import AddClassToScheduleNew from "./AddClassToScheduleNew.js";
-import AddClassToScheduleOld from "./AddClassToScheduleOld.js";
+import AddClassToScheduleOld from "./AddClassToScheduleBase.js";
 import GetFitness from "./GetFitness.js";
 
 export const RUN_SA = async (id_cathedra, name_algorithm) => {
@@ -25,10 +25,9 @@ export const RUN_SA = async (id_cathedra, name_algorithm) => {
   // Получения расписания для груп учителей если они есть  в других кафедрах
   let results = [];
   let start_time = new Date().getTime();
-
-  let db_schedule = await ParseScheduleFromDB(id_cathedra);
-  if (db_schedule) {
-    AddClassToScheduleOld(schedule, db_schedule, max_day, max_pair);
+  let base_schedule = await ParseScheduleFromDB(id_cathedra);
+  if (base_schedule) {
+    AddClassToScheduleBase(schedule, base_schedule, max_day, max_pair);
   }
   for (let clas of classes) {
     AddClassToScheduleNew(schedule, max_day, max_pair, clas, audiences);
