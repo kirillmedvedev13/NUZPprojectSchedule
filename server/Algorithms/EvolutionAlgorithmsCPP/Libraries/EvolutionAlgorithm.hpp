@@ -550,7 +550,7 @@ class EvolutionAlgorithm
     void Mutation(const int &index_individ)
     {
         // Случайное изменение пары для занятия
-        if(this->type_mutation == "custon_one_gene"){
+        if(this->type_mutation == "custom_one_gene"){
             int index_class = GetRndInteger(0, this->classes.size() - 1);
             int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index_individ].size() - 1);
             // если есть рекомендуемоемое время, то пару не менять
@@ -780,7 +780,7 @@ public:
                 ind.fitnessValue.fitnessValue = a * ind.fitnessValue.fitnessValue + b;
             }
         }
-        //Добавление элитных особей
+        // Добавление элитных особей
         auto individ_indexes = vector<int>();
         for(auto i =0; i< num_elit; i++){
             individ_indexes.push_back(i);
