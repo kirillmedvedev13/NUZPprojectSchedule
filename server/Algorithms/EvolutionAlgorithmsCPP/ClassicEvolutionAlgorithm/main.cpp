@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../Libraries/json.hpp"
-
 #include "../Libraries/BS_thread_pool.hpp"
 #include "../Libraries/TypeDefs.hpp"
 #include "../Libraries/EvolutionAlgorithm.hpp"
@@ -10,6 +9,7 @@
 #include <cstdlib>
 #include <chrono>
 #include <filesystem>
+#include <ctime>
 using namespace std;
 using namespace nlohmann;
 using namespace BS;
@@ -18,7 +18,7 @@ int main(int argc,char* argv[])
 {
     try
     {
-        srand(time(NULL));
+        //srand(time(NULL));
         string path;
         if (argc == 2){
             path = argv[1];
