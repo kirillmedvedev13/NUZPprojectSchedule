@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Container } from "react-bootstrap";
+import chroma from "chroma-js";
+import { Button } from "react-bootstrap";
 import {
   LineChart,
   Line,
@@ -149,8 +150,12 @@ export default class MultiCharts extends React.Component {
       this.state;
     const nameAlgorithm = this.props.nameAlgorithm;
 
-    let colors = ["red", "green", "blue", "brown"];
+    //let colors = ["red", "green", "blue", "brown"];
     let initialData = GetDataForCharts(this.props.results);
+    const colors = chroma
+      .scale(["#e60073", "#ff0066", "#ff8c00", "#ffb700", "#008b8b", "#483d8b"])
+      .mode("lch")
+      .colors(data.length);
 
     return (
       <>
@@ -161,7 +166,7 @@ export default class MultiCharts extends React.Component {
           <Button onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
         </div>
         <div
-          className="w-100 justify-content-center mx-5 my-2"
+          className="table-responsive justify-content-center mx-5 my-2"
           id={`form ${nameAlgorithm} `}
         >
           <LineChart
@@ -223,7 +228,6 @@ export default class MultiCharts extends React.Component {
             <Tooltip />
 
             <Legend align="center" />
-
             {data.map((algorithm, i) =>
               algorithm.data.length ? (
                 <Line

@@ -11,6 +11,22 @@ import ButtonRunAlgorithm from "./ButtonRunAlgorithm.js";
 import ButtonUpdateAlgorithm from "./ButtonUpdateAlgorithm.js";
 import ButtonDeleteResults from "./ButtonDeleteResults.js";
 
+function GetLabelForResults(params, params_value) {
+  let label = "";
+  params = JSON.parse(params);
+  params_value = JSON.parse(params_value);
+
+  for (let i = 0; i < params.length - 1; i++) {
+    label += `${params[i].short}: ${params_value[params[i].name]}, `;
+  }
+  if (params.length)
+    label += `${params[params.length - 1].short}: ${
+      params_value[params[params.length - 1].name]
+    }, `;
+  else label = "Без параметрів";
+  return label;
+}
+
 function GetBestResults(algorithms) {
   let best_results = [];
   algorithms.forEach((obj) => {
@@ -37,7 +53,20 @@ function ChooseAlgorithm({ state, handleChangeState }) {
   if (error) return `Error! ${error}`;
   let arrAlgorithm = data.GetAllAlgorithm;
   let best_results = GetBestResults(arrAlgorithm);
-
+  let results_algorithms = [];
+  if (state.nameAlgorithm) {
+    arrAlgorithm.forEach((obj) => {
+      if (obj.name === state.nameAlgorithm) {
+        obj.results_algorithms.forEach((res) => {
+          results_algorithms.push({
+            name: res.params_value,
+            label: GetLabelForResults(obj.params, res.params_value),
+            results: res.results,
+          });
+        });
+      }
+    });
+  }
   return (
     <>
       <div className="col-md-6 offset-md-3">
@@ -60,16 +89,14 @@ function ChooseAlgorithm({ state, handleChangeState }) {
           </Card.Footer>
         </Card>
       </div>
-
       <AlgorithmForm
         state={state}
         handleChangeState={handleChangeState}
         refetch={refetch}
       ></AlgorithmForm>
-
-      {state.results_algorithms?.length ? (
+      {results_algorithms?.length ? (
         <MultiCharts
-          results={state.results_algorithms}
+          results={results_algorithms}
           nameAlgorithm={state.nameAlgorithm}
         ></MultiCharts>
       ) : null}
