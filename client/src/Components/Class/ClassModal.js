@@ -98,8 +98,11 @@ class ClassModal extends React.Component {
                     placeholder="Кількість занять на тиждень"
                     value={item.times_per_week}
                     onChange={(e) => {
-                      handleChangeItem("times_per_week", e.target.value);
-                      this.handleChangeState("validatedTimesPerWeek", true);
+                      let value = +e.target.value;
+                      if (value >= 0 && value < 5) {
+                        handleChangeItem("times_per_week", e.target.value);
+                        this.handleChangeState("validatedTimesPerWeek", true);
+                      }
                     }}
                   ></Form.Control>
                   {!this.state.validatedTimesPerWeek && (

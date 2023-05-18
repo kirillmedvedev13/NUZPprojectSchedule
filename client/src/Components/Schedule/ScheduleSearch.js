@@ -83,7 +83,11 @@ function SwitchFilters({ filters, handleChangeFilters }) {
                 onChange={(e) => {
                   handleChangeFilters(
                     "semester",
-                    e ? Number(e.target.value) : null
+                    e
+                      ? Number(e.target.value) >= 0
+                        ? Number(e.target.value)
+                        : null
+                      : null
                   );
                 }}
               ></Form.Control>

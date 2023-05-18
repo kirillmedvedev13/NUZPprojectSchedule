@@ -198,7 +198,7 @@ class ClassTable extends React.Component {
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати Занняття
+            Додати занняття
           </Button>
         </div>
 

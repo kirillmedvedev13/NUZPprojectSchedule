@@ -52,7 +52,10 @@ class ClassSearch extends React.Component {
                 min={1}
                 max={14}
                 onChange={(e) => {
-                  handleChangeFilters("semester", e ? +e.target.value : null);
+                  handleChangeFilters(
+                    "semester",
+                    e ? (+e.target.value >= 0 ? +e.target.value : null) : null
+                  );
                 }}
               ></Form.Control>
             </Col>
