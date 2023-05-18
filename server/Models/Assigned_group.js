@@ -18,9 +18,13 @@ export default (Sequelize, DataTypes) => {
   Assigned_group.associate = (models) => {
     Assigned_group.belongsTo(models.group, {
       foreignKey: "id_group",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Assigned_group.belongsTo(models.class, {
       foreignKey: "id_class",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
 

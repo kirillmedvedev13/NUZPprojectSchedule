@@ -23,6 +23,8 @@ export default (Sequelize, DataTypes) => {
   Recommended_schedule.associate = (models) => {
     Recommended_schedule.belongsTo(models.class, {
       foreignKey: "id_class",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
   return Recommended_schedule;
