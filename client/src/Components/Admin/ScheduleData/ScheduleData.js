@@ -112,7 +112,7 @@ export default class ScheduleData extends React.Component {
         <div className="col-md-6 offset-md-3">
           <Card className="my-2">
             <Card.Header className="text-center">
-              Дані про поточний розклад
+              Оцінка поточного розкладу
             </Card.Header>
             <Card.Body>
               <DataForm handleChangeState={this.handleChangeState}></DataForm>

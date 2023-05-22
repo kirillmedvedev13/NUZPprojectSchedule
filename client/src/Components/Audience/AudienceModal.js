@@ -64,15 +64,27 @@ class AudienceModal extends React.Component {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-2 mx-2">
-                <Form.Label className="col-md-2">Вмісткість</Form.Label>
+                <Form.Label className="col-md-2">Кількість місць</Form.Label>
                 <Col className="col-md-10">
                   <Form.Control
                     required
-                    placeholder="Вмісткість"
+                    type="number"
+                    min={0}
+                    placeholder="Кількість місць"
                     value={item.capacity}
                     onChange={(e) => {
-                      handleChangeItem("capacity", e.target.value);
-                      this.handleChangeState("validatedCapacity", true);
+                      let value = +e.target.value;
+                      if (value >= 0) {
+                        handleChangeItem("capacity", e.target.value);
+                        this.handleChangeState("validatedCapacity", true);
+                      } else {
+                        handleChangeItem("capacity", 0);
+                        this.handleChangeState("validatedCapacity", {
+                          status: false,
+                          message:
+                            "Значення повинно бути більше або дорівнювати 0",
+                        });
+                      }
                     }}
                   ></Form.Control>
                   {!this.state.validatedCapacity && (

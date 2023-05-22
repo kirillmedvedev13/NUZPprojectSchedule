@@ -24,12 +24,16 @@ export default (Sequelize, DataTypes) => {
     },
   });
   Teacher.associate = (models) => {
-    Teacher.hasMany(models.assigned_teacher, { foreignKey: "id_teacher", });
+    Teacher.hasMany(models.assigned_teacher, { foreignKey: "id_teacher" });
     Teacher.belongsToMany(models.class, {
       foreignKey: "id_teacher",
       through: models.assigned_teacher,
     });
-    Teacher.belongsTo(models.cathedra, { foreignKey: "id_cathedra", });
+    Teacher.belongsTo(models.cathedra, {
+      foreignKey: "id_cathedra",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
   };
 
   return Teacher;

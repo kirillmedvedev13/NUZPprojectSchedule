@@ -19,7 +19,7 @@ import GeneralValues from "./Components/Admin/GeneralValues/GeneralValues";
 import ScheduleData from "./Components/Admin/ScheduleData/ScheduleData";
 import SubmitDataSheet from "./Components/Admin/SubmitDataSheet/SubmitDataSheet";
 import ManagementData from "./Components/Admin/ManagementData/ManagementData";
-import Algorithms from "./Components/Admin/Algorithms/Alghorithms";
+import Algorithms from "./Components/Admin/Algorithms/Algorithms";
 
 class App extends React.Component {
   state = {

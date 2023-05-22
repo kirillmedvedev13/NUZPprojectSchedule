@@ -22,7 +22,9 @@ export default (Sequelize, DataTypes) => {
   Results_algorithm.associate = (models) => {
     Results_algorithm.belongsTo(models.algorithm, {
       foreignKey: "name_algorithm",
-      onDelete: "cascade",
+
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
   return Results_algorithm;

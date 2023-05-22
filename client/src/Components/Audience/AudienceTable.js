@@ -151,7 +151,7 @@ class AudienceTable extends React.Component {
               <tr>
                 <th>Назва аудиторії</th>
                 <th>Тип</th>
-                <th>Вмісткість</th>
+                <th>Кількість місць</th>
                 <th>Закріплені кафедри</th>
                 <th></th>
               </tr>

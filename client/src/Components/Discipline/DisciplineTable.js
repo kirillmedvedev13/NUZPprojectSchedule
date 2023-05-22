@@ -131,7 +131,7 @@ class DisciplineTable extends React.Component {
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати Дисципліну
+            Додати дисципліну
           </Button>
         </div>
         <div className="table-responsive w-100">
