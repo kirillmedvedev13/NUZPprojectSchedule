@@ -148,7 +148,8 @@ export default class MultiCharts extends React.Component {
   render() {
     const { data, left, right, refAreaLeft, refAreaRight, topArr, bottomArr } =
       this.state;
-    const nameAlgorithm = this.props.nameAlgorithm;
+    const nameAlgorithm = this.props.nameAlgorithm; 
+    console.log(data)
 
     //let colors = ["red", "green", "blue", "brown"];
     let initialData = GetDataForCharts(this.props.results);
