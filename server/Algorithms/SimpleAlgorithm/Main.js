@@ -2,7 +2,7 @@ import GetDataFromDB from "../Service/GetDataFromDB.js";
 import ParseScheduleFromDB from "../Service/GetBaseSchedule.js";
 import db from "../../database.js";
 import AddClassToScheduleNew from "./AddClassToScheduleNew.js";
-import AddClassToScheduleOld from "./AddClassToScheduleBase.js";
+import AddClassToScheduleBase from "./AddClassToScheduleBase.js";
 import GetFitness from "./GetFitness.js";
 
 export const RUN_SA = async (id_cathedra, name_algorithm) => {
