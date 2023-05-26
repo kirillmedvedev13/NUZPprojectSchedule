@@ -27,6 +27,7 @@ int main(int argc,char* argv[])
         data = json::parse(fileData);
         int number_island = data["params"]["number_islands"];
         double step =  data["params"]["step"];
+        // Инициализация
         const int max_generations = data["params"]["max_generations"];
         const int population_size = data["params"]["population_size"];
         const double n_migration = data["params"]["n_migration"];
@@ -54,11 +55,10 @@ int main(int argc,char* argv[])
                 data["params"]["p_mutation"] = base_p_mutation + value_p_mutation;
                 data["params"]["p_elitism"] = base_p_elitism + value_p_elitism;
             }
-            worker_pool.push_task([&islands, &data, &bs](){
-                islands.push_back(EvolutionAlgorithm(data, bs));
-            });
+
+             islands.push_back(EvolutionAlgorithm(data, bs, worker_pool));
+
         }
-        worker_pool.wait_for_tasks();
 
         int countIter = 0;
         auto bestPopulation = bestIndivid();
@@ -93,13 +93,9 @@ int main(int argc,char* argv[])
 
             Timer.start();
             for(auto &island: islands){
-                worker_pool.push_task([&island](){
-                    island.SelectionLoop();
-                    island.MinFitnessValue();
-
-                });
+               island.SelectionLoop(worker_pool);
             }
-            worker_pool.wait_for_tasks();
+
             Timer.stop();
             cout << "Selection " << Timer.ms() << "ms" << endl;
 
