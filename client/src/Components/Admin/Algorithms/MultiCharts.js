@@ -171,9 +171,9 @@ export default class MultiCharts extends React.Component {
         <ResponsiveContainer
          style={{overflow:'auto'}}
           width='90%'
-          maxHeight={600}
+          maxHeight={580}
           minWidth={600}
-          minHeight={600}
+          minHeight={500}
           aspect={1}
           className="justify-content-center mx-5 my-2"
           id={`form ${nameAlgorithm} `}
