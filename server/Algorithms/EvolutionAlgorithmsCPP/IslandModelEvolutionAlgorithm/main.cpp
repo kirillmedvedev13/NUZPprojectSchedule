@@ -6,6 +6,7 @@
 #include <chrono>
 #include <mutex>
 #include "../Libraries/EvolutionAlgorithm.hpp"
+#include "../Libraries/Service.hpp"
 
 using namespace std;
 using namespace nlohmann;
@@ -42,7 +43,8 @@ int main(int argc,char* argv[])
         double base_p_crossover = (double)data["params"]["p_crossover"];
         double base_p_mutation = (double)data["params"]["p_mutation"];
         double base_p_elitism = (double)data["params"]["p_elitism"];
-
+        // Получение случайного ключа для того что бы инициализация островов была одинакова
+        double Seed = GetRndDouble();
         // Создание островов с разными параметрами и их инициализация
         vector<EvolutionAlgorithm> islands;
         for (int i =0; i< number_island; i++){
@@ -56,7 +58,7 @@ int main(int argc,char* argv[])
                 data["params"]["p_elitism"] = base_p_elitism + value_p_elitism;
             }
 
-             islands.push_back(EvolutionAlgorithm(data, bs, worker_pool));
+             islands.push_back(EvolutionAlgorithm(data, bs, worker_pool, Seed));
 
         }
 
