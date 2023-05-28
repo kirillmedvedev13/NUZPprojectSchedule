@@ -126,7 +126,7 @@ class SpecialtyTable extends React.Component {
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати Спеціальність
+            Додати спеціальність
           </Button>
         </div>
         <div className="table-responsive w-100">

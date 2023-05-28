@@ -26,13 +26,6 @@ class NaviBar extends React.Component {
               {isLoggin && (
                 <Fragment>
                   <Nav.Link
-                    as={Link}
-                    className="text-white-50 bg-dark"
-                    to="/audiences"
-                  >
-                    Аудиторії
-                  </Nav.Link>
-                  <Nav.Link
                     className=" text-white-50 bg-dark"
                     to="/cathedras"
                     href="/cathedras"
@@ -41,10 +34,31 @@ class NaviBar extends React.Component {
                   </Nav.Link>
                   <Nav.Link
                     className=" text-white-50 bg-dark"
+                    to="/teachers"
+                    href="/teachers"
+                  >
+                    Викладачі
+                  </Nav.Link>
+                  <Nav.Link
+                    className=" text-white-50 bg-dark"
                     to="/specialties"
                     href="/specialties"
                   >
                     Спеціальності
+                  </Nav.Link>
+                  <Nav.Link
+                    className="text-white-50 bg-dark"
+                    to="/groups"
+                    href="/groups"
+                  >
+                    Групи
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    className="text-white-50 bg-dark"
+                    to="/audiences"
+                  >
+                    Аудиторії
                   </Nav.Link>
                   <Nav.Link
                     className="text-white-50 bg-dark"
@@ -60,32 +74,27 @@ class NaviBar extends React.Component {
                   >
                     Заняття
                   </Nav.Link>
-                  <Nav.Link
-                    className="text-white-50 bg-dark"
-                    to="/groups"
-                    href="/groups"
-                  >
-                    Групи
-                  </Nav.Link>
-                  <Nav.Link
-                    className=" text-white-50 bg-dark"
-                    to="/teachers"
-                    href="/teachers"
-                  >
-                    Викладачі
-                  </Nav.Link>
-                  <Dropdown className="text-white-50 bg-dark">
+
+                  <Dropdown className="text-white-50 bg-dark ">
                     <Dropdown.Toggle as={Nav.Link}>
-                      Адміністратор
+                      Адміністрування
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="text-white-50 bg-dark">
+                      <Dropdown.Item
+                        as={Nav.Link}
+                        className="my-1 text-white-50 bg-dark"
+                        href="/admin_algorithms"
+                        to="/admin_algorithms"
+                      >
+                        Запуск алгоритмів
+                      </Dropdown.Item>
                       <Dropdown.Item
                         as={Nav.Link}
                         href="/admin_schedule_data"
                         to="/admin_schedule_data"
                         className=" my-1 text-white-50 bg-dark"
                       >
-                        Дані про поточний розклад
+                        Оцінка поточного розкладу
                       </Dropdown.Item>
                       <Dropdown.Item
                         as={Nav.Link}
@@ -95,21 +104,14 @@ class NaviBar extends React.Component {
                       >
                         Загальні дані
                       </Dropdown.Item>
-                      <Dropdown.Item
-                        as={Nav.Link}
-                        className="my-1 text-white-50 bg-dark"
-                        href="/admin_algorithms"
-                        to="/admin_algorithms"
-                      >
-                        Алгоритми
-                      </Dropdown.Item>
+
                       <Dropdown.Item
                         as={Nav.Link}
                         className="my-1 text-white-50 bg-dark"
                         href="/admin_management_data"
                         to="/admin_management_data"
                       >
-                        Керування даними
+                        Видалення даних
                       </Dropdown.Item>
                       <Dropdown.Item
                         as={Nav.Link}

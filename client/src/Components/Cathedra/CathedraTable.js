@@ -118,7 +118,7 @@ class CathedraTable extends React.Component {
             className="col-auto"
             onClick={this.handleOpenModal}
           >
-            Додати Кафедру
+            Додати кафедру
           </Button>
         </div>
         <div className="table-responsive w-100">

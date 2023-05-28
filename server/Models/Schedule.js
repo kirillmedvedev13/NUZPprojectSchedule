@@ -28,10 +28,15 @@ export default (Sequelize, DataTypes) => {
     },
   });
   Schedule.associate = (models) => {
-    Schedule.belongsTo(models.audience, { foreignKey: "id_audience" });
+    Schedule.belongsTo(models.audience, {
+      foreignKey: "id_audience",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
     Schedule.belongsTo(models.class, {
       foreignKey: "id_class",
-      onDelete: "cascade",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
   return Schedule;

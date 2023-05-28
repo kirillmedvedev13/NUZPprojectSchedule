@@ -69,16 +69,21 @@ export default function AddSpecialtyToDiscipline({
           <Form.Control
             required
             type="number"
+            min={0}
+            max={20}
             defaultValue={+selectedSemesterToAdd}
             placeholder="Семестр"
             onChange={(e) => {
-              handleChangeState("selectedSemesterToAdd", +e.target.value);
-              handleChangeState("validatedSemesterToAdd", {
-                status: true,
-              });
-              handleChangeState("validatedSelectedSpecialtyToAdd", {
-                status: true,
-              });
+              let value = +e.target.value;
+              if (value >= 0) {
+                handleChangeState("selectedSemesterToAdd", value);
+                handleChangeState("validatedSemesterToAdd", {
+                  status: true,
+                });
+                handleChangeState("validatedSelectedSpecialtyToAdd", {
+                  status: true,
+                });
+              }
             }}
           ></Form.Control>
           {!validatedSemesterToAdd.status && (

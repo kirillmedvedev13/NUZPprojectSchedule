@@ -50,7 +50,7 @@ export default class SubmitDataSheet extends React.Component {
         <div className="col-md-6 offset-md-3">
           <Card className="my-2">
             <Card.Header className="text-center">
-              Відомість заручень
+              Відомість доручень
             </Card.Header>
             <Card.Body>
               <Form.Group controlId="formFileLg" className=" bg-light mb-3">

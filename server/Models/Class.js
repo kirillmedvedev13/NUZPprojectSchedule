@@ -22,9 +22,13 @@ export default (Sequelize, DataTypes) => {
   Class.associate = (models) => {
     Class.belongsTo(models.assigned_discipline, {
       foreignKey: "id_assigned_discipline",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Class.belongsTo(models.type_class, {
       foreignKey: "id_type_class",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Class.hasMany(models.recommended_audience, {
       foreignKey: "id_class",
@@ -51,8 +55,8 @@ export default (Sequelize, DataTypes) => {
       through: models.assigned_group,
     });
     Class.hasMany(models.schedule, {
-      foreignKey: "id_class"
-    })
+      foreignKey: "id_class",
+    });
   };
   return Class;
 };

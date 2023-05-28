@@ -18,9 +18,13 @@ export default (Sequelize, DataTypes) => {
   Assigned_audience.associate = (models) => {
     Assigned_audience.belongsTo(models.cathedra, {
       foreignKey: "id_cathedra",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Assigned_audience.belongsTo(models.audience, {
       foreignKey: "id_audience",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
 

@@ -24,7 +24,11 @@ export default (Sequelize, DataTypes) => {
     },
   });
   Group.associate = (models) => {
-    Group.belongsTo(models.specialty, { foreignKey: "id_specialty" });
+    Group.belongsTo(models.specialty, {
+      foreignKey: "id_specialty",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
     Group.hasMany(models.assigned_group, { foreignKey: "id_group" });
     Group.belongsToMany(models.class, {
       foreignKey: "id_group",

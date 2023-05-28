@@ -9,12 +9,12 @@ import cloneDeep from "clone-deep";
 class DisciplineModal extends React.Component {
   defState = {
     validatedName: true,
-    validatedSelectedSpecialtyToAdd: { status: true }, // Проверка выбранной специальности
-    statusAddDisciplineToSpecialty: false, // Если тру то форма с добавлением специальности
-    selectedSpecialtyToAdd: null, // выбранная специльность для добавление к дисциплине
-    validatedSemesterToAdd: { status: true }, // проверка семестра
-    selectedSemesterToAdd: 1, // семестр для добавления специальности
-    counterSpecialties: 0, // счётчик для ключей в массиве специальностей
+    validatedSelectedSpecialtyToAdd: { status: true }, // Перевірка обраної спеціальності
+    statusAddDisciplineToSpecialty: false, // Якщо тру то форма з додаванням спеціальності
+    selectedSpecialtyToAdd: null, // Вибрана специфіка для додавання до дисципліни
+    validatedSemesterToAdd: { status: true }, // перевірка семестру
+    selectedSemesterToAdd: 1, // семестр для додавання спеціальності
+    counterSpecialties: 0, // лічильник для ключів у масиві спеціальностей
   };
 
   state = cloneDeep(this.defState);

@@ -18,9 +18,13 @@ export default (Sequelize, DataTypes) => {
   Assigned_teacher.associate = (models) => {
     Assigned_teacher.belongsTo(models.teacher, {
       foreignKey: "id_teacher",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Assigned_teacher.belongsTo(models.class, {
       foreignKey: "id_class",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
 

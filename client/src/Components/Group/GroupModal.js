@@ -77,11 +77,16 @@ class GroupModal extends React.Component {
                 <Col className="col-md-10 my-1">
                   <Form.Control
                     required
+                    type="number"
+                    min={0}
                     placeholder="Кількість студентів"
                     value={item.number_students}
                     onChange={(e) => {
-                      handleChangeItem("number_students", e.target.value);
-                      this.handleChangeState("validatedNumberStudents", true);
+                      let value = +e.target.value;
+                      if (value >= 0) {
+                        handleChangeItem("number_students", e.target.value);
+                        this.handleChangeState("validatedNumberStudents", true);
+                      }
                     }}
                   ></Form.Control>
                   {!this.state.validatedNumberStudents && (
@@ -97,8 +102,11 @@ class GroupModal extends React.Component {
                     placeholder="Семестр"
                     value={item.semester}
                     onChange={(e) => {
-                      handleChangeItem("semester", e.target.value);
-                      this.handleChangeState("validatedSemester", true);
+                      let value = +e.target.value;
+                      if (value >= 0) {
+                        handleChangeItem("semester", e.target.value);
+                        this.handleChangeState("validatedSemester", true);
+                      }
                     }}
                   ></Form.Control>
                   {!this.state.validatedSemester && (

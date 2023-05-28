@@ -31,7 +31,11 @@ export default (Sequelize, DataTypes) => {
     Audience.hasMany(models.assigned_audience, {
       foreignKey: "id_audience",
     });
-    Audience.belongsTo(models.type_class, { foreignKey: "id_type_class" });
+    Audience.belongsTo(models.type_class, {
+      foreignKey: "id_type_class",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
     Audience.belongsToMany(models.cathedra, {
       foreignKey: "id_audience",
       through: models.assigned_audience,
