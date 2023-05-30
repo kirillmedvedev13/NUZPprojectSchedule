@@ -5,6 +5,7 @@
 #include "../Libraries/json.hpp"
 #include <chrono>
 #include <mutex>
+#include <climits>
 #include "../Libraries/EvolutionAlgorithm.hpp"
 #include "../Libraries/Service.hpp"
 
@@ -63,14 +64,14 @@ int main(int argc,char* argv[])
         }
 
         int countIter = 0;
-        auto bestPopulation = bestIndivid();
+        auto best_individ = bestIndivid();
         auto result = vector<pair<int, double>>();
         Timer.stop();
         cout << "Init " << Timer.ms() << "ms" << endl;
 
         auto StartTime = chrono::high_resolution_clock::now();
 
-        while (countIter < max_generations && bestPopulation.fitnessValue.fitnessValue != 0)
+        while (countIter < max_generations && best_individ.fitnessValue.fitnessValue != 0)
         {
             Timer.start();
             for(int i =0;i<number_island;i++){
@@ -111,9 +112,9 @@ int main(int argc,char* argv[])
                 }
                 //Поиск лучшего острова
                 int best_index = -1;
-                int sum = INT_MAX;
+                double sum = DBL_MAX;
                 for(auto i = 0; i < number_island; i++){
-                    int tempSum = 0;
+                    double tempSum = 0;
                     for(auto &ind: islandsBestIndivids[i]){
                         tempSum += ind.second;
                     }
@@ -122,7 +123,7 @@ int main(int argc,char* argv[])
                         sum = tempSum;
                     }
                 }
-
+                // Замена индивидов у всех островов кроме лучшего
                 for(auto i = 0; i < number_island; i++){
                     if(i != best_index) {
                        islands[i].ChangeWorstIndivids(islandsBestIndivids[best_index]);
@@ -131,22 +132,22 @@ int main(int argc,char* argv[])
                 Timer.stop();
                 cout << "Migration " << Timer.ms() << "ms" << endl;
             }
-
+            // Выборка лучшего индивида
             for(auto &island: islands){
                 auto bestInIsland = island.GetBestIndivid();
-                if(bestPopulation.fitnessValue.fitnessValue>bestInIsland.fitnessValue.fitnessValue){
-                    bestPopulation = bestInIsland;
+                if(best_individ.fitnessValue.fitnessValue > bestInIsland.fitnessValue.fitnessValue){
+                    best_individ = bestInIsland;
                 }
             }
 
-            cout << "Iter: " << ++countIter << ", Min fitness: " << bestPopulation.fitnessValue.fitnessValue << endl;
+            cout << "Iter: " << ++countIter << ", Min fitness: " << best_individ.fitnessValue.fitnessValue << endl;
             auto EndTime = chrono::high_resolution_clock::now();
             chrono::duration<float,std::milli> duration = EndTime - StartTime;
-            result.push_back(make_pair(duration.count(), bestPopulation.fitnessValue.fitnessValue));
+            result.push_back(make_pair(duration.count(), best_individ.fitnessValue.fitnessValue));
 
         }
         json resultJson = json();
-        resultJson["bestPopulation"] = bestPopulation.to_json();
+        resultJson["bestPopulation"] = best_individ.to_json();
         resultJson["result"] = result;
         ofstream fileResult(path+"\\result.json");
         if (fileResult.is_open()){
