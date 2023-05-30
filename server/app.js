@@ -35,8 +35,6 @@ const main = async () => {
     })
   );
 
-
-
   http.createServer(app).listen(config.PORT, () => {
     console.log(`Server HTTP is running on ${config.PORT}`);
   });
