@@ -11,6 +11,7 @@ import {
   ReferenceArea,
   Label,
   Legend,
+  ResponsiveContainer
 } from "recharts";
 
 function getAxisYDomain(from, to, ref, offset, initialData) {
@@ -166,8 +167,15 @@ export default class MultiCharts extends React.Component {
         >
           <Button onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
         </div>
-        <div
-          className="table-responsive justify-content-center mx-5 my-2"
+        <div style={{overflow:'auto',height:'600px'}}>
+        <ResponsiveContainer
+         style={{overflow:'auto'}}
+          width='90%'
+          maxHeight={580}
+          minWidth={600}
+          minHeight={500}
+          aspect={1}
+          className="justify-content-center mx-5 my-2"
           id={`form ${nameAlgorithm} `}
         >
           <LineChart
@@ -253,6 +261,7 @@ export default class MultiCharts extends React.Component {
               />
             ) : null}
           </LineChart>
+        </ResponsiveContainer>
         </div>
       </>
     );
