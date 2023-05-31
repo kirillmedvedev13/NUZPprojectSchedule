@@ -1,4 +1,3 @@
-import { exec, execFile, spawnSync } from "child_process";
 import fs, { readFileSync } from "fs";
 import { __DirectiveLocation } from "graphql";
 import SpawnChild from "../Service/SpawnChild.js";
@@ -20,14 +19,10 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
     } = await GetDataFromDB(id_cathedra, name_algorithm);
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
-    let params_obj = {};
-    for (let p of params) {
-      params_obj[p.name] = p.value;
-    }
     let jsonData = JSON.stringify({
       max_day,
       max_pair,
-      params: params_obj,
+      params,
       base_schedule,
       recommended_schedules,
       classes,
@@ -35,14 +30,7 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let fileName =
-      name_algorithm === "evolution_algorithmCPP"
-        ? path.resolve(
-            "./Algorithms/EvolutionAlgorithmsCpp/ClassicEvolutionAlgorithm.exe"
-          )
-        : path.resolve(
-            "./Algorithms/EvolutionAlgorithmsCpp/IslandModelEvolutionAlgorithm.exe"
-          );
+    let fileName = "./Algorithms/EvolutionAlgorithmsCpp/ClassicEvolutionAlgorithm.exe"
     let fileData = path.resolve("./Algorithms/EvolutionAlgorithmsCpp/");
     fs.writeFileSync(fileData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
@@ -55,7 +43,7 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       let bestPopulation = res.bestPopulation;
       let results = res.result;
       let results_value = JSON.stringify(results);
-      let params_value = JSON.stringify(params_obj);
+      let params_value = JSON.stringify(params);
       let resdb = await db.results_algorithm.findOne({
         where: { params_value, name_algorithm },
       });

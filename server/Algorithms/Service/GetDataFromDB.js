@@ -76,6 +76,11 @@ export default async function GetDataFromDB(
   }
 
   let params = JSON.parse(algorithm.params);
+  let params_obj = {};
+  for (let p of params) {
+    params_obj[p.name] = p.value;
+  }
+  params = params_obj;
 
   return {
     max_day,
