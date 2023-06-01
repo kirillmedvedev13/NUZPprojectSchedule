@@ -41,7 +41,8 @@ int main(int argc,char* argv[])
 
         auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
-        EvolutionAlgorithm mainAlgorithm(data, bs, worker_pool);
+        double Seed = GetRndDouble();
+        EvolutionAlgorithm mainAlgorithm(data, bs, worker_pool, Seed);
 
         Timer.stop();
 

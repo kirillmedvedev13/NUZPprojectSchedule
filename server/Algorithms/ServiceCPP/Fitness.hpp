@@ -45,7 +45,7 @@ double FitnessWindows(vector<schedule *> &i_schedule, const double &penaltyWin, 
                     if (res != array.end())
                         continue;
                 }
-                fitnessWindows += (schedule_bot[i + 1]->number_pair - schedule_bot[i]->number_pair - 1) * penaltyWin;
+                fitnessWindows += diff * penaltyWin;
             }
         }
     }
