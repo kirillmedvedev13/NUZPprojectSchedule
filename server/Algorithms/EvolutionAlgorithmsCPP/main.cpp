@@ -1,8 +1,9 @@
-#include <iostream>
 #include "../ServiceCPP/json.hpp"
 #include "../ServiceCPP/BS_thread_pool.hpp"
 #include "../ServiceCPP/TypeDefs.hpp"
 #include "EvolutionAlgorithm.hpp"
+
+#include <iostream>
 #include <fstream>
 #include <vector>
 #include <cstring>
@@ -10,6 +11,7 @@
 #include <chrono>
 #include <filesystem>
 #include <ctime>
+
 using namespace std;
 using namespace nlohmann;
 using namespace BS;

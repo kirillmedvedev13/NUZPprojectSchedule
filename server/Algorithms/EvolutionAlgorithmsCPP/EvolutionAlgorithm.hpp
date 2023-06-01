@@ -4,6 +4,11 @@
 #include "../ServiceCPP/TypeDefs.hpp"
 #include "../ServiceCPP/BS_thread_pool.hpp"
 #include "../ServiceCPP/Service.hpp"
+#include "../ServiceCPP/GetPairTypeForClass.hpp"
+#include "../ServiceCPP/GetIdAudienceForClass.hpp"
+#include "../ServiceCPP/SetBaseScheduleToIndivid.hpp"
+#include "../ServiceCPP/Fitness.hpp"
+
 #include <cfloat>
 #include <vector>
 #include <climits>
@@ -65,260 +70,6 @@ protected:
     double p_mutation_gene;
     string type_initialization;
 
-    // Получить тип пары для занятия
-    vector<int> GetPairTypeForClass(const clas &clas_)
-    {
-        vector<int> times;
-        int times_per_week = clas_.times_per_week;
-        if (times_per_week <= 1)
-            times.push_back(GetRndInteger(1, 2));
-
-        if (times_per_week > 1 && times_per_week <= 2)
-        {
-            times.push_back(GetRndInteger(1, 2));
-            times.push_back(GetRndInteger(1, 2));
-        }
-        if (times_per_week > 2 && times_per_week <= 3)
-        {
-            double r = GetRndDouble();
-            if (r <= 0.75)
-            {
-                times.push_back(3);
-                times.push_back(GetRndInteger(1, 2));
-            }
-            else
-            {
-                times.push_back(GetRndInteger(1, 2));
-                times.push_back(GetRndInteger(1, 2));
-                times.push_back(GetRndInteger(1, 2));
-            }
-        }
-        return times;
-    }
-    // 0.5 - 1 пара в 2 денели
-    // 1 - 1 пара в 2 денели
-    // 2 - 2 пары в 2 денели
-    // 2.5 - 3 пары в 2 недели
-    // 3 - 3 пары в 2 денели
-    // 4 - 4 пары в 2 недели
-
-
-    //Получить номер аудитории для занятия
-    int GetIdAudienceForClass(const clas &clas)
-    {
-        vector<int> detected_audiences;
-        if (clas.recommended_audiences.size())
-            detected_audiences.push_back(clas.recommended_audiences[GetRndInteger(0, clas.recommended_audiences.size() - 1)].id_audience);
-        else
-        {
-            int sum_students = 0;
-            for (auto ag : clas.assigned_groups)
-            {
-                sum_students += ag.number_students;
-            }
-            int id_cathedra = clas.id_cathedra;
-            // Аудитории в кафедре занятия
-            for (const auto &aud : audiences)
-            {
-                if (aud.capacity >= sum_students && aud.id_type_class == clas.id_type_class)
-                {
-                    for (auto cath : aud.cathedras)
-                    {
-                        if (cath == id_cathedra)
-                        {
-                            detected_audiences.push_back(aud.id);
-                            break;
-                        }
-                    }
-                }
-            }
-            // Если в кафедре нету ни одно аудитории
-            if (!detected_audiences.size())
-            {
-                for (const auto &aud : audiences)
-                {
-                    if (aud.capacity >= sum_students && aud.id_type_class == clas.id_type_class)
-                    {
-                        detected_audiences.push_back(aud.id);
-                    }
-                }
-                if (!detected_audiences.size())
-                    return -1;
-            }
-        }
-        return detected_audiences[GetRndInteger(0, detected_audiences.size() - 1)];
-    }
-
-    //Подсчет окон для определнного расписания
-    double FitnessWindows(vector<schedule *> &i_schedule, double &penaltyWin)
-    {
-        double fitnessWindows = 0;
-        for (int current_day = 1; current_day <= this->max_day; current_day++)
-        {
-            auto schedule_top = vector<schedule *>();
-            auto schedule_bot = vector<schedule *>();
-            copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_top), [&current_day](schedule *p)
-                    { return (p->day_week == current_day && (p->pair_type == 1 || p->pair_type == 3)); });
-            copy_if(i_schedule.begin(), i_schedule.end(), back_inserter(schedule_bot), [&current_day](schedule *p)
-                    { return (p->day_week == current_day && (p->pair_type == 2 || p->pair_type == 3)); });
-            auto array = vector<pair<schedule *, schedule *>>();
-            // Числитель и Общие
-            int s = schedule_top.size() - 1;
-            for (int i = 0; i < s; i++)
-            {
-                auto diff = (schedule_top[i + 1]->number_pair - schedule_top[i]->number_pair);
-                if (diff > 1)
-                {
-                    fitnessWindows += diff * penaltyWin;
-                }
-                // Запомнить окно между общими парами что бы в знаменателе их не повторять
-                if (schedule_top[i + 1]->pair_type == 3 && schedule_top[i]->pair_type == 3)
-                {
-                    array.push_back(make_pair(schedule_top[i], schedule_top[i + 1]));
-                }
-            }
-            // Знаменатель
-            s = schedule_bot.size() - 1;
-            for (int i = 0; i < s; i++)
-            {
-                auto diff = (schedule_bot[i + 1]->number_pair - schedule_bot[i]->number_pair);
-                if (diff > 1)
-                {
-                    if (schedule_bot[i + 1]->pair_type == 3 && schedule_bot[i]->pair_type == 3)
-                    {
-                        auto res = find_if(array.begin(), array.end(), [&i, &schedule_bot](const pair<schedule *, schedule *> &p)
-                                           { return (p.first == schedule_bot[i] && p.second == schedule_bot[i + 1]); });
-                        if (res != array.end())
-                            continue;
-                    }
-                    fitnessWindows += (schedule_bot[i + 1]->number_pair - schedule_bot[i]->number_pair - 1) * penaltyWin;
-                }
-            }
-        }
-        return fitnessWindows;
-    }
-
-    //Подсчет неправильно расставленных рекуомендуемых занятий
-    double FitnessRecommendSchedules(const vector<recommended_schedule> &rs, const vector<schedule> &sc)
-    {
-        double fitnessSameRecSc = 0;
-        for (size_t i = 0; i < sc.size(); i++)
-        {
-            if (sc[i].day_week != rs[i].day_week || sc[i].number_pair != rs[i].number_pair)
-            {
-                fitnessSameRecSc += this->penaltySameRecSc;
-            }
-        }
-        return fitnessSameRecSc;
-    }
-
-    //Подсчет накладания занятий для переданного расписания
-    double FitnessSameTimes(vector<schedule *> &i_schedule, const double &penaltySameTimesSc)
-    {
-        double fitnessSameTimes = 0;
-        schedule *lastTop = nullptr;
-        schedule *lastBot = nullptr;
-        schedule *lastTotal = nullptr;
-        int cur_day = -1;
-        int s = i_schedule.size() - 1;
-        for (int i = -1; i < s; i++)
-        {
-            if (i_schedule[i + 1]->day_week != cur_day)
-            {
-                cur_day = i_schedule[i + 1]->day_week;
-                lastTop = nullptr;
-                lastBot = nullptr;
-                lastTotal = nullptr;
-                continue;
-            }
-            switch (i_schedule[i]->pair_type)
-            {
-            case 1:
-                lastTop = i_schedule[i];
-                break;
-            case 2:
-                lastBot = i_schedule[i];
-                break;
-            case 3:
-                lastTotal = i_schedule[i];
-                break;
-            }
-            if (i_schedule[i + 1]->number_pair == i_schedule[i]->number_pair)
-            {
-                if (i_schedule[i + 1]->pair_type == 1)
-                {
-                    auto top = lastTop != nullptr ? (lastTop->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    auto tot = lastTotal != nullptr ? (lastTotal->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    if (top || tot)
-                    {
-                        fitnessSameTimes += penaltySameTimesSc;
-                        continue;
-                    }
-                }
-                if (i_schedule[i + 1]->pair_type == 2)
-                {
-                    auto bot = lastBot != nullptr ? (lastBot->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    auto tot = lastTotal != nullptr ? (lastTotal->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    if (bot || tot)
-                    {
-                        fitnessSameTimes += penaltySameTimesSc;
-                        continue;
-                    }
-                }
-                if (i_schedule[i + 1]->pair_type == 3)
-                {
-                    auto bot = lastBot != nullptr ? (lastBot->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    auto top = lastTop != nullptr ? (lastTop->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    auto tot = lastTotal != nullptr ? (lastTotal->number_pair == i_schedule[i + 1]->number_pair) : false;
-                    if (bot || top || tot)
-                    {
-                        fitnessSameTimes += penaltySameTimesSc;
-                        continue;
-                    }
-                }
-            }
-        }
-        return fitnessSameTimes;
-    }
-
-    //Исользуеться для сортировки определнного расписания
-    bool Compare(schedule *a, schedule *b)
-    {
-        if (a->day_week < b->day_week)
-            return true;
-        if (a->day_week > b->day_week)
-            return false;
-        if (a->number_pair < b->number_pair)
-            return true;
-        if (a->number_pair > b->number_pair)
-            return false;
-        if (a->pair_type < b->pair_type)
-            return true;
-        if (a->pair_type > b->pair_type)
-            return false;
-        return false;
-    }
-
-    //Сортировка расписания пузырем
-    void SortSchedule(vector<schedule *> &i_schedule)
-    {
-        if (i_schedule.size() > 2)
-        {
-            for (size_t i = 0; i < i_schedule.size(); i++)
-            {
-                for (size_t j = 0; j < i_schedule.size() - 1; j++)
-                {
-                    if (Compare(i_schedule[j], i_schedule[j + 1]) == false)
-                    {
-                        auto t = i_schedule[j];
-                        i_schedule[j] = i_schedule[j + 1];
-                        i_schedule[j + 1] = t;
-                    }
-                }
-            }
-        }
-    }
-
     // Начальная инициализация расписания
     void Init()
     {
@@ -326,40 +77,14 @@ protected:
         // Заполнение базового расписания
         for (int k = 0; k < population_size; k++)
         {
-            for (auto &gr : this->bs.base_schedule_group)
-            {
-                auto id = gr.first;
-                auto &t = populations[k].scheduleForGroups.at(id);
-                for (auto &sc : gr.second)
-                {
-                    t.push_back(&sc);
-                }
-            }
-            for (auto &teach : this->bs.base_schedule_teacher)
-            {
-                auto id = teach.first;
-                auto &t = populations[k].scheduleForTeachers.at(id);
-                for (auto &sc : teach.second)
-                {
-                    t.push_back(&sc);
-                }
-            }
-            for (auto &aud : this->bs.base_schedule_audience)
-            {
-                auto id = aud.first;
-                auto &t = populations[k].scheduleForAudiences.at(id);
-                for (auto &sc : aud.second)
-                {
-                    t.push_back(&sc);
-                }
-            }
+            SetBaseScheduleToIndivid(populations[k], bs);
         }
         // Расстановка расписания случайным образом
         if (this->type_initialization == "random") {
             // В начальном варианте у всех индиводов расписание разное но одинаковое количество пар
             for (size_t i = 0; i < this->classes.size(); i++) {
                 clas &clas = this->classes[i];
-                vector<int> info = this->GetPairTypeForClass(clas);
+                vector<int> info = GetPairTypeForClass(clas);
                 for (size_t j = 0; j < info.size(); j++) {
                     for (int k = 0; k < this->population_size; k++) {
                         int day_week, number_pair;
@@ -374,7 +99,7 @@ protected:
                             number_pair = recommended_schedules[j].number_pair;
                         }
                         //Растановка аудитории
-                        int id_audience = GetIdAudienceForClass(clas);
+                        int id_audience = GetIdAudienceForClass(clas, audiences);
                         //Добавление пары в занятие
                         this->classes[i].schedules[k].push_back(schedule(number_pair, day_week, info[j], id_audience, clas.id));
                     }
@@ -391,18 +116,18 @@ protected:
                 for (size_t index_pair = 0; index_pair < clas.schedules[index_individ].size(); index_pair++) {
                     auto ref = &clas.schedules[index_individ][index_pair];
                     // Добавление ссылки на занятие для груп
-                    for (auto gr : classes[index_class].assigned_groups)
+                    for (auto &gr : classes[index_class].assigned_groups)
                     {
                         auto &ref_gr = populations[index_individ].scheduleForGroups[gr.id];
                         ref_gr.push_back(ref);
                     }
-                    // Доабвление ссылки на занятие для учителей
-                    for (auto teach : classes[index_class].assigned_teachers)
+                    // Добавление ссылки на занятие для учителей
+                    for (auto &teach : classes[index_class].assigned_teachers)
                     {
                         auto &ref_teach = populations[index_individ].scheduleForTeachers[teach.id];
                         ref_teach.push_back(ref);
                     }
-                    //Доабвление ссылки на занятие для аудиторий
+                    // Добавление ссылки на занятие для аудитории
                     auto &ref_aud = populations[index_individ].scheduleForAudiences[clas.schedules[index_individ][index_pair].id_audience];
                     ref_aud.push_back(ref);
                 }
@@ -496,56 +221,6 @@ protected:
         }
     }
 
-    //Подсчет общего фитнеса для определенного индивида
-    void Fitness(individ &i_schedule, const int &index)
-    {
-        for (auto &sc_gr : i_schedule.scheduleForGroups)
-        {
-            this->SortSchedule(sc_gr.second);
-        }
-        for (auto &sc_teach : i_schedule.scheduleForTeachers)
-        {
-            this->SortSchedule(sc_teach.second);
-        }
-        for (auto &sc_aud : i_schedule.scheduleForAudiences)
-        {
-            this->SortSchedule(sc_aud.second);
-        }
-        double fitnessValue = 0;
-        double fitnessGrWin = 0;
-        double fitnessSameTimeGr = 0;
-        double fitnessTeachWin = 0;
-        double fitnessSameTimeTeach = 0;
-        double fitnessSameTimeAud = 0;
-        double fitnessRecSc = 0;
-        //Подсчет фитнеса для груп - окна и накладки занятий
-        for (auto &sc_gr : i_schedule.scheduleForGroups)
-        {
-            fitnessGrWin += this->FitnessWindows(sc_gr.second, this->penaltyGrWin);
-            fitnessSameTimeGr += this->FitnessSameTimes(sc_gr.second, penaltySameTimesSc);
-        }
-        //Подсчет фитнеса для учителей - окна и накладки занятий
-        for (auto &sc_teach : i_schedule.scheduleForTeachers)
-        {
-            fitnessTeachWin += this->FitnessWindows(sc_teach.second, this->penaltyTeachWin);
-            fitnessSameTimeTeach += this->FitnessSameTimes(sc_teach.second, penaltySameTimesSc);
-        }
-        //Подсчет фитнеса для аудиторий - накладки занятий
-        for (auto &sc_aud : i_schedule.scheduleForAudiences)
-        {
-            fitnessSameTimeAud += this->FitnessSameTimes(sc_aud.second, this->penaltySameTimesSc);
-        }
-        //Подсчет фитнеса для рекомендуемых занятий
-        for (auto &cl : this->classes)
-        {
-            if (cl.recommended_schedules.size() > 0)
-            {
-                fitnessRecSc += this->FitnessRecommendSchedules(cl.recommended_schedules, cl.schedules[index]);
-            }
-        }
-        fitnessValue = fitnessGrWin + fitnessSameTimeGr + fitnessTeachWin + fitnessSameTimeTeach + fitnessSameTimeAud + fitnessRecSc;
-        i_schedule.fitnessValue = fitness(fitnessValue, fitnessGrWin, fitnessSameTimeGr, fitnessTeachWin, fitnessSameTimeTeach, fitnessSameTimeAud, fitnessRecSc);
-    }
 
     //Функция мутации для индивида
     void Mutation(const int &index_individ)
@@ -561,7 +236,7 @@ protected:
             {
                 int day_week = GetRndInteger(1, max_day);
                 int number_pair = GetRndInteger(1, max_pair);
-                int new_id_audience = GetIdAudienceForClass(this->classes[index_class]);
+                int new_id_audience = GetIdAudienceForClass(this->classes[index_class], audiences);
                 int pair_type = this->classes[index_class].schedules[index_individ][index_pair].pair_type;
                 // С шансом 0.5 менять числитель на знаменатель
                 if (pair_type < 3 && GetRndDouble() <= 0.5)
@@ -583,7 +258,7 @@ protected:
                         if (GetRndDouble() <= this->p_mutation_gene){
                             int day_week = GetRndInteger(1, max_day);
                             int number_pair = GetRndInteger(1, max_pair);
-                            int new_id_audience = GetIdAudienceForClass(this->classes[index_class]);
+                            int new_id_audience = GetIdAudienceForClass(this->classes[index_class], this->audiences);
                             int pair_type = this->classes[index_class].schedules[index_individ][index_pair].pair_type;
                             // С шансом 0.5 менять числитель на знаменатель
                             if (pair_type < 3 && GetRndDouble() <= 0.5)
@@ -675,7 +350,7 @@ public:
 
         //Добавление занятий
         this->classes = vector<clas>();
-        for (json cl : data["classes"])
+        for (json &cl : data["classes"])
         {
             classes.push_back(clas(cl, population_size));
         }
@@ -704,7 +379,7 @@ public:
         {
             auto &ind = this->populations[i];
             worker_pool.push_task([this, &ind, &i]()
-                                  { this->Fitness(ind, i); });
+                                  { Fitness(this->classes, ind, i, this->max_day, this->penaltyGrWin, this->penaltyTeachWin, this->penaltySameTimesSc, this->penaltySameRecSc); });
         }
         worker_pool.wait_for_tasks();
     }

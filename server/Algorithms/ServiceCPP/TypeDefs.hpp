@@ -91,33 +91,33 @@ struct fitness
     }
 };
 
-struct teacher
-{
+struct ContainId{
     int id;
-    teacher()
-    {
+    ContainId(){
         id = -1;
     }
-    teacher(int id_teacher)
-    {
-        id = id_teacher;
+    ContainId(int id){
+        this->id = id;
     }
 };
 
-struct group
+struct teacher : public ContainId
 {
-    int id;
+    teacher() : ContainId() {}
+    teacher(int id_teacher) : ContainId(id_teacher) {}
+};
+
+struct group : public ContainId
+{
     int number_students;
     int semester;
-    group()
+    group() : ContainId()
     {
-        id = -1;
         number_students = -1;
         semester = -1;
     }
-    group(json &group)
+    group(json &group) : ContainId((int)group["id"])
     {
-        id = (int)group["id"];
         number_students = (int)group["number_students"];
         semester = (int)group["semester"];
     }
@@ -180,22 +180,19 @@ struct clas
     }
 };
 
-struct audience
+struct audience : ContainId
 {
-    int id;
     int id_type_class;
     int capacity;
     vector<int> cathedras;
-    audience()
+    audience() : ContainId()
     {
-        id = -1;
         id_type_class = -1;
         capacity = -1;
         cathedras = vector<int>();
     }
-    audience(json &audience)
+    audience(json &audience) : ContainId(audience["id"])
     {
-        id = audience["id"];
         id_type_class = audience["id_type_class"];
         capacity = audience["capacity"];
         cathedras = vector<int>();
