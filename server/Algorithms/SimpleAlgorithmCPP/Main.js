@@ -28,7 +28,7 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let fileName = "./Algorithms/SimpleAlgorithmCPP/IslandModelEvolutionAlgorithm.exe";
+    let fileName = "./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe";
     let fileData = path.resolve("./Algorithms/SimpleAlgorithmCPP/");
     fs.writeFileSync(fileData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
@@ -63,6 +63,9 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
           message: `Фітнес - ${results[results.length - 1][1]}`,
         };
       else return { successful: false, message: `Помилка` };
+    }
+    else{
+      console.log(`error code - ${code}`);
     }
   } catch (err) {
     console.log(err);
