@@ -1,4 +1,3 @@
-#include "../ServiceCPP/BS_thread_pool.hpp"
 #include "../ServiceCPP/json.hpp"
 #include "../ServiceCPP/Service.hpp"
 #include "../ServiceCPP/TypeDefs.hpp"
