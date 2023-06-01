@@ -6,7 +6,7 @@ import GetDataFromDB from "../Service/GetDataFromDB.js";
 import GetBaseSchedule from "../Service/GetBaseSchedule.js";
 import db from "../../database.js";
 
-export const RUN_IMEACPP = async (id_cathedra, name_algorithm) => {
+export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
   try {
     let {
       max_day,
@@ -15,14 +15,12 @@ export const RUN_IMEACPP = async (id_cathedra, name_algorithm) => {
       recommended_schedules,
       general_values,
       audiences,
-      params,
     } = await GetDataFromDB(id_cathedra, name_algorithm);
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
     let jsonData = JSON.stringify({
       max_day,
       max_pair,
-      params,
       base_schedule,
       recommended_schedules,
       classes,
@@ -30,15 +28,15 @@ export const RUN_IMEACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let fileName = "./Algorithms/IslandModelEvolutionAlgorithmCPP/IslandModelEvolutionAlgorithm.exe";
-    let fileData = path.resolve("./Algorithms/IslandModelEvolutionAlgorithmCPP/");
+    let fileName = "./Algorithms/SimpleAlgorithmCPP/IslandModelEvolutionAlgorithm.exe";
+    let fileData = path.resolve("./Algorithms/SimpleAlgorithmCPP/");
     fs.writeFileSync(fileData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
     });
 
     const code = await SpawnChild(fileName, fileData);
     if (code === 0) {
-      let res = readFileSync("./Algorithms/IslandModelEvolutionAlgorithmCPP/result.json");
+      let res = readFileSync("./Algorithms/SimpleAlgorithmCPP/result.json");
       res = JSON.parse(res);
       let bestPopulation = res.bestPopulation;
       let results = res.result;

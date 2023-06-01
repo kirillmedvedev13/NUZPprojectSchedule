@@ -1,7 +1,8 @@
 import { GraphQLInt, GraphQLString } from "graphql";
 import { RUN_EACPP } from "../../Algorithms/EvolutionAlgorithmsCpp/Main.js";
+import { RUN_IMEACPP } from "../../Algorithms/IslandModelEvolutionAlgorithmCPP/Main.js";
 import { RUN_LSTM } from "../../Algorithms/NeuralNetwork/Main.js";
-import { RUN_SA } from "../../Algorithms/SimpleAlgorithm/Main.js";
+import { RUN_SACPP } from "../../Algorithms/SimpleAlgorithmCPP/Main.js";
 import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
 import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
 import db from "../../database.js";
@@ -47,10 +48,10 @@ export const RUN_ALGORITHM = {
         result = await RUN_EACPP(id_cathedra, name);
         break;
       case "island_model_evolution_algorithmCPP":
-        result = await RUN_EACPP(id_cathedra, name);
+        result = await RUN_IMEACPP(id_cathedra, name);
         break;
       case "simple_algorithm":
-        result = await RUN_SA(id_cathedra, name);
+        result = await RUN_SACPP(id_cathedra, name);
         break;
       case "simulated_annealing_algorithm":
         result = await RUN_SIMULATED_ANNEALING(id_cathedra, name);
