@@ -1,10 +1,10 @@
-#include "../ServiceCPP/BS_thread_pool.hpp"
 #include "../ServiceCPP/json.hpp"
 #include "../ServiceCPP/Service.hpp"
 #include "../ServiceCPP/TypeDefs.hpp"
 #include "../ServiceCPP/SetBaseScheduleToIndivid.hpp"
 #include "../ServiceCPP/GetPairTypeForClass.hpp"
 #include "../ServiceCPP/GetIdAudienceForClass.hpp"
+#include "../ServiceCPP/Fitness.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -12,6 +12,7 @@
 #include <chrono>
 #include <climits>
 #include <set>
+#include <cfloat>
 
 using namespace std;
 using namespace nlohmann;
@@ -34,131 +35,22 @@ struct Clas{
         return false;
     }
     bool operator<(const Clas &b) const{
-        if (this->day_week < b.day_week && this->pair_type < b.pair_type && this->number_pair < b.number_pair)
+        if (this->day_week < b.day_week)
             return true;
+        if (this->day_week > b.day_week)
+            return false;
+        if (this->number_pair < b.number_pair)
+            return true;
+        if (this->number_pair > b.number_pair)
+            return false;
+        if (this->pair_type < b.pair_type)
+            return true;
+        if (this->pair_type > b.pair_type)
+            return false;
         return false;
     }
 };
 
-bool Compare(schedule *a, schedule *b)
-{
-    if (a->day_week < b->day_week)
-        return true;
-    if (a->day_week > b->day_week)
-        return false;
-    if (a->number_pair < b->number_pair)
-        return true;
-    if (a->number_pair > b->number_pair)
-        return false;
-    if (a->pair_type < b->pair_type)
-        return true;
-    if (a->pair_type > b->pair_type)
-        return false;
-    return false;
-}
-
-vector<Clas> GetIntersectionForArraySomeOne(map<int, vector<schedule *>> &scheduleForSomeOne, vector<ContainId> vectorSomeOne,
-                                            int &max_day, int &max_pair, int _pair_type, bool needConsiderWindow = true){
-    auto INTERSECTION = vector<Clas>();
-    // Поиск свободного дня и номера пары
-    auto arr_some = vector<vector<Clas>>();
-    for (auto &some : vectorSomeOne){
-        // Создание вектора если он не создан
-        auto res_map = scheduleForSomeOne.find(some.id);
-        if (res_map == scheduleForSomeOne.end()){
-            scheduleForSomeOne.insert(make_pair(some.id, vector<schedule *>()));
-        }
-        // сортировка расписания
-        sort(scheduleForSomeOne[some.id].begin(), scheduleForSomeOne[some.id].end(), Compare);
-        auto temp_set_no_overlay = vector<Clas>();
-        auto temp_set_no_window = vector<Clas>();
-        // Нужно добавить в сет все свободные пары
-        for (int day_week = 1; day_week <= max_day; day_week++){
-            bool is_exist_pair_in_day;
-            if (needConsiderWindow){
-                auto res = find_if(scheduleForSomeOne[some.id].begin(), scheduleForSomeOne[some.id].end(), [&day_week](schedule *sc){
-                    return sc->day_week == day_week;
-                });
-                if (res != scheduleForSomeOne[some.id].end()){
-                    is_exist_pair_in_day = true;
-                }
-                else{
-                    is_exist_pair_in_day = false;
-                }
-            }
-            for (int number_pair = 1; number_pair <= max_pair; number_pair++){
-                for (int pair_type = 1; pair_type <= 3; pair_type++){
-                    auto res_overlay = find_if(scheduleForSomeOne[some.id].begin(), scheduleForSomeOne[some.id].end(), [&day_week, &number_pair, &pair_type](schedule *sc){
-                        return sc->number_pair == number_pair && sc->day_week == day_week &&  sc->pair_type == pair_type;
-                    });
-                    bool is_overlay = true;
-                    if (res_overlay == scheduleForSomeOne[some.id].end()){
-                        is_overlay = false;
-                        // Если числитель или знаменатель, то добавлять и то и то
-                        if ((_pair_type == 1 || _pair_type == 2) && (pair_type == 1 || pair_type == 2))
-                            temp_set_no_overlay.push_back(Clas(day_week, number_pair, pair_type));
-                        // Если общая пара, то добавлять только её
-                        else if (_pair_type == 3 && pair_type == 3)
-                            temp_set_no_overlay.push_back(Clas(day_week, number_pair, pair_type));
-                    }
-                    if (needConsiderWindow){
-                        // Если не существует первой пары в день, то добавлять любую пару
-                        if (!is_exist_pair_in_day){
-                            temp_set_no_window.push_back(Clas(day_week, number_pair, pair_type));
-                        }
-                        // Иначе нужно искать ближаюшую пару снизу и сверху и смотреть их разницу
-                        else{
-                            auto res_find_up = find_if(scheduleForSomeOne[some.id].begin(), scheduleForSomeOne[some.id].end(), [&day_week, &number_pair, &pair_type, &is_overlay](schedule *sc){
-                                return sc->number_pair - number_pair == 1 && sc->pair_type == pair_type && sc->day_week == day_week && is_overlay == false;
-                            });
-                            if (res_find_up != scheduleForSomeOne[some.id].end()){
-                                temp_set_no_window.push_back(Clas(day_week, number_pair, pair_type));
-                            }
-                            auto res_find_down = find_if(scheduleForSomeOne[some.id].begin(), scheduleForSomeOne[some.id].end(), [&day_week, &number_pair, &pair_type, &is_overlay](schedule *sc){
-                                return number_pair - sc->number_pair == 1 && sc->pair_type == pair_type && sc->day_week == day_week && is_overlay == false;
-                            });
-                            if (res_find_down != scheduleForSomeOne[some.id].end()){
-                                temp_set_no_window.push_back(Clas(day_week, number_pair, pair_type));
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-        // Пересечение занятий без окон и накладок
-        if (needConsiderWindow){
-            auto temp = vector<Clas>();
-            set_intersection(temp_set_no_overlay.begin(), temp_set_no_overlay.end(), temp_set_no_window.begin(), temp_set_no_window.end(), back_inserter(temp));
-            arr_some.push_back(temp);
-        }
-        // Пересечение только без накладок
-        else{
-            arr_some.push_back(temp_set_no_overlay);
-        }
-
-    }
-    // Если только одна группа
-    if (arr_some.size() == 1){
-        for (auto &cl : arr_some[0]){
-            INTERSECTION.push_back(cl);
-        }
-    }else if (arr_some.size() > 1){
-        auto temp_arr = vector<vector<Clas>>(arr_some.size() - 1);
-        // Выбор свободных пар среди всех групп у занятия
-        for (size_t i = 0; i < arr_some.size() - 1; i++){
-            if (i != 0){
-                set_intersection(temp_arr[i-1].begin(), temp_arr[i-1].end(), arr_some[i+1].begin(), arr_some[i+1].end(), back_inserter(temp_arr[i]));
-            }
-            else
-                set_intersection(arr_some[i].begin(), arr_some[i].end(), arr_some[i+1].begin(), arr_some[i+1].end(), back_inserter(temp_arr[i]));
-        }
-        for (auto &cl : temp_arr[temp_arr.size() - 1]){
-            INTERSECTION.push_back(cl);
-        }
-    }
-    return INTERSECTION;
-}
 
 int main(int argc,char* argv[])
 {
@@ -209,6 +101,7 @@ int main(int argc,char* argv[])
 
         for (auto &cl : classes){
             auto info = GetPairTypeForClass(cl);
+            cl.schedules[0] = vector<schedule>(info.size());
             for (size_t j = 0; j < info.size(); j++) {
                 int DAY_WEEK, NUMBER_PAIR, PAIR_TYPE;
                 int id_audience = GetIdAudienceForClass(cl, audiences);
@@ -224,32 +117,223 @@ int main(int argc,char* argv[])
                     auto INTERSECTION_TEACHERS = vector<Clas>();
                     auto INTERSECTION_AUDIENCES = vector<Clas>();
 
-                    auto vec_groups = vector<ContainId>(cl.assigned_groups.size());
-                    for (size_t i = 0; i < cl.assigned_groups.size(); i++){
-                        vec_groups[i] = cl.assigned_groups[i];
-                    }
-                    INTERSECTION_GROUPS = GetIntersectionForArraySomeOne(ind.scheduleForGroups, vec_groups, max_day, max_pair, info[j]);
+                    auto arr_group = vector<vector<Clas>>();
+                    for (auto &gr : cl.assigned_groups){
+                        // Создание вектора если он не создан
+                        auto res_map = ind.scheduleForGroups.find(gr.id);
+                        if (res_map == ind.scheduleForGroups.end()){
+                            ind.scheduleForGroups.insert(make_pair(gr.id, vector<schedule *>()));
+                        }
+                        auto &ref = ind.scheduleForGroups[gr.id];
+                        // сортировка расписания
+                        sort(ref.begin(), ref.end(), CompareSchedule);
+                        auto temp_set_no_overlay = vector<Clas>();
+                        auto temp_set_no_window = vector<Clas>();
+                        // Нужно добавить в сет все свободные пары
+                        auto startFitnessWindows = FitnessWindows(ref, penaltyGrWin, max_day);
+                        auto startFitnessSameTimes = FitnessSameTimes(ref, penaltySameTimesSc);
+                        for (int day_week = 1; day_week <= max_day; day_week++){
+                            for (int number_pair = 1; number_pair <= max_pair; number_pair++){
+                                for (int pair_type = 1; pair_type <= 3; pair_type++){
+                                    auto sc = schedule(number_pair, day_week, pair_type, id_audience, cl.id);
+                                    ref.push_back(&sc);
+                                    sort(ref.begin(), ref.end(), CompareSchedule);
+                                    auto tempFitnessWindows = FitnessWindows(ref, penaltyGrWin, max_day);
+                                    auto tempFitnessSameTimes = FitnessSameTimes(ref, penaltySameTimesSc);
+                                    // Если такая пара подходит по окнам
+                                    if (tempFitnessWindows - startFitnessWindows == 0){
+                                        temp_set_no_window.push_back(Clas(day_week, number_pair, pair_type));
+                                    }
+                                    // Если такая пара подходит по накладкам
+                                    if (tempFitnessSameTimes - startFitnessSameTimes == 0){
+                                        temp_set_no_overlay.push_back(Clas(day_week, number_pair, pair_type));
+                                    }
+                                    ref.erase(find(ref.begin(), ref.end(), &sc));
+                                }
+                            }
+                        }
+                        auto temp = vector<Clas>();
+                        set_intersection(temp_set_no_overlay.begin(), temp_set_no_overlay.end(), temp_set_no_window.begin(), temp_set_no_window.end(), back_inserter(temp));
+                        arr_group.push_back(temp);
 
-                    auto vec_teachers = vector<ContainId>(cl.assigned_teachers.size());
-                    for (size_t i = 0; i < cl.assigned_teachers.size(); i++){
-                        vec_teachers[i] = cl.assigned_teachers[i];
                     }
-                    INTERSECTION_TEACHERS = GetIntersectionForArraySomeOne(ind.scheduleForGroups, vec_teachers, max_day, max_pair, info[j]);
+                    // Если только одна группа
+                    if (arr_group.size() == 1){
+                        for (auto &cl : arr_group[0]){
+                            INTERSECTION_GROUPS.push_back(cl);
+                        }
+                    }else if (arr_group.size() > 1){
+                        auto temp_arr = vector<vector<Clas>>(arr_group.size() - 1);
+                        // Выбор свободных пар среди всех групп у занятия
+                        for (size_t i = 0; i < arr_group.size() - 1; i++){
+                            if (i != 0){
+                                set_intersection(temp_arr[i-1].begin(), temp_arr[i-1].end(), arr_group[i+1].begin(), arr_group[i+1].end(), back_inserter(temp_arr[i]));
+                            }
+                            else
+                                set_intersection(arr_group[i].begin(), arr_group[i].end(), arr_group[i+1].begin(), arr_group[i+1].end(), back_inserter(temp_arr[i]));
+                        }
+                        for (auto &cl : temp_arr[temp_arr.size() - 1]){
+                            INTERSECTION_GROUPS.push_back(cl);
+                        }
+                    }
 
-                    auto vec_audiences = vector<ContainId>(1);
-                    vec_audiences[0] = ContainId(id_audience);
-                    INTERSECTION_AUDIENCES = GetIntersectionForArraySomeOne(ind.scheduleForGroups, vec_teachers, max_day, max_pair, info[j], false);
+                    auto arr_teacher = vector<vector<Clas>>();
+                    for (auto &teacher : cl.assigned_teachers){
+                        // Создание вектора если он не создан
+                        auto res_map = ind.scheduleForTeachers.find(teacher.id);
+                        if (res_map == ind.scheduleForTeachers.end()){
+                            ind.scheduleForTeachers.insert(make_pair(teacher.id, vector<schedule *>()));
+                        }
+                        auto &ref = ind.scheduleForTeachers[teacher.id];
+                        // сортировка расписания
+                        sort(ref.begin(), ref.end(), CompareSchedule);
+                        auto temp_set_no_overlay = vector<Clas>();
+                        auto temp_set_no_window = vector<Clas>();
+                        // Нужно добавить в сет все свободные пары
+                        auto startFitnessWindows = FitnessWindows(ref, penaltyTeachWin, max_day);
+                        auto startFitnessSameTimes = FitnessSameTimes(ref, penaltySameTimesSc);
+                        for (int day_week = 1; day_week <= max_day; day_week++){
+                            for (int number_pair = 1; number_pair <= max_pair; number_pair++){
+                                for (int pair_type = 1; pair_type <= 3; pair_type++){
+                                    auto sc = schedule(number_pair, day_week, pair_type, id_audience, cl.id);
+                                    ref.push_back(&sc);
+                                    sort(ref.begin(), ref.end(), CompareSchedule);
+                                    auto tempFitnessWindows = FitnessWindows(ref, penaltyTeachWin, max_day);
+                                    auto tempFitnessSameTimes = FitnessSameTimes(ref, penaltySameTimesSc);
+                                    // Если такая пара подходит по окнам
+                                    if (tempFitnessWindows - startFitnessWindows == 0){
+                                        temp_set_no_window.push_back(Clas(day_week, number_pair, pair_type));
+                                    }
+                                    // Если такая пара подходит по накладкам
+                                    if (tempFitnessSameTimes - startFitnessSameTimes == 0){
+                                        temp_set_no_overlay.push_back(Clas(day_week, number_pair, pair_type));
+                                    }
+                                    ref.erase(find(ref.begin(), ref.end(), &sc));
+                                }
+                            }
+                        }
+                        auto temp = vector<Clas>();
+                        set_intersection(temp_set_no_overlay.begin(), temp_set_no_overlay.end(), temp_set_no_window.begin(), temp_set_no_window.end(), back_inserter(temp));
+                        arr_teacher.push_back(temp);
+
+                    }
+                    // Если только одна группа
+                    if (arr_teacher.size() == 1){
+                        for (auto &cl : arr_teacher[0]){
+                            INTERSECTION_TEACHERS.push_back(cl);
+                        }
+                    }else if (arr_teacher.size() > 1){
+                        auto temp_arr = vector<vector<Clas>>(arr_teacher.size() - 1);
+                        // Выбор свободных пар среди всех групп у занятия
+                        for (size_t i = 0; i < arr_teacher.size() - 1; i++){
+                            if (i != 0){
+                                set_intersection(temp_arr[i-1].begin(), temp_arr[i-1].end(), arr_teacher[i+1].begin(), arr_teacher[i+1].end(), back_inserter(temp_arr[i]));
+                            }
+                            else
+                                set_intersection(arr_teacher[i].begin(), arr_teacher[i].end(), arr_teacher[i+1].begin(), arr_teacher[i+1].end(), back_inserter(temp_arr[i]));
+                        }
+                        for (auto &cl : temp_arr[temp_arr.size() - 1]){
+                            INTERSECTION_TEACHERS.push_back(cl);
+                        }
+                    }
+
+                    // Создание вектора если он не создан
+                    auto res_map = ind.scheduleForAudiences.find(id_audience);
+                    if (res_map == ind.scheduleForAudiences.end()){
+                        ind.scheduleForAudiences.insert(make_pair(id_audience, vector<schedule *>()));
+                    }
+                    auto &ref = ind.scheduleForAudiences[id_audience];
+                    // сортировка расписания
+                    sort(ref.begin(), ref.end(), CompareSchedule);
+                    auto temp_set_no_overlay = vector<Clas>();
+                    // Нужно добавить в сет все свободные пары
+                    auto startFitnessSameTimes = FitnessSameTimes(ref, penaltySameTimesSc);
+                    for (int day_week = 1; day_week <= max_day; day_week++){
+                        for (int number_pair = 1; number_pair <= max_pair; number_pair++){
+                            for (int pair_type = 1; pair_type <= 3; pair_type++){
+                                auto sc = schedule(number_pair, day_week, pair_type, id_audience, cl.id);
+                                ref.push_back(&sc);
+                                sort(ref.begin(), ref.end(), CompareSchedule);
+                                auto tempFitnessSameTimes = FitnessSameTimes(ref, penaltySameTimesSc);
+                                // Если такая пара подходит по накладкам
+                                if (tempFitnessSameTimes - startFitnessSameTimes == 0){
+                                    INTERSECTION_AUDIENCES.push_back(Clas(day_week, number_pair, pair_type));
+                                }
+                                ref.erase(find(ref.begin(), ref.end(), &sc));
+                            }
+                        }
+                    }
 
                     auto INTERSECTION = vector<Clas>();
                     auto tempInter = vector<Clas>();
+                    auto tempInter2 = vector<Clas>();
                     set_intersection(INTERSECTION_GROUPS.begin(), INTERSECTION_GROUPS.end(), INTERSECTION_TEACHERS.begin(), INTERSECTION_TEACHERS.end(), back_inserter(tempInter));
-                    set_intersection(tempInter.begin(), tempInter.end(), INTERSECTION_AUDIENCES.begin(), INTERSECTION_AUDIENCES.end(), back_inserter(INTERSECTION));
+                    set_intersection(tempInter.begin(), tempInter.end(), INTERSECTION_AUDIENCES.begin(), INTERSECTION_AUDIENCES.end(), back_inserter(tempInter2));
+                    // Фильтрация пар по нужному типу
+                    if (info[j] == 1 || info[j] == 2){
+                        copy_if(tempInter2.begin(), tempInter2.end(), back_inserter(INTERSECTION), [](Clas &i){
+                            return i.pair_type == 1 || i.pair_type == 2;
+                        });
+                    }
+                    else if(info[j] == 3){
+                        copy_if(tempInter2.begin(), tempInter2.end(), back_inserter(INTERSECTION), [](Clas &i){
+                            return i.pair_type == 3;
+                        });
+                    }
 
-                    // Если вообще не нашло подходящего времени, то выбрать полность случайные значения
+                    // Если вообще не нашло подходящего времени, то выбрать лучшее расположение занятия
                     if(INTERSECTION.size() == 0){
-                        DAY_WEEK = GetRndInteger(1, max_day);
-                        NUMBER_PAIR = GetRndInteger(1, max_pair);
-                        PAIR_TYPE = info[j];
+                        double best_fitness = DBL_MAX;
+                        schedule best_sc;
+                        for(int day_week = 1; day_week <= max_day; day_week++){
+                            for(int number_pair = 1; number_pair <= max_pair; number_pair++){
+                                int pair_type, finish;
+                                if (info[j] == 1 || info[j] == 2){
+                                    pair_type = 1;
+                                    finish = 2;
+                                }
+                                else{
+                                    pair_type = 3;
+                                    finish = 3;
+                                }
+                                for (; pair_type <= finish; pair_type++){
+                                    auto sc = schedule(number_pair, day_week, pair_type, id_audience, cl.id);
+                                    // Добавление расписания ко всем
+                                    for (auto &gr : cl.assigned_groups){
+                                        auto &ref_gr = ind.scheduleForGroups[gr.id];
+                                        ref_gr.push_back(&sc);
+                                    }
+                                    for (auto &teacher : cl.assigned_teachers){
+                                        auto &ref_teach = ind.scheduleForTeachers[teacher.id];
+                                        ref_teach.push_back(&sc);
+                                    }
+                                    auto &ref_aud = ind.scheduleForAudiences[id_audience];
+                                    ref_aud.push_back(&sc);
+
+                                    Fitness(classes, ind, 0, max_day, penaltyGrWin, penaltyTeachWin, penaltySameTimesSc, penaltySameRecSc);
+                                    auto tempFitness = ind.fitnessValue.fitnessValue;
+                                    if (tempFitness < best_fitness){
+                                        best_fitness = tempFitness;
+                                        best_sc = schedule(number_pair, day_week, pair_type, id_audience, cl.id);
+                                    }
+
+                                    // Удаление расписания у всех
+                                    for (auto &gr : cl.assigned_groups){
+                                        auto &ref_gr = ind.scheduleForGroups[gr.id];
+                                        ref_gr.erase(find(ref_gr.begin(), ref_gr.end(), &sc));
+                                    }
+                                    for (auto &teacher : cl.assigned_teachers){
+                                        auto &ref_teach = ind.scheduleForTeachers[teacher.id];
+                                        ref_teach.erase(find(ref_teach.begin(), ref_teach.end(), &sc));
+                                    }
+                                    ref_aud.erase(find(ref_aud.begin(), ref_aud.end(), &sc));
+
+                                }
+                            }
+                        }
+                        DAY_WEEK = best_sc.day_week;
+                        NUMBER_PAIR = best_sc.number_pair;
+                        PAIR_TYPE = best_sc.pair_type;
                     }
                     // Если найдены подходящие времена занятий, то выбрать случайное из них
                     else{
@@ -260,8 +344,8 @@ int main(int argc,char* argv[])
                     }
                 }
                 auto sc = schedule(NUMBER_PAIR, DAY_WEEK, PAIR_TYPE, id_audience, cl.id);
-                cl.schedules[0].push_back(sc);
-                auto ref = &cl.schedules[0][cl.schedules[0].size()-1];
+                cl.schedules[0][j] = sc;
+                auto ref = &cl.schedules[0][j];
                 // Добавление ссылки на занятие для груп
                 for (auto &gr : cl.assigned_groups)
                 {
@@ -278,17 +362,31 @@ int main(int argc,char* argv[])
                 auto &ref_aud = ind.scheduleForAudiences[id_audience];
                 ref_aud.push_back(ref);
             }
-
-
-            auto EndTime = chrono::high_resolution_clock::now();
-            chrono::duration<float,std::milli> duration = EndTime - StartTime;
-
-            result.push_back(make_pair(duration.count(), ind.fitnessValue.fitnessValue));
-            ofstream fileResult(path+"\\result.json");
-            //        if (fileResult.is_open()){
-            //            fileResult << resultJson << endl;
-            //        }
         }
+
+        Fitness(classes, ind, 0, max_day, penaltyGrWin, penaltyTeachWin, penaltySameTimesSc, penaltySameRecSc);
+
+        auto EndTime = chrono::high_resolution_clock::now();
+        chrono::duration<float,std::milli> duration = EndTime - StartTime;
+
+        result.push_back(make_pair(duration.count(), ind.fitnessValue.fitnessValue));
+        auto best_individ = bestIndivid();
+        best_individ.fitnessValue = ind.fitnessValue;
+        for (auto &cl : classes)
+        {
+            for (auto &sc : cl.schedules[0])
+            {
+                best_individ.arr_schedule.push_back(schedule(sc.number_pair, sc.day_week, sc.pair_type, sc.id_audience, sc.id_class));
+            }
+        }
+        json resultJson = json();
+        resultJson["bestPopulation"] = best_individ.to_json();
+        resultJson["result"] = result;
+
+        ofstream fileResult(path+"\\result.json");
+                if (fileResult.is_open()){
+                    fileResult << resultJson << endl;
+                }
     }
     catch (exception &ex)
     {
