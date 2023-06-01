@@ -9,6 +9,9 @@ class Audience extends React.Component {
       id_cathedra: null,
     },
   };
+  componentDidMount() {
+    document.title = this.props.title;
+  }
 
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({

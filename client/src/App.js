@@ -88,40 +88,69 @@ class App extends React.Component {
           email={this.state.userEmail}
         />
         <Routes>
-          <Route exact path="/" element={<Schedule></Schedule>} />
-          <Route path="/schedules" element={<Schedule></Schedule>} />
+          <Route
+            exact
+            path="/"
+            element={<Schedule title="Розклад"></Schedule>}
+          />
+          <Route
+            path="/schedules"
+            element={<Schedule title="Розклад"></Schedule>}
+          />
           {this.state.isLoggin && (
             <Fragment>
-              <Route path="/cathedras" element={<Cathedra></Cathedra>} />
-              <Route path="/audiences" element={<Audience></Audience>} />
-              <Route path="/specialties" element={<Specialty></Specialty>} />
-              <Route path="/disciplines" element={<Discipline></Discipline>} />
-              <Route path="/classes" element={<Class></Class>} />
-              <Route path="/groups" element={<Group></Group>} />
-              <Route path="/teachers" element={<Teacher></Teacher>} />
+              <Route
+                path="/cathedras"
+                element={<Cathedra title="Кафедри"></Cathedra>}
+              />
+              <Route
+                path="/audiences"
+                element={<Audience title="Аудиторії"></Audience>}
+              />
+              <Route
+                path="/specialties"
+                element={<Specialty title="Спеціальності"></Specialty>}
+              />
+              <Route
+                path="/disciplines"
+                element={<Discipline title="Дисципліни"></Discipline>}
+              />
+              <Route
+                path="/classes"
+                element={<Class title="Заняття"></Class>}
+              />
+              <Route path="/groups" element={<Group title="Групи"></Group>} />
+              <Route
+                path="/teachers"
+                element={<Teacher title="Викладачі"></Teacher>}
+              />
               <Route
                 path="/admin_general_values"
-                element={<GeneralValues></GeneralValues>}
+                element={<GeneralValues title="Загальні дані"></GeneralValues>}
               />
               <Route
                 path="/admin_management_data"
-                element={<ManagementData></ManagementData>}
+                element={
+                  <ManagementData title="Видалення даних"></ManagementData>
+                }
               />
               <Route
                 path="/admin_submit_data_sheet"
-                element={<SubmitDataSheet></SubmitDataSheet>}
+                element={
+                  <SubmitDataSheet title="Завантаження відомостей"></SubmitDataSheet>
+                }
               />
               <Route
                 path="/admin_schedule_data"
-                element={<ScheduleData></ScheduleData>}
+                element={<ScheduleData title="Оцінка розкладу"></ScheduleData>}
               />
               <Route
                 path="/admin_algorithms"
-                element={<Algorithms></Algorithms>}
+                element={<Algorithms title="Запуск алгоритмів"></Algorithms>}
               />
             </Fragment>
           )}
-          <Route path="*" element={<Error></Error>} />
+          <Route path="*" title="Помилка" element={<Error></Error>} />
         </Routes>
         <NotificationContainer />
       </Fragment>
