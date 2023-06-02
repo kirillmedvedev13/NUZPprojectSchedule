@@ -15,6 +15,7 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
       recommended_schedules,
       general_values,
       audiences,
+      params
     } = await GetDataFromDB(id_cathedra, name_algorithm);
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
