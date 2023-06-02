@@ -30,7 +30,7 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let fileName = path.resolve("./Algorithms/EvolutionAlgorithmsCpp/ClassicEvolutionAlgorithm.exe");
+    let pathToAlgorithm = path.resolve("./Algorithms/EvolutionAlgorithmsCpp/ClassicEvolutionAlgorithm.exe");
     let pathToData = path.resolve("./Algorithms/EvolutionAlgorithmsCpp/");
     let pathToSA = path.resolve("./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
     fs.writeFileSync(pathToData + "/data.json", jsonData, (err) => {
@@ -38,12 +38,12 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
     });
     let code;
     if(params["type_initialization"] == "simple_algorithm"){
-      code = await SpawnChild(fileName, [pathToData, pathToSA]);
+      code = await SpawnChild(pathToAlgorithm, [pathToData, pathToSA]);
     } else{
-      code = await SpawnChild(fileName, [pathToData]);
+      code = await SpawnChild(pathToAlgorithm, [pathToData]);
     }
     if (code === 0) {
-      let res = readFileSync("./Algorithms/EvolutionAlgorithmsCpp/result.json");
+      let res = readFileSync(pathToData + "/result.json");
       res = JSON.parse(res);
       let bestPopulation = res.bestPopulation;
       let results = res.result;
