@@ -18,11 +18,16 @@ int main(int argc,char* argv[])
     try
     {
         string path;
-        if (argc == 2){
+        string pathToSA;
+        if (argc >= 2){
             path = argv[1];
+            if (argc == 3){
+                pathToSA = argv[2];
+            }
         }
         else {
             path = filesystem::current_path().string();
+            pathToSA = "..\\SimpleAlgorithm\\SimpleAlgorithmCPP.exe";
         }
         json data = json();
         ifstream fileData(path + "\\data.json");
@@ -49,7 +54,7 @@ int main(int argc,char* argv[])
         // Создание островов с разными параметрами и их инициализация
         json data_SA = json();
         if (data["params"]["type_initialization"] == "simple_algorithm"){
-            auto code = system(string("..\\SimpleAlgorithmCPP\\SimpleAlgorithmCPP.exe " + path).c_str());
+            auto code = system(string(pathToSA + " " + path).c_str());
             if (code == 0){
                 ifstream fileData(path + "\\result.json");
                 data_SA = json::parse(fileData);
