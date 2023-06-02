@@ -43,7 +43,23 @@ int main(int argc,char* argv[])
         auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
         double Seed = GetRndDouble();
-        EvolutionAlgorithm mainAlgorithm(data, bs, worker_pool, Seed, path);
+        EvolutionAlgorithm mainAlgorithm;
+        if (data["params"]["type_initialization"] == "simple_algorithm"){
+            auto code = system(string("..\\SimpleAlgorithmCPP\\SimpleAlgorithmCPP.exe " + path).c_str());
+            if (code == 0){
+                json data_SA = json();
+                ifstream fileData(path + "\\result.json");
+                data_SA = json::parse(fileData);
+                mainAlgorithm = EvolutionAlgorithm(data, bs, worker_pool, Seed, data_SA);
+            }
+            else{
+                throw "Error run SimpleAlgorithm.exe";
+            }
+        }
+        else{
+            mainAlgorithm = EvolutionAlgorithm(data, bs, worker_pool, Seed);
+        }
+
 
         Timer.stop();
 

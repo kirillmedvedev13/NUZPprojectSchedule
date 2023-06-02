@@ -15,7 +15,9 @@ using namespace BS;
 class IslandModelEvolutionAlgorithm : public EvolutionAlgorithm
 {
 public:
-    IslandModelEvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0) : EvolutionAlgorithm(data, bs_, worker_pool, Seed){}
+    IslandModelEvolutionAlgorithm(){}
+    IslandModelEvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0, json data_SA = NULL) :
+        EvolutionAlgorithm(data, bs_, worker_pool, Seed, data_SA){}
 
     // Получить лучших индивидов их расписание (массив индивидов, массив занятий, массив пар) и фитнес
     vector<pair<vector<vector<schedule>>,int>> GetBestIndivids(const int &len_migration){
