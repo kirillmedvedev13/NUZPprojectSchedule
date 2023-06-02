@@ -2,6 +2,9 @@ import React from "react";
 import DeleteData from "./DeleteData.js";
 
 export default class ManagementData extends React.Component {
+  componentDidMount() {
+    document.title = this.props.title;
+  }
   render() {
     return (
       <>

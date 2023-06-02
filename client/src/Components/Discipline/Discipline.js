@@ -9,6 +9,9 @@ class Discipline extends React.Component {
       id_discipline: null,
     },
   };
+  componentDidMount() {
+    document.title = this.props.title;
+  }
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({
       filters: Object.assign({ ...PrevState.filters }, { [name]: value }),

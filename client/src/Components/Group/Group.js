@@ -9,6 +9,9 @@ class Group extends React.Component {
       id_specialty: null,
     },
   };
+  componentDidMount() {
+    document.title = this.props.title;
+  }
 
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({
@@ -22,9 +25,7 @@ class Group extends React.Component {
         <GroupSearch
           handleChangeFilters={this.handleChangeFilters}
         ></GroupSearch>
-        <GroupTable
-          filters={filters}
-        ></GroupTable>
+        <GroupTable filters={filters}></GroupTable>
       </>
     );
   }

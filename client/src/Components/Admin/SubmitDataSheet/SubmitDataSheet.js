@@ -17,6 +17,9 @@ export default class SubmitDataSheet extends React.Component {
     };
     this.setFile = this.setFile.bind(this);
   }
+  componentDidMount() {
+    document.title = this.props.title;
+  }
 
   setFile(file) {
     try {

@@ -145,7 +145,9 @@ export default class GeneralValues extends React.Component {
       max_day: null,
     };
   }
-
+  componentDidMount() {
+    document.title = this.props.title;
+  }
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
   };

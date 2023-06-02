@@ -12,6 +12,9 @@ class Class extends React.Component {
       semester: null,
     },
   };
+  componentDidMount() {
+    document.title = this.props.title;
+  }
 
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({

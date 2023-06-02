@@ -106,6 +106,9 @@ function DataForm() {
   );
 }
 export default class ScheduleData extends React.Component {
+  componentDidMount() {
+    document.title = this.props.title;
+  }
   render() {
     return (
       <>

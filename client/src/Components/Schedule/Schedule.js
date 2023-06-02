@@ -8,7 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GET_INFO } from "./queries";
 
 function ScheduleTables({ filters }) {
-  const { loading, error, data } = useQuery(GET_INFO,);
+  const { loading, error, data } = useQuery(GET_INFO);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   const info = data.GetInfo;
@@ -16,13 +16,33 @@ function ScheduleTables({ filters }) {
   function SwitchTable({ filters }) {
     switch (filters.scheduleType) {
       case "teacher":
-        return <ScheduleTableTeacher filters={filters} info={info}></ScheduleTableTeacher>
+        return (
+          <ScheduleTableTeacher
+            filters={filters}
+            info={info}
+          ></ScheduleTableTeacher>
+        );
       case "audience":
-        return <ScheduleTableAudience filters={filters} info={info}></ScheduleTableAudience>
+        return (
+          <ScheduleTableAudience
+            filters={filters}
+            info={info}
+          ></ScheduleTableAudience>
+        );
       case "group":
-        return <ScheduleTableGroup filters={filters} info={info}></ScheduleTableGroup>;
+        return (
+          <ScheduleTableGroup
+            filters={filters}
+            info={info}
+          ></ScheduleTableGroup>
+        );
       default:
-        return <ScheduleTableGroup filters={filters} info={info}></ScheduleTableGroup>;
+        return (
+          <ScheduleTableGroup
+            filters={filters}
+            info={info}
+          ></ScheduleTableGroup>
+        );
     }
   }
 
@@ -45,7 +65,9 @@ class Schedule extends React.Component {
       semester: null,
     },
   };
-
+  componentDidMount() {
+    document.title = this.props.title;
+  }
   handleChangeFilters = (name, value) => {
     this.setState((PrevState) => ({
       filters: update(PrevState.filters, { $merge: { [name]: value } }),
@@ -60,8 +82,7 @@ class Schedule extends React.Component {
           filters={filters}
           handleChangeFilters={this.handleChangeFilters}
         ></ScheduleSearch>
-        <ScheduleTables filters={filters}>
-        </ScheduleTables>
+        <ScheduleTables filters={filters}></ScheduleTables>
       </>
     );
   }

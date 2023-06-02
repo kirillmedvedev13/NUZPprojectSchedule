@@ -189,6 +189,9 @@ export default class Algorithms extends React.Component {
       results_algorithms: null,
     };
   }
+  componentDidMount() {
+    document.title = this.props.title;
+  }
 
   handleChangeState = (name, item) => {
     this.setState({ [name]: item });
