@@ -10,7 +10,7 @@ int GetIdAudienceForClass(const clas &clas, const vector<audience> &audiences)
 {
     vector<int> detected_audiences;
     if (clas.recommended_audiences.size())
-        detected_audiences.push_back(clas.recommended_audiences[GetRndInteger(0, clas.recommended_audiences.size() - 1)].id_audience);
+        detected_audiences.push_back(clas.recommended_audiences[GetRndInteger(0, clas.recommended_audiences.size() - 1)].id);
     else
     {
         int sum_students = 0;

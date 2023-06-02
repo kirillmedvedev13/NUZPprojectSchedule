@@ -30,6 +30,7 @@ int main(int argc,char* argv[])
         json data = json();
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
+
         // Инициализация
         const int max_generations = data["params"]["max_generations"];
 
@@ -42,7 +43,7 @@ int main(int argc,char* argv[])
         auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
         double Seed = GetRndDouble();
-        EvolutionAlgorithm mainAlgorithm(data, bs, worker_pool, Seed);
+        EvolutionAlgorithm mainAlgorithm(data, bs, worker_pool, Seed, path);
 
         Timer.stop();
 

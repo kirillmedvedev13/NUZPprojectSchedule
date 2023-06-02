@@ -69,9 +69,10 @@ protected:
     string type_mutation;
     double p_mutation_gene;
     string type_initialization;
+    string path_to_data;
 
     // Начальная инициализация расписания
-    void Init()
+    void Init(const string &path_to_data)
     {
         this->populations = vector<individ>(population_size);
         // Заполнение базового расписания
@@ -107,7 +108,7 @@ protected:
             }
         }
         else if (this->type_initialization == "simple_algorithm"){
-
+            system(string("..\\SimpleAlgorithmCPP\\SimpleAlgorithmCPP.exe " + path_to_data).c_str());
         }
         // Расстановка ссылок на расписание для индивидов
         for (int index_individ = 0; index_individ < this->population_size; index_individ++) {
@@ -322,9 +323,10 @@ protected:
     }
 
 public:
-    EvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0) : bs(bs_)
+    EvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0, const string &path_to_data = "") : bs(bs_)
     {
         srand(Seed);
+        this->path_to_data = path_to_data;
         this->max_day = data["max_day"];
         this->max_pair = data["max_pair"];
         const json evolution_values = data["params"];
@@ -362,7 +364,7 @@ public:
             audiences.push_back(new_aud);
         }
         //Инициализация случайного расписания
-        this->Init();
+        this->Init(path_to_data);
 
         // Расстановка фитнессов
         this->FitnessLoop(worker_pool);

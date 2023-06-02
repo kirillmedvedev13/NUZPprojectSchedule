@@ -10,17 +10,20 @@ using namespace nlohmann;
 
 struct schedule;
 
-struct recommended_audience
+struct ContainId{
+    int id;
+    ContainId(){
+        id = -1;
+    }
+    ContainId(int id){
+        this->id = id;
+    }
+};
+
+struct recommended_audience : ContainId
 {
-    int id_audience;
-    recommended_audience(json &ra)
-    {
-        id_audience = ra["id_audience"];
-    }
-    recommended_audience()
-    {
-        id_audience = -1;
-    }
+    recommended_audience(json &ra) : ContainId(ra["id_audience"]) {}
+    recommended_audience() : ContainId() {}
 };
 
 struct recommended_schedule
@@ -88,16 +91,6 @@ struct fitness
         this->fitnessSameTimeTeach = fitnessSameTimeTeach;
         this->fitnessSameTimeAud = fitnessSameTimeAud;
         this->fitnessSameRecSc = fitnessSameRecSc;
-    }
-};
-
-struct ContainId{
-    int id;
-    ContainId(){
-        id = -1;
-    }
-    ContainId(int id){
-        this->id = id;
     }
 };
 
