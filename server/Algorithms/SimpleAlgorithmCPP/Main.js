@@ -15,6 +15,7 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
       recommended_schedules,
       general_values,
       audiences,
+      params
     } = await GetDataFromDB(id_cathedra, name_algorithm);
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
@@ -28,15 +29,15 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let fileName = "./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe";
-    let fileData = path.resolve("./Algorithms/SimpleAlgorithmCPP/");
-    fs.writeFileSync(fileData + "/data.json", jsonData, (err) => {
+    let pathToAlgorithm = path.resolve("./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
+    let pathToData = path.resolve("./Algorithms/SimpleAlgorithmCPP/");
+    fs.writeFileSync(pathToData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
     });
 
-    const code = await SpawnChild(fileName, fileData);
+    const code = await SpawnChild(pathToAlgorithm, [pathToData]);
     if (code === 0) {
-      let res = readFileSync("./Algorithms/SimpleAlgorithmCPP/result.json");
+      let res = readFileSync(pathToData + "/result.json");
       res = JSON.parse(res);
       let bestPopulation = res.bestPopulation;
       let results = res.result;

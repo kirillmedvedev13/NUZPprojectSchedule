@@ -18,11 +18,16 @@ int main(int argc,char* argv[])
     try
     {
         string path;
-        if (argc == 2){
+        string pathToSA;
+        if (argc >= 2){
             path = argv[1];
+            if (argc == 3){
+                pathToSA = argv[2];
+            }
         }
         else {
             path = filesystem::current_path().string();
+            pathToSA = "..\\SimpleAlgorithm\\SimpleAlgorithmCPP.exe";
         }
         json data = json();
         ifstream fileData(path + "\\data.json");
@@ -47,6 +52,17 @@ int main(int argc,char* argv[])
         // Получение случайного ключа для того что бы инициализация островов была одинакова
         double Seed = GetRndDouble();
         // Создание островов с разными параметрами и их инициализация
+        json data_SA = json();
+        if (data["params"]["type_initialization"] == "simple_algorithm"){
+            auto code = system(string(pathToSA + " " + path).c_str());
+            if (code == 0){
+                ifstream fileData(path + "\\result.json");
+                data_SA = json::parse(fileData);
+            }
+            else{
+                throw "Error run SimpleAlgorithm.exe";
+            }
+        }
         vector<IslandModelEvolutionAlgorithm> islands;
         for (int i =0; i< number_island; i++){
             if(i != 0) {
@@ -59,7 +75,7 @@ int main(int argc,char* argv[])
                 data["params"]["p_elitism"] = base_p_elitism + value_p_elitism;
             }
 
-             islands.push_back(IslandModelEvolutionAlgorithm(data, bs, worker_pool, Seed));
+            islands.push_back(IslandModelEvolutionAlgorithm(data, bs, worker_pool, Seed, data_SA));
 
         }
 
@@ -96,7 +112,7 @@ int main(int argc,char* argv[])
 
             Timer.start();
             for(auto &island: islands){
-               island.SelectionLoop(worker_pool);
+                island.SelectionLoop(worker_pool);
             }
 
             Timer.stop();
@@ -126,7 +142,7 @@ int main(int argc,char* argv[])
                 // Замена индивидов у всех островов кроме лучшего
                 for(auto i = 0; i < number_island; i++){
                     if(i != best_index) {
-                       islands[i].ChangeWorstIndivids(islandsBestIndivids[best_index]);
+                        islands[i].ChangeWorstIndivids(islandsBestIndivids[best_index]);
                     }
                 }
                 Timer.stop();

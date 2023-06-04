@@ -13,6 +13,7 @@
 #include <vector>
 #include <climits>
 #include <algorithm>
+#include <fstream>
 
 using namespace std;
 using namespace BS;
@@ -59,7 +60,7 @@ protected:
     int max_pair;
     vector<clas> classes;
     vector<audience> audiences;
-    base_schedule &bs;
+    base_schedule bs;
     vector<individ> populations;
     bestIndivid bestIndiv;
     string type_selection;
@@ -69,9 +70,10 @@ protected:
     string type_mutation;
     double p_mutation_gene;
     string type_initialization;
+    string path_to_data;
 
     // Начальная инициализация расписания
-    void Init()
+    void Init(json data_SA)
     {
         this->populations = vector<individ>(population_size);
         // Заполнение базового расписания
@@ -107,7 +109,15 @@ protected:
             }
         }
         else if (this->type_initialization == "simple_algorithm"){
-
+            for (auto &sc : data_SA["bestPopulation"]){
+                int id_class = sc["id_class"];
+                auto find_cl = find_if(classes.begin(), classes.end(), [&id_class](clas &cl){
+                    return cl.id == id_class;
+                });
+                for (int k = 0; k < this->population_size; k++) {
+                    find_cl->schedules[k].push_back(schedule(sc["number_pair"], sc["day_week"], sc["pair_type"], sc["id_audience"], id_class));
+                }
+            }
         }
         // Расстановка ссылок на расписание для индивидов
         for (int index_individ = 0; index_individ < this->population_size; index_individ++) {
@@ -250,10 +260,10 @@ protected:
         // Изменение всех пар для занятия в зависимости от шанса
         else if (this->type_mutation == "all_genes"){
             for(size_t index_class = 0; index_class < this->classes.size(); index_class++){
-                for(int index_pair = 0; index_pair < this->classes[index_class].schedules[index_individ].size(); index_pair++){
+                for(size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index_individ].size(); index_pair++){
                     int num_rec = this->classes[index_class].recommended_schedules.size();
                     // Если у занятия нету рекомендуемого времени
-                    if (index_pair >= num_rec){
+                    if ((int)index_pair >= num_rec){
                         // Если нужно мутировать пару
                         if (GetRndDouble() <= this->p_mutation_gene){
                             int day_week = GetRndInteger(1, max_day);
@@ -322,9 +332,11 @@ protected:
     }
 
 public:
-    EvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0) : bs(bs_)
+    EvolutionAlgorithm(){}
+    EvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0, json data_SA = NULL)
     {
         srand(Seed);
+        this->bs = bs_;
         this->max_day = data["max_day"];
         this->max_pair = data["max_pair"];
         const json evolution_values = data["params"];
@@ -362,7 +374,7 @@ public:
             audiences.push_back(new_aud);
         }
         //Инициализация случайного расписания
-        this->Init();
+        this->Init(data_SA);
 
         // Расстановка фитнессов
         this->FitnessLoop(worker_pool);

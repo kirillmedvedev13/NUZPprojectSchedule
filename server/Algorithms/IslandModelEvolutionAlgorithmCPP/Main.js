@@ -30,15 +30,21 @@ export const RUN_IMEACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let fileName = "./Algorithms/IslandModelEvolutionAlgorithmCPP/IslandModelEvolutionAlgorithm.exe";
-    let fileData = path.resolve("./Algorithms/IslandModelEvolutionAlgorithmCPP/");
-    fs.writeFileSync(fileData + "/data.json", jsonData, (err) => {
+    let pathToAlgorithm = path.resolve("./Algorithms/IslandModelEvolutionAlgorithmCPP/IslandModelEvolutionAlgorithm.exe");
+    let pathToData = path.resolve("./Algorithms/IslandModelEvolutionAlgorithmCPP/");
+    let pathToSA = path.resolve("./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
+    fs.writeFileSync(pathToData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
     });
+    let code;
+    if(params["type_initialization"] == "simple_algorithm"){
+      code = await SpawnChild(pathToAlgorithm, [pathToData, pathToSA]);
+    } else{
+      code = await SpawnChild(pathToAlgorithm, [pathToData]);
+    }
 
-    const code = await SpawnChild(fileName, fileData);
     if (code === 0) {
-      let res = readFileSync("./Algorithms/IslandModelEvolutionAlgorithmCPP/result.json");
+      let res = readFileSync(pathToData + "/result.json");
       res = JSON.parse(res);
       let bestPopulation = res.bestPopulation;
       let results = res.result;
