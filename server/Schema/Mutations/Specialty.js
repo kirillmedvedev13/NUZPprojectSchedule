@@ -2,7 +2,7 @@ import { GraphQLInt, GraphQLString, GraphQLID } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CREATE_SPECIALTY = {
+export const CreateSpecialty = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -20,7 +20,7 @@ export const CREATE_SPECIALTY = {
   },
 };
 
-export const DELETE_SPECIALTY = {
+export const DeleteSpecialty = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -40,7 +40,7 @@ export const DELETE_SPECIALTY = {
   },
 };
 
-export const UPDATE_SPECIALTY = {
+export const UpdateSpecialty = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },

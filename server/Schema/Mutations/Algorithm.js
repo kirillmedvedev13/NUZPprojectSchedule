@@ -8,7 +8,7 @@ import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const UPDATE_ALGORITHM = {
+export const UpdateAlgorithm = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -35,7 +35,7 @@ export const UPDATE_ALGORITHM = {
   },
 };
 
-export const RUN_ALGORITHM = {
+export const RunAlgorithm = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },

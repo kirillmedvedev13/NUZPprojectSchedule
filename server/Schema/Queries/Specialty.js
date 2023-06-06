@@ -3,7 +3,7 @@ import db from "../../database.js";
 import SpecialtyType from "../TypeDefs/SpecialtyType.js";
 import { Op } from "sequelize";
 
-export const GET_ALL_SPECIALTY = {
+export const GetAllSpecialties = {
   type: new GraphQLList(SpecialtyType),
   args: {
     name: { type: GraphQLString },

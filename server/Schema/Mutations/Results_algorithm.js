@@ -2,7 +2,7 @@ import { GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const DELETE_RESULTS = {
+export const DeleteResults = {
   type: MessageType,
   args: {
     name_algorithm: { type: GraphQLString },

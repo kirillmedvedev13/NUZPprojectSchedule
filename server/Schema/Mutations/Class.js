@@ -2,7 +2,7 @@ import { GraphQLFloat, GraphQLID, GraphQLInt, GraphQLString } from "graphql";
 import MessageType from "../TypeDefs/MessageType.js";
 import db from "../../database.js";
 
-export const CREATE_CLASS = {
+export const CreateClass = {
   type: MessageType,
   args: {
     id_type_class: { type: GraphQLInt },
@@ -74,7 +74,7 @@ export const CREATE_CLASS = {
   },
 };
 
-export const UPDATE_CLASS = {
+export const UpdateClass = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -100,7 +100,7 @@ export const UPDATE_CLASS = {
   },
 };
 
-export const DELETE_CLASS = {
+export const DeleteClass = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -116,7 +116,7 @@ export const DELETE_CLASS = {
       : { successful: false, message: "Помилка при видаленні запису заняття" };
   },
 };
-export const ADD_TEACHER_TO_CLASS = {
+export const AddTeacherToClass = {
   type: MessageType,
   args: {
     id_teacher: { type: GraphQLID },
@@ -149,7 +149,7 @@ export const ADD_TEACHER_TO_CLASS = {
         };
   },
 };
-export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
+export const AddRecAudienceToClass = {
   type: MessageType,
   args: {
     id_audience: { type: GraphQLID },
@@ -183,7 +183,7 @@ export const ADD_RECOMMENDED_AUDIENCE_TO_CLASS = {
         };
   },
 };
-export const ADD_RECOMMENDED_SCHEDULE_TO_CLASS = {
+export const AddRecScheduleToClass = {
   type: MessageType,
   args: {
     number_pair: { type: GraphQLInt },
@@ -217,7 +217,7 @@ export const ADD_RECOMMENDED_SCHEDULE_TO_CLASS = {
   },
 };
 
-export const ADD_GROUP_TO_CLASS = {
+export const AddGroupToClass = {
   type: MessageType,
   args: {
     id_group: { type: GraphQLString },
@@ -255,7 +255,7 @@ export const ADD_GROUP_TO_CLASS = {
   },
 };
 
-export const DELETE_TEACHER_FROM_CLASS = {
+export const DeleteTeacherFromClass = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -274,7 +274,7 @@ export const DELETE_TEACHER_FROM_CLASS = {
         };
   },
 };
-export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
+export const DeleteRecAudienceFromClass = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -297,7 +297,7 @@ export const DELETE_RECOMMENDED_AUDIENCE_FROM_CLASS = {
         };
   },
 };
-export const DELETE_RECOMMENDED_SCHEDULE_FROM_CLASS = {
+export const DeleteRecScheduleFromClass = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -320,7 +320,7 @@ export const DELETE_RECOMMENDED_SCHEDULE_FROM_CLASS = {
         };
   },
 };
-export const DELETE_GROUP_FROM_CLASS = {
+export const DeleteGroupFromClass = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },

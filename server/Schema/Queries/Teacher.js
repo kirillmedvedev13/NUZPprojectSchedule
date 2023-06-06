@@ -3,7 +3,7 @@ import db from "../../database.js";
 import TeacherType from "../TypeDefs/TeacherType.js";
 import { Op } from "sequelize";
 
-export const GET_ALL_TEACHERS = {
+export const GetAllTeachers = {
   type: new GraphQLList(TeacherType),
   args: {
     surname: { type: GraphQLString },

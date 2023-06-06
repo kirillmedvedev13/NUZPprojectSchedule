@@ -43,7 +43,7 @@ function GetCodeSpec(group) {
   }
 }
 
-export const SET_CLASSES = {
+export const SetClasses = {
   type: MessageType,
   args: {
     data: { type: GraphQLString },
@@ -283,7 +283,7 @@ export const SET_CLASSES = {
   },
 };
 
-export const DELETE_ALL_DATA = {
+export const DeleteAllData = {
   type: MessageType,
   args: {
     id_cathedra: { type: GraphQLInt },

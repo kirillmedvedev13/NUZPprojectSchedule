@@ -3,7 +3,7 @@ import db from "../../database.js";
 import DisciplineType from "../TypeDefs/DisciplineType.js";
 import { Op } from "sequelize";
 
-export const GET_ALL_DISCIPLINES = {
+export const GetAllDisciplines = {
   type: new GraphQLList(DisciplineType),
   args: {
     name: { type: GraphQLString },

@@ -2,7 +2,7 @@ import { GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CREATE_TEACHER = {
+export const CreateTeacher = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -23,7 +23,7 @@ export const CREATE_TEACHER = {
   },
 };
 
-export const DELETE_TEACHER = {
+export const DeleteTeacher = {
   type: MessageType,
   args: {
     id: { type: GraphQLInt },
@@ -40,7 +40,7 @@ export const DELETE_TEACHER = {
   },
 };
 
-export const UPDATE_TEACHER = {
+export const UpdateTeacher = {
   type: MessageType,
   args: {
     id: { type: GraphQLInt },

@@ -3,7 +3,7 @@ import db from "../../database.js";
 import CathedraType from "../TypeDefs/CathedraType.js";
 import { Op } from "sequelize"
 
-export const GET_ALL_CATHEDRAS = {
+export const GetAllCathedras = {
   type: new GraphQLList(CathedraType),
   args: {
     name: { type: GraphQLString },

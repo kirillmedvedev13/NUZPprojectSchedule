@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CREATE_AUDIENCE = {
+export const CreateAudience = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -35,7 +35,7 @@ export const CREATE_AUDIENCE = {
   },
 };
 
-export const UPDATE_AUDIENCE = {
+export const UpdateAudience = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -61,7 +61,7 @@ export const UPDATE_AUDIENCE = {
   },
 };
 
-export const DELETE_AUDIENCE = {
+export const DeleteAudience = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -81,7 +81,7 @@ export const DELETE_AUDIENCE = {
   },
 };
 
-export const ADD_CATHEDRA_TO_AUDIENCE = {
+export const AddCathedraToAudience = {
   type: MessageType,
   args: {
     id_audience: { type: GraphQLID },
@@ -115,7 +115,7 @@ export const ADD_CATHEDRA_TO_AUDIENCE = {
   },
 };
 
-export const DELETE_CATHEDRA_FROM_AUDIENCE = {
+export const DeleteCathedraFromAudience = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
