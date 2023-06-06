@@ -10,7 +10,6 @@ import http from "http";
 
 const main = async () => {
   const app = express();
-
   let corsOptions = {
     origin: "*",
     credentials: true,
@@ -26,7 +25,6 @@ const main = async () => {
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-
   app.use(
     "/graphql",
     graphqlHTTP({
