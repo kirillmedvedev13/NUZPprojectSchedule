@@ -2,7 +2,7 @@ import db from "../../database.js";
 import Fitness from "../../Algorithms/Service/Fitness.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CALC_FITNESS = {
+export const CalcFitness = {
   type: MessageType,
   async resolve(parent) {
     const info = await db.info.findOne();

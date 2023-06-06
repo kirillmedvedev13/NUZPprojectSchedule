@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CREATE_CATHEDRA = {
+export const CreateCathedra = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -19,7 +19,7 @@ export const CREATE_CATHEDRA = {
   },
 };
 
-export const DELETE_CATHEDRA = {
+export const DeleteCathedra = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -36,7 +36,7 @@ export const DELETE_CATHEDRA = {
   },
 };
 
-export const UPDATE_CATHEDRA = {
+export const UpdateCathedra = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },

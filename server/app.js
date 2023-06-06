@@ -1,7 +1,7 @@
 import cors from "cors";
 import express from "express";
 import db from "./database.js";
-import Schema from "./Schema/TypeDefs/app.js";
+import Schema from "./Schema/schema.js";
 import { graphqlHTTP } from "express-graphql";
 import config from "./config/config.js";
 import bodyParser from "body-parser";

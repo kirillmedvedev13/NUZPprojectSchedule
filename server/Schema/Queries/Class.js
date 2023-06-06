@@ -3,7 +3,7 @@ import db from "../../database.js";
 import { Op } from "sequelize";
 import ClassType from "../TypeDefs/ClassType.js";
 
-export const GET_ALL_CLASSES = {
+export const GetAllClasses = {
   type: new GraphQLList(ClassType),
   args: {
     id_group: { type: GraphQLInt },

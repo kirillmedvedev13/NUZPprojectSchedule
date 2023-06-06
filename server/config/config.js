@@ -1,7 +1,6 @@
 const config = {
   PORT: "3001",
   HOST: "localhost",
-  RESHOST: "localhost",
   DB_NAME: "scheduledb",
   DB_USER: "admin",
   DB_PASS: "351973",

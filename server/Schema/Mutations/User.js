@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const LOGIN_USER = {
+export const LoginUser = {
   type: UserType,
   args: {
     email: { type: GraphQLString },
@@ -42,7 +42,6 @@ export const LOGIN_USER = {
         },
       };
     let user = res.dataValues;
-    //let checkPass = bcrypt.compare(password, user.password);
     let checkPass = password === user.password ? true : false;
     if (!checkPass) return incorrect;
     const accessToken = jwt.sign(
@@ -65,7 +64,8 @@ export const LOGIN_USER = {
     };
   },
 };
-export const LOGOUT_USER = {
+
+export const LogoutUser = {
   type: MessageType,
   args: {
     email: { type: GraphQLString },
@@ -78,7 +78,7 @@ export const LOGOUT_USER = {
   },
 };
 
-export const RELOGIN_USER = {
+export const ReloginUser = {
   type: UserType,
   args: {
     accessToken: { type: GraphQLString },

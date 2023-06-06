@@ -14,6 +14,10 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    id_cathedra: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
   Specialty.associate = (models) => {
     Specialty.belongsTo(models.cathedra, {
@@ -24,7 +28,6 @@ export default (Sequelize, DataTypes) => {
     Specialty.hasMany(models.assigned_discipline, {
       foreignKey: "id_specialty",
     });
-    /*Specialty.belongsToMany(models.discipline, { foreignKey: "id_specialty", through: models.assigned_discipline});*/
   };
   return Specialty;
 };

@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CREATE_GROUP = {
+export const CreateGroup = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -23,7 +23,7 @@ export const CREATE_GROUP = {
   },
 };
 
-export const DELETE_GROUP = {
+export const DeleteGroup = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -40,7 +40,7 @@ export const DELETE_GROUP = {
   },
 };
 
-export const UPDATE_GROUP = {
+export const UpdateGroup = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },

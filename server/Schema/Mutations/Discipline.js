@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const CREATE_DISCIPLINE = {
+export const CreateDiscipline = {
   type: MessageType,
   args: {
     name: { type: GraphQLString },
@@ -34,7 +34,7 @@ export const CREATE_DISCIPLINE = {
   },
 };
 
-export const DELETE_DISCIPLINE = {
+export const DeleteDiscipline = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -54,7 +54,7 @@ export const DELETE_DISCIPLINE = {
   },
 };
 
-export const UPDATE_DISCIPLINE = {
+export const UpdateDiscipline = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },
@@ -79,7 +79,7 @@ export const UPDATE_DISCIPLINE = {
   },
 };
 
-export const ADD_DISCIPLINE_TO_SPECIALTY = {
+export const AddDisciplineToSpecialty = {
   type: MessageType,
   args: {
     id_discipline: { type: GraphQLInt },
@@ -119,7 +119,7 @@ export const ADD_DISCIPLINE_TO_SPECIALTY = {
   },
 };
 
-export const DELETE_DISCIPLINE_FROM_SPECIALTY = {
+export const DeleteDisciplineFromSpecialty = {
   type: MessageType,
   args: {
     id: { type: GraphQLID },

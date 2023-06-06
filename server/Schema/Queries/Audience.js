@@ -1,9 +1,9 @@
 import { GraphQLInt, GraphQLList, GraphQLString } from "graphql";
 import db from "../../database.js";
 import AudienceType from "../TypeDefs/AudienceType.js";
-import sequelize, { Op } from "sequelize"
+import { Op } from "sequelize"
 
-export const GET_ALL_AUDIENCES = {
+export const GetAllAudiences = {
   type: new GraphQLList(AudienceType),
   args: {
     name: { type: GraphQLString },

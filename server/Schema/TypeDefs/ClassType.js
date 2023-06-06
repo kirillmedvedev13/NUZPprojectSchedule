@@ -1,9 +1,4 @@
-import {
-  GraphQLFloat,
-  GraphQLID,
-  GraphQLList,
-  GraphQLObjectType,
-} from "graphql";
+import {GraphQLFloat, GraphQLID, GraphQLList, GraphQLObjectType} from "graphql";
 import Assigned_disciplineType from "./Assigned_disciplineType.js";
 import Assigned_groupType from "./Assigned_groupType.js";
 import Assigned_teacherType from "./Assigned_teacherType.js";

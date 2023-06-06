@@ -2,7 +2,8 @@ import { GraphQLList, GraphQLInt, GraphQLString } from "graphql";
 import db from "../../database.js";
 import GroupType from "../TypeDefs/GroupType.js";
 import { Op } from "sequelize";
-export const GET_ALL_GROUPS = {
+
+export const GetAllGroups = {
   type: new GraphQLList(GroupType),
   args: {
     name: { type: GraphQLString },

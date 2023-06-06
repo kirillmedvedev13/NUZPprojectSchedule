@@ -2,7 +2,7 @@ import { GraphQLList } from "graphql";
 import db from "../../database.js";
 import Assigned_disciplineType from "../TypeDefs/Assigned_disciplineType.js"
 
-export const GET_ALL_ASSIGNED_DISCIPLINES = {
+export const GetAllAssignedDisciplines = {
     type: new GraphQLList(Assigned_disciplineType),
     async resolve() {
         const res = await db.assigned_discipline.findAll({

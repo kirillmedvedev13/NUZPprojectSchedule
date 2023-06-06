@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 import TeacherType from "../TypeDefs/TeacherType.js";
 import GroupType from "../TypeDefs/GroupType.js";
 
-export const GET_ALL_SCHEDULE_GROUPS = {
+export const GetAllScheduleGroups = {
   type: new GraphQLList(GroupType),
   args: {
     id_cathedra: { type: GraphQLInt },
@@ -78,7 +78,7 @@ export const GET_ALL_SCHEDULE_GROUPS = {
   },
 };
 
-export const GET_ALL_SCHEDULE_AUDIENCES = {
+export const GetAllScheduleAudiences = {
   type: new GraphQLList(AudienceType),
   args: {
     id_cathedra: { type: GraphQLInt },
@@ -160,7 +160,7 @@ export const GET_ALL_SCHEDULE_AUDIENCES = {
   },
 };
 
-export const GET_ALL_SCHEDULE_TEACHERS = {
+export const GetAllScheduleTeachers = {
   type: new GraphQLList(TeacherType),
   args: {
     id_cathedra: { type: GraphQLInt },
@@ -238,7 +238,7 @@ export const GET_ALL_SCHEDULE_TEACHERS = {
   },
 };
 
-export const GET_ALL_SCHEDULE = {
+export const GetAllSchedules = {
   type: new GraphQLList(ScheduleType),
   async resolve(parent) {
     const res = await db.schedule.findAll({

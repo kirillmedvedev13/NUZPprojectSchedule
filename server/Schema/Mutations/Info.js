@@ -2,7 +2,7 @@ import { GraphQLString } from "graphql";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 
-export const UPDATE_INFO = {
+export const UpdateInfo = {
   type: MessageType,
   args: {
     data: { type: GraphQLString },
