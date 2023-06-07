@@ -2,7 +2,7 @@
 #define GETPAIRTYPEFORCLASS_HPP
 
 #include <vector>
-#include "Service.hpp"
+#include "GetRnd.hpp"
 #include "TypeDefs.hpp"
 
 // Получить тип пары для занятия

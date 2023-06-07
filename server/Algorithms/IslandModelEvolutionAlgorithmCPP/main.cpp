@@ -27,11 +27,13 @@ int main(int argc,char* argv[])
         }
         else {
             path = filesystem::current_path().string();
-            pathToSA = "..\\SimpleAlgorithm\\SimpleAlgorithmCPP.exe";
+            pathToSA = "..\\SimpleAlgorithmCPP\\SimpleAlgorithmCPP.exe";
         }
+        srand(time(NULL));
         json data = json();
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
+
         int number_island = data["params"]["number_islands"];
         double step =  data["params"]["step"];
         // Инициализация
@@ -40,7 +42,6 @@ int main(int argc,char* argv[])
         const double n_migration = data["params"]["n_migration"];
         const int len_migration = population_size*n_migration;
         const int iter_migration = data["params"]["iter_migration"];
-        auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
 
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
@@ -49,8 +50,6 @@ int main(int argc,char* argv[])
         double base_p_crossover = (double)data["params"]["p_crossover"];
         double base_p_mutation = (double)data["params"]["p_mutation"];
         double base_p_elitism = (double)data["params"]["p_elitism"];
-        // Получение случайного ключа для того что бы инициализация островов была одинакова
-        double Seed = GetRndDouble();
         // Создание островов с разными параметрами и их инициализация
         json data_SA = json();
         if (data["params"]["type_initialization"] == "simple_algorithm"){
@@ -74,17 +73,15 @@ int main(int argc,char* argv[])
                 data["params"]["p_mutation"] = base_p_mutation + value_p_mutation;
                 data["params"]["p_elitism"] = base_p_elitism + value_p_elitism;
             }
-
-            islands.push_back(IslandModelEvolutionAlgorithm(data, bs, worker_pool, Seed, data_SA));
-
+            islands.push_back(IslandModelEvolutionAlgorithm(data, data_SA));
         }
+
+        Timer.stop();
+        cout << "Init " << Timer.ms() << "ms" << endl;
 
         int countIter = 0;
         auto best_individ = bestIndivid();
         auto result = vector<pair<int, double>>();
-        Timer.stop();
-        cout << "Init " << Timer.ms() << "ms" << endl;
-
         auto StartTime = chrono::high_resolution_clock::now();
 
         while (countIter < max_generations && best_individ.fitnessValue.fitnessValue != 0)
@@ -162,14 +159,7 @@ int main(int argc,char* argv[])
             result.push_back(make_pair(duration.count(), best_individ.fitnessValue.fitnessValue));
 
         }
-        json resultJson = json();
-        resultJson["bestPopulation"] = best_individ.to_json();
-        resultJson["result"] = result;
-        ofstream fileResult(path+"\\result.json");
-        if (fileResult.is_open()){
-            fileResult << resultJson << endl;
-        }
-
+        Service::SaveResults(best_individ, path, result);
     }
     catch (exception &ex)
     {

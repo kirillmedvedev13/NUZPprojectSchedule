@@ -1,9 +1,8 @@
-
 #ifndef GETIDAUDIENCEFORCLASS_HPP
 #define GETIDAUDIENCEFORCLASS_HPP
 
 #include "TypeDefs.hpp"
-#include "Service.hpp"
+#include "GetRnd.hpp"
 
 //Получить номер аудитории для занятия
 int GetIdAudienceForClass(const clas &clas, const vector<audience> &audiences)

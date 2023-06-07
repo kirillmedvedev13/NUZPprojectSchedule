@@ -16,8 +16,8 @@ class IslandModelEvolutionAlgorithm : public EvolutionAlgorithm
 {
 public:
     IslandModelEvolutionAlgorithm(){}
-    IslandModelEvolutionAlgorithm(json data, base_schedule& bs_, thread_pool &worker_pool, const double &Seed = 0, json data_SA = NULL) :
-        EvolutionAlgorithm(data, bs_, worker_pool, Seed, data_SA){}
+    IslandModelEvolutionAlgorithm(json data, json data_SA = NULL) :
+        EvolutionAlgorithm(data, data_SA){}
 
     // Получить лучших индивидов их расписание (массив индивидов, массив занятий, массив пар) и фитнес
     vector<pair<vector<vector<schedule>>,int>> GetBestIndivids(const int &len_migration){
@@ -42,11 +42,8 @@ public:
             auto index_individ = this->population_size - 1 - i;
             this->populations[index_individ].fitnessValue.fitnessValue = bestIndivids[i].second;
             for (size_t index_class = 0; index_class < bestIndivids[i].first.size(); index_class++){
-                for(size_t index_pair = 0; index_pair < bestIndivids[i].first[index_class].size(); index_pair++){
-                    // Замена занятия
-                    auto sc = bestIndivids[i].first[index_class][index_pair];
-                    SwapSchedule(index_class, index_pair, index_individ, sc);
-                }
+                // Замена пар
+                SwapSchedule(index_class, index_individ, bestIndivids[i].first[index_class]);
             }
         }
     }

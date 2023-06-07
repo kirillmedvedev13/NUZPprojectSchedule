@@ -2,6 +2,7 @@
 #define TYPEDEFS_HPP
 
 #include "json.hpp"
+#include <cfloat>
 #include <string>
 #include <vector>
 #include <map>
@@ -51,15 +52,16 @@ struct fitness
     double fitnessSameTimeTeach;
     double fitnessSameTimeAud;
     double fitnessSameRecSc;
+
     fitness()
     {
-        this->fitnessValue = INT_MAX;
-        this->fitnessGrWin = INT_MAX;
-        this->fitnessSameTimeGr = INT_MAX;
-        this->fitnessTeachWin = INT_MAX;
-        this->fitnessSameTimeTeach = INT_MAX;
-        this->fitnessSameTimeAud = INT_MAX;
-        this->fitnessSameRecSc = INT_MAX;
+        this->fitnessValue = DBL_MAX;
+        this->fitnessGrWin = DBL_MAX;
+        this->fitnessSameTimeGr = DBL_MAX;
+        this->fitnessTeachWin = DBL_MAX;
+        this->fitnessSameTimeTeach = DBL_MAX;
+        this->fitnessSameTimeAud = DBL_MAX;
+        this->fitnessSameRecSc = DBL_MAX;
     }
     json to_json()
     {
