@@ -28,8 +28,6 @@ public:
     int population_size;
     bestIndivid bestIndiv;
 
-    Service(){}
-
     void InitService(json data, int population_size){
         bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
         max_day = data["max_day"];
