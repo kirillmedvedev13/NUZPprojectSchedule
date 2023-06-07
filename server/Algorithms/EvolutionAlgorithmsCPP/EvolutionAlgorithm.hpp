@@ -8,6 +8,8 @@
 #include "../ServiceCPP/GetIdAudienceForClass.hpp"
 #include "../ServiceCPP/SetBaseScheduleToIndivid.hpp"
 #include "../ServiceCPP/Fitness.hpp"
+#include "../ServiceCPP/Init.hpp"
+#include "../ServiceCPP/SwapSchedule.hpp"
 
 #include <cfloat>
 #include <vector>
@@ -70,122 +72,7 @@ protected:
     string type_mutation;
     double p_mutation_gene;
     string type_initialization;
-    string path_to_data;
 
-    // Начальная инициализация расписания
-    void Init(json data_SA)
-    {
-        this->populations = vector<individ>(population_size);
-        // Заполнение базового расписания
-        for (int k = 0; k < population_size; k++)
-        {
-            SetBaseScheduleToIndivid(populations[k], bs);
-        }
-        // Расстановка расписания случайным образом
-        if (this->type_initialization == "random") {
-            // В начальном варианте у всех индиводов расписание разное но одинаковое количество пар
-            for (size_t i = 0; i < this->classes.size(); i++) {
-                clas &clas = this->classes[i];
-                vector<int> info = GetPairTypeForClass(clas);
-                for (size_t j = 0; j < info.size(); j++) {
-                    for (int k = 0; k < this->population_size; k++) {
-                        int day_week, number_pair;
-                        //Растанока рекомендуемого расписания
-                        auto recommended_schedules = clas.recommended_schedules;
-                        if (j >= recommended_schedules.size()) {
-                            day_week = GetRndInteger(1, max_day);
-                            number_pair = GetRndInteger(1, max_pair);
-                        }
-                        else {
-                            day_week = recommended_schedules[j].day_week;
-                            number_pair = recommended_schedules[j].number_pair;
-                        }
-                        //Растановка аудитории
-                        int id_audience = GetIdAudienceForClass(clas, audiences);
-                        //Добавление пары в занятие
-                        this->classes[i].schedules[k].push_back(schedule(number_pair, day_week, info[j], id_audience, clas.id));
-                    }
-                }
-            }
-        }
-        else if (this->type_initialization == "simple_algorithm"){
-            for (auto &sc : data_SA["bestPopulation"]){
-                int id_class = sc["id_class"];
-                auto find_cl = find_if(classes.begin(), classes.end(), [&id_class](clas &cl){
-                    return cl.id == id_class;
-                });
-                for (int k = 0; k < this->population_size; k++) {
-                    find_cl->schedules[k].push_back(schedule(sc["number_pair"], sc["day_week"], sc["pair_type"], sc["id_audience"], id_class));
-                }
-            }
-        }
-        // Расстановка ссылок на расписание для индивидов
-        for (int index_individ = 0; index_individ < this->population_size; index_individ++) {
-            for (size_t index_class = 0; index_class < this->classes.size(); index_class++) {
-                clas &clas = classes[index_class];
-                for (size_t index_pair = 0; index_pair < clas.schedules[index_individ].size(); index_pair++) {
-                    auto ref = &clas.schedules[index_individ][index_pair];
-                    // Добавление ссылки на занятие для груп
-                    for (auto &gr : classes[index_class].assigned_groups)
-                    {
-                        auto &ref_gr = populations[index_individ].scheduleForGroups[gr.id];
-                        ref_gr.push_back(ref);
-                    }
-                    // Добавление ссылки на занятие для учителей
-                    for (auto &teach : classes[index_class].assigned_teachers)
-                    {
-                        auto &ref_teach = populations[index_individ].scheduleForTeachers[teach.id];
-                        ref_teach.push_back(ref);
-                    }
-                    // Добавление ссылки на занятие для аудитории
-                    auto &ref_aud = populations[index_individ].scheduleForAudiences[clas.schedules[index_individ][index_pair].id_audience];
-                    ref_aud.push_back(ref);
-                }
-            }
-        }
-    }
-
-    //Замена занятия у индивида на переданное
-    void SwapSchedule(const int &index_class, const int &index_pair, const int &index_individ, const schedule sc){
-        int old_id_audience = this->classes[index_class].schedules[index_individ][index_pair].id_audience;
-        int new_id_audience = sc.id_audience;
-        // Если ид аудитории поменялся, то нужно поменять ссылку на неё
-        if (new_id_audience != old_id_audience)
-        {
-            auto ref = &this->classes[index_class].schedules[index_individ][index_pair];
-            auto it = find(this->populations[index_individ].scheduleForAudiences[old_id_audience].begin(), this->populations[index_individ].scheduleForAudiences[old_id_audience].end(), ref);
-            this->populations[index_individ].scheduleForAudiences[old_id_audience].erase(it);
-            this->populations[index_individ].scheduleForAudiences[new_id_audience].emplace(populations[index_individ].scheduleForAudiences[new_id_audience].begin(), ref);
-        }
-        // Поменять значение пары
-        this->classes[index_class].schedules[index_individ][index_pair] = sc;
-    }
-
-    //Обмен занятий между индивидами
-    void SwapSchedule(const int &index_class, const int &index_pair, const int &index_individ_1, const int &index_individ2){
-        // Если аудитории разные, то менять указатели для каждой аудитории
-        if (this->classes[index_class].schedules[index_individ_1][index_pair].id_audience != this->classes[index_class].schedules[index_individ2][index_pair].id_audience)
-        {
-            // Найти ссылку на занятие для 1 аудитории и удалить
-            auto id_aud1 = this->classes[index_class].schedules[index_individ_1][index_pair].id_audience;
-            auto ref1 = &this->classes[index_class].schedules[index_individ_1][index_pair];
-            auto it1 = find(this->populations[index_individ_1].scheduleForAudiences[id_aud1].begin(),this-> populations[index_individ_1].scheduleForAudiences[id_aud1].end(), ref1);
-            this->populations[index_individ_1].scheduleForAudiences[id_aud1].erase(it1);
-            // Найти ссылку на занятие для 2 аудитории и удалить
-            auto id_aud2 = this->classes[index_class].schedules[index_individ2][index_pair].id_audience;
-            auto ref2 = &this->classes[index_class].schedules[index_individ2][index_pair];
-            auto it2 = find(this->populations[index_individ2].scheduleForAudiences[id_aud2].begin(), this->populations[index_individ2].scheduleForAudiences[id_aud2].end(), ref2);
-            this->populations[index_individ2].scheduleForAudiences[id_aud2].erase(it2);
-
-            // Вставить новые ссылки для аудиторий
-            this->populations[index_individ_1].scheduleForAudiences[id_aud2].emplace(this->populations[index_individ_1].scheduleForAudiences[id_aud2].begin(), ref1);
-            this->populations[index_individ2].scheduleForAudiences[id_aud1].emplace(this->populations[index_individ2].scheduleForAudiences[id_aud1].begin(), ref2);
-        }
-        // Поменять параметры занятий между друг другом
-        auto sc1 = this->classes[index_class].schedules[index_individ_1][index_pair];
-        this->classes[index_class].schedules[index_individ_1][index_pair] = this->classes[index_class].schedules[index_individ2][index_pair];
-        this->classes[index_class].schedules[index_individ2][index_pair] = sc1;
-    }
 
     //Фуцнкция сортировки популяции
     void SortPopulations()
@@ -216,11 +103,11 @@ protected:
         // Переставить занятий у индивидов
         for (size_t index_class = 0; index_class < this->classes.size(); index_class++)
         {
-            for (size_t index_individ = 0; index_individ < this->populations.size(); index_individ++)
+            for (int index_individ = 0; index_individ < this->populations.size(); index_individ++)
             {
                 for (size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index_individ].size(); index_pair++)
                 {
-                    SwapSchedule(index_class, index_pair, index_individ, tClassses[index_class][vec_individs[index_individ].index][index_pair]);
+                    SwapSchedule(this->classes[index_class], index_individ, this->populations[index_individ], tClassses[index_class][vec_individs[index_individ].index]);
                 }
             }
         }
@@ -254,7 +141,7 @@ protected:
                     pair_type = 3 - pair_type;
                 }
                 auto sc = schedule(number_pair, day_week, pair_type, new_id_audience, this->classes[index_class].id);
-                SwapSchedule(index_class,index_pair,index_individ, sc);
+                SwapSchedule(this->populations[index_individ], &this->classes[index_class].schedules[index_individ][index_pair], sc);
             }
         }
         // Изменение всех пар для занятия в зависимости от шанса
@@ -276,7 +163,7 @@ protected:
                                 pair_type = 3 - pair_type;
                             }
                             auto sc = schedule(number_pair, day_week, pair_type, new_id_audience, this->classes[index_class].id);
-                            SwapSchedule(index_class,index_pair,index_individ, sc);
+                            SwapSchedule(this->populations[index_individ], &this->classes[index_class].schedules[index_individ][index_pair], sc);
                         }
                     }
                 }
@@ -285,7 +172,7 @@ protected:
     }
 
     // Фнукция кроссинга
-    void Crossing(const int &index1, const int &index2)
+    void Crossing(int index1, int index2)
     {
         // Замена случайного занятия между двумя индивидами
         if (this->classes.size() > 1)
@@ -293,9 +180,8 @@ protected:
             // замена одного гена
             if (this->type_crossing == "custom_one_gene"){
                 int index_class = GetRndInteger(0, classes.size() - 1);
-                int index_pair = GetRndInteger(0, this->classes[index_class].schedules[index1].size() - 1);
                 // Обмен занятий между индивидами
-                this->SwapSchedule(index_class,index_pair,index1,index2);
+                SwapSchedule(this->classes[index_class], index1, this->populations[index1], index2, this->populations[index2]);
             }
             // k-точечное схрещивание
             else if(this->type_crossing == "k_point"){
@@ -320,9 +206,7 @@ protected:
                 for (size_t i = 0; i < points.size() - 1; i++){
                     if (need_cross){
                         for (int index_class = i; index_class <= points[i+1]; index_class++){
-                            for (size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index1].size(); index_pair++){
-                                this->SwapSchedule(index_class, index_pair, index1, index2);
-                            }
+                            SwapSchedule(this->classes[index_class], index1, this->populations[index1], index2, this->populations[index2]);
                         }
                     }
                     need_cross = !need_cross;
@@ -374,7 +258,9 @@ public:
             audiences.push_back(new_aud);
         }
         //Инициализация случайного расписания
-        this->Init(data_SA);
+        this->populations = vector<individ>(this->population_size);
+        InitClasses(this->type_initialization, data_SA, populations, this->bs, this->classes, this->audiences, this->max_day, this->max_pair);
+        InitPopulations(this->populations, this->classes);
 
         // Расстановка фитнессов
         this->FitnessLoop(worker_pool);
@@ -565,13 +451,12 @@ public:
         }
 
         //Расстановка расписания
-        for (size_t index_individ = 0; index_individ < individ_indexes.size(); index_individ++) {
+        for (int index_individ = 0; index_individ < individ_indexes.size(); index_individ++) {
             // остается поменять значение занятий на новые
             int new_index = individ_indexes[index_individ];
             for (size_t index_class = 0; index_class < classes.size(); index_class++) {
                 for (size_t index_pair = 0; index_pair < this->classes[index_class].schedules[index_individ].size(); index_pair++) {
-                    auto sc = temp_classes[index_class][new_index][index_pair];
-                    SwapSchedule(index_class,index_pair,index_individ,sc);
+                    SwapSchedule(this->classes[index_class], index_individ, this->populations[index_individ], temp_classes[index_class][new_index]);
                 }
             }
         }

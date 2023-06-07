@@ -30,7 +30,7 @@ int main(int argc,char* argv[])
         }
         else {
             path = filesystem::current_path().string();
-            pathToSA = "..\\SimpleAlgorithm\\SimpleAlgorithmCPP.exe";
+            pathToSA = "..\\SimpleAlgorithmCPP\\SimpleAlgorithmCPP.exe";
         }
         json data = json();
         ifstream fileData(path + "\\data.json");

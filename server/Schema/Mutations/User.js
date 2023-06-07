@@ -1,8 +1,7 @@
-import { GraphQLList, GraphQLString } from "graphql";
+import { GraphQLString } from "graphql";
 import db from "../../database.js";
 import UserType from "../TypeDefs/UserType.js";
 import validator from "email-validator";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../../config/config.js";
 import MessageType from "../TypeDefs/MessageType.js";
