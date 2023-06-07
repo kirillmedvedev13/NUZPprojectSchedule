@@ -48,12 +48,11 @@ protected:
     double p_elitism;
     int num_elit;
     string type_selection;
-    bool fitness_scaling;
     string type_crossing;
     int num_k_point;
 
     //Фуцнкция сортировки популяции
-    void SortPopulations()
+    vector<Popul> SortPopulations()
     {
         // Получить новые индексы популяций
         auto vec_individs = vector<Popul>(populations.size());
@@ -62,38 +61,7 @@ protected:
             vec_individs[i] = Popul(populations[i].fitnessValue, i);
         }
         sort(vec_individs.begin(), vec_individs.end());
-
-        // Запомнить расписание для его расстоновки по сортировке
-        auto tClassses = vector<vector<vector<schedule>>>(classes.size());
-        for (size_t i = 0; i < classes.size(); i++)
-        {
-            tClassses[i] = vector<vector<schedule>>(classes[i].schedules.size());
-            for (size_t j = 0; j < classes[i].schedules.size(); j++)
-            {
-                tClassses[i][j] = vector<schedule>(classes[i].schedules[j].size());
-                for (size_t k = 0; k < classes[i].schedules[j].size(); k++)
-                {
-                    tClassses[i][j][k] = classes[i].schedules[j][k];
-                }
-            }
-        }
-
-        // Переставить занятий у индивидов
-        for (int index_class = 0; index_class < classes.size(); index_class++)
-        {
-            for (int index_individ = 0; index_individ < populations.size(); index_individ++)
-            {
-                for (int index_pair = 0; index_pair < classes[index_class].schedules[index_individ].size(); index_pair++)
-                {
-                    SwapSchedule(index_class, index_individ, tClassses[index_class][vec_individs[index_individ].index]);
-                }
-            }
-        }
-        //Перестановка фитнеса у индивидов
-        for (size_t j = 0; j < populations.size(); j++)
-        {
-            populations[j].fitnessValue = vec_individs[j].fitnessValue;
-        }
+        return vec_individs;
     }
 
     // Фнукция кроссинга
@@ -150,7 +118,6 @@ public:
         p_mutation = evolution_values["p_mutation"];
         p_elitism = evolution_values["p_elitism"];
         type_selection = evolution_values["type_selection"];
-        fitness_scaling = evolution_values["fitness_scaling"];
         type_crossing = evolution_values["type_crossing"];
         num_k_point = evolution_values["num_k_point"];
         num_elit = population_size * p_elitism;
@@ -201,56 +168,27 @@ public:
     //Цикл выборки
     void SelectionLoop(thread_pool &worker_pool)
     {
-        SortPopulations();
-        // Запомнить расписание для его расстоновки по селекции
+        auto vec_individs = SortPopulations();
+        // Запомнить расписание для его расстановки по селекции
         auto temp_classes = vector<vector<vector<schedule>>>(classes.size());
-        for (size_t i = 0; i < classes.size(); i++)
-        {
+        for (size_t i = 0; i < classes.size(); i++) {
             temp_classes[i] = vector<vector<schedule>>(classes[i].schedules.size());
-            for (size_t j = 0; j < classes[i].schedules.size(); j++)
-            {
+            for (size_t j = 0; j < classes[i].schedules.size(); j++) {
                 temp_classes[i][j] = vector<schedule>(classes[i].schedules[j].size());
-                for (size_t k = 0; k < classes[i].schedules[j].size(); k++)
-                {
+                for (size_t k = 0; k < classes[i].schedules[j].size(); k++) {
                     temp_classes[i][j][k] = classes[i].schedules[j][k];
                 }
-            }
-        }
-        // маштабирование приспоосбления от 30 до 80
-        if(fitness_scaling){
-            double fitness_max = DBL_MIN;
-            double fitness_min = DBL_MAX;
-            for (auto &ind : populations){
-                if (ind.fitnessValue.fitnessValue >= fitness_max){
-                    fitness_max = ind.fitnessValue.fitnessValue;
-                }
-                if (ind.fitnessValue.fitnessValue < fitness_min){
-                    fitness_min = ind.fitnessValue.fitnessValue;
-                }
-            }
-            double fitness_scale_min = 30;
-            double fitness_scale_max = 80;
-            double a;
-            if(fitness_min == fitness_max){
-                a = (fitness_scale_min - fitness_scale_max);
-            }
-            else{
-                a = (fitness_scale_min - fitness_scale_max) / (fitness_min - fitness_max);
-            }
-            double b = fitness_scale_min - (a * fitness_min);
-            for (auto &ind : populations){
-                ind.fitnessValue.fitnessValue = a * ind.fitnessValue.fitnessValue + b;
             }
         }
         // Добавление элитных особей
         auto individ_indexes = vector<int>();
         for(auto i =0; i< num_elit; i++){
-            individ_indexes.push_back(i);
+            individ_indexes.push_back(vec_individs[i].index);
         }
         // Тип выборки индивидов
         if (type_selection == "roulette"){
             double sum_fitness = 0;
-            for (auto &ind : populations){
+            for (auto &ind : vec_individs){
                 sum_fitness += ind.fitnessValue.fitnessValue;
             }
             auto part_individs = vector<double>(population_size+1);
@@ -258,7 +196,7 @@ public:
             double sum_parts = 0;
             //Массив с долями победы определонного индивида
             for (auto i = 0; i < population_size; i++){
-                sum_parts += 1-(populations[i].fitnessValue.fitnessValue / sum_fitness);
+                sum_parts += 1-(vec_individs[i].fitnessValue.fitnessValue / sum_fitness);
                 part_individs[i+1] = sum_parts;
             }
             for (auto i = 0; i < population_size - num_elit; i++){
@@ -279,7 +217,7 @@ public:
                         winIndex = index_left;
                     }
                 }
-                individ_indexes.push_back(winIndex);
+                individ_indexes.push_back(vec_individs[winIndex].index);
             }
         }
         else if (type_selection == "ranging"){
@@ -309,12 +247,11 @@ public:
                         winIndex = index_left;
                     }
                 }
-                individ_indexes.push_back(winIndex);
+                individ_indexes.push_back(vec_individs[winIndex].index);
             }
         }
         else if (type_selection == "tournament"){
-            for (int i = 0; i < population_size - num_elit; i++)
-            {
+            for (int i = 0; i < population_size - num_elit; i++) {
                 // по умолчанию туринр
                 int i1 = 0;
                 int i2 = 0;
@@ -332,9 +269,8 @@ public:
                     winIndex = i2;
                 else
                     winIndex = i3;
-                individ_indexes.push_back(winIndex);
+                individ_indexes.push_back(vec_individs[winIndex].index);
             }
-
         }
 
         //Расстановка расписания
@@ -345,9 +281,7 @@ public:
                 SwapSchedule(index_class, index_individ, temp_classes[index_class][new_index]);
             }
         }
-        if (fitness_scaling){
-            FitnessLoop(worker_pool);
-        }
+        FitnessLoop(worker_pool);
     }
 };
 
