@@ -30,14 +30,15 @@ struct Clas{
             return true;
         return false;
     }
+
     schedule GetSchedule(int classId){
         return schedule(number_pair,day_week,pair_type,id_audience,classId);
     }
 
+
 };
 
 // клас для зберігання параметрів та методів
-
 class Service{
 public:
     double penaltySameRecSc;
@@ -90,10 +91,7 @@ public:
         }
         type_initialization = data["params"]["type_initialization"];
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> ccecdf700cbc9587c1ee6d2d302dcda0fd6f60c8
     void InitBaseSchedule(){
         // Заполнение базового расписания
         for (size_t k = 0; k < populations.size(); k++)
@@ -102,13 +100,7 @@ public:
         }
     }
 
-<<<<<<< HEAD
-    // Начальная инициализация расписания в classes
-    void InitClasses(json data_SA = NULL){
-
-=======
     void InitClasses(int index_individ, json data_SA = NULL){
->>>>>>> ccecdf700cbc9587c1ee6d2d302dcda0fd6f60c8
         // Расстановка расписания случайным образом
         if (type_initialization == "random") {
             // В начальном варианте у всех индиводов расписание разное
@@ -204,6 +196,7 @@ public:
                 auto it = find(populations[index_individ].scheduleForAudiences[sc.id_audience].begin(), populations[index_individ].scheduleForAudiences[sc.id_audience].end(), ref);
                 populations[index_individ].scheduleForAudiences[sc.id_audience].erase(it);
             }
+            cl.schedules[index_individ].clear();
         }
     }
 
@@ -422,7 +415,6 @@ public:
             }
         }
     }
-
     void Mutation(int index_individ,map<int,vector<Clas>> &tabuList, int &iter){
         // Случайное изменение пары для занятия
         if(type_mutation == "custom_one_gene"){
@@ -480,7 +472,6 @@ public:
             }
         }
     }
-
 
     //Подсчет окон для определнного расписания
     double FitnessWindows(vector<schedule *> &i_schedule, double &penaltyWin)

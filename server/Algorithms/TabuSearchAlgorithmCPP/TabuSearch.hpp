@@ -95,7 +95,7 @@ public:
             cout <<"Iter: " << iter++<< ", time: "<<Timer.ms() << "ms"<<", fitness: "<<bestFitness<< endl;
             auto EndTime = chrono::high_resolution_clock::now();
             chrono::duration<float,std::milli> duration = EndTime - StartTime;
-            result.push_back(make_pair(duration.count(), populations[0].fitnessValue.fitnessValue));
+            result.push_back(make_pair(duration.count(), bestFitness));
         }
         return GetBestIndivid();
 
@@ -106,7 +106,7 @@ public:
         for(auto& [classId, historyN]: tabuNeighbor){
             auto& history = tabu_list[classId];
             for(auto &sched: historyN){
-                auto it = std::find(history.begin(),history.end(),sched);
+                auto it = std::find(history.begin(),history.end(),history[0]);
                 if(it!=history.end()){
                     cout<<"Value in tabu list"<<endl;
                     return true;

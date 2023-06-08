@@ -3,12 +3,8 @@ import { RUN_EACPP } from "../../Algorithms/EvolutionAlgorithmsCpp/Main.js";
 import { RUN_IMEACPP } from "../../Algorithms/IslandModelEvolutionAlgorithmCPP/Main.js";
 import { RUN_LSTM } from "../../Algorithms/NeuralNetwork/Main.js";
 import { RUN_SACPP } from "../../Algorithms/SimpleAlgorithmCPP/Main.js";
-<<<<<<< HEAD
-import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
-=======
 import { RUN_SIMACPP } from "../../Algorithms/SimulatedAnnealingAlgorithmCPP/Main.js";
 import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
->>>>>>> ccecdf700cbc9587c1ee6d2d302dcda0fd6f60c8
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 import { RUN_TSCPP } from "../../Algorithms/TabuSearchAlgorithmCPP/Main.js";
