@@ -7,8 +7,6 @@
 #include "GetRnd.hpp"
 #include "GetIdAudienceForClass.hpp"
 
-#include "fstream"
-
 // клас для зберігання параметрів та методів
 class Service{
 public:

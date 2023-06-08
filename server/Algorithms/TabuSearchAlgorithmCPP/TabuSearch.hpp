@@ -31,14 +31,11 @@ struct Clas{
 struct TabuList{
     int classId;
     vector<Clas> history;
-    TabuList(){
-
-    }
+    TabuList(){}
     TabuList(int classId){
         this->classId=classId;
         history = vector<Clas>();
     }
-
 };
 
 class TabuSearch: public Service{
