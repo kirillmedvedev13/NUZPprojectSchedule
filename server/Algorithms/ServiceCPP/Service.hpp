@@ -167,6 +167,7 @@ public:
                 auto it = find(populations[index_individ].scheduleForAudiences[sc.id_audience].begin(), populations[index_individ].scheduleForAudiences[sc.id_audience].end(), ref);
                 populations[index_individ].scheduleForAudiences[sc.id_audience].erase(it);
             }
+            cl.schedules[index_individ].clear();
         }
     }
 

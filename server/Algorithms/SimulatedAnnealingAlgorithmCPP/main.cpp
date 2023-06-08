@@ -54,8 +54,7 @@ int main(int argc,char* argv[])
         mainAlgorithm.InitPopulations(0);
 
 
-        while (best_individ.fitnessValue.fitnessValue != 0)
-        {
+        while (mainAlgorithm.populations[0].fitnessValue.fitnessValue != 0) {
             mainAlgorithm.SetIndivid(1, 0);
             mainAlgorithm.InitPopulations(1);
             mainAlgorithm.Mutation(1);
@@ -80,11 +79,12 @@ int main(int argc,char* argv[])
 
             mainAlgorithm.UpdateTemperature();
             ++countIter;
-            if (countIter % 100 == 0)
+            //if (countIter % 100 == 0){
                 cout << "Iter: " << countIter << " , fitness: " << mainAlgorithm.populations[0].fitnessValue.fitnessValue << " , temp: " << mainAlgorithm.temperature << endl;
-            auto EndTime = chrono::high_resolution_clock::now();
-            chrono::duration<float,std::milli> duration = EndTime - StartTime;
-            result.push_back(make_pair(duration.count(), best_individ.fitnessValue.fitnessValue));
+                auto EndTime = chrono::high_resolution_clock::now();
+                chrono::duration<float,std::milli> duration = EndTime - StartTime;
+                result.push_back(make_pair(duration.count(), mainAlgorithm.populations[0].fitnessValue.fitnessValue));
+           // }
         }
         best_individ = mainAlgorithm.GetBestIndivid();
         Service::SaveResults(best_individ, path, result);

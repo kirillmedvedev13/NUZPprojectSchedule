@@ -222,7 +222,6 @@ export default async function InitRecords(db) {
       step: 1,
       value: 10,
     },
-
     {
       name: "s_neighbors",
       label: "Кількість сусідніх розв’язків на 1 ітерації",
@@ -257,7 +256,6 @@ export default async function InitRecords(db) {
 
   let SimAparams = [
     ...InitAndMutparams,
-    [
       {
         name: "temperature",
         label: "Початкова температура",
@@ -278,8 +276,6 @@ export default async function InitRecords(db) {
         type: "number",
         value: 0.99,
       },
-    ]
-
   ];
 
   await db.type_class.findOrCreate({
@@ -330,7 +326,7 @@ export default async function InitRecords(db) {
     defaults: {
       name: "simple_algorithm",
       label: "Алгоритм простого перебору на С++",
-      params: JSON.stringify(JSON.stringify(InitAndMutparams)),
+      params: JSON.stringify(InitAndMutparams),
       results: JSON.stringify([[0, 0]]),
     },
   });
@@ -339,7 +335,7 @@ export default async function InitRecords(db) {
     where: { name: "tabu_search_algorithm" },
     defaults: {
       name: "tabu_search_algorithm",
-      label: "Алгоритм Табу-пошуку",
+      label: "Алгоритм Табу-пошуку на С++",
       params: JSON.stringify(TabuSearchparams),
       results: JSON.stringify([[0, 0]]),
     },
@@ -349,7 +345,7 @@ export default async function InitRecords(db) {
     where: { name: "simulated_annealing_algorithm" },
     defaults: {
       name: "simulated_annealing_algorithm",
-      label: "Алгоритм імітації відпалу",
+      label: "Алгоритм імітації відпалу на С++",
       params: JSON.stringify(SimAparams),
       results: JSON.stringify([[0, 0]]),
     },
