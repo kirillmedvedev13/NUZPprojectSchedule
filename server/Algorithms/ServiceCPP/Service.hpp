@@ -63,37 +63,37 @@ public:
         type_initialization = data["params"]["type_initialization"];
     }
 
-    // Начальная инициализация расписания в classes
-    void InitClasses(json data_SA = NULL){
+    void InitBaseSchedule(){
         // Заполнение базового расписания
         for (size_t k = 0; k < populations.size(); k++)
         {
             SetBaseScheduleToIndivid(populations[k], bs);
         }
+    }
+
+    void InitClasses(int index_individ, json data_SA = NULL){
         // Расстановка расписания случайным образом
         if (type_initialization == "random") {
             // В начальном варианте у всех индиводов расписание разное
             for (size_t i = 0; i < classes.size(); i++) {
                 auto &clas = classes[i];
                 auto info = GetPairTypeForClass(clas);
-                for (size_t k = 0; k < populations.size(); k++) {
-                    for (size_t j = 0; j < info.size(); j++) {
-                        int day_week, number_pair;
-                        //Расстанока рекомендуемого расписания
-                        auto recommended_schedules = clas.recommended_schedules;
-                        if (j >= recommended_schedules.size()) {
-                            day_week = GetRndInteger(1, max_day);
-                            number_pair = GetRndInteger(1, max_pair);
-                        }
-                        else {
-                            day_week = recommended_schedules[j].day_week;
-                            number_pair = recommended_schedules[j].number_pair;
-                        }
-                        //Растановка аудитории
-                        int id_audience = GetIdAudienceForClass(clas, audiences);
-                        //Добавление пары в занятие
-                        classes[i].schedules[k].push_back(schedule(number_pair, day_week, info[j], id_audience, clas.id));
+                for (size_t j = 0; j < info.size(); j++) {
+                    int day_week, number_pair;
+                    //Расстанока рекомендуемого расписания
+                    auto recommended_schedules = clas.recommended_schedules;
+                    if (j >= recommended_schedules.size()) {
+                        day_week = GetRndInteger(1, max_day);
+                        number_pair = GetRndInteger(1, max_pair);
                     }
+                    else {
+                        day_week = recommended_schedules[j].day_week;
+                        number_pair = recommended_schedules[j].number_pair;
+                    }
+                    //Растановка аудитории
+                    int id_audience = GetIdAudienceForClass(clas, audiences);
+                    //Добавление пары в занятие
+                    classes[i].schedules[index_individ].push_back(schedule(number_pair, day_week, info[j], id_audience, clas.id));
                 }
             }
         }
@@ -104,9 +104,37 @@ public:
                 auto find_cl = find_if(classes.begin(), classes.end(), [&id_class](clas &cl){
                     return cl.id == id_class;
                 });
-                for (size_t k = 0; k < populations.size(); k++) {
-                    find_cl->schedules[k].push_back(schedule(sc["number_pair"], sc["day_week"], sc["pair_type"], sc["id_audience"], id_class));
+                find_cl->schedules[index_individ].push_back(schedule(sc["number_pair"], sc["day_week"], sc["pair_type"], sc["id_audience"], id_class));
+            }
+        }
+    }
+
+    void InitClasses(json data_SA = NULL){
+        for (size_t index_individ = 0; index_individ < populations.size(); index_individ++) {
+            InitClasses(index_individ, data_SA);
+        }
+    }
+
+    void InitPopulations(int index_individ){
+        for (size_t index_class = 0; index_class < classes.size(); index_class++) {
+            clas &clas = classes[index_class];
+            for (size_t index_pair = 0; index_pair < clas.schedules[index_individ].size(); index_pair++) {
+                auto ref = &clas.schedules[index_individ][index_pair];
+                // Добавление указателя на занятие для груп
+                for (auto &gr : classes[index_class].assigned_groups)
+                {
+                    auto &ref_gr = populations[index_individ].scheduleForGroups[gr.id];
+                    ref_gr.push_back(ref);
                 }
+                // Добавление указателя на занятие для учителей
+                for (auto &teach : classes[index_class].assigned_teachers)
+                {
+                    auto &ref_teach = populations[index_individ].scheduleForTeachers[teach.id];
+                    ref_teach.push_back(ref);
+                }
+                // Добавление указателя на занятие для аудитории
+                auto &ref_aud = populations[index_individ].scheduleForAudiences[clas.schedules[index_individ][index_pair].id_audience];
+                ref_aud.push_back(ref);
             }
         }
     }
@@ -115,28 +143,40 @@ public:
     {
         // Расстановка ссылок на расписание для индивидов
         for (size_t index_individ = 0; index_individ < populations.size(); index_individ++) {
-            for (size_t index_class = 0; index_class < classes.size(); index_class++) {
-                clas &clas = classes[index_class];
-                for (size_t index_pair = 0; index_pair < clas.schedules[index_individ].size(); index_pair++) {
-                    auto ref = &clas.schedules[index_individ][index_pair];
-                    // Добавление ссылки на занятие для груп
-                    for (auto &gr : classes[index_class].assigned_groups)
-                    {
-                        auto &ref_gr = populations[index_individ].scheduleForGroups[gr.id];
-                        ref_gr.push_back(ref);
-                    }
-                    // Добавление ссылки на занятие для учителей
-                    for (auto &teach : classes[index_class].assigned_teachers)
-                    {
-                        auto &ref_teach = populations[index_individ].scheduleForTeachers[teach.id];
-                        ref_teach.push_back(ref);
-                    }
-                    // Добавление ссылки на занятие для аудитории
-                    auto &ref_aud = populations[index_individ].scheduleForAudiences[clas.schedules[index_individ][index_pair].id_audience];
-                    ref_aud.push_back(ref);
+            InitPopulations(index_individ);
+        }
+    }
+
+    void ClearIndivid(int index_individ){
+        for (auto &cl : classes){
+            for (auto &sc : cl.schedules[index_individ]){
+                auto ref = &sc;
+                // Удаление указателя на занятие для груп
+                for (auto &gr : cl.assigned_groups)
+                {
+                    auto it = find(populations[index_individ].scheduleForGroups[gr.id].begin(), populations[index_individ].scheduleForGroups[gr.id].end(), ref);
+                    populations[index_individ].scheduleForGroups[gr.id].erase(it);
                 }
+                // Удаление указателя на занятие для учителей
+                for (auto &teach : cl.assigned_teachers)
+                {
+                    auto it = find(populations[index_individ].scheduleForTeachers[teach.id].begin(), populations[index_individ].scheduleForTeachers[teach.id].end(), ref);
+                    populations[index_individ].scheduleForTeachers[teach.id].erase(it);
+                }
+                // Добавление указателя на занятие для аудитории
+                auto it = find(populations[index_individ].scheduleForAudiences[sc.id_audience].begin(), populations[index_individ].scheduleForAudiences[sc.id_audience].end(), ref);
+                populations[index_individ].scheduleForAudiences[sc.id_audience].erase(it);
             }
         }
+    }
+
+    void SetIndivid(int index_main_individ, int index_copied_individ){
+        for (auto &cl : classes){
+            for (auto &sc : cl.schedules[index_copied_individ]){
+                cl.schedules[index_main_individ].push_back(sc);
+            }
+        }
+        populations[index_main_individ].fitnessValue = populations[index_copied_individ].fitnessValue;
     }
 
     //Получить лучшего индивида. Вызивать только если обновлены фитнес значения
