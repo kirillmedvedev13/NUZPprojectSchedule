@@ -181,6 +181,107 @@ export default async function InitRecords(db) {
     },
   ];
 
+  let InitAndMutparams = [
+    {
+      name: "type_initialization",
+      label: "Тип ініціалізації",
+      short: "тип ініц.",
+      type: "select",
+      value: initialization_options[0].value,
+      options: initialization_options,
+    },
+    {
+      name: "type_mutation",
+      label: "Тип мутації",
+      short: "тип мут.",
+      type: "select",
+      value: mutation_options[0].value,
+      options: mutation_options,
+    },
+    {
+      name: "p_mutation_gene",
+      label: "Ймовірність мутації пари (тільки якщо обрано мутацію - всіх генів)",
+      short: "мут.пар.",
+      type: "number",
+      value: 0.1,
+      min: 0,
+      max: 1,
+      step: 0.05,
+    },
+  ];
+
+  let TabuSearchparams = [
+    ...InitAndMutparams,
+    {
+      name: "tabu_tenure",
+      label: "Кількість ітерації дії Табу",
+      short: "дія т.",
+      min: 0,
+      max: null,
+      type: "number",
+      step: 1,
+      value: 10,
+    },
+
+    {
+      name: "s_neighbors",
+      label: "Кількість сусідніх розв’язків на 1 ітерації",
+      short: "сусід.",
+      min: 1,
+      max: null,
+      type: "number",
+      step: 1,
+      value: 10,
+    },
+    {
+      name: "n_iteration",
+      label: "Кількість ітерації",
+      short: "ітер.",
+      min: 1,
+      max: null,
+      type: "number",
+      step: 1,
+      value: 10000,
+    },
+    {
+      name: "tabu_list_len",
+      label: "Довжина списку Табу",
+      short: "довж.т.",
+      min: 1,
+      max: null,
+      type: "number",
+      step: 1,
+      value: 50,
+    },
+  ];
+
+  let SimAparams = [
+    ...InitAndMutparams,
+    [
+      {
+        name: "temperature",
+        label: "Початкова температура",
+        short: "темп.",
+        min: 0,
+        max: null,
+        step: 100,
+        type: "number",
+        value: 100000,
+      },
+      {
+        name: "alpha",
+        label: "Коефіцієнт alpha",
+        short: "alpha",
+        min: 0,
+        max: 1,
+        step: 0.01,
+        type: "number",
+        value: 0.99,
+      },
+    ]
+
+  ];
+
   await db.type_class.findOrCreate({
     where: { id: 1 },
     defaults: {
@@ -199,7 +300,7 @@ export default async function InitRecords(db) {
     where: { name: "model_lstm" },
     defaults: {
       name: "model_lstm",
-      label: "Модель на основі LSTM",
+      label: "Нейронна мережа на основі LSTM на Python",
       params: JSON.stringify([]),
       results: JSON.stringify([[0, 0]]),
     },
@@ -225,11 +326,11 @@ export default async function InitRecords(db) {
   });
 
   await db.algorithm.findOrCreate({
-    where: { name: "simple_algorithm" },
+    where: { name: "simple_algorithmCPP" },
     defaults: {
       name: "simple_algorithm",
-      label: "Алгоритм простого перебору",
-      params: JSON.stringify([]),
+      label: "Алгоритм простого перебору на С++",
+      params: JSON.stringify(JSON.stringify(InitAndMutparams)),
       results: JSON.stringify([[0, 0]]),
     },
   });
@@ -239,49 +340,7 @@ export default async function InitRecords(db) {
     defaults: {
       name: "tabu_search_algorithm",
       label: "Алгоритм Табу-пошуку",
-      params: JSON.stringify([
-        {
-          name: "tabu_tenure",
-          label: "Кількість ітерації дії Табу",
-          short: "дія т.",
-          min: 0,
-          max: null,
-          type: "number",
-          step: 1,
-          value: 10,
-        },
-
-        {
-          name: "s_neighbors",
-          label: "Кількість сусідніх розв’язків на 1 ітерації",
-          short: "сусід.",
-          min: 1,
-          max: null,
-          type: "number",
-          step: 1,
-          value: 10,
-        },
-        {
-          name: "n_iteration",
-          label: "Кількість ітерації",
-          short: "ітер.",
-          min: 1,
-          max: null,
-          type: "number",
-          step: 1,
-          value: 10000,
-        },
-        {
-          name: "tabu_list_len",
-          label: "Довжина списку Табу",
-          short: "довж.т.",
-          min: 1,
-          max: null,
-          type: "number",
-          step: 1,
-          value: 50,
-        },
-      ]),
+      params: JSON.stringify(TabuSearchparams),
       results: JSON.stringify([[0, 0]]),
     },
   });
@@ -291,28 +350,7 @@ export default async function InitRecords(db) {
     defaults: {
       name: "simulated_annealing_algorithm",
       label: "Алгоритм імітації відпалу",
-      params: JSON.stringify([
-        {
-          name: "temperature",
-          label: "Початкова температура",
-          short: "темп.",
-          min: 0,
-          max: null,
-          step: 0.1,
-          type: "number",
-          value: 100,
-        },
-        {
-          name: "alpha",
-          label: "Коефіцієнт alpha",
-          short: "alpha",
-          min: 0,
-          max: 1,
-          step: 0.01,
-          type: "number",
-          value: 0.99,
-        },
-      ]),
+      params: JSON.stringify(SimAparams),
       results: JSON.stringify([[0, 0]]),
     },
   });
