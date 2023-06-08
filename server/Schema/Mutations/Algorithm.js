@@ -4,9 +4,9 @@ import { RUN_IMEACPP } from "../../Algorithms/IslandModelEvolutionAlgorithmCPP/M
 import { RUN_LSTM } from "../../Algorithms/NeuralNetwork/Main.js";
 import { RUN_SACPP } from "../../Algorithms/SimpleAlgorithmCPP/Main.js";
 import { RUN_SIMULATED_ANNEALING } from "../../Algorithms/SimulatedAnnealingAlgorithm/Main.js";
-import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
+import { RUN_TSCPP } from "../../Algorithms/TabuSearchAlgorithmCPP/Main.js";
 
 export const UpdateAlgorithm = {
   type: MessageType,
@@ -57,7 +57,7 @@ export const RunAlgorithm = {
         result = await RUN_SIMULATED_ANNEALING(id_cathedra, name);
         break;
       case "tabu_search_algorithm":
-        result = await RUN_TS(id_cathedra, name);
+        result = await RUN_TSCPP(id_cathedra, name);
         break;
       case "model_lstm":
         result = await RUN_LSTM(id_cathedra, name);
