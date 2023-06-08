@@ -7,6 +7,35 @@
 #include "GetRnd.hpp"
 #include "GetIdAudienceForClass.hpp"
 
+struct Clas{
+    int day_week;
+    int pair_type;
+    int number_pair;
+    int id_audience;
+    int number_iter;
+    Clas(int day_week, int number_pair, int pair_type,int audience, int number_iter){
+        this->day_week = day_week;
+        this->number_pair = number_pair;
+        this->pair_type = pair_type;
+        this->id_audience=audience;
+        this->number_iter=number_iter;
+    }
+    Clas operator=(const Clas &b){
+        return Clas(b.day_week, b.number_pair, b.pair_type,b.id_audience,b.number_iter);
+    }
+    bool operator==(const Clas &b) const{
+        if (this->day_week == b.day_week && this->pair_type == b.pair_type && this->number_pair == b.number_pair)
+            return true;
+        return false;
+    }
+
+    schedule GetSchedule(int classId){
+        return schedule(number_pair,day_week,pair_type,id_audience,classId);
+    }
+
+
+};
+
 // клас для зберігання параметрів та методів
 class Service{
 public:
@@ -378,6 +407,63 @@ public:
                             }
                             auto sc = schedule(number_pair, day_week, pair_type, new_id_audience, classes[index_class].id);
                             SwapSchedule(index_individ, &classes[index_class].schedules[index_individ][index_pair], sc);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    void Mutation(int index_individ,map<int,vector<Clas>> &tabuList, int &iter){
+        // Случайное изменение пары для занятия
+        if(type_mutation == "custom_one_gene"){
+            int index_class = GetRndInteger(0, classes.size() - 1);
+            int index_pair = GetRndInteger(0, classes[index_class].schedules[index_individ].size() - 1);
+            // если есть рекомендуемоемое время, то пару не менять
+            int num_rec = classes[index_class].recommended_schedules.size();
+
+            //Если у занятия нету рекомендуемого времени
+            if (index_pair >= num_rec)
+            {
+                int day_week = GetRndInteger(1, max_day);
+                int number_pair = GetRndInteger(1, max_pair);
+                int new_id_audience = GetIdAudienceForClass(classes[index_class], audiences);
+                int pair_type = classes[index_class].schedules[index_individ][index_pair].pair_type;
+                // С шансом 0.5 менять числитель на знаменатель
+                if (pair_type < 3 && GetRndDouble() <= 0.5)
+                {
+                    pair_type = 3 - pair_type;
+                }
+                auto sc = schedule(number_pair, day_week, pair_type, new_id_audience, classes[index_class].id);
+                SwapSchedule(index_individ, &classes[index_class].schedules[index_individ][index_pair], sc);
+
+                auto &clasList = tabuList[classes[index_class].id];
+                clasList.push_back(Clas(day_week,number_pair,pair_type, new_id_audience, iter));
+
+            }
+        }
+        // Изменение всех пар для занятия в зависимости от шанса
+        else if (type_mutation == "all_genes"){
+            for(size_t index_class = 0; index_class < classes.size(); index_class++){
+                for(size_t index_pair = 0; index_pair < classes[index_class].schedules[index_individ].size(); index_pair++){
+                    int num_rec = classes[index_class].recommended_schedules.size();
+                    // Если у занятия нету рекомендуемого времени
+                    if ((int)index_pair >= num_rec){
+                        // Если нужно мутировать пару
+                        if (GetRndDouble() <= p_mutation_gene){
+                            int day_week = GetRndInteger(1, max_day);
+                            int number_pair = GetRndInteger(1, max_pair);
+                            int new_id_audience = GetIdAudienceForClass(classes[index_class], audiences);
+                            int pair_type = classes[index_class].schedules[index_individ][index_pair].pair_type;
+                            // С шансом 0.5 менять числитель на знаменатель
+                            if (pair_type < 3 && GetRndDouble() <= 0.5)
+                            {
+                                pair_type = 3 - pair_type;
+                            }
+                            auto sc = schedule(number_pair, day_week, pair_type, new_id_audience, classes[index_class].id);
+                            SwapSchedule(index_individ, &classes[index_class].schedules[index_individ][index_pair], sc);
+
+                            auto &clasList = tabuList[classes[index_class].id];
+                            clasList.push_back(Clas(day_week,number_pair,pair_type, new_id_audience,iter));
                         }
                     }
                 }

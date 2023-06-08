@@ -1,7 +1,7 @@
 #include "../ServiceCPP/json.hpp"
 #include "../ServiceCPP/Service.hpp"
 #include "../ServiceCPP/TypeDefs.hpp"
-#include "SimpleAlgorithm.hpp"
+#include "TabuSearch.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -14,34 +14,43 @@ int main(int argc,char* argv[])
 {
     try
     {
-        auto StartTime = chrono::high_resolution_clock::now();
         string path;
-        if (argc == 2){
+        string pathToSA;
+        if (argc >= 2){
             path = argv[1];
+            if (argc == 3){
+                pathToSA = argv[2];
+            }
         }
         else {
             path = filesystem::current_path().string();
+            pathToSA = "..\\SimpleAlgorithmCPP\\SimpleAlgorithmCPP.exe";
         }
         srand(time(NULL));
         json data = json();
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
-        // Значение время и фитнесса
+        json data_SA=NULL;
+        TabuSearch mainAlgorithm;
+        if (data["params"]["type_initialization"] == "simple_algorithm"){
+            auto code = system(string(pathToSA + " " + path).c_str());
+            if (code == 0){
+                data_SA = json();
+                ifstream fileData(path + "\\result.json");
+                data_SA = json::parse(fileData);
+            }
+            else{
+                throw "Error run SimpleAlgorithm.exe";
+            }
+        }
+        timer Timer;
+        Timer.start();
+        mainAlgorithm = TabuSearch(data,Timer,data_SA);
         auto result = vector<pair<int, double>>();
-
-        auto SA = SimpleAlgorithm(data);
-
-        SA.Fitness(0);
-
-        auto best_individ = SA.GetBestIndivid();
-
-        auto EndTime = chrono::high_resolution_clock::now();
-        chrono::duration<float,std::milli> duration = EndTime - StartTime;
-        result.push_back(make_pair(duration.count(), best_individ.fitnessValue.fitnessValue));
-
-        cout << "Simple Algorithm: " << " fitness: " << best_individ.fitnessValue.fitnessValue << endl;
-
+        auto best_individ = mainAlgorithm.MainLoop(data,Timer,result);
         Service::SaveResults(best_individ, path, result);
+
+
     }
     catch (exception &ex)
     {
