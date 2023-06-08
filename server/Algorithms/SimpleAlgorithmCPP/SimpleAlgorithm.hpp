@@ -47,6 +47,7 @@ class SimpleAlgorithm : public Service
 public:
     SimpleAlgorithm(json data){
         InitService(data, 1);
+        InitBaseSchedule();
         auto &ind = populations[0];
         for (auto &cl : classes){
             auto info = GetPairTypeForClass(cl);

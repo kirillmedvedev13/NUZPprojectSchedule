@@ -71,6 +71,9 @@ export const RUN_EACPP = async (id_cathedra, name_algorithm) => {
         };
       else return { successful: false, message: `Помилка` };
     }
+    else{
+      throw `Error code - ${code}`
+    }
   } catch (err) {
     console.log(err);
   }

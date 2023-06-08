@@ -122,6 +122,7 @@ public:
         num_k_point = evolution_values["num_k_point"];
         num_elit = population_size * p_elitism;
 
+        InitBaseSchedule();
         InitClasses(data_SA);
         InitPopulations();
     }
