@@ -30,6 +30,7 @@
     "graphql": "^16.2.0",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
+    "mysql2": "^3.3.3",
     "sequelize": "^6.12.5"
   },
   "devDependencies": {
