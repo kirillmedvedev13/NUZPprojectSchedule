@@ -37,9 +37,7 @@ int main(int argc,char* argv[])
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
 
-        // Инициализация
         const int max_generations = data["params"]["max_generations"];
-        // Потоки
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();

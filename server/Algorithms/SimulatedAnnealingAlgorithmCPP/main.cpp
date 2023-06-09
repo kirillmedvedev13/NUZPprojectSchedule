@@ -53,7 +53,8 @@ int main(int argc,char* argv[])
         mainAlgorithm.InitClasses(0, data_SA);
         mainAlgorithm.InitPopulations(0);
 
-        while (mainAlgorithm.populations[0].fitnessValue.fitnessValue != 0) {
+        const int max_generations = data["params"]["max_generations"];
+        while (countIter < max_generations && mainAlgorithm.populations[0].fitnessValue.fitnessValue != 0) {
             mainAlgorithm.ClearIndivid(1);
             mainAlgorithm.SetIndivid(1, 0);
             mainAlgorithm.InitPopulations(1);
