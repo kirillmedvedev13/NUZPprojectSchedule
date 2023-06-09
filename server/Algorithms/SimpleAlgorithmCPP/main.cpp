@@ -26,7 +26,7 @@ int main(int argc,char* argv[])
         json data = json();
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
-        // Значение время и фитнесса
+        // Значение время и фитнесqса
         auto result = vector<pair<int, double>>();
 
         auto SA = SimpleAlgorithm(data);

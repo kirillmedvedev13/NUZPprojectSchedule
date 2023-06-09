@@ -1,6 +1,8 @@
 import db from "../../database.js";
-import Fitness from "../../Algorithms/Service/Fitness.js";
 import MessageType from "../TypeDefs/MessageType.js";
+import SpawnChild from "../../Algorithms/Service/SpawnChild.js";
+import fs from "fs";
+import path from "path";
 
 export const CalcFitness = {
   type: MessageType,
@@ -9,89 +11,83 @@ export const CalcFitness = {
     const general_values = JSON.parse(info.dataValues.general_values);
 
     const max_day = info.dataValues.max_day;
-    let recommended_schedules = await db.recommended_schedule.findAll({
-      include: {
-        model: db.class,
-        include: {
-          model: db.schedule,
-        },
-      },
-    });
-    recommended_schedules = recommended_schedules.map((rs) => rs.toJSON());
-    let scheduleForGroups = new Map();
-    let scheduleForTeachers = new Map();
-    let scheduleForAudiences = new Map();
-    let schedule = {
-      scheduleForGroups,
-      scheduleForTeachers,
-      scheduleForAudiences,
-      fitnessValue: null,
-    };
-    let dataSchedules = await db.schedule.findAll({
+    const max_pair = info.dataValues.max_pair;
+
+    let schedules = await db.schedule.findAll();
+
+    let classes = await db.class.findAll({
       include: [
         {
-          model: db.audience,
+          model: db.assigned_group,
+          include: {
+            model: db.group,
+          },
         },
         {
-          model: db.class,
-          include: [
-            { model: db.recommended_schedule },
-            {
-              model: db.assigned_group,
-            },
-            {
-              model: db.assigned_teacher,
-            },
-            {
-              model: db.recommended_audience,
-            },
-          ],
+          model: db.assigned_teacher,
+        },
+        {
+          model: db.recommended_audience,
+        },
+        {
+          model: db.recommended_schedule,
+        },
+        {
+          model: db.assigned_discipline,
+          required: true,
+          include: {
+            model: db.specialty,
+            required: true,
+          },
         },
       ],
     });
-    for (let pair of dataSchedules) {
-      pair = pair.dataValues;
-      let clas = pair.class.dataValues;
-      let object = {
-        id: pair.id,
-        number_pair: pair.number_pair,
-        day_week: pair.day_week,
-        pair_type: pair.pair_type,
-      };
-      let schedAud = schedule.scheduleForAudiences.get(pair.audience.id);
-      if (!schedAud) schedAud = [];
-      schedAud.push(object);
-      schedule.scheduleForAudiences.set(pair.audience.id, schedAud);
-      for (let group of clas.assigned_groups) {
-        group = group.dataValues;
-        let schedGroup = schedule.scheduleForGroups.get(group.id_group);
-        if (!schedGroup) schedGroup = [];
-        schedGroup.push(object);
-        schedule.scheduleForGroups.set(group.id_group, schedGroup);
-      }
-      for (let teach of clas.assigned_teachers) {
-        teach = teach.dataValues;
-        let schedTeach = schedule.scheduleForTeachers.get(teach.id_teacher);
-        if (!schedTeach) schedTeach = [];
-        schedTeach.push(object);
-        schedule.scheduleForTeachers.set(teach.id_teacher, schedTeach);
-      }
-    }
-    let fitnessValue = Fitness(
-      schedule,
-      recommended_schedules,
+
+    let audiences = await db.audience.findAll({
+      include: {
+        model: db.assigned_audience,
+      },
+    });
+
+    schedules = schedules.map((s) => s.toJSON());
+    classes = classes.map((c) => c.toJSON());
+    audiences = audiences.map((a) => a.toJSON());
+
+    let jsonData = JSON.stringify({
       max_day,
-      general_values
+      max_pair,
+      classes,
+      general_values,
+      audiences,
+      schedules
+    });
+
+    let pathToAlgorithm = path.resolve(
+      ".\\Algorithms\\CalcFitness\\CalcFitness.exe"
     );
-    const res = await db.info.update(
-      { fitness_value: JSON.stringify(fitnessValue) },
-      { where: { id: 1 } }
-    );
-    return res[0]
-      ? {
-        successful: true,
-        message: "Значення пораховано успішно",
-      }
-      : { successful: false, message: "Помилка при рахуванні значення" };
+    let pathToData = path.resolve(".\\Algorithms\\CalcFitness/");
+    fs.writeFileSync(pathToData + "\\data.json", jsonData, (err) => {
+      if (err) console.log(err);
+    });
+
+    const code = await SpawnChild(pathToAlgorithm, [pathToData]);
+    if (code == 0) {
+      let fitnessValue = fs.readFileSync(pathToData + "\\result.json");
+      fitnessValue = JSON.parse(fitnessValue);
+      fitnessValue = fitnessValue.fitnessValue;
+
+      const res = await db.info.update(
+        { fitness_value: JSON.stringify(fitnessValue) },
+        { where: { id: 1 } }
+      );
+      return res[0]
+        ? {
+            successful: true,
+            message: "Фтнес-значення пораховано успішно",
+          }
+        : { successful: false, message: "Помилка при рахуванні значення" };
+    } else {
+      return { successful: false, message: "Помилка при рахуванні значення" };
+    }
   },
 };

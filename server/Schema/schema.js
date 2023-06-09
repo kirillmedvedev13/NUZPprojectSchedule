@@ -1,21 +1,48 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { GetAllTeachers } from "./Queries/Teacher.js";
-import { CreateTeacher, DeleteTeacher, UpdateTeacher} from "./Mutations/Teacher.js";
+import {
+  CreateTeacher,
+  DeleteTeacher,
+  UpdateTeacher,
+} from "./Mutations/Teacher.js";
 import { GetAllAudiences } from "./Queries/Audience.js";
-import { CreateAudience, DeleteAudience, UpdateAudience, AddCathedraToAudience, DeleteCathedraFromAudience } 
-from "./Mutations/Audience.js";
+import {
+  CreateAudience,
+  DeleteAudience,
+  UpdateAudience,
+  AddCathedraToAudience,
+  DeleteCathedraFromAudience,
+} from "./Mutations/Audience.js";
 import { GetAllCathedras } from "./Queries/Cathedra.js";
-import { CreateCathedra, DeleteCathedra, UpdateCathedra} from "./Mutations/Cathedra.js";
+import {
+  CreateCathedra,
+  DeleteCathedra,
+  UpdateCathedra,
+} from "./Mutations/Cathedra.js";
 import { GetAllSpecialties } from "./Queries/Specialty.js";
-import { CreateSpecialty, DeleteSpecialty, UpdateSpecialty} from "./Mutations/Specialty.js";
+import {
+  CreateSpecialty,
+  DeleteSpecialty,
+  UpdateSpecialty,
+} from "./Mutations/Specialty.js";
 import { GetAllTypeClasses } from "./Queries/Type_class.js";
 import { GetAllGroups } from "./Queries/Group.js";
 import { CreateGroup, UpdateGroup, DeleteGroup } from "./Mutations/Group.js";
 import { GetAllDisciplines } from "./Queries/Discipline.js";
-import { CreateDiscipline, UpdateDiscipline, DeleteDiscipline, AddDisciplineToSpecialty, DeleteDisciplineFromSpecialty} 
-from "./Mutations/Discipline.js";
+import {
+  CreateDiscipline,
+  UpdateDiscipline,
+  DeleteDiscipline,
+  AddDisciplineToSpecialty,
+  DeleteDisciplineFromSpecialty,
+} from "./Mutations/Discipline.js";
 import { GetAllClasses } from "./Queries/Class.js";
-import { GetAllScheduleGroups, GetAllScheduleAudiences, GetAllScheduleTeachers, GetAllSchedules} from "./Queries/Schedule.js";
+import {
+  GetAllScheduleGroups,
+  GetAllScheduleAudiences,
+  GetAllScheduleTeachers,
+  GetAllSchedules,
+} from "./Queries/Schedule.js";
 import {
   CreateClass,
   UpdateClass,
