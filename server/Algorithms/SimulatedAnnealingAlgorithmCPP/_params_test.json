@@ -1,0 +1,149 @@
+{
+  "items": [
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.1,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.1,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.1,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.05,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.05,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.05,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000000,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000,
+      "alpha":0.8
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000,
+      "alpha":0.8
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "random",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100000,
+      "alpha":0.8
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "simple_algorithm",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "simple_algorithm",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100,
+      "alpha":0.99
+    },
+    {
+      "max_generations": 2000,
+      "type_initialization": "simple_algorithm",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.15,
+      "temperature": 100,
+      "alpha":0.99
+    }
+
+  ]
+}

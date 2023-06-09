@@ -3,14 +3,14 @@ import SpawnChild from "../Service/SpawnChild.js";
 import path from "path";
 
 async function Run(){
-    let pathToAlgorithm = path.resolve("ClassicEvolutionAlgorithm.exe");
+    let pathToAlgorithm = path.resolve("SimulatedAnnealingAlgorithmCPP.exe");
     let pathToSA = path.resolve("../SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
     let pathToData= path.resolve("");
-    let test_params = readFileSync(pathToData + "\\params_test.json")
+    let test_params = readFileSync(pathToData + "\\_params_test.json")
     let data = readFileSync(pathToData + "\\data.json")
     data = JSON.parse(data);
     test_params = JSON.parse(test_params);
-    let i = 2;
+    let i = 1;
     for (let params of test_params.items){
         console.log(`NUMBER TEST - ${i}`);
         data.params = params;
