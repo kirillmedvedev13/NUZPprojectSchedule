@@ -4,7 +4,6 @@ import { RUN_IMEACPP } from "../../Algorithms/IslandModelEvolutionAlgorithmCPP/M
 import { RUN_LSTM } from "../../Algorithms/NeuralNetwork/Main.js";
 import { RUN_SACPP } from "../../Algorithms/SimpleAlgorithmCPP/Main.js";
 import { RUN_SIMACPP } from "../../Algorithms/SimulatedAnnealingAlgorithmCPP/Main.js";
-import { RUN_TS } from "../../Algorithms/TabuSearchAlgorithm/Main.js";
 import db from "../../database.js";
 import MessageType from "../TypeDefs/MessageType.js";
 import { RUN_TSCPP } from "../../Algorithms/TabuSearchAlgorithmCPP/Main.js";

@@ -8,28 +8,6 @@
 using namespace BS;
 using namespace std;
 
-<<<<<<< HEAD
-struct Clas{
-    int day_week;
-    int pair_type;
-    int number_pair;
-    int number_iter;
-    Clas(int day_week, int number_pair, int pair_type,int number_iter){
-        this->day_week = day_week;
-        this->number_pair = number_pair;
-        this->pair_type = pair_type;
-        this->number_iter=number_iter;
-    }
-    Clas operator=(const Clas &b){
-        return Clas(b.day_week, b.number_pair, b.pair_type,b.number_pair);
-    }
-    bool operator==(const Clas &b) const{
-        if (this->day_week == b.day_week && this->pair_type == b.pair_type && this->number_pair == b.number_pair)
-            return true;
-        return false;
-    }
-
-};
 
 struct TabuList{
     int classId;
@@ -40,8 +18,6 @@ struct TabuList{
         history = vector<Clas>();
     }
 };
-=======
->>>>>>> 700543b6d65308fd9d75088f920de5d1c7135464
 
 class TabuSearch: public Service{
     int tabu_tenure;
@@ -83,7 +59,7 @@ public:
             Service mutations;
 
             mutations.InitServiceWithInitAndMut(data,s_neighbors);
-            mutations.InitBaseSchedule();
+            mutations.InitBaseSchedule(data);
             for(int j=0;j<s_neighbors;j++){
                for(int k = 0;k<mutations.classes.size();k++){
                    mutations.classes[k].schedules[j]=classes[k].schedules[0];

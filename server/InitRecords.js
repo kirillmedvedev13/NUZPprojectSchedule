@@ -326,7 +326,7 @@ export default async function InitRecords(db) {
     defaults: {
       name: "simple_algorithm",
       label: "Алгоритм простого перебору на С++",
-      params: JSON.stringify(InitAndMutparams),
+      params: JSON.stringify([]),
       results: JSON.stringify([[0, 0]]),
     },
   });

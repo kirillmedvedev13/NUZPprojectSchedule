@@ -49,7 +49,7 @@ int main(int argc,char* argv[])
         auto StartTime = chrono::high_resolution_clock::now();
 
         SimulatedAnnealing mainAlgorithm(data);
-        mainAlgorithm.InitBaseSchedule();
+        mainAlgorithm.InitBaseSchedule(data);
         mainAlgorithm.InitClasses(0, data_SA);
         mainAlgorithm.InitPopulations(0);
 
