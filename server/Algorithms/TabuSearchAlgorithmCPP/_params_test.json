@@ -1,0 +1,202 @@
+{
+  "items": [
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 10,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 10,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 10,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 10,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 10,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "all_genes",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 10,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 20,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 20,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 20,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 10,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 20,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 20,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 20,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 50
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 100
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 100
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "random",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 100
+    },
+    {
+      "n_iteration": 200000,
+      "type_initialization": "simple_algorithm",
+      "type_mutation": "custon_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 100
+    }
+  ]
+}
