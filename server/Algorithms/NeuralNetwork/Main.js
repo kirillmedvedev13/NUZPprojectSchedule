@@ -34,7 +34,7 @@ export const RUN_LSTM = async (id_cathedra, name_algorithm) => {
     fs.writeFileSync(fileData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
     });
-    const code = await SpawnChild(fileName, fileData);
+    const code = await SpawnChild(fileName, [fileData]);
     if (code === 0) {
       let res = readFileSync("./Algorithms/NeuralNetwork/result.json");
       res = JSON.parse(res);

@@ -116,7 +116,7 @@ public:
         for(auto& [classId, historyN]: tabuNeighbor){
             auto& history = tabu_list[classId];
             for(auto &sched: historyN){
-                auto it = std::find(history.begin(),history.end(),history[0]);
+                auto it = std::find(history.begin(),history.end(),sched);
                 if(it!=history.end()){
                     cout<<"Value in tabu list"<<endl;
                     return true;
