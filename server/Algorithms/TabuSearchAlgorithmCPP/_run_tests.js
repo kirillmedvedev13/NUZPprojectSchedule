@@ -3,7 +3,7 @@ import SpawnChild from "../Service/SpawnChild.js";
 import path from "path";
 
 async function Run(){
-    let pathToAlgorithm = path.resolve("SimulatedAnnealingAlgorithmCPP.exe");
+    let pathToAlgorithm = path.resolve("TabuSearchAlgorithmCPP.exe");
     let pathToSA = path.resolve("../SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
     let pathToData= path.resolve("");
     let test_params = readFileSync(pathToData + "\\_params_test.json")
