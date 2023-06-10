@@ -80,11 +80,11 @@ int main(int argc,char* argv[])
 
             mainAlgorithm.UpdateTemperature();
             ++countIter;
+            auto EndTime = chrono::high_resolution_clock::now();
+            chrono::duration<float,std::milli> duration = EndTime - StartTime;
+            result.push_back(make_pair(duration.count(), mainAlgorithm.populations[0].fitnessValue.fitnessValue));
             if (countIter % 100 == 0){
                 cout << "Iter: " << countIter << " , fitness: " << mainAlgorithm.populations[0].fitnessValue.fitnessValue << " , temp: " << mainAlgorithm.temperature << endl;
-                auto EndTime = chrono::high_resolution_clock::now();
-                chrono::duration<float,std::milli> duration = EndTime - StartTime;
-                result.push_back(make_pair(duration.count(), mainAlgorithm.populations[0].fitnessValue.fitnessValue));
             }
         }
         best_individ = mainAlgorithm.GetBestIndivid();
