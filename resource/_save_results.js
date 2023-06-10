@@ -9,8 +9,8 @@ async function Run() {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(pathToExcel);
 
-  let worksheet = workbook.getWorksheet(3);
-  let calls = ['I', 'J', 'K', 'L'];
+  let worksheet = workbook.getWorksheet(4);
+  let calls = ['J', 'K', 'L', 'M'];
 
   let contentDir = fs.readdirSync(pathToResults);
   contentDir.forEach((file) => {

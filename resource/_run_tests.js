@@ -10,7 +10,7 @@ async function Run(){
     let data = readFileSync(pathToData + "\\data.json")
     data = JSON.parse(data);
     test_params = JSON.parse(test_params);
-    let i = 1;
+    let i = 23;
     for (let params of test_params.items){
         console.log(`NUMBER TEST - ${i}`);
         data.params = params;

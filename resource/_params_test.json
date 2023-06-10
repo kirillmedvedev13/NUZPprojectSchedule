@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "n_iteration": 5000,
+      "type_initialization": "simple_algorithm",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 100
+    },
+    {
+      "n_iteration": 5000,
+      "type_initialization": "simple_algorithm",
+      "type_mutation": "custom_one_gene",
+      "p_mutation_gene": 0.05,
+      "tabu_tenure": 30,
+      "s_neighbors": 30,
+      "tabu_list_len": 100
+    }
+  ]
+}
