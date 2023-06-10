@@ -52,7 +52,8 @@ public:
     bestIndivid MainLoop(json data,timer &Timer,vector<pair<int, double>> &result){
         int iter = 0;
         auto StartTime = chrono::high_resolution_clock::now();
-        while(populations[0].fitnessValue.fitnessValue > 0 && iter< n_iteration){
+        int bestFitness=populations[0].fitnessValue.fitnessValue;
+        while(bestFitness > 0 && iter< n_iteration){
             Timer.start();
 
             vector<map<int,vector<Clas>>> tabuNeighbor;
@@ -75,7 +76,7 @@ public:
                 mutations.Fitness(j);
             }
             int indexBestNeighb=NULL;
-            int bestFitness=populations[0].fitnessValue.fitnessValue;
+
             for(int j=0; j < s_neighbors;j++){
                 int fitnesNeighb = mutations.populations[j].fitnessValue.fitnessValue;
                 if(bestFitness>fitnesNeighb && !TabuListContains(tabuNeighbor[j])){
