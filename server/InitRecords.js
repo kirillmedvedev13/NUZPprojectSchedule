@@ -1,8 +1,10 @@
 export default async function InitRecords(db) {
-
   let initialization_options = [
     { value: "random", label: "Випадкова ініціалізація" },
-    { value: "simple_algorithm", label: "Ініціалізація за допомогою просто перебору" },
+    {
+      value: "simple_algorithm",
+      label: "Ініціалізація за допомогою просто перебору",
+    },
   ];
   let selection_options = [
     { value: "ranging", label: "Відбір ранжуванням" },
@@ -21,7 +23,6 @@ export default async function InitRecords(db) {
     { value: "custom_one_gene", label: "Мутація одного гену" },
     { value: "all_genes", label: "Мутація всіх генів" },
   ];
-  
 
   let EAparamsCPP = [
     {
@@ -108,7 +109,8 @@ export default async function InitRecords(db) {
     },
     {
       name: "num_k_point",
-      label: "Кількість k точок схрещювання (тільки якщо обрано схрещювання k точок)",
+      label:
+        "Кількість k точок схрещювання (тільки якщо обрано схрещювання k точок)",
       short: "k.точок",
       type: "number",
       value: 2,
@@ -126,7 +128,8 @@ export default async function InitRecords(db) {
     },
     {
       name: "p_mutation_gene",
-      label: "Ймовірність мутації гена (тільки якщо обрано мутацію - всіх генів)",
+      label:
+        "Ймовірність мутації гена (тільки якщо обрано мутацію - всіх генів)",
       short: "мут.ген.",
       type: "number",
       value: 0.1,
@@ -135,7 +138,6 @@ export default async function InitRecords(db) {
       step: 0.05,
     },
   ];
-
 
   let EAparamsCPPIsland = [
     ...EAparamsCPP,
@@ -151,7 +153,8 @@ export default async function InitRecords(db) {
     },
     {
       name: "step",
-      label: "Крок розбіжності значень y % (на скільки будуть збільшуватися параметри у наступних отсровах)",
+      label:
+        "Крок розбіжності значень y % (на скільки будуть збільшуватися параметри у наступних отсровах)",
       short: "кр.",
       min: 1,
       max: 100,
@@ -200,7 +203,8 @@ export default async function InitRecords(db) {
     },
     {
       name: "p_mutation_gene",
-      label: "Ймовірність мутації пари (тільки якщо обрано мутацію - всіх генів)",
+      label:
+        "Ймовірність мутації пари (тільки якщо обрано мутацію - всіх генів)",
       short: "мут.пар.",
       type: "number",
       value: 0.1,
@@ -256,26 +260,26 @@ export default async function InitRecords(db) {
 
   let SimAparams = [
     ...InitAndMutparams,
-      {
-        name: "temperature",
-        label: "Початкова температура",
-        short: "темп.",
-        min: 0,
-        max: null,
-        step: 100,
-        type: "number",
-        value: 100000,
-      },
-      {
-        name: "alpha",
-        label: "Коефіцієнт alpha",
-        short: "alpha",
-        min: 0,
-        max: 1,
-        step: 0.01,
-        type: "number",
-        value: 0.99,
-      },
+    {
+      name: "temperature",
+      label: "Початкова температура",
+      short: "темп.",
+      min: 0,
+      max: null,
+      step: 100,
+      type: "number",
+      value: 100000,
+    },
+    {
+      name: "alpha",
+      label: "Коефіцієнт alpha",
+      short: "alpha",
+      min: 0,
+      max: 1,
+      step: 0.01,
+      type: "number",
+      value: 0.99,
+    },
   ];
 
   await db.type_class.findOrCreate({
@@ -324,7 +328,7 @@ export default async function InitRecords(db) {
   await db.algorithm.findOrCreate({
     where: { name: "simple_algorithmCPP" },
     defaults: {
-      name: "simple_algorithm",
+      name: "simple_algorithmCPP",
       label: "Алгоритм простого перебору на С++",
       params: JSON.stringify(InitAndMutparams),
       results: JSON.stringify([[0, 0]]),
