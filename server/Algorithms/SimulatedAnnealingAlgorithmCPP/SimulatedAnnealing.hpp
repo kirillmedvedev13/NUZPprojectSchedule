@@ -5,8 +5,8 @@
 #include "../ServiceCPP/json.hpp"
 
 class SimulatedAnnealing : public Service{
-    double alpha;
 public:
+    double alpha;
     double temperature;
     SimulatedAnnealing(){}
     SimulatedAnnealing(json data){

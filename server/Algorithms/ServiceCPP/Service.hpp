@@ -6,8 +6,7 @@
 #include "SetBaseScheduleToIndivid.hpp"
 #include "GetRnd.hpp"
 #include "GetIdAudienceForClass.hpp"
-
-#include "fstream"
+#include <fstream>
 
 struct Clas{
     int day_week;
@@ -49,7 +48,6 @@ public:
     int max_pair;
     vector<clas> classes;
     vector<audience> audiences;
-    base_schedule bs;
     vector<individ> populations;
     string type_initialization;
     string type_mutation;
@@ -58,7 +56,6 @@ public:
     bestIndivid bestIndiv;
 
     void InitService(json data, int population_size){
-        bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
         max_day = data["max_day"];
         max_pair = data["max_pair"];
         this->population_size = population_size;
@@ -92,7 +89,8 @@ public:
         type_initialization = data["params"]["type_initialization"];
     }
 
-    void InitBaseSchedule(){
+    void InitBaseSchedule(json data){
+        auto bs = base_schedule(data["base_schedule"]["schedule_group"], data["base_schedule"]["schedule_teacher"], data["base_schedule"]["schedule_audience"]);
         // Заполнение базового расписания
         for (size_t k = 0; k < populations.size(); k++)
         {

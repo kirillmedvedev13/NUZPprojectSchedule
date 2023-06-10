@@ -1,0 +1,2201 @@
+{
+  "bestPopulation": [
+    {
+      "day_week": 2,
+      "id_audience": 1,
+      "id_class": 550,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 550,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 551,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 552,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 553,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 3,
+      "id_class": 554,
+      "number_pair": 7,
+      "pair_type": 3
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 554,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 555,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 555,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 555,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 556,
+      "number_pair": 1,
+      "pair_type": 3
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 556,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 1,
+      "id_class": 560,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 1,
+      "id_class": 560,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 561,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 561,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 562,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 562,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 563,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 563,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 564,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 564,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 565,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 565,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 1,
+      "id_class": 566,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 566,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 567,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 567,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 568,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 568,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 569,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 569,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 570,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 570,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 571,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 571,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 1,
+      "id_class": 572,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 573,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 573,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 574,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 574,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 575,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 575,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 7,
+      "id_class": 576,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 577,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 578,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 589,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 590,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 590,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 591,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 591,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 592,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 592,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 593,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 594,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 594,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 595,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 595,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 596,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 596,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 2,
+      "id_class": 597,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 598,
+      "number_pair": 7,
+      "pair_type": 3
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 598,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 599,
+      "number_pair": 1,
+      "pair_type": 3
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 599,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 600,
+      "number_pair": 4,
+      "pair_type": 3
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 600,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 601,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 602,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 603,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 604,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 1,
+      "id_class": 605,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 606,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 607,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 608,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 1,
+      "id_class": 612,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 613,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 614,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 615,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 1,
+      "id_class": 616,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 7,
+      "id_class": 617,
+      "number_pair": 6,
+      "pair_type": 3
+    },
+    {
+      "day_week": 2,
+      "id_audience": 7,
+      "id_class": 617,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 618,
+      "number_pair": 4,
+      "pair_type": 3
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 618,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 619,
+      "number_pair": 4,
+      "pair_type": 3
+    },
+    {
+      "day_week": 4,
+      "id_audience": 7,
+      "id_class": 619,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 2,
+      "id_class": 638,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 2,
+      "id_class": 638,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 639,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 639,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 3,
+      "id_class": 640,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 640,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 641,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 641,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 645,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 646,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 646,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 647,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 647,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 648,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 648,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 1,
+      "id_class": 651,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 652,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 652,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 7,
+      "id_class": 654,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 7,
+      "id_class": 654,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 1,
+      "id_class": 655,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 655,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 656,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 656,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 657,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 657,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 658,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 658,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 1,
+      "id_class": 662,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 3,
+      "id_class": 663,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 663,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 664,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 664,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 665,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 665,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 1,
+      "id_class": 666,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 666,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 667,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 667,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 668,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 668,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 669,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 669,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 1,
+      "id_class": 673,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 673,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 674,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 674,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 675,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 675,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 676,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 676,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 4,
+      "id_class": 686,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 687,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 687,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 3,
+      "id_class": 688,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 688,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 4,
+      "id_class": 690,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 8,
+      "id_class": 691,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 8,
+      "id_class": 692,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 2,
+      "id_class": 694,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 695,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 2,
+      "id_class": 696,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 8,
+      "id_class": 697,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 4,
+      "id_class": 698,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 699,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 700,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 701,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 8,
+      "id_class": 702,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 3,
+      "id_class": 704,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 704,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 8,
+      "id_class": 706,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 8,
+      "id_class": 707,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 8,
+      "id_class": 708,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 8,
+      "id_class": 708,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 4,
+      "id_class": 709,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 710,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 710,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 711,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 711,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 727,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 727,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 728,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 728,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 729,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 729,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 730,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 730,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 4,
+      "id_class": 557,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 4,
+      "id_class": 557,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 558,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 558,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 559,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 559,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 2,
+      "id_class": 579,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 579,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 580,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 580,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 581,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 581,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 582,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 582,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 583,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 583,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 584,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 584,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 585,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 585,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 586,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 586,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 587,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 588,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 2,
+      "id_class": 609,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 6,
+      "id_class": 610,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 610,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 611,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 611,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 1,
+      "id_class": 620,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 8,
+      "id_class": 621,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 8,
+      "id_class": 621,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 8,
+      "id_class": 622,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 8,
+      "id_class": 622,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 623,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 5,
+      "id_class": 624,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 5,
+      "id_class": 624,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 625,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 625,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 2,
+      "id_class": 626,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 627,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 627,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 628,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 628,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 2,
+      "id_class": 629,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 2,
+      "id_class": 629,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 630,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 630,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 7,
+      "id_class": 631,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 7,
+      "id_class": 631,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 1,
+      "id_class": 632,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 633,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 633,
+      "number_pair": 7,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 634,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 6,
+      "id_class": 634,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 2,
+      "id_class": 635,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 636,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 3,
+      "id_class": 637,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 2,
+      "id_class": 642,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 2,
+      "id_class": 642,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 643,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 643,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 6,
+      "id_class": 644,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 6,
+      "id_class": 644,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 649,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 649,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 650,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 650,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 653,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 653,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 1,
+      "id_class": 659,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 7,
+      "id_class": 660,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 7,
+      "id_class": 661,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 1,
+      "id_class": 670,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 1,
+      "id_class": 670,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 7,
+      "id_class": 671,
+      "number_pair": 5,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 7,
+      "id_class": 672,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 677,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 8,
+      "id_class": 678,
+      "number_pair": 4,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 8,
+      "id_class": 678,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 8,
+      "id_class": 679,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 8,
+      "id_class": 679,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 3,
+      "id_audience": 2,
+      "id_class": 680,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 6,
+      "id_class": 681,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 6,
+      "id_class": 681,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 682,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 682,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 2,
+      "id_class": 683,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 5,
+      "id_class": 684,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 5,
+      "id_class": 684,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 685,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 5,
+      "id_class": 685,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 689,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 3,
+      "id_class": 689,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 6,
+      "id_audience": 8,
+      "id_class": 693,
+      "number_pair": 8,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 8,
+      "id_class": 703,
+      "number_pair": 7,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 3,
+      "id_class": 705,
+      "number_pair": 2,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 3,
+      "id_class": 705,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 712,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 5,
+      "id_class": 712,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 9,
+      "id_class": 713,
+      "number_pair": 1,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 8,
+      "id_class": 714,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 8,
+      "id_class": 714,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 1,
+      "id_class": 715,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 8,
+      "id_class": 716,
+      "number_pair": 8,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 8,
+      "id_class": 716,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 1,
+      "id_class": 717,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 6,
+      "id_audience": 3,
+      "id_class": 718,
+      "number_pair": 1,
+      "pair_type": 2
+    },
+    {
+      "day_week": 4,
+      "id_audience": 1,
+      "id_class": 719,
+      "number_pair": 6,
+      "pair_type": 1
+    },
+    {
+      "day_week": 3,
+      "id_audience": 8,
+      "id_class": 720,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 2,
+      "id_class": 731,
+      "number_pair": 5,
+      "pair_type": 1
+    },
+    {
+      "day_week": 5,
+      "id_audience": 7,
+      "id_class": 732,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 1,
+      "id_audience": 10,
+      "id_class": 721,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 9,
+      "id_class": 722,
+      "number_pair": 3,
+      "pair_type": 2
+    },
+    {
+      "day_week": 2,
+      "id_audience": 10,
+      "id_class": 723,
+      "number_pair": 3,
+      "pair_type": 1
+    },
+    {
+      "day_week": 4,
+      "id_audience": 10,
+      "id_class": 724,
+      "number_pair": 4,
+      "pair_type": 1
+    },
+    {
+      "day_week": 1,
+      "id_audience": 9,
+      "id_class": 725,
+      "number_pair": 2,
+      "pair_type": 1
+    },
+    {
+      "day_week": 2,
+      "id_audience": 9,
+      "id_class": 726,
+      "number_pair": 6,
+      "pair_type": 2
+    },
+    {
+      "day_week": 5,
+      "id_audience": 9,
+      "id_class": 726,
+      "number_pair": 8,
+      "pair_type": 2
+    }
+  ],
+  "result": [
+    [1050, 2.0],
+    [2075, 2.0],
+    [3101, 2.0],
+    [4135, 2.0],
+    [5234, 2.0],
+    [6287, 2.0],
+    [7342, 2.0],
+    [8435, 2.0],
+    [9481, 2.0],
+    [10545, 2.0],
+    [11626, 2.0],
+    [12722, 2.0],
+    [13793, 2.0],
+    [14828, 2.0],
+    [15892, 2.0],
+    [16940, 2.0],
+    [17984, 2.0],
+    [19043, 2.0],
+    [20077, 2.0],
+    [21139, 2.0],
+    [22173, 2.0],
+    [23161, 2.0],
+    [24192, 2.0],
+    [25276, 2.0],
+    [26340, 2.0],
+    [27422, 2.0],
+    [28492, 2.0],
+    [29524, 2.0],
+    [30538, 2.0],
+    [31589, 2.0],
+    [32667, 2.0],
+    [33773, 2.0],
+    [34831, 2.0],
+    [35891, 2.0],
+    [36978, 2.0],
+    [38029, 2.0],
+    [39084, 2.0],
+    [40132, 2.0],
+    [41179, 2.0],
+    [42205, 2.0],
+    [43254, 2.0],
+    [44331, 2.0],
+    [45387, 2.0],
+    [46437, 2.0],
+    [47486, 2.0],
+    [48543, 2.0],
+    [49586, 2.0],
+    [50638, 2.0],
+    [51683, 2.0],
+    [52741, 2.0],
+    [53784, 2.0],
+    [54829, 2.0],
+    [55889, 2.0],
+    [56934, 2.0],
+    [57977, 2.0],
+    [59038, 2.0],
+    [60084, 2.0],
+    [61099, 2.0],
+    [62134, 2.0],
+    [63147, 2.0],
+    [64182, 2.0],
+    [65244, 2.0],
+    [66299, 2.0],
+    [67331, 2.0],
+    [68349, 2.0],
+    [69358, 2.0],
+    [70353, 2.0],
+    [71388, 2.0],
+    [72429, 2.0],
+    [73493, 2.0],
+    [74527, 2.0],
+    [75590, 2.0],
+    [76636, 2.0],
+    [77687, 2.0],
+    [78835, 2.0],
+    [79884, 2.0],
+    [80931, 2.0],
+    [81951, 2.0],
+    [82988, 2.0],
+    [84041, 2.0],
+    [85096, 2.0],
+    [86130, 2.0],
+    [87180, 2.0],
+    [88273, 2.0],
+    [89331, 2.0],
+    [90382, 2.0],
+    [91425, 2.0],
+    [92446, 2.0],
+    [93525, 2.0],
+    [94623, 2.0],
+    [95680, 2.0],
+    [96735, 2.0],
+    [97793, 2.0],
+    [98831, 2.0],
+    [99882, 2.0],
+    [100922, 2.0],
+    [101975, 2.0],
+    [103031, 2.0],
+    [104054, 2.0],
+    [105133, 2.0],
+    [106173, 2.0],
+    [107207, 2.0],
+    [108290, 2.0],
+    [109426, 2.0],
+    [110489, 2.0],
+    [111529, 2.0],
+    [112628, 2.0],
+    [113687, 2.0],
+    [114739, 2.0],
+    [115788, 2.0],
+    [116840, 2.0],
+    [117892, 2.0],
+    [118937, 2.0],
+    [119984, 2.0],
+    [121036, 2.0],
+    [122087, 2.0],
+    [123134, 2.0],
+    [124179, 2.0],
+    [125233, 2.0],
+    [126297, 2.0],
+    [127334, 2.0],
+    [128345, 2.0],
+    [129379, 2.0],
+    [130430, 2.0],
+    [131448, 2.0],
+    [132525, 2.0],
+    [133543, 2.0],
+    [134599, 2.0],
+    [135647, 2.0],
+    [136684, 2.0],
+    [137688, 2.0],
+    [138780, 2.0],
+    [139834, 2.0],
+    [140882, 2.0],
+    [141928, 2.0],
+    [142994, 2.0],
+    [144028, 2.0],
+    [145083, 2.0],
+    [146146, 2.0],
+    [147189, 2.0],
+    [148246, 2.0],
+    [149375, 2.0],
+    [150508, 2.0],
+    [151612, 2.0],
+    [152704, 2.0],
+    [153852, 2.0],
+    [154993, 2.0],
+    [156096, 2.0],
+    [157193, 2.0],
+    [158362, 2.0],
+    [159413, 0.0]
+  ]
+}

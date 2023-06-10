@@ -9,6 +9,16 @@ using namespace BS;
 using namespace std;
 
 
+struct TabuList{
+    int classId;
+    vector<Clas> history;
+    TabuList(){}
+    TabuList(int classId){
+        this->classId=classId;
+        history = vector<Clas>();
+    }
+};
+
 class TabuSearch: public Service{
     int tabu_tenure;
     int s_neighbors;
@@ -49,7 +59,7 @@ public:
             Service mutations;
 
             mutations.InitServiceWithInitAndMut(data,s_neighbors);
-            mutations.InitBaseSchedule();
+            mutations.InitBaseSchedule(data);
             for(int j=0;j<s_neighbors;j++){
                for(int k = 0;k<mutations.classes.size();k++){
                    mutations.classes[k].schedules[j]=classes[k].schedules[0];

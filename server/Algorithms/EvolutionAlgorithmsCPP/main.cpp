@@ -37,29 +37,24 @@ int main(int argc,char* argv[])
         ifstream fileData(path + "\\data.json");
         data = json::parse(fileData);
 
-        // Инициализация
         const int max_generations = data["params"]["max_generations"];
-        // Потоки
         thread_pool worker_pool(thread::hardware_concurrency());
         timer Timer;
         Timer.start();
 
-        EvolutionAlgorithm mainAlgorithm;
+        json data_SA = NULL;
         if (data["params"]["type_initialization"] == "simple_algorithm"){
             auto code = system(string(pathToSA + " " + path).c_str());
             if (code == 0){
-                json data_SA = json();
+
                 ifstream fileData(path + "\\result.json");
                 data_SA = json::parse(fileData);
-                mainAlgorithm = EvolutionAlgorithm(data, data_SA);
             }
             else{
                 throw "Error run SimpleAlgorithm.exe";
             }
         }
-        else{
-            mainAlgorithm = EvolutionAlgorithm(data);
-        }
+        EvolutionAlgorithm mainAlgorithm(data, data_SA);
 
         Timer.stop();
         cout << "Init " << Timer.ms() << " ms.\n";

@@ -259,6 +259,16 @@ export default async function InitRecords(db) {
   ];
 
   let SimAparams = [
+    {
+      name: "max_generations",
+      label: "Максимальна кiлькiсть iтерацiй",
+      short: "ітер.",
+      type: "number",
+      min: 1,
+      max: null,
+      step: 10000,
+      value: 200000,
+    },
     ...InitAndMutparams,
     {
       name: "temperature",
@@ -330,7 +340,7 @@ export default async function InitRecords(db) {
     defaults: {
       name: "simple_algorithmCPP",
       label: "Алгоритм простого перебору на С++",
-      params: JSON.stringify(InitAndMutparams),
+      params: JSON.stringify([]),
       results: JSON.stringify([[0, 0]]),
     },
   });
