@@ -338,7 +338,7 @@ export default async function InitRecords(db) {
   await db.algorithm.findOrCreate({
     where: { name: "simple_algorithmCPP" },
     defaults: {
-      name: "simple_algorithm",
+      name: "simple_algorithmCPP",
       label: "Алгоритм простого перебору на С++",
       params: JSON.stringify([]),
       results: JSON.stringify([[0, 0]]),
