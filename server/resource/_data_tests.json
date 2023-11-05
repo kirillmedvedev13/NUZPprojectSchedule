@@ -1,24 +1,7 @@
 {
   "max_day": 6,
   "max_pair": 8,
-  "params": {
-    "population_size": 500,
-    "max_generations": 2000,
-    "p_elitism": 0.1,
-    "//type_crossing": "custom_one_gene",
-    "type_crossing": "k_point",
-    "num_k_point": 4,
-    "p_crossover": 0.6,
-    "type_mutation": "custom_one_gene",
-    "//type_mutation": "all_genes",
-    "p_mutation_gene": 0,
-    "p_mutation": 0.2,
-    "//type_selection": "roulette",
-    "type_selection": "tournament",
-    "//type_initialization": "random",
-    "type_initialization": "simple_algorithm",
-    "fitness_scaling": false
-  },
+  "params": {},
   "base_schedule": {
     "schedule_group": [],
     "schedule_teacher": [],
