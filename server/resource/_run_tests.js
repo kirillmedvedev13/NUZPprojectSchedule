@@ -2,8 +2,8 @@ import { readFileSync, writeFileSync } from "fs";
 import SpawnChild from "../Algorithms/Service/SpawnChild.js";
 import path from "path";
 
-let algorithm = "EA";
-// let algorithm = "IM";
+// let algorithm = "EA";
+let algorithm = "IM";
 // let algorithm = "SA";
 // let algorithm = "TS";
 
@@ -45,7 +45,7 @@ async function Run() {
   data = JSON.parse(data);
   test_params = JSON.parse(test_params);
   let number_of_tests = 3;
-  let number_of_current_test = 52;
+  let number_of_current_test = 38;
   for (let params of test_params.items) {
     for (let i = 0; i < number_of_tests; i++) {
       console.log(`NUMBER TEST - ${number_of_current_test}`);
@@ -57,15 +57,11 @@ async function Run() {
       let code;
       if (params["type_initialization"] == "simple_algorithm") {
         code = await SpawnChild(path_to_run, [
-          path.resolve(path_to_folder_algorithm + "/data.json"),
+          path_to_folder_algorithm,
           path_to_simple_algorithm,
         ]);
-        console.log(path.resolve(path_to_folder_algorithm + "/data.json"));
-        console.log(path_to_simple_algorithm);
       } else {
-        code = await SpawnChild(path_to_run, [
-          path.resolve(path_to_folder_algorithm + "/data.json"),
-        ]);
+        code = await SpawnChild(path_to_run, [path_to_folder_algorithm]);
       }
       if (code === 0) {
         let res = readFileSync(
@@ -73,7 +69,8 @@ async function Run() {
         );
         writeFileSync(
           path.resolve(
-            path_to_current + `/_results_${algorithm}/result${i}.json`
+            path_to_current +
+              `/_results_${algorithm}/result${number_of_current_test}.json`
           ),
           res
         );

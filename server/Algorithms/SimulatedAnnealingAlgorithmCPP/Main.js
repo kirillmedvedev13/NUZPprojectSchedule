@@ -30,16 +30,22 @@ export const RUN_SIMACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let pathToAlgorithm = path.resolve("./Algorithms/SimulatedAnnealingAlgorithmCPP/SimulatedAnnealingAlgorithmCPP.exe");
-    let pathToData = path.resolve("./Algorithms/SimulatedAnnealingAlgorithmCPP/");
-    let pathToSA = path.resolve("./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
+    let pathToAlgorithm = path.resolve(
+      "./Algorithms/SimulatedAnnealingAlgorithmCPP/run_algorithm.exe"
+    );
+    let pathToData = path.resolve(
+      "./Algorithms/SimulatedAnnealingAlgorithmCPP/"
+    );
+    let pathToSA = path.resolve(
+      "./Algorithms/SimpleAlgorithmCPP/run_algorithm.exe"
+    );
     fs.writeFileSync(pathToData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
     });
     let code;
-    if(params["type_initialization"] == "simple_algorithm"){
+    if (params["type_initialization"] == "simple_algorithm") {
       code = await SpawnChild(pathToAlgorithm, [pathToData, pathToSA]);
-    } else{
+    } else {
       code = await SpawnChild(pathToAlgorithm, [pathToData]);
     }
     if (code === 0) {
@@ -70,9 +76,8 @@ export const RUN_SIMACPP = async (id_cathedra, name_algorithm) => {
           message: `Фітнес - ${results[results.length - 1][1]}`,
         };
       else return { successful: false, message: `Помилка` };
-    }
-    else{
-      throw `Error code - ${code}`
+    } else {
+      throw `Error code - ${code}`;
     }
   } catch (err) {
     console.log(err);
