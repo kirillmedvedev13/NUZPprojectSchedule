@@ -2,8 +2,8 @@ import { readFileSync, writeFileSync } from "fs";
 import SpawnChild from "../Algorithms/Service/SpawnChild.js";
 import path from "path";
 
-// let algorithm = "EA";
-let algorithm = "IM";
+let algorithm = "EA";
+// let algorithm = "IM";
 // let algorithm = "SA";
 // let algorithm = "TS";
 
@@ -45,7 +45,7 @@ async function Run() {
   data = JSON.parse(data);
   test_params = JSON.parse(test_params);
   let number_of_tests = 3;
-  let number_of_current_test = 38;
+  let number_of_current_test = 67;
   for (let params of test_params.items) {
     for (let i = 0; i < number_of_tests; i++) {
       console.log(`NUMBER TEST - ${number_of_current_test}`);
