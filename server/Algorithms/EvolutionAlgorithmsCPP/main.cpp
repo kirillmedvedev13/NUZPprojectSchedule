@@ -22,6 +22,7 @@ int main(int argc,char* argv[])
     {
         string path;
         string pathToSA;
+
         if (argc >= 2){
             path = argv[1];
             if (argc == 3){
