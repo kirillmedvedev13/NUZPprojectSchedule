@@ -32,6 +32,7 @@ async function Run() {
 
     let contentDir = fs.readdirSync(array_results[i]);
     contentDir.forEach((file) => {
+      console.log(path.resolve(array_results[i] + "/" + file));
       let data = fs.readFileSync(path.resolve(array_results[i] + "/" + file));
       data = JSON.parse(data);
 
