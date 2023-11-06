@@ -15,7 +15,7 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
       recommended_schedules,
       general_values,
       audiences,
-      params
+      params,
     } = await GetDataFromDB(id_cathedra, name_algorithm);
 
     let base_schedule = await GetBaseSchedule(id_cathedra);
@@ -29,7 +29,9 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
       audiences,
     });
 
-    let pathToAlgorithm = path.resolve("./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe");
+    let pathToAlgorithm = path.resolve(
+      "./Algorithms/SimpleAlgorithmCPP/run_algorithm.exe"
+    );
     let pathToData = path.resolve("./Algorithms/SimpleAlgorithmCPP/");
     fs.writeFileSync(pathToData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
@@ -64,8 +66,7 @@ export const RUN_SACPP = async (id_cathedra, name_algorithm) => {
           message: `Фітнес - ${results[results.length - 1][1]}`,
         };
       else return { successful: false, message: `Помилка` };
-    }
-    else{
+    } else {
       console.log(`error code - ${code}`);
     }
   } catch (err) {

@@ -31,11 +31,11 @@ export const RUN_TSCPP = async (id_cathedra, name_algorithm) => {
     });
 
     let pathToAlgorithm = path.resolve(
-      "./Algorithms/TabuSearchAlgorithmCPP/TabuSearchAlgorithmCPP.exe"
+      "./Algorithms/TabuSearchAlgorithmCPP/run_algorithm.exe"
     );
     let pathToData = path.resolve("./Algorithms/TabuSearchAlgorithmCPP/");
     let pathToSA = path.resolve(
-      "./Algorithms/SimpleAlgorithmCPP/SimpleAlgorithmCPP.exe"
+      "./Algorithms/SimpleAlgorithmCPP/run_algorithm.exe"
     );
     fs.writeFileSync(pathToData + "/data.json", jsonData, (err) => {
       if (err) console.log(err);
